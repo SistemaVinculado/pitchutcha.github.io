@@ -7,7 +7,7 @@
     <title>Pitchutcha - Data Structures</title>
     
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Inter%3Awght%40400%3B500%3B700%3B900&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Inter%3Awght%40400%-B500%3B700%3B900&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -22,26 +22,20 @@
         <header class="sticky top-0 z-20 border-b border-gray-200 bg-white">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
                 <div class="flex items-center gap-8">
-                    <a class="flex items-center gap-2 text-gray-800" href="{{ '/' | relative_url }}">
-                        <svg class="h-8 w-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 0.297c-6.63 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 22.203c-5.64 0-10.203-4.563-10.203-10.203s4.563-10.203 10.203-10.203 10.203 4.563 10.203 10.203-4.563 10.203-10.203 10.203zm.003-18.403c-4.41 0-7.997 3.587-7.997 7.997s3.587 7.997 7.997 7.997 7.997-3.587 7.997-7.997-3.587-7.997-7.997-7.997zm0 14.593c-3.636 0-6.593-2.957-6.593-6.593s2.957-6.593 6.593-6.593 6.593 2.957 6.593 6.593-2.957 6.593-6.593 6.593zm0-12.003c-2.977 0-5.4 2.423-5.4 5.4s2.423 5.4 5.4 5.4 5.4-2.423 5.4-5.4-2.423-5.4-5.4-5.4z"></path>
-                        </svg>
+                    <a class="flex items-center gap-3 text-gray-800" href="{{ '/' | relative_url }}">
+                        <span class="material-symbols-outlined text-3xl text-blue-600"> science </span>
                         <h1 class="text-xl font-bold">Pitchutcha</h1>
                     </a>
                     <nav class="hidden items-center gap-6 md:flex">
-                        <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="#">Product</a>
-                        <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="#">Solutions</a>
-                        <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="#">Open Source</a>
-                        <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="#">Resources</a>
-                        <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="#">Plans</a>
+                        <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="{{ '/algorithms.html' | relative_url }}">Algorithms</a>
+                        <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="{{ '/data-structures.html' | relative_url }}">Data Structures</a>
                     </nav>
                 </div>
                 <div class="flex items-center gap-4">
-                    <div class="relative hidden lg:block">
+                    <form id="header-search-form" class="relative hidden lg:block">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
-                        <input class="h-10 w-full rounded-md border border-gray-300 bg-gray-50 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="Search" type="search"/>
-                    </div>
-                    <button class="hidden items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 sm:flex">New repo</button>
+                        <input id="header-search-input" class="h-10 w-full rounded-md border border-gray-300 bg-gray-50 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="Search" type="search"/>
+                    </form>
                 </div>
             </div>
         </header>
