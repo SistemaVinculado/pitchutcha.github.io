@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf--t"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>GitHub Docs - Computer Science</title>
+    <title>Pitchutcha - Search Results</title>
     
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
@@ -40,145 +40,22 @@
                         <button class="hidden sm:inline-flex items-center justify-center rounded-md border border-transparent bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2">
                             Sign In
                         </button>
-                        <img alt="User avatar" class="h-8 w-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqtbeD0HpPcGQVcgIizY1t3YwHpu8AEKMvI4_gTee2SqjwgqEy-ismQIB1iaQRPFEJpEC-XlHkOorS9EhLt2JY-J-EowgbDduECuhY7BIeex6NIPSItw1zv8K7EiR50JjQ1eq8K4CqWmwRb-BdFanmrfeXFrJzqKjyZfsgArP077evxe_3hDA5BiHCK1mAUT-9TMJpSZ-XS7nZpQsPfgdSVYtWOTeBPSYOR_Vzg5EfdbXrsAb1XvnpcJeS7rdPsc-VMkP4M5oeX_NA"/>
                     </div>
                 </div>
             </div>
         </header>
         
         <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <aside class="md:col-span-1">
-                    <h2 class="text-lg font-semibold mb-4">Filter Results</h2>
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="font-medium mb-2">Topic</h3>
-                            <div class="space-y-2">
-                                <label class="flex items-center">
-                                    <input class="form-checkbox rounded text-[var(--primary-color)] focus:ring-[var(--primary-color)]" type="checkbox"/>
-                                    <span class="ml-2 text-sm text-gray-700">Algorithms</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input class="form-checkbox rounded text-[var(--primary-color)] focus:ring-[var(--primary-color)]" type="checkbox"/>
-                                    <span class="ml-2 text-sm text-gray-700">Data Structures</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input class="form-checkbox rounded text-[var(--primary-color)] focus:ring-[var(--primary-color)]" type="checkbox"/>
-                                    <span class="ml-2 text-sm text-gray-700">AI/ML</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input class="form-checkbox rounded text-[var(--primary-color)] focus:ring-[var(--primary-color)]" type="checkbox"/>
-                                    <span class="ml-2 text-sm text-gray-700">Web Development</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="font-medium mb-2">Difficulty</h3>
-                            <div class="space-y-2">
-                                <label class="flex items-center">
-                                    <input class="form-radio text-[var(--primary-color)] focus:ring-[var(--primary-color)]" name="difficulty" type="radio"/>
-                                    <span class="ml-2 text-sm text-gray-700">Beginner</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input class="form-radio text-[var(--primary-color)] focus:ring-[var(--primary-color)]" name="difficulty" type="radio"/>
-                                    <span class="ml-2 text-sm text-gray-700">Intermediate</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input class="form-radio text-[var(--primary-color)] focus:ring-[var(--primary-color)]" name="difficulty" type="radio"/>
-                                    <span class="ml-2 text-sm text-gray-700">Advanced</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block font-medium mb-2" for="last-updated">Last Updated</label>
-                            <select class="w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" id="last-updated">
-                                <option>Anytime</option>
-                                <option>Past week</option>
-                                <option>Past month</option>
-                                <option>Past year</option>
-                            </select>
-                        </div>
-                    </div>
-                </aside>
-                
-                <div class="md:col-span-3">
-                    <div class="mb-6">
-                        <div class="relative">
-                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-                            <input class="w-full rounded-md border-gray-300 bg-white py-3 pl-12 pr-10 text-lg focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" type="text" value="Computer Science"/>
-                            <button class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                                <span class="material-symbols-outlined">close</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
-                        <p class="text-sm text-gray-600">Showing <span class="font-bold text-gray-900">1,234 results</span></p>
-                        <div>
-                            <label class="sr-only" for="sort-by">Sort by</label>
-                            <select class="rounded-md border-gray-300 text-sm shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" id="sort-by">
-                                <option>Relevance</option>
-                                <option>Date</option>
-                                <option>Popularity</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-md shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                            <a class="block" href="#">
-                                <h3 class="text-lg font-semibold text-gray-900 hover:text-[var(--primary-color)]">Introduction to <mark class="bg-yellow-200 px-1 rounded-sm">Computer</mark> <mark class="bg-yellow-200 px-1 rounded-sm">Science</mark></h3>
-                                <p class="text-sm text-gray-500 mt-1">Category: <span class="font-medium text-gray-700">Computer Science Basics</span></p>
-                                <p class="text-gray-600 mt-2 text-sm">Learn about the basics of <mark class="bg-yellow-200 px-1 rounded-sm">computer</mark> <mark class="bg-yellow-200 px-1 rounded-sm">science</mark>, including algorithms, data structures, and programming languages.</p>
-                            </a>
-                        </div>
-                        <div class="bg-white p-6 rounded-md shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                            <a class="block" href="#">
-                                <h3 class="text-lg font-semibold text-gray-900 hover:text-[var(--primary-color)]">Advanced Topics in <mark class="bg-yellow-200 px-1 rounded-sm">Computer</mark> <mark class="bg-yellow-200 px-1 rounded-sm">Science</mark></h3>
-                                <p class="text-sm text-gray-500 mt-1">Category: <span class="font-medium text-gray-700">Advanced Computer Science</span></p>
-                                <p class="text-gray-600 mt-2 text-sm">Explore advanced topics in <mark class="bg-yellow-200 px-1 rounded-sm">computer</mark> <mark class="bg-yellow-200 px-1 rounded-sm">science</mark>, such as artificial intelligence, machine learning, and data science.</p>
-                            </a>
-                        </div>
-                        <div class="bg-white p-6 rounded-md shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                            <a class="block" href="#">
-                                <h3 class="text-lg font-semibold text-gray-900 hover:text-[var(--primary-color)]"><mark class="bg-yellow-200 px-1 rounded-sm">Computer</mark> <mark class="bg-yellow-200 px-1 rounded-sm">Science</mark> Learning Resources</h3>
-                                <p class="text-sm text-gray-500 mt-1">Category: <span class="font-medium text-gray-700">Learning Resources</span></p>
-                                <p class="text-gray-600 mt-2 text-sm">Discover resources for learning <mark class="bg-yellow-200 px-1 rounded-sm">computer</mark> <mark class="bg-yellow-200 px-1 rounded-sm">science</mark>, including online courses, tutorials, and books.</p>
-                            </a>
-                        </div>
-                        <div class="bg-white p-6 rounded-md shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                            <a class="block" href="#">
-                                <h3 class="text-lg font-semibold text-gray-900 hover:text-[var(--primary-color)]"><mark class="bg-yellow-200 px-1 rounded-sm">Computer</mark> <mark class="bg-yellow-200 px-1 rounded-sm">Science</mark> FAQs</h3>
-                                <p class="text-sm text-gray-500 mt-1">Category: <span class="font-medium text-gray-700">FAQs</span></p>
-                                <p class="text-gray-600 mt-2 text-sm">Find answers to frequently asked questions about <mark class="bg-yellow-200 px-1 rounded-sm">computer</mark> <mark class="bg-yellow-200 px-1 rounded-sm">science</mark>.</p>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <nav aria-label="Pagination" class="mt-8 flex justify-center">
-                        <a class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0" href="#">
-                            <span class="sr-only">Previous</span>
-                            <span class="material-symbols-outlined h-5 w-5">chevron_left</span>
-                        </a>
-                        <a aria-current="page" class="relative z-10 inline-flex items-center bg-[var(--primary-color)] text-white px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]" href="#">1</a>
-                        <a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0" href="#">2</a>
-                        <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">3</a>
-                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">...</span>
-                        <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">8</a>
-                        <a class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0" href="#">
-                            <span class="sr-only">Next</span>
-                            <span class="material-symbols-outlined h-5 w-5">chevron_right</span>
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </main>
+            </main>
 
         <footer class="bg-white border-t border-gray-200 mt-auto">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-500">
-                © 2024 GitHub Docs. All rights reserved.
+                © 2025 Pitchutcha. All rights reserved.
             </div>
         </footer>
     </div>
     
     <script src="js/script.js"></script>
+    <script src="js/dev-panel.js" defer></script>
 </body>
 </html>
