@@ -1,4 +1,4 @@
-/* Este arquivo centraliza todos os estilos personalizados do seu site.
+/* Este arquivo centraliza todos os seus estilos personalizados do seu site.
   Ele define as fontes e as variáveis de cor para os temas claro e escuro.
 */
 
@@ -25,4 +25,17 @@ body {
     --text-secondary: #94a3b8;
     --background-primary: #0f172a;
     --background-secondary: #1e293b;
+}
+
+
+/* --- NOVAS CORREÇÕES --- */
+
+/* 1. Faz o link "Read more →" no index.html ficar azul mais escuro ao passar o mouse */
+.group:hover .group-hover-text-color-change {
+    color: #2563eb; /* Um tom de azul mais forte */
+}
+
+/* 2. Aumenta o contraste do bloco de código no tema escuro (index2.html) */
+.dark .not-prose {
+    background-color: var(--background-secondary); /* Usa a cor de fundo secundária do tema escuro */
 }
