@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GitHub Docs - System Diagnostics</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+    :root {
+      --primary-color: #137fec;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+<div class="flex flex-col min-h-screen">
+<header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16 border-b border-gray-700">
+<div class="flex items-center gap-6">
+<a class="flex items-center gap-2" href="#">
+<svg class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.82c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.65.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.577.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" fill-rule="evenodd"></path>
+</svg>
+<span class="text-xl font-bold">GitHub Docs</span>
+</a>
+<nav class="hidden md:flex items-center gap-4">
+<a class="text-sm font-medium text-gray-300 hover:text-white transition-colors" href="#">Home</a>
+<a class="text-sm font-medium text-gray-300 hover:text-white transition-colors" href="#">Topics</a>
+<a class="text-sm font-medium text-gray-300 hover:text-white transition-colors" href="#">Guides</a>
+<a class="text-sm font-medium text-[var(--primary-color)]" href="#">Status</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="bg-gray-800 border border-gray-700 rounded-md py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-[var(--primary-color)] focus:outline-none focus:border-[var(--primary-color)] transition-all" placeholder="Search docs..." type="text"/>
+</div>
+<button class="p-2 rounded-md hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button>
+<img alt="User avatar" class="size-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5hgAs_pKatfeN-GGONvdMw8huJvr2UkuMf-uUWVFLTXCSGfkEBPU97eGpAyn_w6J_3tGQWWcoB4q_YM_qQO7HmuygBLf3nED0V3WKaJcO_8Ewybgdl7izxUgwEAB4KwI1Iup8ZIaKH6HqMgDOMHgpnHIAaBesHfIULu6VUdiSL16BiZShU_gWqmCIHMzeReNFFmupUjufHF3oTkwJcreP3mStP35oPn_kDLZydsc5QjinlvXqPvYXQvGMqxRI1tSYaSn_t4vzoz6q"/>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-5xl mx-auto">
+<header class="mb-8">
+<h1 class="text-3xl font-bold tracking-tight text-white">System Status</h1>
+<p class="mt-2 text-lg text-gray-400">Real-time health and performance monitoring for the GitHub Docs platform.</p>
+</header>
+<div class="mb-8 p-6 bg-gray-800/50 rounded-lg border border-gray-700 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-4 h-4 rounded-full bg-green-500 animate-pulse"></div>
+<p class="text-xl font-semibold text-green-400">All Systems Operational</p>
+</div>
+<p class="text-sm text-gray-400">Last updated: <span class="font-medium text-gray-300">Just now</span></p>
+</div>
+<section class="mb-12">
+<h2 class="text-xl font-semibold text-white mb-4">Current Component Status</h2>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 bg-gray-800 rounded-md border border-gray-700">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-green-400">dns</span>
+<span class="font-medium text-gray-200">Web Servers</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-green-500"></div>
+<span class="text-sm font-medium text-green-400">Operational</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-gray-800 rounded-md border border-gray-700">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-green-400">database</span>
+<span class="font-medium text-gray-200">Database</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-green-500"></div>
+<span class="text-sm font-medium text-green-400">Operational</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-gray-800 rounded-md border border-gray-700">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-green-400">api</span>
+<span class="font-medium text-gray-200">API</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-green-500"></div>
+<span class="text-sm font-medium text-green-400">Operational</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-gray-800 rounded-md border border-gray-700">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-yellow-400">build</span>
+<span class="font-medium text-gray-200">CI/CD Pipeline</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+<span class="text-sm font-medium text-yellow-400">Degraded Performance</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-gray-800 rounded-md border border-gray-700">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-red-500">cloud_off</span>
+<span class="font-medium text-gray-200">Search Service</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-red-500"></div>
+<span class="text-sm font-medium text-red-500">Major Outage</span>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-12">
+<h2 class="text-xl font-semibold text-white mb-4">Historical Uptime</h2>
+<div class="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-3xl font-bold text-white">99.98%</p>
+<p class="text-sm text-gray-400">Uptime in the last 90 days</p>
+</div>
+<div class="flex gap-2 rounded-md bg-gray-700/50 p-1">
+<button class="px-3 py-1 text-sm rounded-md bg-gray-600 text-white">30d</button>
+<button class="px-3 py-1 text-sm rounded-md hover:bg-gray-600/50 text-gray-400">60d</button>
+<button class="px-3 py-1 text-sm rounded-md hover:bg-gray-600/50 text-gray-400">90d</button>
+</div>
+</div>
+<div class="h-60 w-full">
+<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 500 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 140L500 140" stroke="#4A5568" stroke-dasharray="2 2" stroke-width="1"></path>
+<path d="M0 105L500 105" stroke="#4A5568" stroke-dasharray="2 2" stroke-width="1"></path>
+<path d="M0 70L500 70" stroke="#4A5568" stroke-dasharray="2 2" stroke-width="1"></path>
+<path d="M0 35L500 35" stroke="#4A5568" stroke-dasharray="2 2" stroke-width="1"></path>
+<path d="M0 120 C 25 120, 35 80, 60 80 C 85 80, 95 100, 120 100 C 145 100, 155 40, 180 40 C 205 40, 215 70, 240 70 C 265 70, 275 60, 300 60 C 325 60, 335 110, 360 110 C 385 110, 395 90, 420 90 C 445 90, 455 100, 480 100 L 500 100" stroke="url(#lineGradient)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M0 120 C 25 120, 35 80, 60 80 C 85 80, 95 100, 120 100 C 145 100, 155 40, 180 40 C 205 40, 215 70, 240 70 C 265 70, 275 60, 300 60 C 325 60, 335 110, 360 110 C 385 110, 395 90, 420 90 C 445 90, 455 100, 480 100 L 500 100 V 150 H 0 Z" fill="url(#areaGradient)"></path>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="lineGradient" x1="0" x2="500" y1="0" y2="0">
+<stop stop-color="#38A169"></stop>
+<stop offset="1" stop-color="#4FD1C5"></stop>
+</linearGradient>
+<linearGradient gradientUnits="userSpaceOnUse" id="areaGradient" x1="250" x2="250" y1="0" y2="150">
+<stop stop-color="#4FD1C5" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#4FD1C5" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-xl font-semibold text-white mb-4">Incidents &amp; Maintenance</h2>
+<div class="space-y-6">
+<div class="p-6 bg-yellow-900/20 border-l-4 border-yellow-500 rounded-r-lg">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-yellow-400">Degraded performance on CI/CD pipelines</p>
+<span class="text-sm text-gray-400">July 20, 2024</span>
+</div>
+<p class="mt-2 text-sm text-gray-300"><strong>Investigating</strong> - We are currently investigating an issue causing delays in our CI/CD pipeline. Some builds might take longer than usual to start. We will post an update as soon as we have more information.</p>
+</div>
+<div class="p-6 bg-blue-900/20 border-l-4 border-blue-500 rounded-r-lg">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-blue-400">Scheduled Maintenance for Database</p>
+<span class="text-sm text-gray-400">July 22, 2024</span>
+</div>
+<p class="mt-2 text-sm text-gray-300">We will be performing scheduled maintenance on our main database cluster on July 22, 2024, from 02:00 to 03:00 UTC. We expect minimal downtime, but some services may be intermittently unavailable.</p>
+</div>
+<div class="p-6 bg-green-900/20 border-l-4 border-green-500 rounded-r-lg">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-green-400">API Latency Resolved</p>
+<span class="text-sm text-gray-400">July 19, 2024</span>
+</div>
+<p class="mt-2 text-sm text-gray-300"><strong>Resolved</strong> - The issue with increased API latency has been resolved. All services are now operating normally. We apologize for any inconvenience caused.</p>
+</div>
+<div class="text-center pt-4">
+<a class="text-sm text-[var(--primary-color)] hover:underline" href="#">View incident history →</a>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="bg-gray-900 mt-16">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-700">
+<div class="flex justify-between items-center">
+<p class="text-sm text-gray-400">© 2024 GitHub Docs. All rights reserved.</p>
+<div class="flex gap-4">
+<a class="text-sm text-gray-400 hover:text-white transition-colors" href="#">Terms of Service</a>
+<a class="text-sm text-gray-400 hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="text-sm text-gray-400 hover:text-white transition-colors" href="#">Contact</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+
+</body></html>
