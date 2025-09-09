@@ -28,14 +28,44 @@ body {
 }
 
 
-/* --- NOVAS CORREÇÕES --- */
-
-/* 1. Faz o link "Read more →" no index.html ficar azul mais escuro ao passar o mouse */
+/* --- CORREÇÕES ANTERIORES --- */
 .group:hover .group-hover-text-color-change {
     color: #2563eb; /* Um tom de azul mais forte */
 }
-
-/* 2. Aumenta o contraste do bloco de código no tema escuro (index2.html) */
 .dark .not-prose {
-    background-color: var(--background-secondary); /* Usa a cor de fundo secundária do tema escuro */
+    background-color: var(--background-secondary); 
+}
+
+/* --- ESTILOS DO PAINEL DE DIAGNÓSTICO --- */
+.dev-tab {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    background-color: transparent;
+    color: #9ca3af; /* text-gray-400 */
+    border: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+.dev-tab:hover {
+    background-color: #374151; /* bg-gray-700 */
+    color: #ffffff;
+}
+.dev-tab.active-tab {
+    background-color: #111827; /* bg-gray-900 */
+    color: #ffffff;
+    font-weight: 600;
+    border-color: #0ea5e9; /* border-sky-500 */
+}
+.dev-button {
+    padding: 0.25rem 0.75rem;
+    background-color: #374151; /* bg-gray-700 */
+    border: 1px solid #4b5563; /* border-gray-600 */
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+.dev-button:hover {
+     background-color: #4b5563; /* bg-gray-600 */
+}
+[contenteditable]:focus {
+    outline: 1px solid #0ea5e9;
+    background-color: #374151;
 }
