@@ -1,15 +1,68 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>Pitchutcha</title>
     
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Inter%3Awght%40400%3B500%3B600%3B700&family=Noto+Sans%3Awght%40400%3B500%3B600%3B700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+    
+    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 </head>
 
 <body class="bg-slate-100">
     <div class="flex h-screen overflow-hidden">
         <aside class="w-80 bg-white border-r border-slate-200 flex flex-col flex-shrink-0">
-            </aside>
+            <div class="p-6">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-3xl text-slate-800"> science </span>
+                    <h1 class="text-slate-800 text-xl font-bold">Pitchutcha</h1>
+                </div>
+                <p class="text-slate-500 text-sm mt-1">Computer Science Topics</p>
+            </div>
+            
+            <nav class="flex-grow px-4 overflow-y-auto">
+                <ul class="space-y-1">
+                    <li>
+                        <a class="flex items-center gap-3 px-4 py-2 rounded-md bg-slate-100 text-slate-900 font-semibold" href="#">
+                            <span class="material-symbols-outlined"> memory </span> Algorithms
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="#">
+                            <span class="material-symbols-outlined"> account_tree </span> Data Structures
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="#">
+                            <span class="material-symbols-outlined"> code </span> Programming Languages
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="#">
+                            <span class="material-symbols-outlined"> psychology </span> Machine Learning
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="#">
+                            <span class="material-symbols-outlined"> developer_board </span> Computer Architecture
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="p-6 border-t border-slate-200">
+                <a href="#" class="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900">
+                    <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                    <span>All systems operational</span>
+                </a>
+            </div>
+        </aside>
 
         <main class="flex-1 overflow-y-auto">
             <div class="p-8">
@@ -39,7 +92,30 @@
                     </section>
                     
                     <section class="mt-12">
-                        </section>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4">Trending Topics</h2>
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-6">
+                                <div class="w-32 h-20 bg-cover bg-center rounded-md flex-shrink-0" style='background-image: url("https://placehold.co/300x200/FEF3C7/D97706?text=Machine+Learning");'></div>
+                                <div class="flex-grow">
+                                    <h3 class="text-md font-semibold text-slate-800">Advanced Machine Learning Techniques</h3>
+                                    <p class="text-slate-600 text-sm mt-1">Dive into advanced topics in machine learning.</p>
+                                </div>
+                                <a class="text-blue-600 hover:text-blue-700 transition-colors" href="#">
+                                    <span class="material-symbols-outlined"> chevron_right </span>
+                                </a>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-6">
+                                <div class="w-32 h-20 bg-cover bg-center rounded-md flex-shrink-0" style='background-image: url("https://placehold.co/300x200/FEE2E2/DC2626?text=Code+Optimization");'></div>
+                                <div class="flex-grow">
+                                    <h3 class="text-md font-semibold text-slate-800">Optimizing Code Performance</h3>
+                                    <p class="text-slate-600 text-sm mt-1">Tips and tricks for writing efficient code.</p>
+                                </div>
+                                <a class="text-blue-600 hover:text-blue-700 transition-colors" href="#">
+                                    <span class="material-symbols-outlined"> chevron_right </span>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </main>
