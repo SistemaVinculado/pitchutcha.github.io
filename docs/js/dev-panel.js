@@ -293,8 +293,9 @@ document.addEventListener('DOMContentLoaded', () => {
         testResults.innerHTML = '';
         const filesToCheck = [
             'css/style.css', 'js/script.js', 'js/dev-panel.js', 
-            'index.html', 'index1.html', 'index2.html', 'index3.html'
-            // Adicione aqui outros arquivos JSON ou MD que seu projeto use
+            'index.html', 
+            'algorithms.html', // Verificando o novo nome do arquivo
+            'data-structures.html'
         ];
 
         for(const file of filesToCheck) {
