@@ -1,3 +1,6 @@
+---
+---
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -9,7 +12,7 @@
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
 
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 </head>
@@ -19,7 +22,7 @@
         <header class="sticky top-0 z-20 border-b border-gray-200 bg-white">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
                 <div class="flex items-center gap-8">
-                    <a class="flex items-center gap-2 text-gray-800" href="#">
+                    <a class="flex items-center gap-2 text-gray-800" href="{{ '/' | relative_url }}">
                         <svg class="h-8 w-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 0.297c-6.63 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 22.203c-5.64 0-10.203-4.563-10.203-10.203s4.563-10.203 10.203-10.203 10.203 4.563 10.203 10.203-4.563 10.203-10.203 10.203zm.003-18.403c-4.41 0-7.997 3.587-7.997 7.997s3.587 7.997 7.997 7.997 7.997-3.587 7.997-7.997-3.587-7.997-7.997-7.997zm0 14.593c-3.636 0-6.593-2.957-6.593-6.593s2.957-6.593 6.593-6.593 6.593 2.957 6.593 6.593-2.957 6.593-6.593 6.593zm0-12.003c-2.977 0-5.4 2.423-5.4 5.4s2.423 5.4 5.4 5.4 5.4-2.423 5.4-5.4-2.423-5.4-5.4-5.4z"></path>
                         </svg>
@@ -49,7 +52,7 @@
                     <nav aria-label="Breadcrumb" class="flex">
                         <ol class="inline-flex items-center space-x-1 md:space-x-2">
                             <li class="inline-flex items-center">
-                                <a class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600" href="#"> Docs </a>
+                                <a class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600" href="{{ '/' | relative_url }}"> Docs </a>
                             </li>
                             <li>
                                 <div class="flex items-center">
@@ -64,189 +67,31 @@
                     <h2 class="text-4xl font-extrabold tracking-tight text-gray-900">Algorithms</h2>
                     <p class="mt-4 max-w-3xl text-lg text-gray-600">Explore the fundamental concepts of algorithms, including sorting, searching, graph algorithms, and dynamic programming. Learn how to analyze algorithm efficiency and apply these techniques to solve real-world problems.</p>
                 </div>
-                <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
-                        <input class="h-10 w-full rounded-md border border-gray-300 bg-white pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:w-64" placeholder="Filter articles..." type="search"/>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <label class="text-sm font-medium text-gray-700" for="sort-by">Sort by:</label>
-                        <select class="h-10 rounded-md border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500" id="sort-by" name="sort-by">
-                            <option>Most Popular</option>
-                            <option>Newest</option>
-                            <option>Reading Time</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="space-y-12">
-                    <div>
-                        <h3 class="mb-6 border-b border-gray-200 pb-2 text-2xl font-bold text-gray-900">Sorting Algorithms</h3>
-                        <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                                            <span class="material-symbols-outlined"> sort </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Introduction to Sorting</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">Learn about common sorting algorithms like bubble sort, insertion sort, merge sort, and quicksort.</p>
+                
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    
+                    {% for post in site.categories.Algorithms %}
+                    <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
+                        <div class="flex flex-col p-6">
+                            <div class="mb-4 flex items-center gap-4">
+                                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                                    <span class="material-symbols-outlined"> memory </span>
                                 </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
+                                <h4 class="flex-1 text-lg font-semibold text-gray-900">
+                                    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                                </h4>
                             </div>
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                                            <span class="material-symbols-outlined"> swap_vert </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Bubble Sort</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">A simple algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.</p>
-                                </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                                            <span class="material-symbols-outlined"> vertical_align_bottom </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Insertion Sort</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">Builds the final sorted array one item at a time by repeatedly inserting the next element into its correct position.</p>
-                                </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
-                            </div>
+                            <p class="mb-4 text-sm text-gray-600">{{ post.excerpt }}</p>
+                        </div>
+                        <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
+                            <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="{{ post.url | relative_url }}">
+                                <span>Read article</span>
+                                <span class="material-symbols-outlined"> arrow_forward </span>
+                            </a>
                         </div>
                     </div>
-                    <div>
-                        <h3 class="mb-6 border-b border-gray-200 pb-2 text-2xl font-bold text-gray-900">Searching Algorithms</h3>
-                        <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-600">
-                                            <span class="material-symbols-outlined"> search </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Introduction to Searching</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">An algorithm for finding an item with specified properties among a collection of items.</p>
-                                </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-600">
-                                            <span class="material-symbols-outlined"> zoom_in </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Binary Search</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">Finds the position of a target value within a sorted array by repeatedly dividing the search interval in half.</p>
-                                </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-600">
-                                            <span class="material-symbols-outlined"> manage_search </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Linear Search</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">Examines each element in the list until the target element is found or the list ends.</p>
-                                </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="mb-6 border-b border-gray-200 pb-2 text-2xl font-bold text-gray-900">Graph Algorithms</h3>
-                        <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
-                                            <span class="material-symbols-outlined"> share </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Intro to Graph Algorithms</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">Algorithms for solving problems on graphs, representing relationships between objects.</p>
-                                </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
-                                            <span class="material-symbols-outlined"> account_tree </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Depth-First Search (DFS)</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">Traverses a tree or graph by exploring as far as possible along each branch before backtracking.</p>
-                                </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg">
-                                <div class="flex flex-col p-6">
-                                    <div class="mb-4 flex items-center gap-4">
-                                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
-                                            <span class="material-symbols-outlined"> hub </span>
-                                        </div>
-                                        <h4 class="flex-1 text-lg font-semibold text-gray-900">Breadth-First Search (BFS)</h4>
-                                    </div>
-                                    <p class="mb-4 text-sm text-gray-600">Traverses a tree or graph by exploring neighbor nodes first, before moving to the next level neighbors.</p>
-                                </div>
-                                <div class="mt-auto border-t border-gray-200 bg-gray-50 px-6 py-3">
-                                    <a class="flex items-center justify-between text-sm font-medium text-blue-600 hover:text-blue-700" href="#">
-                                        <span>Read article</span>
-                                        <span class="material-symbols-outlined"> arrow_forward </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
+                    
                 </div>
             </div>
         </main>
@@ -258,7 +103,7 @@
         </footer>
     </div>
 
-    <script src="js/script.js"></script>
-    <script src="js/dev-panel.js" defer></script>
+    <script src="{{ '/js/script.js' | relative_url }}"></script>
+    <script src="{{ '/js/dev-panel.js' | relative_url }}" defer></script>
 </body>
 </html>
