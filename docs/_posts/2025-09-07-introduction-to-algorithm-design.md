@@ -1,6 +1,7 @@
 ---
 layout: artigo
 title: "Introduction to Algorithm Design"
+category: Algorithms
 excerpt: "Learn the basics of algorithm design and analysis, including common paradigms like divide-and-conquer, dynamic programming, and greedy algorithms."
 image: "https://placehold.co/600x400/D1E7FC/2563EB?text=Algorithm+Intro"
 ---
