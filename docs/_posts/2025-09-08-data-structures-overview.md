@@ -1,6 +1,7 @@
 ---
 layout: artigo
 title: "Data Structures Overview"
+category: Data Structures
 excerpt: "Explore common data structures like arrays, linked lists, stacks, queues, and trees, and understand their importance in efficient problem-solving."
 image: "https://placehold.co/600x400/D1FAE5/047857?text=Data+Structures"
 ---
