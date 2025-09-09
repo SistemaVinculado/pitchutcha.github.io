@@ -32,9 +32,14 @@ body {
 .group:hover .group-hover-text-color-change {
     color: #2563eb; /* Um tom de azul mais forte */
 }
-.dark .not-prose {
-    background-color: var(--background-secondary); 
+
+/* --- NOVA CORREÇÃO PARA O BLOCO DE CÓDIGO --- */
+/* Aumenta o contraste do bloco de código no tema escuro (index2.html) */
+.dark article div[class*="bg-gray-900"] {
+    background-color: var(--secondary-color); /* Usa a cor de fundo secundária do tema escuro (#1f2937) */
+    border: 1px solid #374151; /* Adiciona uma borda sutil para destacar */
 }
+
 
 /* --- ESTILOS DO PAINEL DE DIAGNÓSTICO --- */
 .dev-tab {
