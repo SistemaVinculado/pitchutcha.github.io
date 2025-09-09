@@ -30,31 +30,16 @@
             
             <nav class="flex-grow px-4 overflow-y-auto">
                 <ul class="space-y-1">
-                    <li>
-                        <a class="flex items-center gap-3 px-4 py-2 rounded-md bg-slate-100 text-slate-900 font-semibold" href="#">
-                            <span class="material-symbols-outlined"> memory </span> Algorithms
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="#">
-                            <span class="material-symbols-outlined"> account_tree </span> Data Structures
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="#">
-                            <span class="material-symbols-outlined"> code </span> Programming Languages
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="#">
-                            <span class="material-symbols-outlined"> psychology </span> Machine Learning
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="#">
-                            <span class="material-symbols-outlined"> developer_board </span> Computer Architecture
-                        </a>
-                    </li>
+                    {% assign categories = site.categories | sort %}
+                    {% for category in categories %}
+                        {% assign category_name = category | first %}
+                        <li>
+                            <a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-slate-100 text-slate-600 font-medium" href="{{ category_name | slugify }}.html">
+                                <span class="material-symbols-outlined"> topic </span>
+                                {{ category_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
                 </ul>
             </nav>
             
@@ -90,7 +75,8 @@
                                 </div>
                             </div>
                             {% endfor %}
-                            </div>
+
+                        </div>
                     </section>
                     
                     <section class="mt-12">
