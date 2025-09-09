@@ -189,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         summary.textContent = `<${element.tagName.toLowerCase()}>`;
         summary.addEventListener('click', (e) => {
              e.preventDefault();
+             e.stopPropagation();
              details.open = !details.open;
             // Mostra estilos ao clicar
             inspectStyles(element);
@@ -205,49 +206,51 @@ document.addEventListener('DOMContentLoaded', () => {
         styleRulesContainer.innerHTML = '';
         const title = document.createElement('h3');
         title.className = 'font-bold border-b border-gray-700 mb-2 pb-1';
-        title.innerHTML = `Styles for <code>&lt;${element.tagName.toLowerCase()}&gt;</code>`;
+        title.innerHTML = `Styles for <code><${element.tagName.toLowerCase()}></code>`;
         styleRulesContainer.appendChild(title);
         
         const styleBlock = document.createElement('div');
         styleBlock.className = "p-2 bg-gray-800 rounded";
-        styleBlock.innerHTML = `{<br>}`;
         
         const addPropBtn = document.createElement('button');
         addPropBtn.textContent = '+ Add property';
         addPropBtn.className = "dev-button mt-2";
         
         addPropBtn.onclick = () => {
-             const newProp = createEditableStyle('', '', element);
-             styleBlock.insertBefore(newProp, addPropBtn);
+             const newProp = createEditableStyle('', '', element, styleBlock);
+             styleBlock.appendChild(newProp);
         };
 
         // Adicionar propriedades existentes
         for (let i = 0; i < element.style.length; i++) {
             const prop = element.style[i];
             const value = element.style.getPropertyValue(prop);
-            styleBlock.appendChild(createEditableStyle(prop, value, element));
+            styleBlock.appendChild(createEditableStyle(prop, value, element, styleBlock));
         }
 
         styleRulesContainer.appendChild(styleBlock);
         styleRulesContainer.appendChild(addPropBtn);
     }
     
-    function createEditableStyle(prop, value, element){
+    function createEditableStyle(prop, value, element, container){
         const ruleDiv = document.createElement('div');
         ruleDiv.innerHTML = `<span contenteditable="true" class="style-prop text-purple-400">${prop || 'property'}</span>: <span contenteditable="true" class="style-value text-green-400">${value || 'value'}</span>;`;
         
-        ruleDiv.addEventListener('input', () => {
-            const newProp = ruleDiv.querySelector('.style-prop').textContent.trim();
-            const newValue = ruleDiv.querySelector('.style-value').textContent.trim();
-            // Limpa estilos antigos para evitar lixo
-            element.style.cssText = '';
-            document.querySelectorAll('#style-rules .style-prop').forEach((p, i) => {
-                 const v = document.querySelectorAll('#style-rules .style-value')[i].textContent.trim();
-                 if(p.textContent.trim()) {
-                     element.style.setProperty(p.textContent.trim(), v);
+        const updateStyle = () => {
+             element.style.cssText = ''; // Limpa para evitar duplicatas
+             const allProps = container.querySelectorAll('.style-prop');
+             const allValues = container.querySelectorAll('.style-value');
+             allProps.forEach((p, i) => {
+                 const currentProp = p.textContent.trim();
+                 const currentValue = allValues[i].textContent.trim();
+                 if(currentProp) {
+                     element.style.setProperty(currentProp, currentValue);
                  }
             });
-        });
+        };
+
+        ruleDiv.querySelector('.style-prop').addEventListener('blur', updateStyle);
+        ruleDiv.querySelector('.style-value').addEventListener('blur', updateStyle);
         return ruleDiv;
     }
 
@@ -303,11 +306,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     message = `Arquivo encontrado e acessível.`;
                 } else {
                     status = 'error';
-                    message = `Falha ao carregar o arquivo (Status: ${response.status}). Verifique o caminho e as permissões.`;
+                    message = `Falha ao carregar o arquivo (Status: ${response.status}). Verifique o caminho.`;
                 }
             } catch (e) {
                 status = 'error';
-                message = `Erro de rede ao tentar acessar. O arquivo existe? O servidor está online?`;
+                message = `Erro de rede. Verifique se o arquivo existe e o servidor está online.`;
             }
             logTestResult(file, status, message);
         }
@@ -324,9 +327,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Captura de erros globais
     window.onerror = function (message, source, lineno, colno, error) {
-        console.error(`Erro global capturado: ${message} em ${source}:${lineno}`);
+        console.error(`Erro global: ${message} em ${source}:${lineno}`);
         statusIndicator.classList.remove('bg-green-500');
         statusIndicator.classList.add('bg-red-500');
-        statusIndicator.parentElement.lastChild.textContent = 'Status: Error';
+        statusIndicator.parentElement.querySelector('span').textContent = 'Status: Error';
     };
 });
