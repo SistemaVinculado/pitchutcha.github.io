@@ -1,4 +1,28 @@
-/* Este é o lugar para todos os seus estilos personalizados */
+/* Este arquivo centraliza todos os estilos personalizados do seu site.
+  Ele define as fontes e as variáveis de cor para os temas claro e escuro.
+*/
+
 body {
-    font-family: Inter, "Noto Sans", sans-serif;
+    /* Define a fonte padrão para todo o site, vindo do index3.html */
+    font-family: 'Inter', sans-serif;
+}
+
+/* Variáveis de Cor para o Tema Padrão (Claro) */
+:root {
+    --primary-color: #137fec;
+    --secondary-color: #e7edf3;
+    --text-primary: #0d141b;
+    --text-secondary: #4c739a;
+    --background-primary: #ffffff;
+    --background-secondary: #f8fafc;
+}
+
+/* Variáveis de Cor para o Tema Escuro, usado no index2.html */
+.dark {
+    --primary-color: #137fec;
+    --secondary-color: #1f2937;
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --background-primary: #0f172a;
+    --background-secondary: #1e293b;
 }
