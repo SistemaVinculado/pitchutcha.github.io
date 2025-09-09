@@ -13,7 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Falha ao carregar search.json');
             }
             allPosts = await response.json();
-            displayResults(allPosts); // Exibe todos os artigos inicialmente
+            
+            // Verifica se há um termo de busca na URL ao carregar a página
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryFromUrl = urlParams.get('q');
+            if (queryFromUrl) {
+                searchInput.value = queryFromUrl;
+            }
+
+            performSearch(); // Realiza a busca inicial (com ou sem termo da URL)
         } catch (error) {
             console.error(error);
             resultsCount.textContent = 'Erro ao carregar artigos.';
@@ -21,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Função para mostrar os resultados na tela
-    function displayResults(results) {
+    function displayResults(results, query) {
         resultsContainer.innerHTML = ''; // Limpa resultados antigos
 
         if (results.length === 0) {
@@ -32,13 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsCount.textContent = `Mostrando ${results.length} resultados.`;
 
         results.forEach(post => {
+            let title = post.title;
+            let excerpt = post.excerpt;
+
+            // Lógica para destacar o termo da busca
+            if (query) {
+                const regex = new RegExp(query, 'gi'); // 'gi' para global e case-insensitive
+                title = title.replace(regex, (match) => `<mark>${match}</mark>`);
+                excerpt = excerpt.replace(regex, (match) => `<mark>${match}</mark>`);
+            }
+
             const postElement = document.createElement('div');
             postElement.className = 'bg-white p-6 rounded-md shadow-sm border border-gray-200 hover:shadow-md transition-shadow';
             postElement.innerHTML = `
                 <a class="block" href="${post.url}">
-                    <h3 class="text-lg font-semibold text-gray-900 hover:text-[var(--primary-color)]">${post.title}</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 hover:text-[var(--primary-color)]">${title}</h3>
                     <p class="text-sm text-gray-500 mt-1">Categoria: <span class="font-medium text-gray-700">${post.category}</span></p>
-                    <p class="text-gray-600 mt-2 text-sm">${post.excerpt}</p>
+                    <p class="text-gray-600 mt-2 text-sm">${excerpt}</p>
                 </a>
             `;
             resultsContainer.appendChild(postElement);
@@ -49,25 +67,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function performSearch() {
         const query = searchInput.value.toLowerCase().trim();
         
-        // Obter categorias selecionadas
-        const selectedCategories = [];
-        categoryFilters.forEach(checkbox => {
-            if (checkbox.checked) {
-                selectedCategories.push(checkbox.value);
-            }
-        });
+        const selectedCategories = Array.from(categoryFilters)
+                                       .filter(i => i.checked)
+                                       .map(i => i.value);
 
         const filteredPosts = allPosts.filter(post => {
-            // Verificar o texto da busca
-            const matchesQuery = post.title.toLowerCase().includes(query) || post.excerpt.toLowerCase().includes(query);
-
-            // Verificar as categorias
+            const matchesQuery = query ? post.title.toLowerCase().includes(query) || post.excerpt.toLowerCase().includes(query) : true;
             const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(post.category);
-
             return matchesQuery && matchesCategory;
         });
 
-        displayResults(filteredPosts);
+        displayResults(filteredPosts, query);
     }
     
     // 4. Ligar os eventos
@@ -77,6 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
             checkbox.addEventListener('change', performSearch);
         });
         
-        loadSearchData(); // Carrega os dados quando a página abre
+        loadSearchData(); // Carrega os dados e realiza a busca inicial
     }
 });
