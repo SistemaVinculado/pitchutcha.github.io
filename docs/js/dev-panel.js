@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded",()=>{if(window.self!==window.top){r
         </div>
         <div id="dev-panel" class="hidden fixed bottom-0 left-0 w-full h-2/3 bg-gray-900 text-white shadow-2xl z-[99] flex flex-col font-mono text-sm">
             <div class="flex items-center justify-between bg-gray-800 p-2 border-b border-gray-700">
-                <div class="flex items-center gap-4">
-                    <h2 class="font-bold text-lg px-2">Pitchutcha Dev Panel</h2>
-                    <nav class="flex gap-1">
+                <div class="flex items-center gap-4 min-w-0">
+                    <h2 class="font-bold text-lg px-2 flex-shrink-0">Pitchutcha Dev Panel</h2>
+                    <nav class="flex gap-1 overflow-x-auto whitespace-nowrap">
                         <button data-tab="console" class="dev-tab active-tab">Console</button>
                         <button data-tab="elements" class="dev-tab">Elements</button>
                         <button data-tab="network" class="dev-tab">Network</button>
