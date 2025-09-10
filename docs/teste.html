@@ -2,153 +2,240 @@
 <meta charset="utf-8"/>
 <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
 <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 <title>Stitch Design</title>
 <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+      :root {
+        --primary-color: #135bec;
+      }
+      .running-status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 9999px;
+        background-color: #0bda5e;
+      }
+      .completed-status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 9999px;
+        background-color: #9da6b9;
+      }
+      .failed-status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 9999px;
+        background-color: #fa6238;
+      }
+    </style>
 </head>
-<body>
-<div class="relative flex size-full min-h-screen flex-col bg-[#0d1117] dark group/design-root overflow-x-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
-<div class="layout-container flex h-full grow flex-col">
-<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#30363d] px-10 py-4">
-<div class="flex items-center gap-4 text-white">
-<svg class="text-white" fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
-<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+<body class="bg-[#111318]">
+<div class="relative flex size-full min-h-screen flex-col bg-[#111318] dark group/design-root overflow-x-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+<div class="absolute inset-0 -z-10">
+<svg class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 800 800" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient cx="50%" cy="50%" fx="50%" fy="50%" id="gradient-bg" r="50%">
+<stop offset="0%" stop-color="rgba(19, 91, 236, 0.2)"></stop>
+<stop offset="100%" stop-color="rgba(19, 91, 236, 0)"></stop>
+</radialGradient>
+</defs>
+<rect fill="url(#gradient-bg)" height="100%" width="100%"></rect>
+<g opacity="0.3">
+<path d="M100 100 L700 100 L700 700 L100 700 Z" fill="none" stroke="#282e39" stroke-width="2"></path>
+<path d="M200 200 L600 200 L600 600 L200 600 Z" fill="none" stroke="#282e39" stroke-width="2"></path>
+<path d="M300 300 L500 300 L500 500 L300 500 Z" fill="none" stroke="#282e39" stroke-width="2"></path>
+<line stroke="#282e39" stroke-width="1" x1="0" x2="800" y1="400" y2="400"></line>
+<line stroke="#282e39" stroke-width="1" x1="400" x2="400" y1="0" y2="800"></line>
+</g>
 </svg>
-<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">GitHub</h2>
 </div>
-<div class="flex flex-1 items-center justify-end gap-6">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#282e39] px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<div class="size-6">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">Compute</h2>
+</div>
+<div class="flex items-center gap-8">
 <nav class="flex items-center gap-6">
-<a class="text-white/80 hover:text-white text-base font-medium leading-normal" href="#">Product</a>
-<a class="text-white/80 hover:text-white text-base font-medium leading-normal" href="#">Solutions</a>
-<a class="text-white/80 hover:text-white text-base font-medium leading-normal" href="#">Open Source</a>
-<a class="text-white/80 hover:text-white text-base font-medium leading-normal" href="#">Pricing</a>
+<a class="text-white text-sm font-medium leading-normal" href="#">Overview</a>
+<a class="text-[#9da6b9] hover:text-white text-sm font-medium leading-normal" href="#">Jobs</a>
+<a class="text-[#9da6b9] hover:text-white text-sm font-medium leading-normal" href="#">Instances</a>
+<a class="text-[#9da6b9] hover:text-white text-sm font-medium leading-normal" href="#">Clusters</a>
+<a class="text-[#9da6b9] hover:text-white text-sm font-medium leading-normal" href="#">Images</a>
+<a class="text-[#9da6b9] hover:text-white text-sm font-medium leading-normal" href="#">Snapshots</a>
 </nav>
 <div class="flex items-center gap-4">
-<a class="text-white/80 hover:text-white text-base font-medium leading-normal" href="#">Sign in</a>
-<button class="flex min-w-[90px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 border border-white/30 text-white text-base font-medium leading-normal tracking-[0.015em] hover:border-white transition-colors">
-<span class="truncate">Sign up</span>
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent text-white hover:bg-[#282e39]">
+<span class="material-symbols-outlined text-2xl"> search </span>
 </button>
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent text-white hover:bg-[#282e39]">
+<span class="material-symbols-outlined text-2xl"> notifications </span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDWAJLEogNmoDsKfdfyt6P4arjnP4g-PXWlTwBcj1ow49CMdumLl_AeF60Aiy_R1Cxzi5QBXPO9dV5LBLuMrId7ZilhfTi97FZ9jZ1GsbGWnSgwVTtAcaIS7DEURT9zhGSJRzv1oYW_Hm6F3gSLDDpN9_qSyjQ_x-DndABV3PS7nUYnZ-qVQEx-s8OZ6nunb7jHPwxYfdn6pGcgEiSdD9GertgrITdGteaoO8iwY7a3XNc7KwONqyZKy7hPy59sCjJofPpAAWCnbw");'></div>
 </div>
 </div>
 </header>
-<main class="flex-1">
-<div class="relative px-10 py-20 flex flex-col items-center text-center">
-<div class="absolute inset-0 bg-grid-white/[0.05] [mask-image:linear-gradient(to_bottom,white_10%,transparent_50%)]"></div>
-<div class="absolute inset-0 bg-cover bg-center" style="background-image: radial-gradient(circle, rgba(63, 94, 251, 0.1) 0%, rgba(252, 70, 107, 0) 60%);"></div>
-<div class="relative z-10 flex flex-col items-center gap-6">
-<h1 class="text-white text-5xl md:text-7xl font-bold leading-tight tracking-tighter">
-                Let’s build from here
-              </h1>
-<p class="text-white/70 text-lg md:text-xl max-w-3xl">
-                The complete developer platform to build, scale, and deliver secure software.
-              </p>
-<div class="flex items-center gap-4 mt-4">
-<form class="flex items-center gap-2 w-full max-w-md">
-<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-md text-white focus:outline-0 focus:ring-2 focus:ring-[#38e07b] border border-[#30363d] bg-[#161b22] focus:border-[#38e07b] h-12 placeholder:text-white/50 px-4 text-base font-normal leading-normal" placeholder="Email address" type="email"/>
-<button class="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-12 px-6 bg-[#38e07b] text-[#0d1117] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#48eda8] transition-colors">
-<span class="truncate">Sign up for GitHub</span>
-</button>
-</form>
+<div class="px-40 flex flex-1 justify-center py-10">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<div class="flex flex-wrap justify-between items-center gap-3 p-4">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-white tracking-tight text-[32px] font-bold leading-tight">Overview</p>
+<p class="text-[#9da6b9] text-base font-normal leading-normal">Monitor your compute resources and job performance.</p>
 </div>
-</div>
-</div>
-<div class="px-10 py-20 flex flex-col gap-16 items-center">
-<div class="text-center max-w-3xl">
-<h2 class="text-white text-4xl md:text-5xl font-bold leading-tight tracking-tighter">
-                  Built for developers
-                </h2>
-<p class="text-white/70 text-lg md:text-xl mt-4">GitHub is the platform for developers to build, collaborate, and ship software.</p>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
-<div class="flex flex-col gap-4 p-6 rounded-lg border border-[#30363d] bg-[#161b22]/50">
-<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-md" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCGk4KSe5YNMxYla9-VPnwFgFnjZPGwPjmcAGablLjkzNB_pHlnLK4renTk5U1c3XUDYJwRkuaqFFKMxvmzzvmDyoqCgZoSCED5eIeQU9YFl1nIzANJEPhK_weaufPaNK48LDQnTV11kGne1CpHmBEz04LZqj3_859aa83kGm3x70P_LFybu2Eih5zsG3YP5jm5LCnEZMnTdiDIEmYMAwPyt9bOPyQXnMMJz1jUT9qfMpiFjO22TXAweGp2n5OXxPc1aucVMguNq84");'></div>
-<div>
-<h3 class="text-white text-xl font-bold">Version control</h3>
-<p class="text-white/70 text-base mt-2">Track changes to your code, revert to previous versions, and collaborate with others.</p>
-</div>
-</div>
-<div class="flex flex-col gap-4 p-6 rounded-lg border border-[#30363d] bg-[#161b22]/50">
-<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-md" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA39ofB9Et6TnevnC8W9REGnUw4hDM00RqDYQHFEMTC_Y6TlOwhnv-QM7qK34kNcfQFjXK0cv2YTUxKQDzobsRTZx1C3jSvLdb9bIIKXzHsh3Yb0j4FMRVxNC6sge9daYsj_xxHUplKzq4JbDDlucUvUXHDNBzlut5DY8lbsW30clUOO_UUDoncEr8huLgCR_zfPsxxcKSGze7VSf7WRIKr9fRLj-yx56pFEGTAaErzRmzQ7dd3svgGKyKGNo5u9fa-51mZZxL0pwk");'></div>
-<div>
-<h3 class="text-white text-xl font-bold">Collaboration</h3>
-<p class="text-white/70 text-base mt-2">Work together on code, review changes, and manage projects.</p>
-</div>
-</div>
-<div class="flex flex-col gap-4 p-6 rounded-lg border border-[#30363d] bg-[#161b22]/50">
-<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-md" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBzKZe9LdPBcqTgL9gzCrFV0laMuiL12cJOdiu8eokWOIKJ38GJ7kTGgYI-qQ1dwuybOlbikl4_E2W672nMMPOaimCzSeL8y750kCoo-NROAsIl6i3sdh2RwbKrZs0iSyR3zEocH-F_Qd1k8s6WWoOxjUR3FaElfpJ_AziLczrJcVSYLNa-bKo2l3L_wuq1bMZ2IE1RbQJOE8HGuh1cmV5VwGFjAzFX5VUbFGAvVo2ytnk3V44demtnly-EsZRelo4eUWV4BkDekkc");'></div>
-<div>
-<h3 class="text-white text-xl font-bold">Open source</h3>
-<p class="text-white/70 text-base mt-2">Explore and contribute to millions of open source projects.</p>
-</div>
-</div>
-<div class="flex flex-col gap-4 p-6 rounded-lg border border-[#30363d] bg-[#161b22]/50">
-<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-md" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA8renehJO6ZiDU5K7Ag9xZW4WGe5QqAgWYHv9fDD3ovk_k0Rnq3wuir2Bf_MDXGQu-7QZ7B4Q5CpX4OMpP7gbLnO016B-4dw7sessMRjz6aFlWf8VtkaQgn8GPI3pO2zEst986HiO5nnSM0tl1LU4kWGwiK7P4_uk5IVUIbdKeO2aOtS4JpcJWXK_FOyKQvA4aZFVoVy7fTy9engBI8G388cabpSwKNiPPw2cxaoQ1PcvujktDdNhTZidHUjFCT6wQ0dR35ewPYIU");'></div>
-<div>
-<h3 class="text-white text-xl font-bold">Integrations</h3>
-<p class="text-white/70 text-base mt-2">Connect your favorite tools and services to GitHub.</p>
-</div>
-</div>
-<div class="flex flex-col gap-4 p-6 rounded-lg border border-[#30363d] bg-[#161b22]/50">
-<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-md" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAM_qkFP2dnS_norvbnlfLEcur-EnX0B9rlmo0W87-xwloCvc7qJrBgFpxOPdwcV0iMYC6mt-_tKEijkDxmcBwSIbti3bm0d8piMOGZ2MmqkUgDJC7UqZ4msNDvtPyPmtrvyJ3olYoEE_z14z7PT2Qr5G_Dh5vUFJqIudM7-XpjFVt2kS9DbXBYAuhYBPquR56FU7-lhUqT6FlVCvfCrfMkwXp1DY1DBG9kZv7E1w_NJdT2m-kW_oTlAykNfe5jgZnUYDtfQG1Ofyk");'></div>
-<div>
-<h3 class="text-white text-xl font-bold">Security</h3>
-<p class="text-white/70 text-base mt-2">Protect your code and data with advanced security features.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="px-10 py-20 bg-[#161b22]">
-<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-<div class="flex flex-col gap-2">
-<p class="text-[#38e07b] text-base font-medium leading-normal">Developers</p>
-<p class="text-white text-5xl font-bold">100M+</p>
-</div>
-<div class="flex flex-col gap-2">
-<p class="text-[#38e07b] text-base font-medium leading-normal">Repositories</p>
-<p class="text-white text-5xl font-bold">500M+</p>
-</div>
-<div class="flex flex-col gap-2">
-<p class="text-[#38e07b] text-base font-medium leading-normal">Organizations</p>
-<p class="text-white text-5xl font-bold">10M+</p>
-</div>
-</div>
-</div>
-<div class="px-10 py-20 flex flex-col items-center text-center gap-8">
-<h2 class="text-white text-4xl md:text-5xl font-bold leading-tight tracking-tighter max-w-3xl">
-                    Join the world's largest developer community
-                </h2>
-<button class="flex min-w-[200px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-12 px-6 bg-[#38e07b] text-[#0d1117] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#48eda8] transition-colors">
-<span class="truncate">Sign up for GitHub</span>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[var(--primary-color)] text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4">
+<span class="material-symbols-outlined"> add </span>
+<span>Create New Job</span>
 </button>
 </div>
-<footer class="flex flex-col gap-8 px-10 py-12 border-t border-[#30363d]">
-<div class="flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="grid grid-cols-3 gap-6 p-4 mt-6">
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-[#1C1F27] border border-[#282e39]">
+<p class="text-[#9da6b9] text-sm font-medium leading-normal">Running Instances</p>
+<p class="text-white tracking-tight text-3xl font-bold leading-tight">12</p>
+<p class="text-[#0bda5e] text-sm font-medium leading-normal flex items-center gap-1">
+<span class="material-symbols-outlined text-base"> trending_up </span>
+<span>+10%</span>
+</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-[#1C1F27] border border-[#282e39]">
+<p class="text-[#9da6b9] text-sm font-medium leading-normal">Active Clusters</p>
+<p class="text-white tracking-tight text-3xl font-bold leading-tight">3</p>
+<p class="text-[#fa6238] text-sm font-medium leading-normal flex items-center gap-1">
+<span class="material-symbols-outlined text-base"> trending_down </span>
+<span>-5%</span>
+</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-[#1C1F27] border border-[#282e39]">
+<p class="text-[#9da6b9] text-sm font-medium leading-normal">Completed Jobs</p>
+<p class="text-white tracking-tight text-3xl font-bold leading-tight">25</p>
+<p class="text-[#0bda5e] text-sm font-medium leading-normal flex items-center gap-1">
+<span class="material-symbols-outlined text-base"> trending_up </span>
+<span>+15%</span>
+</p>
+</div>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-8">Recent Jobs</h2>
+<div class="px-4 py-3 @container">
+<div class="overflow-hidden rounded-lg border border-[#282e39] bg-[#1C1F27]">
+<table class="w-full">
+<thead>
+<tr class="bg-[#111318]">
+<th class="px-6 py-4 text-left text-[#9da6b9] text-xs font-medium uppercase tracking-wider">Job ID</th>
+<th class="px-6 py-4 text-left text-[#9da6b9] text-xs font-medium uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-left text-[#9da6b9] text-xs font-medium uppercase tracking-wider">Model</th>
+<th class="px-6 py-4 text-left text-[#9da6b9] text-xs font-medium uppercase tracking-wider">Created At</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#282e39]">
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-white text-sm font-mono">job-12345</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
 <div class="flex items-center gap-2">
-<svg class="text-white/50" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+<div class="running-status-dot"></div>
+<span class="text-white">Running</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">GPT-3</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">2023-08-15 10:00</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-white text-sm font-mono">job-67890</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+<div class="flex items-center gap-2">
+<div class="completed-status-dot"></div>
+<span class="text-white">Completed</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">DALL-E 2</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">2023-08-14 14:30</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-white text-sm font-mono">job-11223</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+<div class="flex items-center gap-2">
+<div class="failed-status-dot"></div>
+<span class="text-white">Failed</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">CLIP</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">2023-08-13 09:15</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-white text-sm font-mono">job-33445</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+<div class="flex items-center gap-2">
+<div class="running-status-dot"></div>
+<span class="text-white">Running</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">GPT-3</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">2023-08-12 16:45</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-white text-sm font-mono">job-55667</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+<div class="flex items-center gap-2">
+<div class="completed-status-dot"></div>
+<span class="text-white">Completed</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">DALL-E 2</td>
+<td class="px-6 py-4 whitespace-nowrap text-[#9da6b9] text-sm">2023-08-11 11:20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-8">Performance Metrics</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-6">
+<div class="flex flex-col gap-4 rounded-lg border border-[#282e39] bg-[#1C1F27] p-6">
+<div class="flex items-center justify-between">
+<p class="text-white text-base font-medium leading-normal">CPU Usage</p>
+<div class="flex items-center gap-1 text-sm text-[#0bda5e]">
+<span class="material-symbols-outlined text-base"> trending_up </span>
+<span>+5%</span>
+</div>
+</div>
+<p class="text-white tracking-tight text-3xl font-bold leading-tight truncate">75%</p>
+<div class="flex flex-1 flex-col justify-end">
+<svg fill="none" height="140" preserveAspectRatio="none" viewBox="0 0 472 140" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V140H0V109Z" fill="url(#paint0_linear_cpu)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="var(--primary-color)" stroke-linecap="round" stroke-width="2"></path>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_cpu" x1="236" x2="236" y1="1" y2="149">
+<stop stop-color="var(--primary-color)" stop-opacity="0.3"></stop>
+<stop offset="1" stop-color="var(--primary-color)" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
 </svg>
-<p class="text-white/50 text-base font-normal leading-normal">© 2023 GitHub, Inc.</p>
 </div>
-<div class="flex flex-wrap items-center justify-center gap-6">
-<a class="text-white/80 hover:text-white text-base font-normal leading-normal" href="#">Terms</a>
-<a class="text-white/80 hover:text-white text-base font-normal leading-normal" href="#">Privacy</a>
-<a class="text-white/80 hover:text-white text-base font-normal leading-normal" href="#">Docs</a>
-<a class="text-white/80 hover:text-white text-base font-normal leading-normal" href="#">Contact</a>
 </div>
-<div class="flex justify-center gap-4">
-<a class="text-white/50 hover:text-white transition-colors" href="#">
-<svg class="feather feather-twitter" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
-</a>
-<a class="text-white/50 hover:text-white transition-colors" href="#">
-<svg class="feather feather-facebook" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-</a>
-<a class="text-white/50 hover:text-white transition-colors" href="#">
-<svg class="feather feather-linkedin" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect height="12" width="4" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-</a>
+<div class="flex flex-col gap-4 rounded-lg border border-[#282e39] bg-[#1C1F27] p-6">
+<div class="flex items-center justify-between">
+<p class="text-white text-base font-medium leading-normal">Memory Usage</p>
+<div class="flex items-center gap-1 text-sm text-[#fa6238]">
+<span class="material-symbols-outlined text-base"> trending_down </span>
+<span>-2%</span>
 </div>
-</div></footer>
-</main>
+</div>
+<p class="text-white tracking-tight text-3xl font-bold leading-tight truncate">60%</p>
+<div class="grid flex-1 grid-flow-col gap-4 items-end justify-items-center pt-4">
+<div class="bg-[#282e39] rounded-t-sm w-full" style="height: 80%;"></div>
+<div class="bg-[#282e39] rounded-t-sm w-full" style="height: 70%;"></div>
+<div class="bg-[#282e39] rounded-t-sm w-full" style="height: 30%;"></div>
+<div class="bg-[#282e39] rounded-t-sm w-full" style="height: 80%;"></div>
+<div class="bg-[var(--primary-color)] rounded-t-sm w-full" style="height: 100%;"></div>
+<div class="bg-[#282e39] rounded-t-sm w-full" style="height: 20%;"></div>
+<div class="bg-[#282e39] rounded-t-sm w-full" style="height: 20%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 
