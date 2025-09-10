@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded",()=>{if(window.self!==window.top){return}const e=document.createElement("script");e.src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.9.1/axe.min.js",e.integrity="sha512-4fO/MwPSDDhXGajLzGb3Gdv0n1HmMw0aQZzlhNDu8gAxuGs3UtLSgGGX/tHms9eyJ2pQ6ngS2PZe3XqM/s6kZA==",e.crossOrigin="anonymous",e.referrerPolicy="no-referrer",document.head.appendChild(e);const t=`
+document.addEventListener("DOMContentLoaded",()=>{if(window.self!==window.top){return}const e=document.createElement("script");e.src="js/vendor/axe.min.js",document.head.appendChild(e);const t=`
         <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
             <span class="material-symbols-outlined">developer_mode</span>
         </div>
