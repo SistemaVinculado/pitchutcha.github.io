@@ -58,7 +58,7 @@ jobs:
       # 7. Extrai o CSS crítico para a página de artigo e salva-o
       - name: Extrair CSS crítico para o layout 'artigo'
         run: >
-          critical docs/_site/algoritmos/2025/09/07/introduction-to-algorithm-design.html --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/artigo.css || echo "Geração de CSS para artigo falhou, mas não vai bloquear o workflow"
+          critical docs/_site/Algoritmos/2025/09/07/introduction-to-algorithm-design.html --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/artigo.css || echo "Geração de CSS para artigo falhou, mas não vai bloquear o workflow"
 
       # 8. Extrai o CSS crítico para a página inicial e salva-o
       - name: Extrair CSS crítico para a página inicial
@@ -77,4 +77,3 @@ jobs:
         with:
           commit_message: "chore: Atualiza os arquivos de Critical CSS"
           file_pattern: "docs/_includes/critical-css/*.css"
-
