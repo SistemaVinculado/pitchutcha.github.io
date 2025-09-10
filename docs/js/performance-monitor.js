@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderResult(page.name, lcpValue, clsValue);
                     document.body.removeChild(iframe);
                     resolve();
-                }, 3000); // 3 segundos de espera
+                }, 1000); // 3 segundos de espera
             };
         });
     }
