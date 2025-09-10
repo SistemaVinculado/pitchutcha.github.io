@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded",()=>{if(window.self!==window.top){r
                         <button data-tab="console" class="dev-tab active-tab">Console</button>
                         <button data-tab="elements" class="dev-tab">Elements</button>
                         <button data-tab="network" class="dev-tab">Network</button>
+                        <button data-tab="recursos" class="dev-tab">Recursos</button>
                         <button data-tab="acessibilidade" class="dev-tab">Acessibilidade</button>
                         <button data-tab="tests" class="dev-tab">Testes</button>
                         <button data-tab="info" class="dev-tab">Info</button>
@@ -34,35 +35,43 @@ document.addEventListener("DOMContentLoaded",()=>{if(window.self!==window.top){r
                 </div>
                 <div id="tab-elements" class="dev-tab-content hidden flex-grow flex overflow-hidden">
                     <div class="w-1/2 overflow-y-auto p-2 border-r border-gray-700">
-                        <div class="flex items-center gap-2 mb-2">
-                            <button id="element-picker" class="dev-button">Pick Element</button>
-                        </div>
                         <div id="dom-tree"></div>
                     </div>
-                    <div id="style-inspector" class="w-1/2 overflow-y-auto p-2">
-                        <h3 class="font-bold border-b border-gray-700 mb-2 pb-1">Styles (element.style)</h3>
-                        <div id="style-rules" class="text-xs">Select an element to inspect.</div>
-                    </div>
+                    <div id="style-inspector" class="w-1/2 overflow-y-auto p-2"></div>
                 </div>
                 <div id="tab-network" class="dev-tab-content hidden flex-grow p-2">
                      <div id="network-log" class="overflow-y-auto h-full"></div>
+                </div>
+                <div id="tab-recursos" class="dev-tab-content hidden flex-grow flex flex-col p-2 gap-2">
+                    <div class="flex-shrink-0 flex items-center justify-between">
+                        <button id="refresh-resources" class="dev-button">Atualizar</button>
+                        <div id="resources-summary" class="text-right text-xs"></div>
+                    </div>
+                    <div class="flex-grow overflow-auto bg-black bg-opacity-20 rounded">
+                        <table class="w-full text-left text-xs">
+                            <thead class="sticky top-0 bg-gray-800">
+                                <tr>
+                                    <th class="p-2">Nome do Recurso</th>
+                                    <th class="p-2">Tipo</th>
+                                    <th class="p-2">Tamanho</th>
+                                    <th class="p-2">Tempo (ms)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resources-list"></tbody>
+                        </table>
+                    </div>
                 </div>
                 <div id="tab-acessibilidade" class="dev-tab-content hidden flex-grow flex flex-col p-2 gap-2">
                      <div class="flex-shrink-0">
                         <button id="run-accessibility-test" class="dev-button">Executar Teste de Acessibilidade</button>
                      </div>
-                     <div id="accessibility-results" class="flex-grow overflow-y-auto bg-black bg-opacity-20 p-2 rounded">
-                        <p class="text-gray-400">Clique no botão para iniciar a análise de acessibilidade da página atual.</p>
-                     </div>
+                     <div id="accessibility-results" class="flex-grow overflow-y-auto bg-black bg-opacity-20 p-2 rounded"></div>
                 </div>
                 <div id="tab-tests" class="dev-tab-content hidden flex-grow flex flex-col p-2 gap-2">
                      <button id="run-tests" class="dev-button self-start">Executar Testes de Diagnóstico</button>
                      <div id="test-results" class="overflow-y-auto h-full"></div>
                 </div>
-                <div id="tab-info" class="dev-tab-content hidden flex-grow p-2">
-                    <p>User Agent: ${navigator.userAgent}</p>
-                    <p>Viewport: ${window.innerWidth}x${window.innerHeight}</p>
-                 </div>
+                <div id="tab-info" class="dev-tab-content hidden flex-grow p-2"></div>
             </div>
             
             <div class="flex-shrink-0 bg-gray-800 p-1 border-t border-gray-700 flex items-center gap-2">
@@ -70,7 +79,17 @@ document.addEventListener("DOMContentLoaded",()=>{if(window.self!==window.top){r
                 <span>Status: OK</span>
             </div>
         </div>
-    `;document.body.insertAdjacentHTML("beforeend",t);const n=document.getElementById("dev-tools-trigger"),o=document.getElementById("dev-panel"),l=document.getElementById("dev-panel-close"),d=document.querySelectorAll(".dev-tab"),c=document.querySelectorAll(".dev-tab-content");n.addEventListener("click",()=>{o.classList.toggle("hidden")}),l.addEventListener("click",()=>{o.classList.add("hidden")}),d.forEach(e=>{e.addEventListener("click",()=>{d.forEach(e=>{e.classList.remove("active-tab")}),e.classList.add("active-tab");const t=`tab-${e.dataset.tab}`;c.forEach(e=>{e.classList.add("hidden"),e.id===t&&e.classList.remove("hidden")})})});const r=document.getElementById("console-output"),s=document.getElementById("console-input"),i=document.getElementById("status-indicator"),a=[],u=[];let m=-1,p=-1;function y(e,t){const n={log:"📝",info:"ℹ️",warn:"⚠️",error:"❌"},o={log:"text-gray-300",info:"text-blue-400",warn:"text-yellow-400",error:"text-red-400"},l=document.createElement("div");l.className=`flex items-start gap-2 border-b border-gray-800 py-1 ${o[e]}`;const d=new Date().toLocaleTimeString();let c=`<span class="flex-shrink-0">${n[e]}</span> <span class="flex-shrink-0 text-gray-500">${d}</span> <div class="break-all">`;c+=[...t].map(e=>"object"==typeof e?JSON.stringify(e,null,2):e).join(" "),"</div>",l.innerHTML=c,r.appendChild(l),r.scrollTop=r.scrollHeight,a.push({type:e,timestamp:d,args:[...t]})}const h={};["log","warn","info","error"].forEach(e=>{h[e]=console[e],console[e]=(...t)=>{h[e](...t),y(e,t)}}),document.getElementById("clear-console").addEventListener("click",()=>{r.innerHTML="",a.length=0}),document.getElementById("export-console").addEventListener("click",()=>{const e=new Blob([JSON.stringify(a,null,2)],{type:"application/json"}),t=URL.createObjectURL(e),n=document.createElement("a");n.href=t,n.download="console-log.json",n.click(),URL.revokeObjectURL(t)}),s.addEventListener("keydown",e=>{if("Enter"===e.key&&s.value){const t=s.value;console.log(">",t),u.push(t),p=u.length;try{const n=new Function(`return ${t}`)();console.info("=",n)}catch(n){console.error(n.message)}s.value=""}else"ArrowUp"===e.key?p>0&&(p--,s.value=u[p]):"ArrowDown"===e.key&&(p<u.length-1?(p++,s.value=u[p]):(s.value="",p=u.length))});const f=document.getElementById("dom-tree"),b=document.getElementById("style-rules");function g(e,t,n=0){if(["SCRIPT","STYLE","LINK","META"].includes(e.tagName))return;const o=document.createElement("details");o.style.marginLeft=`${15*n}px`,o.open=n<2;const l=document.createElement("summary");l.className="cursor-pointer hover:bg-gray-700 p-1 rounded",l.textContent=`<${e.tagName.toLowerCase()}>`,l.addEventListener("click",t=>{t.preventDefault(),t.stopPropagation(),o.open=!o.open,w(e)}),o.appendChild(l),[...e.children].forEach(e=>g(e,o,n+1)),t.appendChild(o)}g(document.documentElement,f);function v(e,t,n,o){const l=document.createElement("div");l.innerHTML=`<span contenteditable="true" class="style-prop text-purple-400">${e||"property"}</span>: <span contenteditable="true" class="style-value text-green-400">${t||"value"}</span>;`;return l.querySelector(".style-prop").addEventListener("blur",()=>{n.style.cssText="";const e=o.querySelectorAll(".style-prop"),t=o.querySelectorAll(".style-value");e.forEach((e,o)=>{const l=e.textContent.trim(),d=t[o].textContent.trim();l&&n.style.setProperty(l,d)})}),l.querySelector(".style-value").addEventListener("blur",()=>{n.style.cssText="";const e=o.querySelectorAll(".style-prop"),t=o.querySelectorAll(".style-value");e.forEach((e,o)=>{const l=e.textContent.trim(),d=t[o].textContent.trim();l&&n.style.setProperty(l,d)})}),l}function w(e){b.innerHTML="";const t=document.createElement("h3");t.className="font-bold border-b border-gray-700 mb-2 pb-1",t.innerHTML=`Styles for code<${e.tagName.toLowerCase()}></code>`,b.appendChild(t);const n=document.createElement("div");n.className="p-2 bg-gray-800 rounded";const o=document.createElement("button");o.textContent="+ Add property",o.className="dev-button mt-2",o.onclick=()=>{const t=v("","",e,n);n.appendChild(t)};for(let t=0;t<e.style.length;t++){const o=e.style[t],l=e.style.getPropertyValue(o);n.appendChild(v(o,l,e,n))}b.appendChild(n),b.appendChild(o)}const E=document.getElementById("network-log"),k=window.fetch;window.fetch=function(...e){const t=performance.now(),n=e[0]instanceof Request?e[0].url:e[0],o=document.createElement("div");return o.className="flex justify-between items-center p-1 border-b border-gray-800",o.innerHTML=`<span>${n.substring(0,80)}...</span> <span class="loader"></span>`,E.prepend(o),k.apply(this,e).then(e=>{const l=(performance.now()-t).toFixed(2),d=e.ok?"text-green-500":"text-red-500";return o.innerHTML=`<span>${n.substring(0,80)}...</span><span class="flex items-center gap-2"><span class="${d}">${e.status}</span><span class="text-gray-500">${l}ms</span></span>`,e}).catch(e=>{const n=(performance.now()-t).toFixed(2);throw o.innerHTML=`<span>${n.substring(0,80)}...</span><span class="flex items-center gap-2"><span class="text-red-500">Error</span><span class="text-gray-500">${n}ms</span></span>`,e})};const S=document.getElementById("run-accessibility-test"),L=document.getElementById("accessibility-results");function x(e,t,n){const o={minor:"bg-yellow-800 text-yellow-300",moderate:"bg-orange-800 text-orange-300",serious:"bg-red-800 text-red-300",critical:"bg-red-700 text-red-200 font-bold"};let l="";return e.nodes&&e.nodes.length>0&&(l="<ul>",e.nodes.forEach(e=>{l+=`<li class="mt-1"><code class="text-xs bg-gray-700 p-1 rounded">${e.target.join(", ")}</code></li>`}),l+="</ul>"),`
+    `;document.body.insertAdjacentHTML("beforeend",t);const n=document.getElementById("dev-tools-trigger"),o=document.getElementById("dev-panel"),l=document.getElementById("dev-panel-close"),d=document.querySelectorAll(".dev-tab"),c=document.querySelectorAll(".dev-tab-content");n.addEventListener("click",()=>{o.classList.toggle("hidden")}),l.addEventListener("click",()=>{o.classList.add("hidden")}),d.forEach(e=>{e.addEventListener("click",()=>{d.forEach(e=>e.classList.remove("active-tab")),e.classList.add("active-tab");const t=`tab-${e.dataset.tab}`;c.forEach(n=>{n.classList.add("hidden"),n.id===t&&(n.classList.remove("hidden"),"recursos"===e.dataset.tab&&g(),"info"===e.dataset.tab&&v())})})});const r=document.getElementById("console-output"),s=document.getElementById("console-input"),i=document.getElementById("status-indicator"),a=[],u=[];let m=-1,p=-1;function y(e,t){const n={log:"📝",info:"ℹ️",warn:"⚠️",error:"❌"},o={log:"text-gray-300",info:"text-blue-400",warn:"text-yellow-400",error:"text-red-400"},l=document.createElement("div");l.className=`flex items-start gap-2 border-b border-gray-800 py-1 ${o[e]}`;const d=new Date().toLocaleTimeString();let c=`<span class="flex-shrink-0">${n[e]}</span> <span class="flex-shrink-0 text-gray-500">${d}</span> <div class="break-all">`;c+=[...t].map(e=>"object"==typeof e?JSON.stringify(e,null,2):e).join(" "),"</div>",l.innerHTML=c,r.appendChild(l),r.scrollTop=r.scrollHeight,a.push({type:e,timestamp:d,args:[...t]})}const h={};["log","warn","info","error"].forEach(e=>{h[e]=console[e],console[e]=(...t)=>{h[e](...t),y(e,t)}}),document.getElementById("clear-console").addEventListener("click",()=>{r.innerHTML="",a.length=0}),document.getElementById("export-console").addEventListener("click",()=>{const e=new Blob([JSON.stringify(a,null,2)],{type:"application/json"}),t=URL.createObjectURL(e),n=document.createElement("a");n.href=t,n.download="console-log.json",n.click(),URL.revokeObjectURL(t)}),s.addEventListener("keydown",e=>{if("Enter"===e.key&&s.value){const t=s.value;console.log(">",t),u.push(t),p=u.length;try{const n=new Function(`return ${t}`)();console.info("=",n)}catch(n){console.error(n.message)}s.value=""}else"ArrowUp"===e.key?p>0&&(p--,s.value=u[p]):"ArrowDown"===e.key&&(p<u.length-1?(p++,s.value=u[p]):(s.value="",p=u.length))});const f=document.getElementById("dom-tree"),b=document.getElementById("style-inspector");function g(){const e=document.getElementById("resources-list"),t=document.getElementById("resources-summary"),n=performance.getEntriesByType("resource");let o=0;e.innerHTML="",n.forEach(t=>{const n=t.name.split("/").pop().split("?")[0],l=(t.transferSize/1024).toFixed(2);o+=t.transferSize;const d=`
+            <tr class="border-b border-gray-800 hover:bg-gray-700/50">
+                <td class="p-2" title="${t.name}">${n}</td>
+                <td class="p-2">${t.initiatorType}</td>
+                <td class="p-2">${l} KB</td>
+                <td class="p-2">${t.duration.toFixed(0)} ms</td>
+            </tr>
+        `;e.insertAdjacentHTML("beforeend",d)}),t.innerHTML=`<span class="font-bold">${n.length}</span> requisições | <span class="font-bold">${(o/1024).toFixed(2)} KB</span> transferidos`}function v(){const e=document.getElementById("tab-info");e.innerHTML=`
+        <p class="mb-2"><strong class="text-gray-400">User Agent:</strong> ${navigator.userAgent}</p>
+        <p><strong class="text-gray-400">Viewport:</strong> ${window.innerWidth}x${window.innerHeight}</p>
+    `}document.getElementById("refresh-resources").addEventListener("click",g);const E=document.getElementById("network-log"),k=window.fetch;window.fetch=function(...e){const t=performance.now(),n=e[0]instanceof Request?e[0].url:e[0],o=document.createElement("div");return o.className="flex justify-between items-center p-1 border-b border-gray-800",o.innerHTML=`<span>${n.substring(0,80)}...</span> <span class="loader"></span>`,E.prepend(o),k.apply(this,e).then(e=>{const l=(performance.now()-t).toFixed(2),d=e.ok?"text-green-500":"text-red-500";return o.innerHTML=`<span>${n.substring(0,80)}...</span><span class="flex items-center gap-2"><span class="${d}">${e.status}</span><span class="text-gray-500">${l}ms</span></span>`,e}).catch(e=>{const n=(performance.now()-t).toFixed(2);throw o.innerHTML=`<span>${n.substring(0,80)}...</span><span class="flex items-center gap-2"><span class="text-red-500">Error</span><span class="text-gray-500">${n}ms</span></span>`,e})};const S=document.getElementById("run-accessibility-test"),L=document.getElementById("accessibility-results");function x(e,t,n){const o={minor:"bg-yellow-800 text-yellow-300",moderate:"bg-orange-800 text-orange-300",serious:"bg-red-800 text-red-300",critical:"bg-red-700 text-red-200 font-bold"};let l="";return e.nodes&&e.nodes.length>0&&(l="<ul>",e.nodes.forEach(e=>{l+=`<li class="mt-1"><code class="text-xs bg-gray-700 p-1 rounded">${e.target.join(", ")}</code></li>`}),l+="</ul>"),`
             <div class="p-3 border-l-4 border-${n}-500 bg-gray-800 mb-3 rounded-r">
                 <div class="flex items-center justify-between">
                     <p class="font-semibold">${e.help}</p>
