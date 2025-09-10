@@ -72,13 +72,13 @@ image: "https://placehold.co/600x400/D1E7FC/2563EB?text=Introdução+Algoritmos"
 
 <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
     <div class="flex items-center gap-4">
-        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors">
+        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors whitespace-nowrap">
             <span class="material-symbols-outlined text-base">thumb_up</span> Útil
         </button>
-        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors">
-            <span class="material-symbols-outlined text-base">thumb_down</span> Não foi útil
+        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors whitespace-nowrap">
+            <span class="material-symbols-outlined text-base">thumb_down</span> Não útil
         </button>
-        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors">
+        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors whitespace-nowrap">
             <span class="material-symbols-outlined text-base">share</span> Compartilhar
         </button>
     </div>
