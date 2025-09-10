@@ -1,0 +1,25 @@
+name: Download Fuse.js Library
+
+on:
+  workflow_dispatch: # Permite iniciar manualmente
+
+jobs:
+  download-library:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permissão para fazer commit no repositório
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Create vendor directory if it doesn't exist
+        run: mkdir -p docs/js/vendor
+
+      - name: Download fuse.min.js from CDN
+        run: curl -L 'https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js' -o 'docs/js/vendor/fuse.min.js'
+
+      - name: Commit and push the new library file
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "fix: Update and correct fuse.min.js library"
+          file_pattern: "docs/js/vendor/fuse.min.js"
