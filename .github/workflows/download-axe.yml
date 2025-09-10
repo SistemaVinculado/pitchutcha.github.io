@@ -1,0 +1,26 @@
+name: Download Axe Library
+
+on:
+  workflow_dispatch: # Permite iniciar manualmente
+
+jobs:
+  download-library:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permissão para fazer commit no repositório
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Create vendor directory
+        run: mkdir -p docs/js/vendor
+
+      - name: Download axe.min.js from CDN
+        run: curl -L 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.9.1/axe.min.js' -o 'docs/js/vendor/axe.min.js'
+
+      - name: Commit and push the new library file
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "feat: Add axe.min.js library locally"
+          file_pattern: "docs/js/vendor/axe.min.js"
+
