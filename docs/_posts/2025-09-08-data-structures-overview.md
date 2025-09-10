@@ -1,41 +1,41 @@
 ---
 layout: artigo
-title: "Data Structures Overview"
-category: Data Structures
+title: "Visão Geral de Estruturas de Dados"
+category: Estruturas de Dados
 icon: account_tree
-excerpt: "Explore common data structures like arrays, linked lists, stacks, queues, and trees, and understand their importance in efficient problem-solving."
-image: "https://placehold.co/600x400/D1FAE5/047857?text=Data+Structures"
+excerpt: "Explore estruturas de dados comuns como arrays, listas ligadas, pilhas, filas e árvores, e entenda sua importância na resolução eficiente de problemas."
+image: "https://placehold.co/600x400/D1FAE5/047857?text=Estruturas+de+Dados"
 ---
 
 <div class="mb-8 flex items-center space-x-2 text-sm text-[var(--text-secondary)]">
-    <a class="hover:text-[var(--primary-color)]" href="#">Docs</a>
+    <a class="hover:text-[var(--primary-color)]" href="#">Início</a>
     <span>/</span>
-    <a class="hover:text-[var(--primary-color)]" href="#">Computer Science</a>
+    <a class="hover:text-[var(--primary-color)]" href="#">Ciência da Computação</a>
     <span>/</span>
-    <span class="text-[var(--text-primary)]">Data Structures</span>
+    <span class="text-[var(--text-primary)]">Estruturas de Dados</span>
 </div>
 
 <article>
-    <h1 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl">Data Structures Overview</h1>
+    <h1 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl">Visão Geral de Estruturas de Dados</h1>
     <p class="mt-6 text-lg text-[var(--text-secondary)]">
-        Data structures are a fundamental concept in computer science, providing a way to organize, manage, and store data effectively. Choosing the right data structure is crucial for designing efficient algorithms and high-performance applications. This overview introduces some of the most common data structures.
+        Estruturas de dados são um conceito fundamental na ciência da computação, fornecendo uma maneira de organizar, gerenciar e armazenar dados de forma eficaz. A escolha da estrutura de dados correta é crucial para o desenvolvimento de algoritmos eficientes e aplicações de alto desempenho. Esta visão geral apresenta algumas das estruturas de dados mais comuns.
     </p>
     <section class="pt-10" id="arrays">
         <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Arrays</h2>
         <p class="mt-4">
-            An array is a collection of items stored at contiguous memory locations. It's the simplest data structure where each element can be accessed randomly by using its index number. Arrays are great for fast lookups but can be inefficient for insertions and deletions in the middle of the collection.
+            Um array (ou vetor) é uma coleção de itens armazenados em locais de memória contíguos. É a estrutura de dados mais simples, onde cada elemento pode ser acessado aleatoriamente usando seu número de índice. Arrays são ótimos para buscas rápidas, mas podem ser ineficientes para inserções e exclusões no meio da coleção.
         </p>
     </section>
     <section class="pt-10" id="linked-lists">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Linked Lists</h2>
+        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Listas Ligadas</h2>
         <p class="mt-4">
-            A linked list is a linear data structure where the elements are not stored in contiguous memory locations. The elements are linked using pointers. They are efficient for insertions and deletions but slower for lookups, as you may need to traverse the list from the beginning.
+            Uma lista ligada (ou encadeada) é uma estrutura de dados linear onde os elementos não são armazenados em locais de memória contíguos. Os elementos são conectados usando ponteiros. Elas são eficientes para inserções e exclusões, mas mais lentas para buscas, pois pode ser necessário percorrer a lista desde o início.
         </p>
     </section>
     <section class="pt-10" id="stacks-and-queues">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Stacks & Queues</h2>
+        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Pilhas e Filas</h2>
         <p class="mt-4">
-            Stacks and queues are abstract data types. A stack follows the Last-In, First-Out (LIFO) principle, like a stack of plates. A queue follows the First-In, First-Out (FIFO) principle, like a checkout line at a store. Both can be implemented using arrays or linked lists.
+            Pilhas (stacks) e filas (queues) são tipos abstratos de dados. Uma pilha segue o princípio LIFO (Last-In, First-Out - o último a entrar é o primeiro a sair), como uma pilha de pratos. Uma fila segue o princípio FIFO (First-In, First-Out - o primeiro a entrar é o primeiro a sair), como uma fila de caixa em uma loja. Ambas podem ser implementadas usando arrays ou listas ligadas.
         </p>
     </section>
 </article>
@@ -44,28 +44,28 @@ image: "https://placehold.co/600x400/D1FAE5/047857?text=Data+Structures"
 <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
     <div class="flex items-center gap-4">
         <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors">
-            <span class="material-symbols-outlined text-base">thumb_up</span> Helpful
+            <span class="material-symbols-outlined text-base">thumb_up</span> Útil
         </button>
         <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors">
-            <span class="material-symbols-outlined text-base">thumb_down</span> Not helpful
+            <span class="material-symbols-outlined text-base">thumb_down</span> Não foi útil
         </button>
         <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors">
-            <span class="material-symbols-outlined text-base">share</span> Share
+            <span class="material-symbols-outlined text-base">share</span> Compartilhar
         </button>
     </div>
-    <p class="text-sm text-[var(--text-secondary)]">Last updated: September 8, 2025</p>
+    <p class="text-sm text-[var(--text-secondary)]">Última atualização: 8 de Setembro, 2025</p>
 </div>
 <div class="mt-12 flex justify-between">
     <a class="inline-flex items-center gap-2 rounded-md border border-[var(--secondary-color)] bg-[var(--background-primary)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--secondary-color)]" href="#">
         <span class="material-symbols-outlined">arrow_back</span>
-        <span>Previous: Introduction to Algorithms</span>
+        <span>Anterior: Introdução a Algoritmos</span>
     </a>
     <a class="inline-flex items-center gap-2 rounded-md border border-[var(--secondary-color)] bg-[var(--background-primary)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--secondary-color)]" href="#">
-        <span>Next: Programming Languages</span>
+        <span>Próximo: Linguagens de Programação</span>
         <span class="material-symbols-outlined">arrow_forward</span>
     </a>
 </div>
 
 <footer class="mt-12 border-t border-[var(--secondary-color)] pt-8 text-center text-sm text-[var(--text-secondary)]">
-    © 2025 Pitchutcha. All rights reserved.
+    © 2025 Pitchutcha. Todos os direitos reservados.
 </footer>
