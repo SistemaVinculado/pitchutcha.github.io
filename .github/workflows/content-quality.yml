@@ -40,4 +40,5 @@ jobs:
           # Nível de agressividade do codespell (quão "exigente" ele é)
           codespell_level: 'aggressive'
           # Dicionário de palavras a serem ignoradas (muito útil para termos técnicos em português)
-          ignore_words_list: 'Pitchutcha,algoritmo,algoritmos,array,arrays,ligada,ligadas,stack,stacks,queue,queues,deque,recursivamente,otimizada,otimização,prioridade,ponteiros,implementada,encadeada,aninhados,linearítmico,quadrático,autocompletar'
+          ignore_words_list: 'Pitchutcha,algoritmo,algoritmos,array,arrays,ligada,ligadas,stack,stacks,queue,queues,deque,recursivamente,otimizada,otimização,prioridade,ponteiros,implementada,encadeada,aninhados,linearítmico,quadrático,autocompletar,Alternar,Componentes,Erros,itens,vetor,simular,ignora'
+
