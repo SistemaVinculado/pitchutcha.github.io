@@ -69,6 +69,18 @@
                         </div>
                 </div>
 
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-white mb-4">Histórico de Uptime e Incidentes</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div id="uptime-history-container">
+                            <p class="text-gray-400">Carregando dados de uptime...</p>
+                        </div>
+                        <div id="incidents-history-container">
+                            <p class="text-gray-400">Carregando histórico de incidentes...</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="flex flex-col gap-4 rounded-lg p-6 bg-[#161b22] border border-[#30363d]">
                         <div class="flex items-center justify-between">
@@ -189,5 +201,6 @@
     <script src="{{ '/js/dev-panel.js' | relative_url }}" defer></script>
     <script src="{{ '/js/status-check.js' | relative_url }}" defer></script>
     <script src="{{ '/js/performance-monitor.js' | relative_url }}" defer></script>
+    <script src="{{ '/js/uptime-monitor.js' | relative_url }}" defer></script>
 </body>
 </html>
