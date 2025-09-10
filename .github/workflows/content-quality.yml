@@ -33,12 +33,9 @@ jobs:
       - name: Executar verificação ortográfica com Codespell
         uses: codespell-project/actions-codespell@v2.0
         with:
-          # Pasta a ser verificada (a raiz do seu site)
-          check_folders: docs
+          # Caminho para os arquivos a serem verificados (parâmetro corrigido)
+          path: 'docs'
           # Ignora arquivos binários e outros que não são texto
           skip: "*.woff,*.woff2,*.js,*.css"
-          # Nível de agressividade do codespell (quão "exigente" ele é)
-          codespell_level: 'aggressive'
           # Dicionário de palavras a serem ignoradas (muito útil para termos técnicos em português)
           ignore_words_list: 'Pitchutcha,algoritmo,algoritmos,array,arrays,ligada,ligadas,stack,stacks,queue,queues,deque,recursivamente,otimizada,otimização,prioridade,ponteiros,implementada,encadeada,aninhados,linearítmico,quadrático,autocompletar,Alternar,Componentes,Erros,itens,vetor,simular,ignora,rouge,ser,momento'
-
