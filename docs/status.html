@@ -1,305 +1,316 @@
----
----
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Pitchutcha - Status</title>
-    
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Inter%3Awght%40400%3B500%3B600%3B700&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+document.addEventListener('DOMContentLoaded', () => {
+    // Evita rodar em iframes ou ambientes não desejados
+    if (window.self !== window.top) return;
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    
-    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
-
-    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
-</head>
-
-<body class="bg-[#0d1117] text-white" style='font-family: Inter, "Noto Sans", sans-serif;'>
-    <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-20 border-b border-[#30363d] bg-[#161b22]">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-                <div class="flex items-center gap-8">
-                    <a class="flex items-center gap-3 text-white" href="{{ '/' | relative_url }}">
-                        <span class="material-symbols-outlined text-3xl text-blue-500"> science </span>
-                        <h1 class="text-xl font-bold">Pitchutcha</h1>
-                    </a>
-                    <nav class="hidden items-center gap-6 md:flex">
-                        <a class="text-sm font-medium text-gray-400 hover:text-white" href="{{ '/algorithms.html' | relative_url }}">Algorithms</a>
-                        <a class="text-sm font-medium text-gray-400 hover:text-white" href="{{ '/data-structures.html' | relative_url }}">Data Structures</a>
-                        <a class="text-sm font-medium text-white" href="{{ '/status.html' | relative_url }}">Status</a>
+    const devPanelHTML = `
+        <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
+            <span class="material-symbols-outlined">developer_mode</span>
+        </div>
+        <div id="dev-panel" class="hidden fixed bottom-0 left-0 w-full h-2/3 bg-gray-900 text-white shadow-2xl z-[99] flex flex-col font-mono text-sm">
+            <div class="flex items-center justify-between bg-gray-800 p-2 border-b border-gray-700">
+                <div class="flex items-center gap-4">
+                    <h2 class="font-bold text-lg px-2">Pitchutcha Dev Panel</h2>
+                    <nav class="flex gap-1">
+                        <button data-tab="console" class="dev-tab active-tab">Console</button>
+                        <button data-tab="elements" class="dev-tab">Elements</button>
+                        <button data-tab="network" class="dev-tab">Network</button>
+                        <button data-tab="storage" class="dev-tab">Storage</button>
+                        <button data-tab="tests" class="dev-tab">Testes</button>
+                        <button data-tab="info" class="dev-tab">Info</button>
                     </nav>
                 </div>
-                <div class="flex items-center gap-4">
-                    <form id="header-search-form" class="relative hidden lg:block">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
-                        <input id="header-search-input" class="h-10 w-full rounded-md border border-[#30363d] bg-[#0d1117] pl-10 pr-4 text-sm text-gray-300 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="Search" type="search"/>
-                    </form>
-                </div>
+                <button id="dev-panel-close" class="p-2 rounded-full hover:bg-gray-700">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
             </div>
-        </header>
 
-        <main class="flex-1 px-10 py-8">
-            <div class="mx-auto max-w-7xl">
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold tracking-tight text-white">Advanced Diagnostic Status</h1>
-                    <p class="mt-1 text-gray-400">Real-time health and performance of our AI models and services.</p>
-                </div>
-                <div class="mb-8 p-4 rounded-lg bg-[#161b22] border border-[#30363d]">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-semibold text-white">Overall System Status</h2>
-                        <div class="flex items-center gap-2 text-sm">
-                            <span class="relative flex h-3 w-3">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                            </span>
-                            <span class="text-green-400">All Systems Operational</span>
-                        </div>
+            <div class="flex-grow overflow-hidden flex">
+                <div id="tab-console" class="dev-tab-content flex-grow flex flex-col p-2 gap-2">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                         <button id="clear-console" class="dev-button">Clear</button>
+                         <button id="export-console" class="dev-button">Export JSON</button>
+                    </div>
+                    <div id="console-output" class="flex-grow overflow-y-auto bg-black bg-opacity-20 p-2 rounded"></div>
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-cyan-400">chevron_right</span>
+                        <input type="text" id="console-input" class="flex-grow bg-gray-800 border border-gray-700 rounded p-1 focus:outline-none focus:ring-2 focus:ring-cyan-500" placeholder="Executar JavaScript...">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[#161b22] border border-[#30363d]">
-                        <div class="flex items-center justify-between">
-                            <p class="text-gray-300 font-medium">API Latency</p>
-                            <span class="material-symbols-outlined text-gray-500">speed</span>
+                <div id="tab-elements" class="dev-tab-content hidden flex-grow flex overflow-hidden">
+                    <div class="w-1/2 overflow-y-auto p-2 border-r border-gray-700">
+                        <div class="flex items-center gap-2 mb-2">
+                            <button id="element-picker" class="dev-button">Pick Element</button>
                         </div>
-                        <div class="flex items-baseline gap-2">
-                            <p class="text-white text-3xl font-bold">25ms</p>
-                            <p class="text-red-500 text-sm font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-base">arrow_downward</span>
-                                <span>5%</span>
-                            </p>
-                        </div>
+                        <div id="dom-tree"></div>
                     </div>
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[#161b22] border border-[#30363d]">
-                        <div class="flex items-center justify-between">
-                            <p class="text-gray-300 font-medium">Model Inference Time</p>
-                            <span class="material-symbols-outlined text-gray-500">model_training</span>
-                        </div>
-                        <div class="flex items-baseline gap-2">
-                            <p class="text-white text-3xl font-bold">150ms</p>
-                            <p class="text-green-500 text-sm font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-base">arrow_upward</span>
-                                <span>2%</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[#161b22] border border-[#30363d]">
-                        <div class="flex items-center justify-between">
-                            <p class="text-gray-300 font-medium">Error Rate</p>
-                            <span class="material-symbols-outlined text-gray-500">error_outline</span>
-                        </div>
-                        <div class="flex items-baseline gap-2">
-                            <p class="text-white text-3xl font-bold">0.02%</p>
-                            <p class="text-green-500 text-sm font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-base">arrow_downward</span>
-                                <span>10%</span>
-                            </p>
-                        </div>
+                    <div id="style-inspector" class="w-1/2 overflow-y-auto p-2">
+                        <h3 class="font-bold border-b border-gray-700 mb-2 pb-1">Styles (element.style)</h3>
+                        <div id="style-rules" class="text-xs">Select an element to inspect.</div>
                     </div>
                 </div>
-                <div class="mb-8">
-                    <h2 class="text-xl font-semibold text-white mb-4">Model Performance</h2>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="flex flex-col gap-4 rounded-lg border border-[#30363d] p-6 bg-[#161b22]">
-                            <p class="text-gray-300 font-medium">API Latency by Model</p>
-                            <p class="text-white text-3xl font-bold truncate">Average: 25ms</p>
-                            <div class="flex gap-2 items-center text-sm">
-                                <p class="text-gray-400">Last 24 Hours</p>
-                                <p class="text-red-500 font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-base">arrow_downward</span>
-                                -5%</p>
-                            </div>
-                            <div class="flex-1 flex flex-col justify-center">
-                                <svg fill="none" height="150" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#paint0_linear_area)"></path>
-                                <path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#4a90e2" stroke-linecap="round" stroke-width="2"></path>
-                                <defs><linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_area" x1="236" x2="236" y1="1" y2="149"><stop stop-color="#4a90e2" stop-opacity="0.3"></stop><stop offset="1" stop-color="#4a90e2" stop-opacity="0"></stop></linearGradient></defs>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-4 rounded-lg border border-[#30363d] p-6 bg-[#161b22]">
-                            <p class="text-gray-300 font-medium">Model Inference Time</p>
-                            <p class="text-white text-3xl font-bold truncate">Average: 150ms</p>
-                            <div class="flex gap-2 items-center text-sm">
-                                <p class="text-gray-400">Last 24 Hours</p>
-                                <p class="text-green-500 font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-base">arrow_upward</span>
-                                +2%
-                                </p>
-                            </div>
-                            <div class="grid grid-cols-5 gap-4 items-end flex-1 pt-6 px-3">
-                                <div class="flex flex-col items-center gap-2">
-                                <div class="w-full bg-[#30363d] rounded-t-sm" style="height: 50%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
-                                <p class="text-gray-400 text-xs text-center">GPT-4</p>
-                                </div>
-                                <div class="flex flex-col items-center gap-2">
-                                <div class="w-full bg-[#30363d] rounded-t-sm" style="height: 70%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
-                                <p class="text-gray-400 text-xs text-center">GPT-3.5</p>
-                                </div>
-                                <div class="flex flex-col items-center gap-2">
-                                <div class="w-full bg-[#30363d] rounded-t-sm" style="height: 30%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
-                                <p class="text-gray-400 text-xs text-center">DALL·E</p>
-                                </div>
-                                <div class="flex flex-col items-center gap-2">
-                                <div class="w-full bg-[#30363d] rounded-t-sm" style="height: 60%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
-                                <p class="text-gray-400 text-xs text-center">Whisper</p>
-                                </div>
-                                <div class="flex flex-col items-center gap-2">
-                                <div class="w-full bg-[#30363d] rounded-t-sm" style="height: 80%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
-                                <p class="text-gray-400 text-xs text-center">Embeds</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div id="tab-network" class="dev-tab-content hidden flex-grow p-2">
+                     <div id="network-log" class="overflow-y-auto h-full"></div>
                 </div>
-                <div class="mb-8">
-                    <h2 class="text-xl font-semibold text-white mb-4">Public Roadmap & Changelog</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="flex flex-col gap-4 rounded-lg p-6 bg-[#161b22] border border-[#30363d]">
-                            <h3 class="text-lg font-semibold text-white flex items-center gap-2"><span class="material-symbols-outlined text-blue-400">schedule</span> Planned</h3>
-                            <div class="space-y-4">
-                                <div class="p-4 bg-[#21262d] rounded-md">
-                                    <p class="font-semibold text-white">Improved API Documentation</p>
-                                    <p class="text-sm text-gray-400 mt-1">Enhancing clarity and adding more examples for all API endpoints.</p>
-                                    <p class="text-xs text-gray-500 mt-2">Target: Q3 2024</p>
-                                </div>
-                                <div class="p-4 bg-[#21262d] rounded-md">
-                                    <p class="font-semibold text-white">New 'Codex' Model Release</p>
-                                    <p class="text-sm text-gray-400 mt-1">Introducing a powerful new model specialized in code generation and understanding.</p>
-                                    <p class="text-xs text-gray-500 mt-2">Target: Q4 2024</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-4 rounded-lg p-6 bg-[#161b22] border border-[#30363d]">
-                            <h3 class="text-lg font-semibold text-white flex items-center gap-2"><span class="material-symbols-outlined text-yellow-400">hourglass_top</span> In Progress</h3>
-                            <div class="space-y-4">
-                                <div class="p-4 bg-[#21262d] rounded-md">
-                                    <p class="font-semibold text-white">Latency Reduction for GPT-4</p>
-                                    <p class="text-sm text-gray-400 mt-1">Optimizing infrastructure to decrease inference time for the GPT-4 model.</p>
-                                    <p class="text-xs text-gray-500 mt-2">Release: v2.5.0</p>
-                                </div>
-                                <div class="p-4 bg-[#21262d] rounded-md">
-                                    <p class="font-semibold text-white">Fine-tuning API Enhancements</p>
-                                    <p class="text-sm text-gray-400 mt-1">Adding more customization options and improving the fine-tuning workflow.</p>
-                                    <p class="text-xs text-gray-500 mt-2">Release: v2.6.0</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-4 rounded-lg p-6 bg-[#161b22] border border-[#30363d]">
-                            <h3 class="text-lg font-semibold text-white flex items-center gap-2"><span class="material-symbols-outlined text-green-400">check_circle</span> Completed</h3>
-                            <div class="space-y-4">
-                                <div class="p-4 bg-[#21262d] rounded-md">
-                                    <p class="font-semibold text-white">Whisper API Launch</p>
-                                    <p class="text-sm text-gray-400 mt-1">Successfully launched the Whisper API for robust speech-to-text transcription.</p>
-                                    <p class="text-xs text-gray-500 mt-2">Released: June 15, 2024</p>
-                                </div>
-                                <div class="p-4 bg-[#21262d] rounded-md">
-                                    <p class="font-semibold text-white">Increased Rate Limits</p>
-                                    <p class="text-sm text-gray-400 mt-1">Doubled the default rate limits for all paying customers.</p>
-                                    <p class="text-xs text-gray-500 mt-2">Released: May 28, 2024</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div id="tab-storage" class="dev-tab-content hidden flex-grow p-2">
+                    <p>Funcionalidade de Storage ainda não implementada.</p>
                 </div>
-                <div>
-                    <h2 class="text-xl font-semibold text-white mb-4">System Events & Alerts</h2>
-                    <div class="flow-root">
-                        <ul class="-mb-8" role="list">
-                            <li>
-                                <div class="relative pb-8">
-                                <span aria-hidden="true" class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-[#30363d]"></span>
-                                <div class="relative flex items-start space-x-3">
-                                    <div>
-                                    <div class="relative px-1">
-                                        <div class="h-8 w-8 bg-orange-500 rounded-full ring-8 ring-[#161b22] flex items-center justify-center">
-                                        <span class="material-symbols-outlined text-white">warning</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="min-w-0 flex-1 py-1.5">
-                                    <div class="text-sm text-gray-500">
-                                        <span class="font-medium text-white">API Latency Increase</span>
-                                        <span class="whitespace-nowrap ml-2">10 minutes ago</span>
-                                    </div>
-                                    <div class="mt-1 text-sm text-gray-400"><p>We are currently investigating a spike in API latency across all models.</p></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="relative pb-8">
-                                <span aria-hidden="true" class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-[#30363d]"></span>
-                                <div class="relative flex items-start space-x-3">
-                                    <div>
-                                    <div class="relative px-1">
-                                        <div class="h-8 w-8 bg-orange-500 rounded-full ring-8 ring-[#161b22] flex items-center justify-center">
-                                        <span class="material-symbols-outlined text-white">warning</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="min-w-0 flex-1 py-1.5">
-                                    <div class="text-sm text-gray-500">
-                                        <span class="font-medium text-white">Model B Performance Degraded</span>
-                                        <span class="whitespace-nowrap ml-2">30 minutes ago</span>
-                                    </div>
-                                    <div class="mt-1 text-sm text-gray-400"><p>GPT-3.5 is experiencing degraded performance. We are working on a fix.</p></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="relative pb-8">
-                                <span aria-hidden="true" class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-[#30363d]"></span>
-                                <div class="relative flex items-start space-x-3">
-                                    <div>
-                                    <div class="relative px-1">
-                                        <div class="h-8 w-8 bg-blue-500 rounded-full ring-8 ring-[#161b22] flex items-center justify-center">
-                                        <span class="material-symbols-outlined text-white">info</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="min-w-0 flex-1 py-1.5">
-                                    <div class="text-sm text-gray-500">
-                                        <span class="font-medium text-white">System Maintenance</span>
-                                        <span class="whitespace-nowrap ml-2">1 hour ago</span>
-                                    </div>
-                                    <div class="mt-1 text-sm text-gray-400"><p>Scheduled maintenance is planned for tomorrow at 2:00 AM UTC.</p></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="relative pb-8">
-                                <div class="relative flex items-start space-x-3">
-                                    <div>
-                                    <div class="relative px-1">
-                                        <div class="h-8 w-8 bg-green-500 rounded-full ring-8 ring-[#161b22] flex items-center justify-center">
-                                        <span class="material-symbols-outlined text-white">check_circle</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="min-w-0 flex-1 py-1.5">
-                                    <div class="text-sm text-gray-500">
-                                        <span class="font-medium text-white">API Stability Restored</span>
-                                        <span class="whitespace-nowrap ml-2">3 hours ago</span>
-                                    </div>
-                                    <div class="mt-1 text-sm text-gray-400"><p>The previous issue with API latency has been resolved. All systems are back to normal.</p></div>
-                                    </div>
-                                </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                <div id="tab-tests" class="dev-tab-content hidden flex-grow flex flex-col p-2 gap-2">
+                     <button id="run-tests" class="dev-button self-start">Executar Testes de Diagnóstico</button>
+                     <div id="test-results" class="overflow-y-auto h-full"></div>
                 </div>
+                <div id="tab-info" class="dev-tab-content hidden flex-grow p-2">
+                    <p>User Agent: ${navigator.userAgent}</p>
+                    <p>Viewport: ${window.innerWidth}x${window.innerHeight}</p>
+                 </div>
             </div>
-        </main>
-    </div>
+            
+            <div class="flex-shrink-0 bg-gray-800 p-1 border-t border-gray-700 flex items-center gap-2">
+                <div id="status-indicator" class="w-3 h-3 bg-green-500 rounded-full" title="No errors detected"></div>
+                <span>Status: OK</span>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', devPanelHTML);
 
-    <script src="{{ '/js/script.js' | relative_url }}"></script>
-    <script src="{{ '/js/dev-panel.js' | relative_url }}" defer></script>
-</body>
-</html>
+    const trigger = document.getElementById('dev-tools-trigger');
+    const panel = document.getElementById('dev-panel');
+    const closeBtn = document.getElementById('dev-panel-close');
+    const tabs = document.querySelectorAll('.dev-tab');
+    const tabContents = document.querySelectorAll('.dev-tab-content');
+    const consoleOutput = document.getElementById('console-output');
+    const consoleInput = document.getElementById('console-input');
+    const statusIndicator = document.getElementById('status-indicator');
+    
+    // Abrir/Fechar painel
+    trigger.addEventListener('click', () => panel.classList.toggle('hidden'));
+    closeBtn.addEventListener('click', () => panel.classList.add('hidden'));
+
+    // Navegação por abas
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active-tab'));
+            tab.classList.add('active-tab');
+            const targetId = `tab-${tab.dataset.tab}`;
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+                if (content.id === targetId) {
+                    content.classList.remove('hidden');
+                }
+            });
+        });
+    });
+
+    // --- Funcionalidades do Console ---
+    const logHistory = [];
+    let historyIndex = -1;
+
+    function logToPanel(type, args) {
+        const icons = { log: '📝', info: 'ℹ️', warn: '⚠️', error: '❌' };
+        const colors = { log: 'text-gray-300', info: 'text-blue-400', warn: 'text-yellow-400', error: 'text-red-400' };
+        const entry = document.createElement('div');
+        entry.className = `flex items-start gap-2 border-b border-gray-800 py-1 ${colors[type]}`;
+        const timestamp = new Date().toLocaleTimeString();
+        let content = `<span class="flex-shrink-0">${icons[type]}</span> <span class="flex-shrink-0 text-gray-500">${timestamp}</span> <div class="break-all">`;
+        content += [...args].map(arg => {
+            if (typeof arg === 'object') return JSON.stringify(arg, null, 2);
+            return arg;
+        }).join(' ');
+        content += '</div>';
+        entry.innerHTML = content;
+        consoleOutput.appendChild(entry);
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        logHistory.push({ type, timestamp, args: [...args] });
+    }
+
+    const originalConsole = {};
+    ['log', 'warn', 'info', 'error'].forEach(type => {
+        originalConsole[type] = console[type];
+        console[type] = (...args) => {
+            originalConsole[type](...args);
+            logToPanel(type, args);
+        };
+    });
+    
+    document.getElementById('clear-console').addEventListener('click', () => { consoleOutput.innerHTML = ''; logHistory.length = 0; });
+    document.getElementById('export-console').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(logHistory, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'console-log.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    const commandHistory = [];
+    let commandHistoryIndex = -1;
+    consoleInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && consoleInput.value) {
+            const command = consoleInput.value;
+            console.log('>', command);
+            commandHistory.push(command);
+            commandHistoryIndex = commandHistory.length;
+            try {
+                const result = new Function(`return ${command}`)();
+                console.info('=', result);
+            } catch (error) {
+                console.error(error.message);
+            }
+            consoleInput.value = '';
+        } else if (e.key === 'ArrowUp') {
+            if (commandHistoryIndex > 0) {
+                commandHistoryIndex--;
+                consoleInput.value = commandHistory[commandHistoryIndex];
+            }
+        } else if (e.key === 'ArrowDown') {
+            if (commandHistoryIndex < commandHistory.length - 1) {
+                commandHistoryIndex++;
+                consoleInput.value = commandHistory[commandHistoryIndex];
+            } else {
+                 consoleInput.value = '';
+                 commandHistoryIndex = commandHistory.length;
+            }
+        }
+    });
+
+    // --- Funcionalidades de Elementos ---
+    const domTreeContainer = document.getElementById('dom-tree');
+    const styleRulesContainer = document.getElementById('style-rules');
+    
+    function buildDomTree(element, parentElement, indent = 0) {
+        if(['SCRIPT', 'STYLE', 'LINK', 'META'].includes(element.tagName)) return;
+
+        const details = document.createElement('details');
+        details.style.marginLeft = `${indent * 15}px`;
+        details.open = indent < 2;
+
+        const summary = document.createElement('summary');
+        summary.className = 'cursor-pointer hover:bg-gray-700 p-1 rounded';
+        summary.textContent = `<${element.tagName.toLowerCase()}>`;
+        summary.addEventListener('click', (e) => {
+             e.preventDefault();
+             e.stopPropagation();
+             details.open = !details.open;
+            inspectStyles(element);
+        });
+        
+        details.appendChild(summary);
+        [...element.children].forEach(child => buildDomTree(child, details, indent + 1));
+        parentElement.appendChild(details);
+    }
+    buildDomTree(document.documentElement, domTreeContainer);
+
+    function inspectStyles(element) {
+        styleRulesContainer.innerHTML = '';
+        const title = document.createElement('h3');
+        title.className = 'font-bold border-b border-gray-700 mb-2 pb-1';
+        title.innerHTML = `Styles for <code><${element.tagName.toLowerCase()}></code>`;
+        styleRulesContainer.appendChild(title);
+        
+        const styleBlock = document.createElement('div');
+        styleBlock.className = "p-2 bg-gray-800 rounded";
+        
+        const addPropBtn = document.createElement('button');
+        addPropBtn.textContent = '+ Add property';
+        addPropBtn.className = "dev-button mt-2";
+        
+        addPropBtn.onclick = () => {
+             const newProp = createEditableStyle('', '', element, styleBlock);
+             styleBlock.appendChild(newProp);
+        };
+        for (let i = 0; i < element.style.length; i++) {
+            const prop = element.style[i];
+            const value = element.style.getPropertyValue(prop);
+            styleBlock.appendChild(createEditableStyle(prop, value, element, styleBlock));
+        }
+        styleRulesContainer.appendChild(styleBlock);
+        styleRulesContainer.appendChild(addPropBtn);
+    }
+    
+    function createEditableStyle(prop, value, element, container){
+        const ruleDiv = document.createElement('div');
+        ruleDiv.innerHTML = `<span contenteditable="true" class="style-prop text-purple-400">${prop || 'property'}</span>: <span contenteditable="true" class="style-value text-green-400">${value || 'value'}</span>;`;
+        const updateStyle = () => {
+             element.style.cssText = '';
+             const allProps = container.querySelectorAll('.style-prop');
+             const allValues = container.querySelectorAll('.style-value');
+             allProps.forEach((p, i) => {
+                 const currentProp = p.textContent.trim();
+                 const currentValue = allValues[i].textContent.trim();
+                 if(currentProp) {
+                     element.style.setProperty(currentProp, currentValue);
+                 }
+            });
+        };
+        ruleDiv.querySelector('.style-prop').addEventListener('blur', updateStyle);
+        ruleDiv.querySelector('.style-value').addEventListener('blur', updateStyle);
+        return ruleDiv;
+    }
+
+    // --- Funcionalidades de Network ---
+    const networkLog = document.getElementById('network-log');
+    const originalFetch = window.fetch;
+    window.fetch = function(...args) {
+        const startTime = performance.now();
+        const url = args[0] instanceof Request ? args[0].url : args[0];
+        const logEntry = document.createElement('div');
+        logEntry.className = 'flex justify-between items-center p-1 border-b border-gray-800';
+        logEntry.innerHTML = `<span>${url.substring(0, 80)}...</span> <span class="loader"></span>`;
+        networkLog.prepend(logEntry);
+
+        return originalFetch.apply(this, args).then(response => {
+            const duration = (performance.now() - startTime).toFixed(2);
+            const statusColor = response.ok ? 'text-green-500' : 'text-red-500';
+            logEntry.innerHTML = `<span>${url.substring(0, 80)}...</span><span class="flex items-center gap-2"><span class="${statusColor}">${response.status}</span><span class="text-gray-500">${duration}ms</span></span>`;
+            return response;
+        }).catch(error => {
+            const duration = (performance.now() - startTime).toFixed(2);
+             logEntry.innerHTML = `<span>${url.substring(0, 80)}...</span><span class="flex items-center gap-2"><span class="text-red-500">Error</span><span class="text-gray-500">${duration}ms</span></span>`;
+            throw error;
+        });
+    };
+
+    // --- Funcionalidades de Testes ---
+    const testResults = document.getElementById('test-results');
+    document.getElementById('run-tests').addEventListener('click', async () => {
+        testResults.innerHTML = '';
+        const filesToCheck = [
+            'css/style.css', 'js/script.js', 'js/dev-panel.js', 
+            'index.html', 'algorithms.html', 'data-structures.html', 'search.html', 'status.html'
+        ];
+        for(const file of filesToCheck) {
+            let status, message;
+            try {
+                const response = await fetch(file, { method: 'HEAD', cache: 'no-store' });
+                if (response.ok) {
+                    status = 'success';
+                    message = `Arquivo encontrado e acessível.`;
+                } else {
+                    status = 'error';
+                    message = `Falha ao carregar o arquivo (Status: ${response.status}). Verifique o caminho.`;
+                }
+            } catch (e) {
+                status = 'error';
+                message = `Erro de rede. Verifique se o arquivo existe e o servidor está online.`;
+            }
+            logTestResult(file, status, message);
+        }
+    });
+
+    function logTestResult(name, type, message) {
+        const icons = { info: 'ℹ️', success: '✅', warn: '⚠️', error: '❌' };
+        const colors = { info: 'text-blue-400', success: 'text-green-400', warn: 'text-yellow-400', error: 'text-red-400' };
+        const entry = document.createElement('div');
+        entry.className = `flex items-start gap-2 border-b border-gray-800 py-1 ${colors[type]}`;
+        entry.innerHTML = `<span>${icons[type]}</span> <span class="font-bold w-48 flex-shrink-0">${name}</span> <span>${message}</span>`;
+        testResults.appendChild(entry);
+    }
+    
+    // Captura de erros globais
+    window.onerror = function (message, source, lineno, colno, error) {
+        console.error(`Erro global: ${message} em ${source}:${lineno}`);
+        statusIndicator.classList.remove('bg-green-500');
+        statusIndicator.classList.add('bg-red-500');
+        statusIndicator.parentElement.querySelector('span').textContent = 'Status: Error';
+    };
+});
