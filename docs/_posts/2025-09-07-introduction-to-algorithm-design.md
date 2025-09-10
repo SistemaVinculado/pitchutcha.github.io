@@ -7,14 +7,6 @@ excerpt: "Aprenda o básico de design e análise de algoritmos, incluindo paradi
 image: "https://placehold.co/600x400/D1E7FC/2563EB?text=Introdução+Algoritmos"
 ---
 
-<div class="mb-8 flex items-center space-x-2 text-sm text-[var(--text-secondary)]">
-    <a class="hover:text-[var(--primary-color)]" href="#">Início</a>
-    <span>/</span>
-    <a class="hover:text-[var(--primary-color)]" href="#">Ciência da Computação</a>
-    <span>/</span>
-    <span class="text-[var(--text-primary)]">Algoritmos</span>
-</div>
-
 <article>
     <h1 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl">Introdução ao Design de Algoritmos</h1>
     <p class="mt-6 text-lg text-[var(--text-secondary)]">
