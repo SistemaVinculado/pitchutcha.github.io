@@ -1,0 +1,46 @@
+name: Gemini AI Assistant
+
+on:
+  # Quando issues forem abertas
+  issues:
+    types: [opened]
+
+  # Quando pull requests forem abertas ou atualizadas
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  # Triagem automática de issues
+  triage:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+    steps:
+      - uses: google-github-actions/run-gemini-cli@v1
+        with:
+          args: triage
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+  # Revisão automática de PRs
+  review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/run-gemini-cli@v1
+        with:
+          args: review --files .
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+  # Geração de testes automáticos em PRs
+  generate-tests:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/run-gemini-cli@v1
+        with:
+          args: write-tests --files .
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
