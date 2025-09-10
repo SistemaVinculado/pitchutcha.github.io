@@ -29,8 +29,3 @@ jobs:
         with:
           commit_message: "feat: Add local fonts (Inter, Noto Sans)"
           file_pattern: "docs/fonts/*.*"
-
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "feat: Add local fonts (Inter, Noto Sans)"
-          file_pattern: "docs/fonts/*.*"
