@@ -1,0 +1,32 @@
+name: Fetch UptimeRobot Stats
+
+on:
+  workflow_dispatch: # Permite iniciar manualmente
+  schedule:
+    - cron: '0 */6 * * *' # Executa a cada 6 horas
+
+jobs:
+  fetch-uptime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Fetch UptimeRobot data
+        run: |
+          curl --request POST 'https://api.uptimerobot.com/v2/getMonitors' \
+          --header 'Content-Type: application/x-www-form-urlencoded' \
+          --data-urlencode "api_key=${{ secrets.UPTIMEROBOT_API_KEY }}" \
+          --data-urlencode "monitors=801334653" \
+          --data-urlencode "custom_uptime_ratios=7-30" \
+          --data-urlencode "logs=1" \
+          --data-urlencode "logs_limit=10" \
+          --data-urlencode "format=json" \
+          -o docs/uptime-data.json
+
+      - name: Commit and push if it changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Update UptimeRobot data"
+          file_pattern: "docs/uptime-data.json"
+
