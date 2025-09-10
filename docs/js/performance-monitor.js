@@ -1,94 +1,16 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const performanceContainer = document.getElementById('performance-monitor-container');
-
-    if (!performanceContainer) {
-        return;
-    }
-
-    const pagesToTest = [
-        { name: 'Página Principal', url: 'index.html' },
-        { name: 'Página de Algoritmos', url: 'algorithms.html' },
-        { name: 'Página de Estruturas de Dados', url: 'data-structures.html' }
-    ];
-
-    // Limites para Core Web Vitals (Verde, Amarelo, Vermelho)
-    const LCP_THRESHOLDS = { good: 2500, needsImprovement: 4000 };
-    const CLS_THRESHOLDS = { good: 0.1, needsImprovement: 0.25 };
-
-    function getMetricRating(value, thresholds) {
-        if (value <= thresholds.good) return { rating: 'Good', color: 'text-green-400' };
-        if (value <= thresholds.needsImprovement) return { rating: 'Needs Improvement', color: 'text-yellow-400' };
-        return { rating: 'Poor', color: 'text-red-400' };
-    }
-
-    function renderResult(name, lcp, cls) {
-        const lcpResult = getMetricRating(lcp.value, LCP_THRESHOLDS);
-        const clsResult = getMetricRating(cls.value, CLS_THRESHOLDS);
-
-        const resultHTML = `
-            <div class="flex flex-col gap-4 rounded-lg p-6 bg-[#161b22] border border-[#30363d]">
-                <h3 class="text-lg font-semibold text-white">${name}</h3>
+document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("performance-monitor-container");if(e){const t=[{name:"Página Principal",url:"index.html"},{name:"Página de Algoritmos",url:"algoritmos.html"},{name:"Página de Estruturas de Dados",url:"estruturas-de-dados.html"}],n={good:2500,needsImprovement:4e3},o={good:.1,needsImprovement:.25};async function s(){for(const e of t)await a(e)}function a(t){return new Promise(s=>{const a=document.createElement("iframe");a.src=t.url,a.style.display="none",document.body.appendChild(a),a.onload=()=>{const c=a.contentWindow;let r={value:0},i={value:0};try{const l=new c.PerformanceObserver(e=>{const t=e.getEntries();t.forEach(e=>{("largest-contentful-paint"===e.entryType&&(r=e),"layout-shift"===e.entryType&&(i.value+=e.value))})});l.observe({type:["largest-contentful-paint","layout-shift"],buffered:!0})}catch(l){console.error("PerformanceObserver não suportado ou falhou.",l)}setTimeout(()=>{(function(t,s,a){const c=function(e,t){return e<=t.good?{rating:"Bom",color:"text-green-500"}:e<=t.needsImprovement?{rating:"Requer Melhoria",color:"text-yellow-500"}:{rating:"Ruim",color:"text-red-500"}}(s.value,n),r=function(e,t){return e<=t.good?{rating:"Bom",color:"text-green-500"}:e<=t.needsImprovement?{rating:"Requer Melhoria",color:"text-yellow-500"}:{rating:"Ruim",color:"text-red-500"}}(a.value,o),i=`
+            <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--secondary-color)]">
+                <h3 class="text-lg font-semibold text-[var(--text-primary)]">${t}</h3>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <p class="text-gray-300">Largest Contentful Paint (LCP)</p>
-                        <p class="font-bold ${lcpResult.color}">${(lcp.value / 1000).toFixed(2)}s</p>
+                        <p class="text-[var(--text-secondary)]">Largest Contentful Paint (LCP)</p>
+                        <p class="font-bold ${c.color}">${(s.value/1e3).toFixed(2)}s</p>
                     </div>
                     <div class="flex justify-between items-center">
-                        <p class="text-gray-300">Cumulative Layout Shift (CLS)</p>
-                        <p class="font-bold ${clsResult.color}">${cls.value.toFixed(3)}</p>
+                        <p class="text-[var(--text-secondary)]">Cumulative Layout Shift (CLS)</p>
+                        <p class="font-bold ${r.color}">${a.value.toFixed(3)}</p>
                     </div>
                 </div>
-                <p class="text-xs text-gray-500 mt-2">LCP measures loading performance. CLS measures visual stability.</p>
+                <p class="text-xs text-gray-500 mt-2">LCP mede o desempenho de carregamento. CLS mede a estabilidade visual.</p>
             </div>
-        `;
-        performanceContainer.insertAdjacentHTML('beforeend', resultHTML);
-    }
-
-    function measurePagePerformance(page) {
-        return new Promise((resolve) => {
-            const iframe = document.createElement('iframe');
-            iframe.src = page.url;
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-
-            iframe.onload = () => {
-                const iframeWindow = iframe.contentWindow;
-                let lcpValue = { value: 0 };
-                let clsValue = { value: 0 };
-
-                // Usando PerformanceObserver para capturar as métricas
-                try {
-                    const observer = new iframeWindow.PerformanceObserver((list) => {
-                        const entries = list.getEntries();
-                        entries.forEach(entry => {
-                            if (entry.entryType === 'largest-contentful-paint') {
-                                lcpValue = entry;
-                            }
-                            if (entry.entryType === 'layout-shift') {
-                                clsValue.value += entry.value;
-                            }
-                        });
-                    });
-                    observer.observe({ type: ['largest-contentful-paint', 'layout-shift'], buffered: true });
-                } catch (e) {
-                    console.error('PerformanceObserver not supported or failed.', e);
-                }
-
-                // Espera um pouco para as métricas serem coletadas e depois resolve
-                setTimeout(() => {
-                    renderResult(page.name, lcpValue, clsValue);
-                    document.body.removeChild(iframe);
-                    resolve();
-                }, 3000); // 3 segundos de espera
-            };
-        });
-    }
-
-    async function runAllPerformanceChecks() {
-        for (const page of pagesToTest) {
-            await measurePagePerformance(page);
-        }
-    }
-
-    runAllPerformanceChecks();
-});
+        `;e.insertAdjacentHTML("beforeend",i)})(t.name,r,i),document.body.removeChild(a),s()},3e3)}})}s()}});
