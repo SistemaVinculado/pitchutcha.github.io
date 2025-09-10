@@ -39,35 +39,3 @@ image: "https://placehold.co/600x400/D1FAE5/047857?text=Estruturas+de+Dados"
         </p>
     </section>
 </article>
-
-<div class="mt-12 flex justify-between">
-    <a class="inline-flex items-center gap-2 rounded-md border border-[var(--secondary-color)] bg-[var(--background-primary)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--secondary-color)]" href="#">
-        <span class="material-symbols-outlined">arrow_back</span>
-        <span>Anterior: Introdução a Algoritmos</span>
-    </a>
-    <a class="inline-flex items-center gap-2 rounded-md border border-[var(--secondary-color)] bg-[var(--background-primary)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--secondary-color)]" href="#">
-        <span>Próximo: Linguagens de Programação</span>
-        <span class="material-symbols-outlined">arrow_forward</span>
-    </a>
-</div>
-
-<hr class="my-12 border-[var(--secondary-color)]"/>
-
-<div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
-    <div class="flex items-center gap-4 flex-shrink-0">
-        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors whitespace-nowrap">
-            <span class="material-symbols-outlined text-base">thumb_up</span> Útil
-        </button>
-        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors whitespace-nowrap">
-            <span class="material-symbols-outlined text-base">thumb_down</span> Não útil
-        </button>
-        <button class="flex items-center gap-2 rounded-full border border-transparent bg-[var(--secondary-color)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] transition-colors whitespace-nowrap">
-            <span class="material-symbols-outlined text-base">share</span> Compartilhar
-        </button>
-    </div>
-    <p class="text-sm text-[var(--text-secondary)]">Última atualização: 8 de Setembro, 2025</p>
-</div>
-
-<footer class="mt-12 border-t border-[var(--secondary-color)] pt-8 text-center text-sm text-[var(--text-secondary)]">
-    © 2025 Pitchutcha. Todos os direitos reservados.
-</footer>
