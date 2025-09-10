@@ -16,16 +16,20 @@ jobs:
         uses: roryg/google-font-download@v1
         with:
           fonts: |
-            family: Inter
-            variants: [400, 500, 700, 900]
-            subsets: [latin]
-          ---
-            family: Noto Sans
-            variants: [400, 500, 700, 900]
-            subsets: [latin]
+            - family: Inter
+              variants: [400, 500, 700, 900]
+              subsets: [latin]
+            - family: Noto Sans
+              variants: [400, 500, 700, 900]
+              subsets: [latin]
           outputDir: docs/fonts
           
       - name: Commit and push font files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "feat: Add local fonts (Inter, Noto Sans)"
+          file_pattern: "docs/fonts/*.*"
+
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "feat: Add local fonts (Inter, Noto Sans)"
