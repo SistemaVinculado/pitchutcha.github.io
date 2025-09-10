@@ -14,15 +14,44 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
 
-      - name: Generate Simulated Metrics
+      - name: Generate Simulated Metrics and Graph Data
         run: |
-          # Gera números aleatórios mas realistas
-          LATENCY=$((RANDOM % 40 + 20)) # Gera um número entre 20 e 59
-          INFERENCE=$((RANDOM % 150 + 100)) # Gera um número entre 100 e 249
-          ERROR_RATE=$(printf "0.0%d" $((RANDOM % 5 + 1))) # Gera uma taxa de erro entre 0.01% e 0.05%
+          set -e
+          # Gera métricas simples
+          LATENCY=$((RANDOM % 40 + 20))
+          INFERENCE=$((RANDOM % 150 + 100))
+          ERROR_RATE=$(printf "0.0%d" $((RANDOM % 5 + 1)))
 
-          # Cria um arquivo JSON temporário com as métricas
-          echo '{ "metrics": { "api_latency": "'$LATENCY'ms", "inference_time": "'$INFERENCE'ms", "error_rate": "'$ERROR_RATE'%" } }' > metrics.json
+          # Gera um array de 12 pontos de dados para o gráfico de linha de latência
+          LATENCY_HISTORY=$(echo $(for i in {1..12}; do echo $((RANDOM % 60 + 10)); done) | sed 's/ /,/g')
+
+          # Gera um array de objetos para o gráfico de barras de tempo de inferência
+          BAR_CHART_DATA=$(jq -n '[
+            {"model": "GPT-4", "time": '$((RANDOM % 100 + 150))'},
+            {"model": "GPT-3.5", "time": '$((RANDOM % 80 + 80))'},
+            {"model": "DALL-E", "time": '$((RANDOM % 120 + 200))'},
+            {"model": "Whisper", "time": '$((RANDOM % 50 + 50))'},
+            {"model": "Embeds", "time": '$((RANDOM % 30 + 20))'}
+          ]')
+
+          # Cria o arquivo JSON temporário com todos os dados
+          jq -n \
+            --arg latency "${LATENCY}ms" \
+            --arg inference "${INFERENCE}ms" \
+            --arg error_rate "${ERROR_RATE}%" \
+            --argjson latency_history "[$LATENCY_HISTORY]" \
+            --argjson inference_by_model "$BAR_CHART_DATA" \
+            '{
+              "metrics": {
+                "api_latency": $latency,
+                "inference_time": $inference,
+                "error_rate": $error_rate
+              },
+              "graphs": {
+                "latency_history": $latency_history,
+                "inference_by_model": $inference_by_model
+              }
+            }' > metrics.json
 
       - name: Fetch UptimeRobot data
         run: |
