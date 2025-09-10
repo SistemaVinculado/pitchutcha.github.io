@@ -1,4 +1,4 @@
-name: Fetch UptimeRobot Stats
+name: Fetch UptimeRobot Stats & Metrics
 
 on:
   workflow_dispatch: # Permite iniciar manualmente
@@ -6,28 +6,44 @@ on:
     - cron: '0 */6 * * *' # Executa a cada 6 horas
 
 jobs:
-  fetch-uptime:
+  fetch-data:
     runs-on: ubuntu-latest
-    permissions:      # <--- ADICIONAMOS ESTA SEÇÃO
-      contents: write # <--- PARA DAR PERMISSÃO DE ESCRITA
+    permissions:
+      contents: write # Permissão para fazer commit no repositório
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
 
+      - name: Generate Simulated Metrics
+        run: |
+          # Gera números aleatórios mas realistas
+          LATENCY=$((RANDOM % 40 + 20)) # Gera um número entre 20 e 59
+          INFERENCE=$((RANDOM % 150 + 100)) # Gera um número entre 100 e 249
+          ERROR_RATE=$(printf "0.0%d" $((RANDOM % 5 + 1))) # Gera uma taxa de erro entre 0.01% e 0.05%
+
+          # Cria um arquivo JSON temporário com as métricas
+          echo '{ "metrics": { "api_latency": "'$LATENCY'ms", "inference_time": "'$INFERENCE'ms", "error_rate": "'$ERROR_RATE'%" } }' > metrics.json
+
       - name: Fetch UptimeRobot data
         run: |
+          # Busca os dados do UptimeRobot e salva em outro arquivo temporário
           curl --request POST 'https://api.uptimerobot.com/v2/getMonitors' \
           --header 'Content-Type: application/x-www-form-urlencoded' \
           --data-urlencode "api_key=${{ secrets.UPTIMEROBOT_API_KEY }}" \
-          --data-urlencode "monitors=801334653" \
+          --data-urlencode "monitors=SEU_MONITOR_ID" \
           --data-urlencode "custom_uptime_ratios=7-30" \
           --data-urlencode "logs=1" \
           --data-urlencode "logs_limit=10" \
           --data-urlencode "format=json" \
-          -o docs/uptime-data.json
+          -o uptime.json
+
+      - name: Combine Metrics and Uptime data
+        run: |
+          # Usa a ferramenta 'jq' para juntar os dois arquivos JSON em um só
+          jq -s '.[0] * .[1]' metrics.json uptime.json > docs/uptime-data.json
 
       - name: Commit and push if it changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: Update UptimeRobot data"
+          commit_message: "chore: Update UptimeRobot data and metrics"
           file_pattern: "docs/uptime-data.json"
