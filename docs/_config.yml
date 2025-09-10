@@ -2,3 +2,8 @@
 
 title: Pitchutcha
 description: Uma enciclopédia de documentação sobre Ciência da Computação.
+
+# Configuração do Processador de Markdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
