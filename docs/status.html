@@ -92,58 +92,63 @@
 </div>
 </div>
 </div>
-<div class="mb-8 p-6 rounded-lg bg-[#161b22] border border-[#30363d]">
-<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-<h2 class="text-xl font-semibold text-white">Historical Data Comparison</h2>
-<div class="flex items-center gap-2">
-<button class="flex items-center gap-2 rounded-md bg-[#21262d] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#30363d] transition-colors">
-<span class="material-symbols-outlined text-base">calendar_today</span>
-<span>Last 24 hours</span>
-</button>
-<span class="text-gray-400">vs.</span>
-<button class="flex items-center gap-2 rounded-md bg-[#21262d] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#30363d] transition-colors">
-<span class="material-symbols-outlined text-base">calendar_today</span>
-<span>Previous 7 days</span>
-</button>
-<button class="flex items-center gap-2 rounded-md bg-[#21262d] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#30363d] transition-colors">
-<span class="material-symbols-outlined text-base">date_range</span>
-<span>Custom Range</span>
-</button>
-</div>
-</div>
+<div class="mb-8">
+<h2 class="text-xl font-semibold text-white mb-4">Model Performance</h2>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-<div class="flex flex-col gap-4 rounded-lg border border-[#30363d] p-6 bg-[#0d1117]">
-<p class="text-gray-300 font-medium">API Latency Comparison</p>
-<div class="flex-1 flex flex-col justify-center relative h-64">
-<svg class="absolute inset-0" fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 472 200" width="100%" xmlns="http://www.w3.org/2000/svg">
+<div class="flex flex-col gap-4 rounded-lg border border-[#30363d] p-6 bg-[#161b22]">
+<p class="text-gray-300 font-medium">API Latency by Model</p>
+<p class="text-white text-3xl font-bold truncate">Average: 25ms</p>
+<div class="flex gap-2 items-center text-sm">
+<p class="text-gray-400">Last 24 Hours</p>
+<p class="text-red-500 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-base">arrow_downward</span>
+                      -5%</p>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<svg fill="none" height="150" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#paint0_linear_area)"></path>
 <path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#4a90e2" stroke-linecap="round" stroke-width="2"></path>
-<path d="M0 140C18.1538 140 18.1538 80 36.3077 80C54.4615 80 54.4615 100 72.6154 100C90.7692 100 90.7692 150 108.923 150C127.077 150 127.077 90 145.231 90C163.385 90 163.385 160 181.538 160C199.692 160 199.692 120 217.846 120C236 120 236 100 254.154 100C272.308 100 272.308 180 290.462 180C308.615 180 308.615 190 326.769 190C344.923 190 344.923 60 363.077 60C381.231 60 381.231 140 399.385 140C417.538 140 417.538 180 435.692 180C453.846 180 453.846 80 472 80" stroke="#a2d2ff" stroke-dasharray="4 4" stroke-linecap="round" stroke-width="2"></path>
+<defs><linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_area" x1="236" x2="236" y1="1" y2="149"><stop stop-color="#4a90e2" stop-opacity="0.3"></stop><stop offset="1" stop-color="#4a90e2" stop-opacity="0"></stop></linearGradient></defs>
 </svg>
 </div>
-<div class="flex justify-center gap-6 text-sm mt-4">
-<div class="flex items-center gap-2"><span class="h-2 w-4 bg-[#4a90e2] rounded-full"></span><span class="text-gray-400">Last 24 hours</span></div>
-<div class="flex items-center gap-2"><span class="h-2 w-4 bg-[#a2d2ff] rounded-full"></span><span class="text-gray-400">Previous 7 days</span></div>
 </div>
+<div class="flex flex-col gap-4 rounded-lg border border-[#30363d] p-6 bg-[#161b22]">
+<p class="text-gray-300 font-medium">Model Inference Time</p>
+<p class="text-white text-3xl font-bold truncate">Average: 150ms</p>
+<div class="flex gap-2 items-center text-sm">
+<p class="text-gray-400">Last 24 Hours</p>
+<p class="text-green-500 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-base">arrow_upward</span>
+                      +2%
+                    </p>
 </div>
-<div class="flex flex-col gap-4 rounded-lg border border-[#30363d] p-6 bg-[#0d1117]">
-<p class="text-gray-300 font-medium">Error Rate Comparison</p>
-<div class="grid grid-cols-2 gap-6 items-end flex-1 pt-6 px-3">
+<div class="grid grid-cols-5 gap-4 items-end flex-1 pt-6 px-3">
 <div class="flex flex-col items-center gap-2">
-<p class="text-white text-lg font-bold">0.02%</p>
-<div class="w-full bg-[#30363d] rounded-t-sm h-16 relative"><div class="h-1/4 w-full bg-green-500 rounded-t-sm absolute bottom-0"></div></div>
-<p class="text-gray-400 text-xs text-center">Last 24 Hours</p>
+<div class="w-full bg-[#30363d] rounded-t-sm" style="height: 50%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
+<p class="text-gray-400 text-xs text-center">GPT-4</p>
 </div>
 <div class="flex flex-col items-center gap-2">
-<p class="text-white text-lg font-bold">0.05%</p>
-<div class="w-full bg-[#30363d] rounded-t-sm h-16 relative"><div class="h-1/2 w-full bg-yellow-500 rounded-t-sm absolute bottom-0"></div></div>
-<p class="text-gray-400 text-xs text-center">Previous 7 days</p>
+<div class="w-full bg-[#30363d] rounded-t-sm" style="height: 70%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
+<p class="text-gray-400 text-xs text-center">GPT-3.5</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-[#30363d] rounded-t-sm" style="height: 30%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
+<p class="text-gray-400 text-xs text-center">DALL·E</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-[#30363d] rounded-t-sm" style="height: 60%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
+<p class="text-gray-400 text-xs text-center">Whisper</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-[#30363d] rounded-t-sm" style="height: 80%;"><div class="h-full w-full bg-[#4a90e2] rounded-t-sm"></div></div>
+<p class="text-gray-400 text-xs text-center">Embeds</p>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div>
-<h2 class="text-xl font-semibold text-white mb-4 mt-8">System Events &amp; Alerts</h2>
+<div class="mb-8">
+<h2 class="text-xl font-semibold text-white mb-4">System Events &amp; Alerts</h2>
 <div class="flow-root">
 <ul class="-mb-8" role="list">
 <li>
@@ -211,8 +216,8 @@
 </li>
 <li>
 <div class="relative pb-8">
-<span aria-hidden="true" class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-[#30363d]"></span>
 <div class="relative flex items-start space-x-3">
+<span aria-hidden="true" class="absolute left-4 top-4 -ml-px h-full w-0.5 bg-[#30363d]"></span>
 <div>
 <div class="relative px-1">
 <div class="h-8 w-8 bg-green-500 rounded-full ring-8 ring-[#161b22] flex items-center justify-center">
@@ -231,6 +236,98 @@
 </div>
 </li>
 </ul>
+</div>
+</div>
+<div class="mt-12">
+<h2 class="text-xl font-semibold text-white mb-4">User-Contributed Troubleshooting Tips</h2>
+<div class="p-6 rounded-lg bg-[#161b22] border border-[#30363d]">
+<div class="flex flex-col md:flex-row gap-4 mb-6">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">search</span>
+<input class="w-full bg-[#0d1117] border border-[#30363d] rounded-md pl-10 pr-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Search for a solution..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<select class="bg-[#0d1117] border border-[#30363d] rounded-md px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+<option>All Categories</option>
+<option>API Usage</option>
+<option>Model Behavior</option>
+<option>Billing Issues</option>
+<option>Authentication</option>
+</select>
+<button class="flex items-center justify-center gap-2 min-w-[84px] max-w-[480px] cursor-pointer overflow-hidden rounded-md h-10 px-4 bg-blue-600 text-white text-sm font-semibold leading-normal hover:bg-blue-700 transition">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Submit Tip</span>
+</button>
+</div>
+</div>
+<div class="space-y-6">
+<div class="flex gap-6 p-4 rounded-lg bg-[#0d1117] border border-[#30363d]">
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<button class="p-1 rounded-full hover:bg-[#21262d] transition"><span class="material-symbols-outlined text-lg">arrow_upward</span></button>
+<span class="font-bold text-green-500">125</span>
+<button class="p-1 rounded-full hover:bg-[#21262d] transition"><span class="material-symbols-outlined text-lg">arrow_downward</span></button>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<p class="font-semibold text-white">Fix for 'Context Length Exceeded' Error</p>
+<span class="text-xs text-gray-500 bg-[#21262d] px-2 py-1 rounded-full">API Usage</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-gray-500">
+<span>by @user123</span>
+<span>•</span>
+<span>2 days ago</span>
+<button class="ml-2 p-1 rounded-full hover:bg-[#21262d] text-gray-400"><span class="material-symbols-outlined text-base">flag</span></button>
+</div>
+</div>
+<p class="text-sm text-gray-400">I found that summarizing the previous conversation history before sending it to the API helped resolve the context length error. You can use a smaller model to do the summarization to save on tokens.</p>
+</div>
+</div>
+<div class="flex gap-6 p-4 rounded-lg bg-[#0d1117] border border-[#30363d]">
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<button class="p-1 rounded-full hover:bg-[#21262d] transition"><span class="material-symbols-outlined text-lg">arrow_upward</span></button>
+<span class="font-bold text-green-500">98</span>
+<button class="p-1 rounded-full hover:bg-[#21262d] transition"><span class="material-symbols-outlined text-lg">arrow_downward</span></button>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<p class="font-semibold text-white">Workaround for slow DALL·E image generation</p>
+<span class="text-xs text-gray-500 bg-[#21262d] px-2 py-1 rounded-full">Model Behavior</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-gray-500">
+<span>by @creativecoder</span>
+<span>•</span>
+<span>5 days ago</span>
+<button class="ml-2 p-1 rounded-full hover:bg-[#21262d] text-gray-400"><span class="material-symbols-outlined text-base">flag</span></button>
+</div>
+</div>
+<p class="text-sm text-gray-400">If DALL·E is slow, try specifying a smaller image size in your request. I've noticed a significant speed up when requesting 256x256 images instead of 1024x1024.</p>
+</div>
+</div>
+<div class="flex gap-6 p-4 rounded-lg bg-[#0d1117] border border-[#30363d]">
+<div class="flex flex-col items-center gap-1 text-gray-400">
+<button class="p-1 rounded-full hover:bg-[#21262d] transition"><span class="material-symbols-outlined text-lg">arrow_upward</span></button>
+<span class="font-bold text-green-500">72</span>
+<button class="p-1 rounded-full hover:bg-[#21262d] transition"><span class="material-symbols-outlined text-lg">arrow_downward</span></button>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<p class="font-semibold text-white">Resolving 401 Authentication Errors</p>
+<span class="text-xs text-gray-500 bg-[#21262d] px-2 py-1 rounded-full">Authentication</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-gray-500">
+<span>by @securesam</span>
+<span>•</span>
+<span>1 week ago</span>
+<button class="ml-2 p-1 rounded-full hover:bg-[#21262d] text-gray-400"><span class="material-symbols-outlined text-base">flag</span></button>
+</div>
+</div>
+<p class="text-sm text-gray-400">Make sure your API key is correctly set in the Authorization header as a Bearer token. Double-check for any typos or extra spaces. I had an extra space and it drove me crazy for an hour!</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
