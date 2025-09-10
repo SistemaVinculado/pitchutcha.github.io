@@ -8,6 +8,8 @@ on:
 jobs:
   fetch-uptime:
     runs-on: ubuntu-latest
+    permissions:      # <--- ADICIONAMOS ESTA SEÇÃO
+      contents: write # <--- PARA DAR PERMISSÃO DE ESCRITA
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -29,4 +31,3 @@ jobs:
         with:
           commit_message: "chore: Update UptimeRobot data"
           file_pattern: "docs/uptime-data.json"
-
