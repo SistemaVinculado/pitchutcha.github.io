@@ -1,121 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const overallStatusIndicator = document.getElementById('overall-status-indicator');
-    const overallStatusText = document.getElementById('overall-status-text');
-    const detailedStatusContainer = document.getElementById('detailed-status-container');
-
-    if (!overallStatusIndicator || !detailedStatusContainer) {
-        return;
-    }
-
-    const componentsToCheck = [
-        { name: 'Página Principal', url: 'index.html', type: 'Página' },
-        { name: 'Página de Algoritmos', url: 'algorithms.html', type: 'Página' },
-        { name: 'Página de Estrutura de Dados', url: 'data-structures.html', type: 'Página' },
-        { name: 'Página de Busca', url: 'search.html', type: 'Página' },
-        { name: 'Página de Status', url: 'status.html', type: 'Página' },
-        { name: 'CSS Principal', url: 'css/style.css', type: 'Recurso' },
-        { name: 'JS Principal', url: 'js/script.js', type: 'Recurso' },
-        { name: 'JS da Busca', url: 'js/search.js', type: 'Recurso' },
-        { name: 'Painel de Dev', url: 'js/dev-panel.js', type: 'Recurso' },
-        { name: 'Banco de Dados da Busca', url: 'search.json', type: 'Recurso', checkIntegrity: true }
-    ];
-
-    const slowThreshold = 500; // Meio segundo
-
-    function renderStatusItem(name, status, message) {
-        const statuses = {
-            operational: { color: 'green', text: 'Operational', pulseColor: 'ping-green' },
-            degraded: { color: 'yellow', text: 'Degraded', pulseColor: 'ping-yellow' },
-            outage: { color: 'red', text: 'Outage', pulseColor: 'ping-red' }
-        };
-        const currentStatus = statuses[status] || { color: 'gray', text: 'Unknown', pulseColor: '' };
-
-        const itemHTML = `
+document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("overall-status-indicator"),t=document.getElementById("overall-status-text"),n=document.getElementById("detailed-status-container");if(e&&n){const o=[{name:"Página Principal",url:"index.html",type:"Página"},{name:"Página de Algoritmos",url:"algorithms.html",type:"Página"},{name:"Página de Estrutura de Dados",url:"data-structures.html",type:"Página"},{name:"Página de Busca",url:"search.html",type:"Página"},{name:"Página de Status",url:"status.html",type:"Página"},{name:"CSS Principal",url:"css/style.css",type:"Recurso"},{name:"JS Principal",url:"js/script.js",type:"Recurso"},{name:"JS da Busca",url:"js/search.js",type:"Recurso"},{name:"Painel de Dev",url:"js/dev-panel.js",type:"Recurso"},{name:"Banco de Dados da Busca",url:"search.json",type:"Recurso",checkIntegrity:!0}],a=1e3;async function s(){let s="operational";for(const c of o){const o=performance.now();let r="outage",l="";try{const u=await fetch(c.url,{cache:"no-store"}),d=performance.now()-o;u.ok?c.checkIntegrity?await u.text().then(e=>{""===e.trim()?(r="outage",l="Falha: Arquivo está vazio. Dica: Verifique se o conteúdo não foi apagado.",s="outage"):(JSON.parse(e),r="operational",l=`Componente íntegro e operacional (${d.toFixed(0)}ms).`)}):(d>a?(r="degraded",l=`Aviso: Componente com lentidão (${d.toFixed(0)}ms). Dica: Verifique o tamanho do arquivo.`,"operational"===s&&(s="degraded")):(r="operational",l=`Componente operacional (${d.toFixed(0)}ms).`)):(r="outage",l=`Falha: Arquivo não encontrado (Erro ${u.status}). Dica: Verifique o nome e o caminho do arquivo.`,s="outage")}catch(e){r="outage",l=`Falha Crítica: ${e.message}. Dica: Verifique se o arquivo está corrompido ou se há erro de rede.`,s="outage"}i(c.name,r,l)}c(s)}function i(e,t,o){const a={operational:{color:"green",text:"Operational",pulseColor:"ping-green"},degraded:{color:"yellow",text:"Degraded",pulseColor:"ping-yellow"},outage:{color:"red",text:"Outage",pulseColor:"ping-red"}},s=a[t]||{color:"gray",text:"Unknown",pulseColor:""};const c=`
             <div class="flex items-center justify-between p-4 border-b border-[#30363d] last:border-b-0">
                 <div>
-                    <p class="text-white font-semibold">${name}</p>
-                    <p class="text-sm text-gray-400">${message}</p>
+                    <p class="text-white font-semibold">${e}</p>
+                    <p class="text-sm text-gray-400">${o}</p>
                 </div>
                 <div class="flex items-center gap-2 text-sm">
                     <span class="relative flex h-3 w-3">
-                        <span class="ping-pulse ${currentStatus.pulseColor} text-${currentStatus.color}-400"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.pulseColor}"></span>
+                        <span class="ping-pulse ${s.pulseColor} text-${s.color}-400"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 ${s.pulseColor}"></span>
                     </span>
-                    <span class="capitalize text-${currentStatus.color}-400">${currentStatus.text}</span>
+                    <span class="capitalize text-${s.color}-400">${s.text}</span>
                 </div>
             </div>
-        `;
-        detailedStatusContainer.insertAdjacentHTML('beforeend', itemHTML);
-    }
-
-    async function runChecks() {
-        let finalStatus = 'operational';
-
-        for (const component of componentsToCheck) {
-            const startTime = performance.now();
-            let status = 'outage';
-            let message = '';
-
-            try {
-                const response = await fetch(component.url, { cache: 'no-store' });
-                const duration = performance.now() - startTime;
-
-                if (response.ok) {
-                    // Verificação de integridade (para JSON)
-                    if (component.checkIntegrity) {
-                        const text = await response.text();
-                        if (text.length === 0) {
-                             status = 'outage';
-                             message = 'Falha: Arquivo está vazio. Dica: Verifique se o conteúdo não foi apagado.';
-                             finalStatus = 'outage';
-                        } else {
-                            JSON.parse(text); // Tenta parsear, vai dar erro se for inválido
-                            status = 'operational';
-                            message = `Componente íntegro e operacional (${duration.toFixed(0)}ms).`;
-                        }
-                    } else { // Verificação normal de arquivo
-                        if (duration > slowThreshold) {
-                            status = 'degraded';
-                            message = `Aviso: Componente com lentidão (${duration.toFixed(0)}ms). Dica: Verifique o tamanho do arquivo.`;
-                            if (finalStatus === 'operational') finalStatus = 'degraded';
-                        } else {
-                            status = 'operational';
-                            message = `Componente operacional (${duration.toFixed(0)}ms).`;
-                        }
-                    }
-                } else {
-                    status = 'outage';
-                    message = `Falha: Arquivo não encontrado (Erro ${response.status}). Dica: Verifique o nome e o caminho do arquivo.`;
-                    finalStatus = 'outage';
-                }
-            } catch (error) {
-                status = 'outage';
-                message = `Falha Crítica: ${error.message}. Dica: Verifique se o arquivo está corrompido ou se há erro de rede.`;
-                finalStatus = 'outage';
-            }
-            renderStatusItem(component.name, status, message);
-        }
-        
-        updateOverallStatus(finalStatus);
-    }
-
-    function updateOverallStatus(status) {
-        const statuses = {
-            operational: { pulseColor: 'ping-green', text: 'All Systems Operational', textColor: 'text-green-400' },
-            degraded: { pulseColor: 'ping-yellow', text: 'Degraded Performance', textColor: 'text-yellow-400' },
-            outage: { pulseColor: 'ping-red', text: 'Major System Outage', textColor: 'text-red-400' }
-        };
-        const currentStatus = statuses[status];
-        
-        const indicatorHTML = `
-            <span class="ping-pulse ${currentStatus.pulseColor} text-${currentStatus.pulseColor.replace('ping-', '')}-400"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.pulseColor}"></span>
-        `;
-        
-        overallStatusIndicator.innerHTML = indicatorHTML;
-        overallStatusText.className = currentStatus.textColor;
-        overallStatusText.textContent = currentStatus.text;
-    }
-
-    runChecks();
-});
+        `;n.insertAdjacentHTML("beforeend",c)}function c(n){const o={operational:{pulseColor:"ping-green",text:"All Systems Operational",textColor:"text-green-400"},degraded:{pulseColor:"ping-yellow",text:"Degraded Performance",textColor:"text-yellow-400"},outage:{pulseColor:"ping-red",text:"Major System Outage",textColor:"text-red-400"}},a=o[n];const s=`
+            <span class="ping-pulse ${a.pulseColor} text-${a.pulseColor.replace("ping-","")}-400"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 ${a.pulseColor}"></span>
+        `;e.innerHTML=s,t.className=a.textColor,t.textContent=a.text}s()}});
