@@ -191,12 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
              e.preventDefault();
              e.stopPropagation();
              details.open = !details.open;
-            // Mostra estilos ao clicar
             inspectStyles(element);
         });
         
         details.appendChild(summary);
-
         [...element.children].forEach(child => buildDomTree(child, details, indent + 1));
         parentElement.appendChild(details);
     }
@@ -220,14 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
              const newProp = createEditableStyle('', '', element, styleBlock);
              styleBlock.appendChild(newProp);
         };
-
-        // Adicionar propriedades existentes
         for (let i = 0; i < element.style.length; i++) {
             const prop = element.style[i];
             const value = element.style.getPropertyValue(prop);
             styleBlock.appendChild(createEditableStyle(prop, value, element, styleBlock));
         }
-
         styleRulesContainer.appendChild(styleBlock);
         styleRulesContainer.appendChild(addPropBtn);
     }
@@ -235,9 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function createEditableStyle(prop, value, element, container){
         const ruleDiv = document.createElement('div');
         ruleDiv.innerHTML = `<span contenteditable="true" class="style-prop text-purple-400">${prop || 'property'}</span>: <span contenteditable="true" class="style-value text-green-400">${value || 'value'}</span>;`;
-        
         const updateStyle = () => {
-             element.style.cssText = ''; // Limpa para evitar duplicatas
+             element.style.cssText = '';
              const allProps = container.querySelectorAll('.style-prop');
              const allValues = container.querySelectorAll('.style-value');
              allProps.forEach((p, i) => {
@@ -248,7 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
                  }
             });
         };
-
         ruleDiv.querySelector('.style-prop').addEventListener('blur', updateStyle);
         ruleDiv.querySelector('.style-value').addEventListener('blur', updateStyle);
         return ruleDiv;
@@ -268,21 +261,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return originalFetch.apply(this, args).then(response => {
             const duration = (performance.now() - startTime).toFixed(2);
             const statusColor = response.ok ? 'text-green-500' : 'text-red-500';
-            logEntry.innerHTML = `
-                <span>${url.substring(0, 80)}...</span>
-                <span class="flex items-center gap-2">
-                    <span class="${statusColor}">${response.status}</span>
-                    <span class="text-gray-500">${duration}ms</span>
-                </span>`;
+            logEntry.innerHTML = `<span>${url.substring(0, 80)}...</span><span class="flex items-center gap-2"><span class="${statusColor}">${response.status}</span><span class="text-gray-500">${duration}ms</span></span>`;
             return response;
         }).catch(error => {
             const duration = (performance.now() - startTime).toFixed(2);
-             logEntry.innerHTML = `
-                <span>${url.substring(0, 80)}...</span>
-                <span class="flex items-center gap-2">
-                    <span class="text-red-500">Error</span>
-                    <span class="text-gray-500">${duration}ms</span>
-                </span>`;
+             logEntry.innerHTML = `<span>${url.substring(0, 80)}...</span><span class="flex items-center gap-2"><span class="text-red-500">Error</span><span class="text-gray-500">${duration}ms</span></span>`;
             throw error;
         });
     };
@@ -293,11 +276,8 @@ document.addEventListener('DOMContentLoaded', () => {
         testResults.innerHTML = '';
         const filesToCheck = [
             'css/style.css', 'js/script.js', 'js/dev-panel.js', 
-            'index.html', 
-            'algorithms.html', // Verificando o novo nome do arquivo
-            'data-structures.html'
+            'index.html', 'algorithms.html', 'data-structures.html', 'search.html', 'status.html'
         ];
-
         for(const file of filesToCheck) {
             let status, message;
             try {
