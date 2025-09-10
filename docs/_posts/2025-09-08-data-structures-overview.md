@@ -54,8 +54,36 @@ segundo_no.next = terceiro_no # O segundo nó aponta para o terceiro
     </section>
     <section class="pt-10" id="stacks-and-queues">
         <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Pilhas e Filas</h2>
-        <p class="mt-4 text-lg text-[var(--text-secondary)]">
-            Pilhas (stacks) e filas (queues) são tipos abstratos de dados que podem ser implementados usando arrays ou listas ligadas. Uma pilha segue o princípio LIFO (Last-In, First-Out - o último a entrar é o primeiro a sair), como uma pilha de pratos. Uma fila segue o princípio FIFO (First-In, First-Out - o primeiro a entrar é o primeiro a sair), como uma fila de caixa numa loja.
+        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">
+            Pilhas (stacks) e filas (queues) são tipos abstratos de dados. Uma pilha segue o princípio LIFO (Last-In, First-Out), enquanto uma fila segue o FIFO (First-In, First-Out). Ambas podem ser implementadas usando arrays/listas. Veja abaixo um exemplo de uma Pilha:
         </p>
+{% highlight python %}
+# Exemplo de uma Pilha em Python (usando uma lista)
+pilha = []
+
+# Adicionando itens (push)
+pilha.append('item1')
+pilha.append('item2')
+pilha.append('item3')
+# Pilha agora é: ['item1', 'item2', 'item3']
+
+# Removendo um item (pop)
+item_removido = pilha.pop() # Retorna 'item3'
+# Pilha agora é: ['item1', 'item2']
+{% endhighlight %}
+{% highlight javascript %}
+// Exemplo de uma Pilha em JavaScript (usando um Array)
+let pilha = [];
+
+// Adicionando itens (push)
+pilha.push('item1');
+pilha.push('item2');
+pilha.push('item3');
+// Pilha agora é: ['item1', 'item2', 'item3']
+
+// Removendo um item (pop)
+let itemRemovido = pilha.pop(); // Retorna 'item3'
+// Pilha agora é: ['item1', 'item2']
+{% endhighlight %}
     </section>
 </article>
