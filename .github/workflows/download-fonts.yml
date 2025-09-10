@@ -13,19 +13,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Baixar Google Fonts (Inter e Noto Sans)
-        uses: roryg/google-font-download@v1
+        uses: fonts-actions/google-fonts@v2
         with:
           fonts: |
-            - family: Inter
-              variants: [400, 500, 700, 900]
-              subsets: [latin]
-            - family: Noto Sans
-              variants: [400, 500, 700, 900]
-              subsets: [latin]
-          outputDir: docs/fonts
+            Inter:wght@400;500;600;700
+            Noto Sans:wght@400;500;600;700
+          output_dir: docs/fonts
           
       - name: Commit and push font files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "feat: Add local fonts (Inter, Noto Sans)"
-          file_pattern: "docs/fonts/*.*"
+          file_pattern: "docs/fonts"
+
