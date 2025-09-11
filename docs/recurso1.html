@@ -1,1 +1,116 @@
-es
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Spline+Sans%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-color: #38e07b;
+      }
+    </style>
+</head>
+<body class="bg-gray-900 text-white" style='font-family: "Spline Sans", "Noto Sans", sans-serif;'>
+<div class="flex min-h-screen">
+<aside class="w-64 bg-gray-900 border-r border-gray-800 p-6 hidden lg:flex flex-col gap-8">
+<div class="flex items-center gap-2">
+<svg class="text-white" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2 7L12 12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M22 7L12 12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M12 22V12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M7 4.5L17 9.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M7 19.5L17 14.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<h1 class="text-xl font-bold">Docs</h1>
+</div>
+<nav class="flex flex-col gap-4">
+<a class="text-gray-400 hover:text-white transition-colors" href="#">Home</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">Getting Started</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">API Reference</a>
+<a class="font-semibold text-white" href="#">Contributing</a>
+<div class="flex flex-col gap-2 pl-4 border-l border-gray-700">
+<a class="text-white" href="#">About Docs</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">Guidelines</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">Code of Conduct</a>
+</div>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">Community</a>
+</nav>
+</aside>
+<div class="flex-1 flex flex-col">
+<header class="sticky top-0 z-10 flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-800 bg-gray-900/80 backdrop-blur-sm px-6 h-20">
+<button class="lg:hidden p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex-1 justify-end gap-4 hidden sm:flex">
+<label class="relative flex-1 max-w-md">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-gray-400">search</span>
+</div>
+<input class="form-input w-full rounded-lg bg-gray-800 border-transparent focus:ring-2 focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] h-10 placeholder:text-gray-400 pl-10 text-base font-normal leading-normal transition-colors" placeholder="Search documentation..." value=""/>
+</label>
+</div>
+<div class="flex items-center gap-4 ml-auto">
+<button class="p-2 text-gray-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+<button class="p-2 text-gray-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB97xp11rmEmb8eDqCgg_KT7NVWBcJ6lWPChHmHV_fF9IOkzf6hByLrCxvzDeM8Uf4DUW_GmOKcVHUXYbudDB5dYFPNCDaIvdjqM93MtYfP4A43mt17MJTdftY4vkIpSM2YJhaKdAwl3VifHyMHsTHrePqVUKk6NSKGnRlmJonqRc5FX29iMmwHCdz0S_cQJafZYthxZnsIA0LeY6TtMFypM84j0nqxlkviW_j8YK0BNaUV0KgvkzK8ftqclpGxbm0zwSLeH9ZrSaN8");'></div>
+</div>
+</header>
+<main class="flex-1 p-6 md:p-10">
+<div class="max-w-4xl mx-auto">
+<div class="flex items-center gap-2 text-sm text-gray-400 mb-6">
+<a class="hover:text-white transition-colors" href="#">Docs</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="font-medium text-white">About Docs</span>
+</div>
+<article class="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-[var(--primary-color)] hover:prose-a:text-[#52fab3]">
+<h1 class="text-4xl md:text-5xl font-bold tracking-tighter mb-4">About Docs</h1>
+<p class="text-lg text-gray-300">
+                Welcome to the Docs documentation project! This site is built by and for the community, and we're excited to have you contribute. Whether you're fixing a typo, adding a new feature, or improving existing content, your contributions are valuable.
+              </p>
+<div class="grid md:grid-cols-2 gap-8 my-12">
+<div class="bg-gray-800/50 rounded-xl p-6 flex flex-col gap-4">
+<h2 class="text-2xl font-bold">How to Contribute</h2>
+<p class="text-gray-300">
+                    To get started, please read our contributing guidelines. This document outlines the process for submitting changes, coding standards, and best practices for writing documentation.
+                  </p>
+<a class="inline-flex items-center gap-2 mt-auto text-[var(--primary-color)] font-semibold hover:text-[#52fab3] transition-colors group" href="#">
+<span>Read Contributing Guidelines</span>
+<span class="material-symbols-outlined transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<div class="bg-gray-800/50 rounded-xl p-6 flex flex-col gap-4">
+<h2 class="text-2xl font-bold">Code of Conduct</h2>
+<p class="text-gray-300">
+                    We are committed to providing a welcoming and inclusive environment for all. Please review our Code of Conduct, which outlines our expectations for behavior.
+                  </p>
+<a class="inline-flex items-center gap-2 mt-auto text-[var(--primary-color)] font-semibold hover:text-[#52fab3] transition-colors group" href="#">
+<span>Read Code of Conduct</span>
+<span class="material-symbols-outlined transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<h2 class="text-3xl font-bold mt-16 mb-4">License</h2>
+<p class="text-gray-300">
+                This documentation is licensed under the MIT License. You are free to use, modify, and distribute the content, provided you include the original copyright notice and disclaimer. For more details, please see the full license text.
+              </p>
+<div class="mt-6">
+<a class="inline-flex items-center gap-2 text-[var(--primary-color)] font-semibold hover:text-[#52fab3] transition-colors group" href="#">
+<span>View License</span>
+<span class="material-symbols-outlined transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</article>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>
