@@ -1,0 +1,28 @@
+name: Otimizar Imagens
+on:
+  pull_request:
+    paths:
+      - 'docs/assets/images/**.jpg'
+      - 'docs/assets/images/**.jpeg'
+      - 'docs/assets/images/**.png'
+      - 'docs/assets/images/**.webp'
+jobs:
+  build:
+    name: calibreapp/image-actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+      - name: Otimizar imagens
+        id: calibre
+        uses: calibreapp/image-actions@v1.1.0
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          compressOnly: true
+      - name: Criar um commit com as imagens otimizadas
+        if: ${{ steps.calibre.outputs.markdown != '' }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: Otimiza imagens'
+          file_pattern: 'docs/assets/images/**'
+
