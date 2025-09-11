@@ -39,11 +39,10 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: true # Habilita o cache para acelerar a instalação
-          working-directory: './docs'
 
       # 4. Constrói o site Jekyll para uma pasta temporária (_site)
       - name: Construir o site Jekyll
-        run: cd ./docs && bundle exec jekyll build
+        run: bundle exec jekyll build --source ./docs --destination ./docs/_site
         env:
           JEKYLL_ENV: production
 
@@ -77,3 +76,4 @@ jobs:
         with:
           commit_message: "chore: Atualiza os arquivos de Critical CSS"
           file_pattern: "docs/_includes/critical-css/*.css"
+
