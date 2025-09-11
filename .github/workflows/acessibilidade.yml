@@ -1,0 +1,28 @@
+# Nome do Workflow
+name: Auditoria de Acessibilidade
+
+# Gatilhos (Triggers): Roda toda segunda-feira às 5h da manhã
+on:
+  workflow_dispatch: # Permite iniciar manualmente
+  schedule:
+    - cron: '0 5 * * 1'
+
+jobs:
+  audit:
+    name: Executar Auditoria com Axe
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Faz o checkout do código do seu repositório para ter acesso às issues
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Executa a auditoria de acessibilidade no site publicado
+      - name: Rodar Axe no site
+        uses: Deque/axe-core-ga@v1
+        with:
+          # URL do seu site publicado
+          target-url: 'https://sistemavinculado.github.io/pitchutcha.github.io/'
+          # Cria uma issue no GitHub se encontrar violações críticas
+          fail-on-error: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
