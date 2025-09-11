@@ -1,0 +1,68 @@
+# Nome do Workflow
+name: Atualizar Dependências JS
+
+on:
+  workflow_dispatch: # Permite iniciar manualmente
+  schedule:
+    - cron: '0 0 * * 0' # Roda todo domingo à meia-noite
+
+jobs:
+  update-js-libraries:
+    name: Verificar e Atualizar Axe e Fuse.js
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # --- Atualizar Axe ---
+      - name: Verificar versão mais recente do Axe.js
+        id: get_axe_version
+        run: |
+          LATEST_URL=$(curl -sI https://cdnjs.cloudflare.com/ajax/libs/axe-core/latest/axe.min.js | grep -i "location:" | awk '{print $2}' | tr -d '\r')
+          echo "LATEST_URL=${LATEST_URL}" >> $GITHUB_OUTPUT
+      
+      - name: Baixar Axe.js se for mais recente
+        run: |
+          CURRENT_FILE="docs/js/vendor/axe.min.js"
+          LATEST_URL="${{ steps.get_axe_version.outputs.LATEST_URL }}"
+          echo "URL da versão mais recente do Axe: $LATEST_URL"
+          
+          # Se o arquivo não existir ou a URL for diferente, baixa a nova versão
+          if [ ! -f "$CURRENT_FILE" ] || ! curl -sL "$LATEST_URL" | cmp -s - "$CURRENT_FILE"; then
+            echo "Nova versão do Axe encontrada. Baixando..."
+            curl -L "$LATEST_URL" -o "$CURRENT_FILE"
+            echo "AXE_UPDATED=true" >> $GITHUB_ENV
+          else
+            echo "Axe.js já está atualizado."
+            echo "AXE_UPDATED=false" >> $GITHUB_ENV
+          fi
+
+      # --- Atualizar Fuse.js ---
+      - name: Baixar Fuse.js se for mais recente
+        run: |
+          CURRENT_FILE="docs/js/vendor/fuse.min.js"
+          LATEST_URL="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"
+          
+          if [ ! -f "$CURRENT_FILE" ] || ! curl -sL "$LATEST_URL" | cmp -s - "$CURRENT_FILE"; then
+            echo "Nova versão do Fuse.js encontrada. Baixando..."
+            curl -L "$LATEST_URL" -o "$CURRENT_FILE"
+            echo "FUSE_UPDATED=true" >> $GITHUB_ENV
+          else
+            echo "Fuse.js já está atualizado."
+            echo "FUSE_UPDATED=false" >> $GITHUB_ENV
+          fi
+
+      # --- Criar Pull Request ---
+      - name: Criar Pull Request se houver atualizações
+        if: env.AXE_UPDATED == 'true' || env.FUSE_UPDATED == 'true'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: Atualiza bibliotecas JS (Axe, Fuse.js)"
+          title: "Atualização Automática de Dependências JS"
+          body: |
+            Este PR contém atualizações automáticas para as seguintes bibliotecas:
+            - Axe.js: ${{ env.AXE_UPDATED }}
+            - Fuse.js: ${{ env.FUSE_UPDATED }}
+          branch: "chore/update-js-deps"
+          delete-branch: true
