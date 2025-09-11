@@ -6,16 +6,12 @@
   <title>Interactive 3D — Teste para GitHub Pages</title>
   <meta name="description" content="Exemplo simples de cena 3D interativa com Three.js + GSAP — pronto para GitHub Pages." />
   <style>
-    /* Reset simples */
     *{box-sizing:border-box;margin:0;padding:0}
     html,body,#app{height:100%}
     body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#0b0b0f; color:#fff;}
-
-    /* Canvas ocupa a tela inteira */
     #app{position:relative;overflow:hidden}
     canvas{display:block}
 
-    /* UI flutuante */
     .ui{
       position: absolute;left:16px;top:16px;z-index:6;backdrop-filter: blur(6px);
       background: rgba(255,255,255,0.03);padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
@@ -24,7 +20,6 @@
     .ui a{color:#9fe7ff;text-decoration:none}
     .hint{opacity:.85;font-size:13px}
 
-    /* Loading */
     .loading{
       position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:9;pointer-events:none;
       background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.4));
@@ -34,8 +29,9 @@
     }
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* Mobile tweaks */
-    @media (max-width:720px){.ui{left:10px;right:10px;top:auto;bottom:12px;display:flex;justify-content:space-between}}
+    @media (max-width:720px){
+      .ui{left:10px;right:10px;top:auto;bottom:12px;display:flex;justify-content:space-between}
+    }
   </style>
 </head>
 <body>
@@ -43,17 +39,15 @@
     <div class="ui">
       <div class="hint">Interactive 3D demo — move mouse / touch, scroll to wobble. <a href="#" id="reset">Reset</a></div>
     </div>
-
     <div class="loading" id="loading"><div class="loader"></div></div>
   </div>
 
-  <!-- Dependências via CDN (compatíveis com GitHub Pages pois são só arquivos estáticos) -->
+  <!-- Dependências via CDN -->
   <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
   <script>
-  // Exemplo simples: esfera/toro e partículas, interativo com mouse/touch + animação com GSAP
   (function(){
     const container = document.getElementById('app');
 
@@ -67,34 +61,24 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
-    // Controls (opcional — desativado por padrão para experiências controladas)
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.enabled = false;
 
-    // Luzes sutis
-    const amb = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(amb);
-    const dir = new THREE.DirectionalLight(0xffffff, 0.6);
-    dir.position.set(5,5,5); scene.add(dir);
+    // Luzes
+    const amb = new THREE.AmbientLight(0xffffff, 0.6); scene.add(amb);
+    const dir = new THREE.DirectionalLight(0xffffff, 0.6); dir.position.set(5,5,5); scene.add(dir);
 
-    // Material principal com gradiente usando vertex colors
+    // Material
     const mat = new THREE.MeshStandardMaterial({
-      metalness: 0.2,
-      roughness: 0.25,
-      flatShading: false,
-      envMapIntensity: 1,
-      vertexColors: true
+      metalness: 0.2, roughness: 0.25, flatShading: false, envMapIntensity: 1, vertexColors: true
     });
 
-    // Geometry — torus knot para visual interessante
+    // Geometry
     const geo = new THREE.TorusKnotGeometry(1.2, 0.35, 240, 32);
-
-    // Pintar vértices com cores gradientes
     const colorAttr = new Float32Array(geo.attributes.position.count * 3);
     for(let i=0;i<geo.attributes.position.count;i++){
       const y = geo.attributes.position.getY(i);
-      // gradiente do topo ao fundo
-      const t = (y + 2) / 4; // normaliza
+      const t = (y + 2) / 4;
       const c = new THREE.Color().setHSL(0.55 - 0.25*t, 0.7, 0.5 + 0.15*t);
       colorAttr[i*3]=c.r; colorAttr[i*3+1]=c.g; colorAttr[i*3+2]=c.b;
     }
@@ -103,94 +87,75 @@
     const mesh = new THREE.Mesh(geo, mat);
     scene.add(mesh);
 
-    // Partículas de fundo
+    // Partículas
     const particlesCount = 1200;
     const positions = new Float32Array(particlesCount*3);
-    const sizes = new Float32Array(particlesCount);
     for(let i=0;i<particlesCount;i++){
       positions[i*3] = (Math.random()-0.5) * 20;
       positions[i*3+1] = (Math.random()-0.5) * 12;
       positions[i*3+2] = (Math.random()-0.5) * 20 - 5;
-      sizes[i] = Math.random() * 2 + 0.5;
     }
     const partGeo = new THREE.BufferGeometry();
     partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    partGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
     const partMat = new THREE.PointsMaterial({size:0.08, transparent:true, opacity:0.9});
     const points = new THREE.Points(partGeo, partMat);
     scene.add(points);
 
-    // Interatividade — mouse/touch
+    // Interatividade
     const pointer = {x:0,y:0};
     function onPointerMove(e){
       const x = (e.touches ? e.touches[0].clientX : e.clientX) / window.innerWidth;
       const y = (e.touches ? e.touches[0].clientY : e.clientY) / window.innerHeight;
-      pointer.x = (x - 0.5) * 2; // -1..1
-      pointer.y = (y - 0.5) * -2; // -1..1 (invertido)
+      pointer.x = (x - 0.5) * 2;
+      pointer.y = (y - 0.5) * -2;
     }
     window.addEventListener('mousemove', onPointerMove, {passive:true});
     window.addEventListener('touchmove', onPointerMove, {passive:true});
 
-    // Scroll interaction — wobble
+    // Scroll
     let scrollFactor = 0;
     window.addEventListener('scroll', ()=>{
       const s = window.scrollY || window.pageYOffset;
-      scrollFactor = Math.max(-1, Math.min(1, (s / window.innerHeight)  ));
-      // tornar anim suave com gsap
+      scrollFactor = Math.max(-1, Math.min(1, (s / window.innerHeight)));
       gsap.to(mesh.rotation, {duration:0.9, x: mesh.rotation.x + (scrollFactor*0.5), ease: 'power2.out'});
     }, {passive:true});
 
-    // Responsividade
+    // Resize
     function onResize(){
       camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
     window.addEventListener('resize', onResize);
 
-    // Animação principal
+    // Animação
     const clock = new THREE.Clock();
     function animate(){
       const t = clock.getElapsedTime();
-
-      // Rotaciona suavemente com base no tempo e no ponteiro
       mesh.rotation.y += 0.008 + pointer.x * 0.02;
       mesh.rotation.x += 0.004 + pointer.y * 0.01;
-
-      // Pulsos sutis
       mesh.scale.setScalar(1 + Math.sin(t*1.2)*0.02);
-
-      // Move partículas lento
       points.rotation.y = t * 0.02;
-
       controls.update();
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }
 
-    // Entrada inicial animada com GSAP
+    // Entrada animada
     gsap.from(mesh.scale, {duration:1.2, x:0.1, y:0.1, z:0.1, ease:'elastic.out(1,0.6)'});
     gsap.from(renderer.domElement, {duration:1.2, opacity:0, ease:'power2.out'});
 
-    // esconder loading
+    // Loading (sempre some)
     const loading = document.getElementById('loading');
-    setTimeout(()=>{ loading.style.display='none'; }, 800);
+    setTimeout(()=>{ loading.style.display='none'; }, 1200);
 
-    // Reset botão
+    // Reset
     document.getElementById('reset').addEventListener('click', (ev)=>{
       ev.preventDefault();
       gsap.to(mesh.rotation, {duration:1.1, x:0, y:0, z:0, ease:'elastic.out(1,0.6)'});
       gsap.to(camera.position, {duration:1.1, x:0, y:0, z:6, ease:'power2.out'});
     });
 
-    // Start
     animate();
-
-    // Pequena proteção caso WebGL não esteja disponível
-    if(!renderer.capabilities.isWebGL2 && !renderer.extensions.get('WEBGL_depth_texture') && !renderer.extensions.get('OES_texture_float')){
-      console.warn('WebGL features limited — fallback may be used.');
-    }
-
   })();
   </script>
 </body>
