@@ -39,9 +39,11 @@ jobs:
         with:
           ruby-version: '3.1'
           bundler-cache: true # Habilita o cache para acelerar a instalação
+          # A LINHA 'working-directory' FOI REMOVIDA DAQUI PARA CORRIGIR O ERRO
 
       # 4. Constrói o site Jekyll para uma pasta temporária (_site)
       - name: Construir o site Jekyll
+        # Este comando foi corrigido para rodar da raiz do projeto
         run: bundle exec jekyll build --source ./docs --destination ./docs/_site
         env:
           JEKYLL_ENV: production
@@ -57,7 +59,7 @@ jobs:
       # 7. Extrai o CSS crítico para a página de artigo e salva-o
       - name: Extrair CSS crítico para o layout 'artigo'
         run: >
-          critical docs/_site/Algoritmos/2025/09/07/introduction-to-algorithm-design.html --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/artigo.css || echo "Geração de CSS para artigo falhou, mas não vai bloquear o workflow"
+          critical docs/_site/saude/2025/09/11/introducao-a-fibromialgia.html --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/artigo.css || echo "Geração de CSS para artigo falhou, mas não vai bloquear o workflow"
 
       # 8. Extrai o CSS crítico para a página inicial e salva-o
       - name: Extrair CSS crítico para a página inicial
@@ -76,4 +78,3 @@ jobs:
         with:
           commit_message: "chore: Atualiza os arquivos de Critical CSS"
           file_pattern: "docs/_includes/critical-css/*.css"
-
