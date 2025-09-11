@@ -1,0 +1,79 @@
+# Nome do Workflow
+name: Gerar Critical CSS
+
+# Gatilhos (Triggers): Quando a automação deve rodar
+on:
+  # Roda sempre que houver um push para a branch 'main' que modifica o CSS ou os layouts
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/css/**'
+      - 'docs/_layouts/**'
+      - 'docs/index.html'
+  # Permite que você inicie manualmente pela aba "Actions" do GitHub
+  workflow_dispatch:
+
+# Definição dos trabalhos (jobs) a serem executados
+jobs:
+  generate-critical-css:
+    name: Gerar Critical CSS
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permissão para fazer commit no repositório
+
+    steps:
+      # 1. Faz o checkout do código do seu repositório
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Node.js para usar a ferramenta de extração
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # 3. Instala o Ruby e as dependências do Jekyll para construir o site
+      - name: Configurar Ruby e Jekyll
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true # Habilita o cache para acelerar a instalação
+          working-directory: './docs'
+
+      # 4. Constrói o site Jekyll para uma pasta temporária (_site)
+      - name: Construir o site Jekyll
+        run: cd ./docs && bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
+
+      # 5. Instala a ferramenta 'critical' que extrai o CSS
+      - name: Instalar a ferramenta Critical
+        run: npm install -g critical
+
+      # 6. Cria a pasta _includes/critical-css se ela não existir
+      - name: Criar diretório para o CSS crítico
+        run: mkdir -p docs/_includes/critical-css
+
+      # 7. Extrai o CSS crítico para a página de artigo e salva-o
+      - name: Extrair CSS crítico para o layout 'artigo'
+        run: >
+          critical docs/_site/Algoritmos/2025/09/07/introduction-to-algorithm-design.html --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/artigo.css || echo "Geração de CSS para artigo falhou, mas não vai bloquear o workflow"
+
+      # 8. Extrai o CSS crítico para a página inicial e salva-o
+      - name: Extrair CSS crítico para a página inicial
+        run: >
+          critical docs/_site/index.html --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/main.css || echo "Geração de CSS para main falhou, mas não vai bloquear o workflow"
+
+      # 9. Remove o CSS extraído dos arquivos para manter apenas o CSS puro
+      - name: Limpar os arquivos de CSS crítico
+        run: |
+          sed -i '1,/<style>/d;/<\/style>/,$d' docs/_includes/critical-css/artigo.css
+          sed -i '1,/<style>/d;/<\/style>/,$d' docs/_includes/critical-css/main.css
+
+      # 10. Faz o commit dos novos arquivos de CSS de volta para o repositório
+      - name: Fazer commit dos arquivos de CSS crítico
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Atualiza os arquivos de Critical CSS"
+          file_pattern: "docs/_includes/critical-css/*.css"
