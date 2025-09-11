@@ -9,3 +9,4 @@ permalink: /:categories/:year/:month/:day/:title:output_ext
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+kwkwwkw
