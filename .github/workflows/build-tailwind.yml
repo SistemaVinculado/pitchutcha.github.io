@@ -1,17 +1,43 @@
-{
-  "name": "pitchutcha-docs",
-  "version": "1.0.0",
-  "description": "Estilos para o site de documentação Pitchutcha.",
-  "main": "index.js",
-  "scripts": {
-    "build": "tailwindcss -i ./css/input.css -o ./css/style.css --minify"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "tailwindcss": "^3.4.1",
-    "@tailwindcss/forms": "^0.5.7",
-    "@tailwindcss/container-queries": "^0.1.0"
-  }
-}
+name: Construir CSS com Tailwind
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**.html'
+      - 'docs/_layouts/**.html'
+      - 'docs/_posts/**.md'
+      - 'docs/css/input.css'
+      - 'docs/tailwind.config.js'
+  workflow_dispatch:
+
+jobs:
+  build-css:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'docs/package.json' # <-- ESTA LINHA FOI CORRIGIDA
+
+      - name: Instalar dependências
+        run: npm install
+        working-directory: ./docs
+
+      - name: Construir o arquivo CSS
+        run: npm run build
+        working-directory: ./docs
+
+      - name: Fazer commit do novo style.css
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Atualiza o arquivo style.css construído"
+          file_pattern: "docs/css/style.css"
