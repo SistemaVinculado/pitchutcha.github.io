@@ -1,0 +1,27 @@
+name: Baixar e Atualizar Fontes Locais
+
+on:
+  workflow_dispatch: # Permite iniciar manualmente
+
+jobs:
+  download-fonts:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permissão para fazer commit no repositório
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Baixar Google Fonts (Inter e Noto Sans)
+        uses: fonts-actions/google-fonts@v2
+        with:
+          fonts: |
+            Inter:wght@400;500;600;700
+            Noto Sans:wght@400;500;600;700
+          output_dir: docs/fonts
+          
+      - name: Commit and push font files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "feat: Add local fonts (Inter, Noto Sans)"
+          file_pattern: "docs/fonts"
