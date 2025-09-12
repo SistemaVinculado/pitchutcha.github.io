@@ -81,7 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTabContent(tabId) {
         panelContent.innerHTML = ""; 
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
-        if (isInspecting) toggleInspector();
+        
+        // Desativa o modo de inspeção se estiver ativo ao trocar de aba
+        if (isInspecting) {
+            toggleInspector();
+        }
         
         switch (tabId) {
             case "elements": renderElementsTab(); break;
@@ -304,26 +308,36 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.cursor = isInspecting ? 'crosshair' : 'default';
         if (isInspecting) {
             document.addEventListener('mouseover', highlightOnPage);
-            window.devPanelState.listeners['click'] = selectElementOnPage;
-            document.addEventListener('click', window.devPanelState.listeners['click'], { capture: true });
+            document.addEventListener('click', selectElementOnPage, { capture: true });
         } else {
             document.removeEventListener('mouseover', highlightOnPage);
-            if (window.devPanelState.listeners['click']) {
-                document.removeEventListener('click', window.devPanelState.listeners['click'], { capture: true });
-                delete window.devPanelState.listeners['click'];
-            }
-            if(lastInspectedElement) lastInspectedElement.style.outline = '';
+            document.removeEventListener('click', selectElementOnPage, { capture: true });
+            // A linha que removia o contorno foi retirada daqui para corrigir o bug
         }
     }
 
+    // CORREÇÃO: Lógica de seleção foi melhorada para não apagar o contorno.
     function selectElementOnPage(e) {
         if (!isInspecting || e.target.closest("#dev-panel")) return;
         e.preventDefault();
         e.stopPropagation();
+        
         const clickedElement = e.target;
+        
+        // 1. Seleciona e destaca o elemento (o contorno azul é aplicado aqui)
         selectElement(clickedElement);
         revealInTree(clickedElement);
-        toggleInspector();
+        
+        // 2. Desativa o modo de inspeção manualmente sem chamar toggleInspector()
+        isInspecting = false;
+        const inspectorButton = document.getElementById('inspector-toggle');
+        if (inspectorButton) {
+            inspectorButton.style.backgroundColor = 'transparent';
+            inspectorButton.style.color = '#9ca3af';
+        }
+        document.body.style.cursor = 'default';
+        document.removeEventListener('mouseover', highlightOnPage);
+        document.removeEventListener('click', selectElementOnPage, { capture: true });
     }
 
     async function runAxeAudit() {
@@ -377,6 +391,9 @@ document.addEventListener("DOMContentLoaded", () => {
             tbody.insertAdjacentHTML('beforeend', row);
         };
         
+        // CORREÇÃO: Garante que a aba de elementos seja renderizada antes do teste.
+        renderElementsTab();
+
         const inspectorButton = document.getElementById('inspector-toggle');
         if (inspectorButton) {
             const initialState = window.devPanelState.isInspecting();
