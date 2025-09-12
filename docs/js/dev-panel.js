@@ -4,9 +4,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // Adiciona a URL base para ser usada em fetch calls
+    const baseUrlMeta = document.querySelector('meta[name="base-url"]');
+    const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
+
     // Carrega a biblioteca Axe para testes de acessibilidade
     const axeScript = document.createElement("script");
-    axeScript.src = "js/vendor/axe.min.js";
+    axeScript.src = `${baseUrl}js/vendor/axe.min.js`;
     axeScript.defer = true;
     document.head.appendChild(axeScript);
 
@@ -399,7 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
             home: { ids: [".main-search-form"], path: "index.html" }
         };
         
-        const isArticlePage = !!document.getElementById('toc-container') && !!document.querySelector('main article');
+        const isArticlePage = !!document.querySelector('body main aside#toc-container') && !!document.querySelector('body main div article');
         const currentPageFile = window.location.pathname.split("/").pop() || "index.html";
 
         // Roda testes específicos da página atual
@@ -419,12 +423,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Roda testes específicos de páginas de artigo
         if (isArticlePage) {
              addResult("Verificação de Layout", "PASS", "Layout de página de artigo detectado.", null);
-             ["toc-container", "article"].forEach(id => {
-                 const elementExists = !!document.getElementById(id) || !!document.querySelector(id);
+             ["toc-container", "article"].forEach(selector => {
+                 const elementExists = !!document.querySelector(selector);
                  addResult(
-                    `Verificação de Elemento de Artigo: ${id}`,
+                    `Verificação de Elemento de Artigo: ${selector}`,
                     elementExists ? "PASS" : "FAIL",
-                    elementExists ? `Elemento "${id}" encontrado.` : `Elemento "${id}" não encontrado no layout do artigo.`,
+                    elementExists ? `Elemento "${selector}" encontrado.` : `Elemento "${selector}" não encontrado no layout do artigo.`,
                     elementExists ? null : `Verifique o arquivo 'docs/_layouts/artigo.html' e garanta que este elemento está presente.`
                  );
              });
@@ -433,7 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // --- Verificação de Validade de Dados JSON ---
         try {
-            const response = await fetch("search.json?cache_bust=" + Date.now());
+            const response = await fetch(`${baseUrl}search.json?cache_bust=` + Date.now());
             if (response.ok) {
                 const data = await response.json();
                 if (data.length > 0 && data[0].title && data[0].url) {
@@ -449,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch("uptime-data.json?cache_bust=" + Date.now());
+            const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=` + Date.now());
             if (response.ok) {
                 const data = await response.json();
                 if (data.monitors && data.metrics) {
