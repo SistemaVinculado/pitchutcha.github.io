@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Carrega a biblioteca Axe para testes de acessibilidade
     const axeScript = document.createElement("script");
     axeScript.src = "js/vendor/axe.min.js";
+    axeScript.defer = true; // <-- CORREÇÃO APLICADA AQUI
     document.head.appendChild(axeScript);
 
     // --- HTML para o Painel e o Botão de Ativação ---
@@ -361,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resultsContainer.innerHTML = `
             <div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4">
                 <p class="font-bold">Nota do Desenvolvedor:</p>
-                <p class="text-xs text-sky-400">Estes testes são baseados em heurísticas e melhores práticas. Um "FAIL" não é necessarily um erro crítico, mas uma anomalia que merece atenção. Use as sugestões como um guia para melhorar a qualidade do projeto.</p>
+                <p class="text-xs text-sky-400">Estes testes são baseados em heurísticas e melhores práticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção. Use as sugestões como um guia para melhorar a qualidade do projeto.</p>
             </div>
             <table class="w-full text-left text-xs">
                 <thead>
