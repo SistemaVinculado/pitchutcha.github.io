@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Adiciona a URL base para ser usada em fetch calls
+    const DEV_PANEL_VERSION = "1.1.0"; // <-- VERIFICADOR DE VERSÃO
+
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
     const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
 
@@ -65,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
         if (!devPanel.classList.contains("hidden")) {
-            renderTabContent("elements");
+            renderTabContent("info"); // Abre na aba Info por padrão
         }
     });
     closeButton.addEventListener("click", () => devPanel.classList.add("hidden"));
@@ -184,7 +185,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderInfoTab() {
-        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr></tbody></table></div>`;
+        const buildTimeMeta = document.querySelector('meta[name="jekyll-build-time"]');
+        const buildTime = buildTimeMeta ? new Date(buildTimeMeta.content).toLocaleString("pt-BR") : 'Não encontrado';
+
+        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody>
+            <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Versão do Painel</td><td class='p-2'>${DEV_PANEL_VERSION}</td></tr>
+            <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção do Site</td><td class='p-2'>${buildTime}</td></tr>
+            <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
+            <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr>
+            <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr>
+            <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr>
+        </tbody></table></div>`;
     }
 
     function logToPanel(log) {
@@ -396,7 +407,6 @@ document.addEventListener("DOMContentLoaded", () => {
             tbody.insertAdjacentHTML('beforeend', row);
         };
         
-        // --- Verificação de Saúde da Página (LÓGICA CORRIGIDA) ---
         const pageChecks = {
             search: { ids: ["search-input", "results-container", "results-count"], path: "search.html" },
             status: { ids: ["detailed-status-container", "uptime-history-container", "performance-monitor-container"], path: "status.html" },
@@ -405,8 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const isArticlePage = !!document.querySelector('body main aside#toc-container') && !!document.querySelector('body main div article');
         const currentPageFile = window.location.pathname.split("/").pop() || "index.html";
-
-        // Roda testes específicos da página atual
+        
         const checkConfig = Object.values(pageChecks).find(p => p.path === currentPageFile);
         if (checkConfig) {
             checkConfig.ids.forEach(selector => {
@@ -419,8 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             });
         }
-
-        // Roda testes específicos de páginas de artigo
+        
         if (isArticlePage) {
              addResult("Verificação de Layout", "PASS", "Layout de página de artigo detectado.", null);
              ["toc-container", "article"].forEach(selector => {
@@ -435,7 +443,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        // --- Verificação de Validade de Dados JSON ---
         try {
             const response = await fetch(`${baseUrl}search.json?cache_bust=` + Date.now());
             if (response.ok) {
@@ -468,7 +475,6 @@ document.addEventListener("DOMContentLoaded", () => {
             addResult("Validação de `uptime-data.json`", "FAIL", "O conteúdo do arquivo não é um JSON válido.", "Inspecione `uptime-data.json`. Provavelmente houve um erro na execução do workflow `uptime.yml` que corrompeu o arquivo.");
         }
 
-        // --- Diagnóstico de Performance ---
         document.querySelectorAll("script[src]:not([src^='https://'])").forEach(script => {
             const isDeferred = script.hasAttribute('defer') || script.hasAttribute('async');
             addResult(
@@ -479,7 +485,6 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         });
 
-        // --- Análise de SEO Básico ---
         const seo = {
             title: !!document.querySelector('title'),
             description: !!document.querySelector('meta[name="description"]')
@@ -487,11 +492,9 @@ document.addEventListener("DOMContentLoaded", () => {
         addResult("SEO: Título da Página", seo.title ? "PASS" : "FAIL", seo.title ? "A tag `<title>` está presente." : "A tag `<title>` é essencial para SEO e acessibilidade e não foi encontrada.", seo.title ? null : "Adicione uma tag `<title>` única e descritiva dentro da seção `<head>` do HTML.");
         addResult("SEO: Meta Descrição", seo.description ? "PASS" : "RECOMENDAÇÃO", seo.description ? 'A tag `<meta name="description">` está presente.' : "A página não possui uma meta descrição, o que pode impactar como ela aparece nos resultados de busca.", seo.description ? null : 'Adicione `<meta name="description" content="Uma descrição concisa da página.">` dentro da seção `<head>`.');
 
-        // --- Qualidade do Conteúdo ---
         const brokenLinks = document.querySelectorAll('a[href=""], a[href="#"], a:not([href])');
         if (brokenLinks.length > 0) {
             addResult("Qualidade: Links Quebrados/Vazios", "FAIL", `${brokenLinks.length} link(s) com destino vazio ou inválido foram encontrados.`, "Inspecione os links destacados e adicione um `href` válido ou remova a tag `<a>` se não for um link.");
-            // Highlight broken links for the user
             [...brokenLinks].forEach(link => {
                 const clone = link.cloneNode(true);
                 clone.style.cssText = "color: red; border: 1px solid red;";
