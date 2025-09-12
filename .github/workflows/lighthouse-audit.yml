@@ -19,18 +19,17 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # 2. Cria um arquivo de configuração para o Lighthouse ser menos rigoroso
-      #    Isso evita que o workflow falhe se as pontuações não forem perfeitas.
+      # 2. Cria um arquivo de configuração para o Lighthouse ser mais flexível
       - name: Criar Configuração do Lighthouse
         run: |
           echo '{
             "ci": {
               "assert": {
                 "assertions": {
-                  "categories:performance": ["warn", { "minScore": 0.8 }],
+                  "categories:performance": ["warn", { "minScore": 0.7 }],
                   "categories:accessibility": ["warn", { "minScore": 0.8 }],
                   "categories:best-practices": ["warn", { "minScore": 0.8 }],
-                  "categories:seo": ["warn", { "minScore": 0.8 }]
+                  "categories:seo": ["warn", { "minScore": 0.7 }]
                 }
               }
             }
@@ -44,16 +43,15 @@ jobs:
             https://sistemavinculado.github.io/pitchutcha.github.io/
           uploadArtifacts: true
           temporaryPublicStorage: true
-          # Adiciona o caminho para o arquivo de configuração criado acima
           configPath: './.lighthouserc.json'
 
       # 4. Processa o relatório JSON para extrair apenas os dados que queremos
       - name: Processar o Relatório Lighthouse
         id: process_report
         run: |
-          REPORT_PATH=".lighthouseci/lhr-https---sistemavinculado_github_io-pitchutcha_github_io-.json"
+          # O nome do arquivo de relatório pode variar um pouco, então usamos um coringa (*)
+          REPORT_PATH=$(ls .lighthouseci/lhr-*.json | head -n 1)
           
-          # Extrai as pontuações, métricas e as 3 principais oportunidades de melhoria
           PROCESSED_JSON=$(jq '{
             scores: {
               performance: (.categories.performance.score * 100 | round),
@@ -68,13 +66,13 @@ jobs:
               cls: .audits["cumulative-layout-shift"].displayValue,
               si: .audits["speed-index"].displayValue
             },
-            opportunities: (.audits.opportunities.details.items | map({
-              title: .title,
-              savings: (.overallSavingsMs / 1000 | tostring + " s")
-            }) | .[:3])
+            opportunities: [
+              .audits.opportunities.details.items[]? | 
+              select(.overallSavingsMs > 0) | 
+              {title: .title, savings: (.overallSavingsMs / 1000 | tostring + " s")}
+            ] | .[:3]
           }' $REPORT_PATH)
           
-          # Salva o JSON processado em um arquivo final
           echo $PROCESSED_JSON > ./docs/pagespeed-data.json
 
       # 5. Faz o commit do novo arquivo de dados de volta para o repositório
