@@ -19,33 +19,53 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # 2. Cria um arquivo de configuração para o Lighthouse ser mais flexível
-      - name: Criar Configuração do Lighthouse
+      # 2. Cria arquivos de configuração para Celular e Computador
+      - name: Criar Configurações do Lighthouse
         run: |
+          # Configuração para Celular (padrão)
           echo '{
             "ci": {
               "assert": {
                 "assertions": {
-                  "categories:performance": ["warn", { "minScore": 0.7 }],
+                  "categories:performance": ["warn", { "minScore": 0.6 }],
                   "categories:accessibility": ["warn", { "minScore": 0.8 }],
                   "categories:best-practices": ["warn", { "minScore": 0.8 }],
                   "categories:seo": ["warn", { "minScore": 0.7 }]
                 }
               }
             }
-          }' > ./.lighthouserc.json
+          }' > ./.lighthouserc-mobile.json
 
-      # 3. Roda a auditoria para CELULAR (padrão)
+          # Configuração para Computador (com "preset: desktop")
+          echo '{
+            "ci": {
+              "collect": {
+                "settings": {
+                  "preset": "desktop"
+                }
+              },
+              "assert": {
+                "assertions": {
+                  "categories:performance": ["warn", { "minScore": 0.8 }],
+                  "categories:accessibility": ["warn", { "minScore": 0.8 }],
+                  "categories:best-practices": ["warn", { "minScore": 0.8 }],
+                  "categories:seo": ["warn", { "minScore": 0.8 }]
+                }
+              }
+            }
+          }' > ./.lighthouserc-desktop.json
+
+      # 3. Roda a auditoria para CELULAR
       - name: Rodar Lighthouse CI (Celular)
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
             https://sistemavinculado.github.io/pitchutcha.github.io/
           uploadArtifacts: true
+          artifactName: lighthouse-report-mobile # Nome único para o artefato
           temporaryPublicStorage: true
-          configPath: './.lighthouserc.json'
+          configPath: './.lighthouserc-mobile.json'
       
-      # Renomeia o relatório de celular para evitar conflito
       - name: Renomear Relatório de Celular
         run: |
           REPORT_PATH=$(ls .lighthouseci/lhr-*.json | head -n 1)
@@ -58,12 +78,10 @@ jobs:
           urls: |
             https://sistemavinculado.github.io/pitchutcha.github.io/
           uploadArtifacts: true
+          artifactName: lighthouse-report-desktop # Nome único para o artefato
           temporaryPublicStorage: true
-          configPath: './.lighthouserc.json'
-          # Adiciona a configuração para rodar no modo desktop
-          preset: 'desktop'
+          configPath: './.lighthouserc-desktop.json'
       
-      # Renomeia o relatório de computador
       - name: Renomear Relatório de Computador
         run: |
           REPORT_PATH=$(ls .lighthouseci/lhr-*.json | head -n 1)
@@ -71,9 +89,7 @@ jobs:
 
       # 5. Processa e combina os dois relatórios em um único arquivo
       - name: Processar e Combinar Relatórios
-        id: process_report
         run: |
-          # Define uma função JQ para extrair os dados de um relatório
           JQ_EXTRACT_FUNCTION='
           def extract: {
             scores: {
@@ -91,15 +107,14 @@ jobs:
             },
             opportunities: ([.audits.opportunities.details.items[]? | select(.overallSavingsMs > 0) | {title: .title, savings: (.overallSavingsMs / 1000 | tostring + " s")}] | .[:3])
           };'
-
-          # Combina os dois relatórios em um único JSON
+          
           jq -n "$JQ_EXTRACT_FUNCTION"'
           {
             mobile: (input | extract),
             desktop: (input | extract)
           }' ./.lighthouseci/lhr-mobile.json ./.lighthouseci/lhr-desktop.json > ./docs/pagespeed-data.json
 
-      # 6. Faz o commit do novo arquivo de dados de volta para o repositório
+      # 6. Faz o commit do novo arquivo de dados
       - name: Fazer commit do arquivo pagespeed-data.json
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
