@@ -1,0 +1,70 @@
+# Nome do Workflow
+name: Auditoria Lighthouse
+
+# Gatilhos: Roda toda segunda-feira às 8h da manhã ou manualmente
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * 1'
+
+jobs:
+  lighthouse-audit:
+    name: Rodar Auditoria Lighthouse
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permissão para fazer commit no repositório
+
+    steps:
+      # 1. Faz o checkout do código para poder salvar o arquivo de resultados
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Roda a auditoria do Lighthouse no site publicado
+      #    - Salva o resultado completo em uma pasta temporária
+      - name: Rodar Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            https://sistemavinculado.github.io/pitchutcha.github.io/
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      # 3. Processa o relatório JSON para extrair apenas os dados que queremos
+      #    - Usa a ferramenta 'jq' para filtrar e formatar o JSON
+      - name: Processar o Relatório Lighthouse
+        id: process_report
+        run: |
+          # Caminho para o relatório JSON gerado pelo passo anterior
+          REPORT_PATH=".lighthouseci/lhr-https://sistemavinculado_github_io_pitchutcha_github_io_.json"
+          
+          # Extrai as pontuações, métricas e as 3 principais oportunidades de melhoria
+          PROCESSED_JSON=$(jq '{
+            scores: {
+              performance: (.categories.performance.score * 100 | round),
+              accessibility: (.categories.accessibility.score * 100 | round),
+              bestPractices: (.categories."best-practices".score * 100 | round),
+              seo: (.categories.seo.score * 100 | round)
+            },
+            metrics: {
+              fcp: .audits["first-contentful-paint"].displayValue,
+              lcp: .audits["largest-contentful-paint"].displayValue,
+              tbt: .audits["total-blocking-time"].displayValue,
+              cls: .audits["cumulative-layout-shift"].displayValue,
+              si: .audits["speed-index"].displayValue
+            },
+            opportunities: [
+              .audits.details.items[] | 
+              select(.group == "opportunities" and .overallSavingsMs > 0) | 
+              {title: .title, savings: (.overallSavingsMs / 1000 | tostring + " s")}
+            ] | .[:3]
+          }' $REPORT_PATH)
+          
+          # Salva o JSON processado em um arquivo final
+          echo $PROCESSED_JSON > ./docs/pagespeed-data.json
+
+      # 4. Faz o commit do novo arquivo de dados de volta para o repositório
+      - name: Fazer commit do arquivo pagespeed-data.json
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Atualiza os dados de auditoria do Lighthouse"
+          file_pattern: "docs/pagespeed-data.json"
