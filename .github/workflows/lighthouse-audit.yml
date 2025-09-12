@@ -35,8 +35,8 @@ jobs:
             }
           }' > ./.lighthouserc.json
 
-      # 3. Roda a auditoria do Lighthouse no site publicado
-      - name: Rodar Lighthouse CI
+      # 3. Roda a auditoria para CELULAR (padrão)
+      - name: Rodar Lighthouse CI (Celular)
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
@@ -44,15 +44,38 @@ jobs:
           uploadArtifacts: true
           temporaryPublicStorage: true
           configPath: './.lighthouserc.json'
+      
+      # Renomeia o relatório de celular para evitar conflito
+      - name: Renomear Relatório de Celular
+        run: |
+          REPORT_PATH=$(ls .lighthouseci/lhr-*.json | head -n 1)
+          mv $REPORT_PATH ./.lighthouseci/lhr-mobile.json
 
-      # 4. Processa o relatório JSON para extrair apenas os dados que queremos
-      - name: Processar o Relatório Lighthouse
+      # 4. Roda a auditoria para COMPUTADOR
+      - name: Rodar Lighthouse CI (Computador)
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            https://sistemavinculado.github.io/pitchutcha.github.io/
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: './.lighthouserc.json'
+          # Adiciona a configuração para rodar no modo desktop
+          preset: 'desktop'
+      
+      # Renomeia o relatório de computador
+      - name: Renomear Relatório de Computador
+        run: |
+          REPORT_PATH=$(ls .lighthouseci/lhr-*.json | head -n 1)
+          mv $REPORT_PATH ./.lighthouseci/lhr-desktop.json
+
+      # 5. Processa e combina os dois relatórios em um único arquivo
+      - name: Processar e Combinar Relatórios
         id: process_report
         run: |
-          # O nome do arquivo de relatório pode variar um pouco, então usamos um coringa (*)
-          REPORT_PATH=$(ls .lighthouseci/lhr-*.json | head -n 1)
-          
-          PROCESSED_JSON=$(jq '{
+          # Define uma função JQ para extrair os dados de um relatório
+          JQ_EXTRACT_FUNCTION='
+          def extract: {
             scores: {
               performance: (.categories.performance.score * 100 | round),
               accessibility: (.categories.accessibility.score * 100 | round),
@@ -66,18 +89,19 @@ jobs:
               cls: .audits["cumulative-layout-shift"].displayValue,
               si: .audits["speed-index"].displayValue
             },
-            opportunities: [
-              .audits.opportunities.details.items[]? | 
-              select(.overallSavingsMs > 0) | 
-              {title: .title, savings: (.overallSavingsMs / 1000 | tostring + " s")}
-            ] | .[:3]
-          }' $REPORT_PATH)
-          
-          echo $PROCESSED_JSON > ./docs/pagespeed-data.json
+            opportunities: ([.audits.opportunities.details.items[]? | select(.overallSavingsMs > 0) | {title: .title, savings: (.overallSavingsMs / 1000 | tostring + " s")}] | .[:3])
+          };'
 
-      # 5. Faz o commit do novo arquivo de dados de volta para o repositório
+          # Combina os dois relatórios em um único JSON
+          jq -n "$JQ_EXTRACT_FUNCTION"'
+          {
+            mobile: (input | extract),
+            desktop: (input | extract)
+          }' ./.lighthouseci/lhr-mobile.json ./.lighthouseci/lhr-desktop.json > ./docs/pagespeed-data.json
+
+      # 6. Faz o commit do novo arquivo de dados de volta para o repositório
       - name: Fazer commit do arquivo pagespeed-data.json
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: Atualiza os dados de auditoria do Lighthouse"
+          commit_message: "chore: Atualiza os dados de auditoria do Lighthouse (Celular e Computador)"
           file_pattern: "docs/pagespeed-data.json"
