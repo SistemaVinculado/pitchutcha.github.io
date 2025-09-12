@@ -1,15 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Evita que o painel seja executado em iframes
     if (window.self !== window.top) {
         return;
     }
 
-    // Carrega a biblioteca Axe para testes de acessibilidade
     const axeScript = document.createElement("script");
     axeScript.src = "js/vendor/axe.min.js";
     document.head.appendChild(axeScript);
 
-    // --- HTML para o Painel e o Botão de Ativação ---
     const panelHTML = `
         <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
             <span class="material-symbols-outlined">developer_mode</span>
@@ -34,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </button>
             </div>
             <div id="dev-panel-content" class="flex-1 overflow-auto flex">
-                </div>
+            </div>
             <div id="console-input-container" class="hidden items-center p-2 border-t border-gray-700">
                 <span class="material-symbols-outlined text-sky-400">chevron_right</span>
                 <input type="text" id="console-input" class="flex-1 bg-transparent border-none focus:outline-none ml-2" placeholder="Executar JavaScript...">
@@ -42,12 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
     `;
 
-    // Adiciona o HTML ao corpo da página
     const panelWrapper = document.createElement("div");
     panelWrapper.innerHTML = panelHTML;
     document.body.appendChild(panelWrapper);
 
-    // --- Referências aos Elementos do DOM ---
     const triggerButton = document.getElementById("dev-tools-trigger");
     const devPanel = document.getElementById("dev-panel");
     const closeButton = document.getElementById("close-dev-panel");
@@ -56,16 +51,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const consoleInputContainer = document.getElementById("console-input-container");
     const devTabs = document.querySelectorAll(".dev-tab");
     
-    // --- Variáveis de Estado ---
     let isInspecting = false;
     let lastInspectedElement = null;
 
-    // --- Lógica Principal ---
-
-    // Abre e fecha o painel
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
-        // Se o painel foi aberto, carrega a aba de elementos por padrão
         if (!devPanel.classList.contains("hidden")) {
             renderTabContent("elements");
         }
@@ -73,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     closeButton.addEventListener("click", () => devPanel.classList.add("hidden"));
     
-    // Troca de abas
     devTabs.forEach(tab => {
         tab.addEventListener("click", () => {
             devTabs.forEach(t => t.classList.remove("active-tab"));
@@ -82,9 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Função central para renderizar o conteúdo de cada aba
     function renderTabContent(tabId) {
-        panelContent.innerHTML = ""; // Limpa o conteúdo anterior
+        panelContent.innerHTML = "";
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
 
         switch (tabId) {
@@ -114,8 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
         }
     }
-
-    // --- Funções de Renderização das Abas ---
 
     function renderElementsTab() {
         panelContent.innerHTML = `
@@ -222,8 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
     }
 
-
-    // --- Lógica do Console ---
     consoleInput.addEventListener("keydown", e => {
         if (e.key === "Enter" && consoleInput.value) {
             const command = consoleInput.value;
@@ -255,7 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
 
-    // Sobrescreve o console original para capturar logs
     ["log", "warn", "error", "info"].forEach(type => {
         const original = console[type];
         console[type] = (...args) => {
@@ -264,8 +247,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     });
     
-    // --- Lógica da Aba "Elements" ---
-
     function buildElementsTree(rootElement) {
         const treeContainer = document.createElement('div');
 
@@ -295,7 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isOpen = childrenContainer.classList.toggle('hidden');
                 nodeHeader.querySelector('.expand-icon').textContent = isOpen ? 'arrow_right' : 'arrow_drop_down';
                 
-                // Exibe os estilos ao clicar
                 highlightInspectedElement(element);
                 displayComputedStyles(element);
             });
@@ -332,4 +312,103 @@ document.addEventListener("DOMContentLoaded", () => {
             lastInspectedElement.style.outline = '';
         }
         element.style.outline = '2px solid #0ea5e9';
-        lastInspected
+        lastInspectedElement = element;
+    }
+
+    function toggleInspector(event) {
+        event.stopPropagation();
+        isInspecting = !isInspecting;
+        
+        const inspectorButton = event.currentTarget;
+        inspectorButton.style.backgroundColor = isInspecting ? '#0ea5e9' : 'transparent';
+        inspectorButton.style.color = isInspecting ? 'white' : '#9ca3af';
+        document.body.style.cursor = isInspecting ? 'crosshair' : 'default';
+
+        if (isInspecting) {
+            document.addEventListener('mouseover', highlightElementOnPage);
+            document.addEventListener('click', selectElementOnPage, { capture: true });
+        } else {
+            document.removeEventListener('mouseover', highlightElementOnPage);
+            document.removeEventListener('click', selectElementOnPage, { capture: true });
+            if(lastInspectedElement) {
+                lastInspectedElement.style.outline = '';
+            }
+        }
+    }
+
+    function highlightElementOnPage(e) {
+        if(e.target.closest("#dev-panel")) return;
+        highlightInspectedElement(e.target);
+    }
+    
+    function selectElementOnPage(e) {
+        if (isInspecting) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const clickedElement = e.target;
+            toggleInspector(new Event('click')); 
+            
+            displayComputedStyles(clickedElement);
+        }
+    }
+
+    async function runAxeAudit() {
+        const resultsContainer = document.getElementById("axe-results");
+        resultsContainer.innerHTML = "Analisando...";
+        try {
+            const results = await axe.run({ exclude: [['#dev-panel']] });
+            
+            resultsContainer.innerHTML = '';
+            const violations = results.violations;
+            const incomplete = results.incomplete;
+            const passes = results.passes;
+
+            resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
+            
+            if(violations.length > 0) {
+                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
+                violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
+            }
+            if(incomplete.length > 0) {
+                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
+                incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
+            }
+            if(violations.length === 0 && incomplete.length === 0) {
+                resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
+            }
+
+        } catch (err) {
+            resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
+        }
+    }
+
+    async function runDiagnosticTests() {
+        const resultsContainer = document.getElementById("test-results");
+        resultsContainer.innerHTML = "";
+        const resourcesToTest = ["css/style.css", "js/script.js", "js/dev-panel.js", "index.html", "algoritmos.html", "estruturas-de-dados.html", "search.html", "status.html"];
+        
+        for (const resource of resourcesToTest) {
+            let status, message;
+            try {
+                const response = await fetch(resource, { method: "HEAD", cache: "no-store" });
+                if (response.ok) {
+                    status = "success";
+                    message = "Arquivo encontrado e acessível.";
+                } else {
+                    status = "error";
+                    message = `Falha ao carregar (Status: ${response.status}).`;
+                }
+            } catch (error) {
+                status = "error";
+                message = "Erro de rede.";
+            }
+            const color = status === "success" ? "text-green-400" : "text-red-400";
+            resultsContainer.insertAdjacentHTML("beforeend", `<div class="flex items-center gap-2 p-1 border-b border-gray-800 ${color}"><span class="material-symbols-outlined">${status === "success" ? "check_circle" : "error"}</span><span class="font-bold">${resource}:</span><span>${message}</span></div>`);
+        }
+    }
+    
+    window.onerror = (message, source, lineno, colno, error) => {
+        logToPanel({ type: "error", args: [`Erro: ${message} em ${source}:${lineno}`] });
+    };
+});
