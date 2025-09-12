@@ -2,17 +2,18 @@
 
 title: Pitchutcha
 description: Uma enciclopédia de documentação sobre Ciência da Computação.
+baseurl: "/pitchutcha.github.io"
 
 # Configuração do Processador de Markdown
 kramdown:
   input: GFM
   syntax_highlighter: rouge
 
-# Adicione esta seção no final para ignorar os arquivos do Tailwind
+# Ignorar os ficheiros do Tailwind na construção do Jekyll
 exclude:
   - package.json
   - package-lock.json
   - tailwind.config.js
   - node_modules
   - css/input.css
-  - vendor/ # <-- ADICIONE ESTA LINHA
+  - vendor/
