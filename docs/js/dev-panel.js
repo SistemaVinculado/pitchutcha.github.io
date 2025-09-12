@@ -1,1 +1,335 @@
-document.addEventListener("DOMContentLoaded",()=>{if(window.self!==window.top){return}const e=document.createElement("script");e.src="js/vendor/axe.min.js",document.head.appendChild(e);const t=`<div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110"><span class="material-symbols-outlined">developer_mode</span></div><div id="dev-panel" class="hidden fixed bottom-0 left-0 w-full h-2/3 bg-gray-900 text-white shadow-2xl z-[99] flex flex-col font-mono text-sm"><div class="flex items-center justify-between bg-gray-800 p-2 border-b border-gray-700"><div class="flex items-center gap-4 min-w-0"><h2 class="font-bold text-lg px-2 flex-shrink-0">Pitchutcha Dev Panel</h2><nav class="flex gap-1 overflow-x-auto whitespace-nowrap"><button data-tab="elements" class="dev-tab active-tab">Elements</button><button data-tab="console" class="dev-tab">Console</button><button data-tab="storage" class="dev-tab">Storage</button><button data-tab="network" class="dev-tab">Network</button><button data-tab="recursos" class="dev-tab">Recursos</button><button data-tab="acessibilidade" class="dev-tab">Acessibilidade</button><button data-tab="testes" class="dev-tab">Testes</button><button data-tab="info" class="dev-tab">Info</button></nav></div><button id="close-dev-panel" class="p-2 rounded-full hover:bg-gray-700"><span class="material-symbols-outlined">close</span></button></div><div id="dev-panel-content" class="flex-1 overflow-auto flex"></div><div id="console-input-container" class="hidden items-center p-2 border-t border-gray-700"><span class="material-symbols-outlined text-sky-400">chevron_right</span><input type="text" id="console-input" class="flex-1 bg-transparent border-none focus:outline-none ml-2" placeholder="Executar JavaScript..."></div></div>`,n=document.createElement("div");n.innerHTML=t,document.body.appendChild(n);const o=document.getElementById("dev-tools-trigger"),c=document.getElementById("dev-panel"),l=document.getElementById("close-dev-panel"),d=document.getElementById("dev-panel-content"),r=document.getElementById("console-input"),s=document.getElementById("console-input-container");o.addEventListener("click",()=>{c.classList.toggle("hidden"),c.classList.contains("hidden")||p("elements")}),l.addEventListener("click",()=>c.classList.add("hidden"));const i=e=>{const t=document.createElement("div");let n="text-white";return"error"===e.type?n="text-red-400":"warn"===e.type?n="text-yellow-400":"info"===e.type&&(n="text-sky-400"),t.className=`console-log-item py-1 px-2 border-b border-gray-800 flex gap-2 ${n}`,t.innerHTML=`<span class="opacity-50">${(new Date).toLocaleTimeString()}</span><div class="flex-1">${e.args.map(e=>"string"==typeof e?e:JSON.stringify(e,null,2)).join(" ")}</div>`,t},a=e=>{d.querySelector("#console-output")?.insertAdjacentElement("beforeend",i(e))};["log","warn","error","info"].forEach(e=>{const t=console[e];console[e]=(...n)=>{t.apply(console,n),a({type:e,args:n})}}),r.addEventListener("keydown",e=>{if("Enter"===e.key&&r.value){const t=r.value;r.value="",console.log(`> ${t}`);try{const n=new Function(`return ${t}`)(),o=i({type:"info",args:[n]});o.querySelector("div").classList.add("text-sky-400"),d.querySelector("#console-output")?.appendChild(o)}catch(n){console.error(n.toString())}d.scrollTop=d.scrollHeight}});const u=document.querySelectorAll(".dev-tab");u.forEach(e=>{e.addEventListener("click",()=>{u.forEach(e=>e.classList.remove("active-tab")),e.classList.add("active-tab");const t=e.dataset.tab;p(t)})});let m=!1,f=null;const h=e=>{f&&f.style.outline="",(f=e).style.outline="2px solid #0ea5e9"},g=e=>{if(m){e.preventDefault(),e.stopPropagation();const t=e.target;h(t),b(t),m=!1,document.body.style.cursor="default";const n=document.querySelector("#inspector-toggle");n&&(n.style.backgroundColor="transparent",n.style.color="#9ca3af")}},b=e=>{const t=document.getElementById("computed-styles-container");if(t){t.innerHTML="";const n=window.getComputedStyle(e),o=Array.from(n).filter(e=>!e.startsWith("-")).sort();let c="<table class='w-full text-left text-xs'>";o.forEach(e=>{c+=`<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${e}</td><td class='p-1 text-cyan-400'>${n.getPropertyValue(e)}</td></tr>`}),c+="</table>",t.innerHTML=c}},p=e=>{switch(d.innerHTML="",s.style.display="console"===e?"flex":"none",e){case"console":d.innerHTML='<div id="console-output" class="flex-1 overflow-y-auto"></div>';break;case"elements":d.innerHTML=`<div id="elements-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div><div id="styles-container" class="w-1/2 overflow-auto p-2"><div class="flex items-center gap-2 mb-2"><button id="inspector-toggle" class="p-1 rounded hover:bg-gray-700" title="Select an element in the page to inspect it"><span class="material-symbols-outlined">ads_click</span></button><h3 class="font-bold">Computed Styles</h3></div><div id="computed-styles-container"></div></div>`;const t=e=>{const n=document.createElement("div");n.className="element-node";const o=document.createElement("div");o.className="flex items-center cursor-pointer hover:bg-gray-800 rounded p-0.5",o.style.paddingLeft=`${e.depth}rem`;const c=Array.from(e.element.attributes).map(e=>`<span class="text-orange-400">${e.name}</span><span class="text-gray-500">="</span><span class="text-green-400">${e.value}</span><span class="text-gray-500">"</span>`).join(" "),l=e.element.children.length>0?`<span class="material-symbols-outlined text-sm expand-icon">arrow_right</span>`:"<span class='w-4 inline-block'></span>",r=`<span class='text-gray-500'>&lt;</span><span class='text-pink-400'>${e.element.tagName.toLowerCase()}</span> <span class="attributes">${c}</span><span class='text-gray-500'>&gt;</span>`;o.innerHTML=`${l}${r}`,n.appendChild(o),o.addEventListener("click",t=>{t.stopPropagation(),n.classList.toggle("open"),h(e.element),b(e.element)});const s=document.createElement("div");return s.className="element-children",n.appendChild(s),n},n=(e,o=0)=>{const c={element:e,depth:o};const l=t(c);if(Array.from(e.children).forEach(e=>{const t=n(e,o+1);l.querySelector(".element-children").appendChild(t)}),l.classList.contains("open")){const e=document.createElement("div");e.style.paddingLeft=`${o}rem`,e.innerHTML=`<span class='text-gray-500'>&lt;/</span><span class='text-pink-400'>${c.element.tagName.toLowerCase()}</span><span class='text-gray-500'>&gt;</span>`,l.appendChild(e)}return l},o=document.getElementById("elements-container");o.appendChild(n(document.documentElement));const r=document.getElementById("inspector-toggle");r&&r.addEventListener("click",()=>{m=!m,r.style.backgroundColor=m?"#0ea5e9":"transparent",r.style.color=m?"white":"#9ca3af",document.body.style.cursor=m?"crosshair":"default",m?document.addEventListener("click",g,{once:!0}):document.removeEventListener("click",g)});break;case"storage":d.innerHTML=`<div class="p-2"><h3 class="font-bold text-lg mb-2">Local Storage</h3><table id="local-storage-table" class="w-full text-left"><thead><tr class="border-b border-gray-700"><th class="p-2">Key</th><th class="p-2">Value</th></tr></thead><tbody></tbody></table></div>`;const i=document.getElementById("local-storage-table")?.querySelector("tbody");if(i)for(let e=0;e<localStorage.length;e++){const t=localStorage.key(e),n=localStorage.getItem(t),o=i.insertRow();o.insertCell(0).textContent=t,o.insertCell(1).textContent=n}break;case"network":const a=performance.getEntriesByType("navigation")[0];let v="<table class='w-full text-left'><tbody>";v+=`<tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${a.duration.toFixed(0)} ms</td></tr>`,v+=`<tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(a.domainLookupEnd-a.domainLookupStart).toFixed(0)} ms</td></tr>`,v+=`<tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(a.connectEnd-a.connectStart).toFixed(0)} ms</td></tr>`,v+=`<tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(a.responseStart-a.requestStart).toFixed(0)} ms</td></tr>`,v+=`<tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(a.responseEnd-a.responseStart).toFixed(0)} ms</td></tr>`,v+="</tbody></table>",d.innerHTML=v;break;case"recursos":const k=performance.getEntriesByType("resource");let y="<table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>";k.forEach(e=>{y+=`<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${e.name.split("/").pop()}</td><td class='p-2'>${e.initiatorType}</td><td class='p-2'>${(e.transferSize/1024).toFixed(2)}</td><td class='p-2'>${e.duration.toFixed(0)}</td></tr>`}),y+="</tbody></table>",d.innerHTML=y;break;case"acessibilidade":d.innerHTML='<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';break;case"testes":d.innerHTML='<div class="p-4"><button id="run-tests" class="dev-button">Rodar Testes de Diagnóstico</button><div id="test-results" class="mt-4"></div></div>';break;case"info":d.innerHTML=`<div class="p-4"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr></tbody></table></div>`}const w=document.getElementById("axe-results"),E=document.getElementById("run-axe"),S=document.getElementById("test-results"),L=document.getElementById("run-tests");E&&E.addEventListener("click",async()=>{w.innerHTML="Analisando...",await new Promise(e=>setTimeout(e,100));try{const e=await axe.run({exclude:[["#dev-panel"]]});(e=>{w.innerHTML="";const t=e=>`<div class="p-2 my-1 rounded-md ${"critical"===e.impact||"serious"===e.impact?"bg-red-900 border border-red-700":"bg-yellow-900 border border-yellow-700"}"><p class="font-bold">${e.help} (${e.impact})</p><p class="text-gray-400">${e.description}</p><a href="${e.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`,n=e=>`<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${e.help}</p></div>`,o=e.violations,c=e.incomplete,l=e.passes;w.insertAdjacentHTML("beforeend",`<h3 class="text-xl font-bold">Resultados (${o.length} violações, ${c.length} revisões, ${l.length} passaram)</h3>`),o.length>0&&(w.insertAdjacentHTML("beforeend",'<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>'),o.forEach(e=>{const n=t(e);w.insertAdjacentHTML("beforeend",n)})),c.length>0&&(w.insertAdjacentHTML("beforeend",'<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>'),c.forEach(e=>{const n=t(e);w.insertAdjacentHTML("beforeend",n)})),l.length>0&&(w.insertAdjacentHTML("beforeend",`<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${l.length})</h4>`),l.forEach(e=>{const t=n(e);w.insertAdjacentHTML("beforeend",t)})),0===o.length&&0===c.length&&w.insertAdjacentHTML("beforeend",'<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>')})(e)}catch(s){console.error(s),w.innerHTML=`<p class="text-red-500">${s.message}</p>`}}),L&&L.addEventListener("click",async()=>{S.innerHTML="";const e=["css/style.css","js/script.js","js/dev-panel.js","index.html","algoritmos.html","estruturas-de-dados.html","search.html","status.html"];for(const t of e){let e,n;try{const o=await fetch(t,{method:"HEAD",cache:"no-store"});o.ok?(e="success",n="Arquivo encontrado e acessível."):(e="error",n=`Falha ao carregar o arquivo (Status: ${o.status}).`)}catch(o){e="error",n="Erro de rede."}x(t,e,n)}})};const x=(e,t,n)=>{const o="success"===t?"text-green-400":"text-red-400",c=`<div class="flex items-center gap-2 p-1 border-b border-gray-800 ${o}"><span class="material-symbols-outlined">${"success"===t?"check_circle":"error"}</span><span class="font-bold">${e}:</span><span>${n}</span></div>`;d.querySelector("#test-results")?.insertAdjacentHTML("beforeend",c)};window.onerror=(e,t,n,o,c)=>{const l=`Erro: ${e} em ${t}:${n}`;a({type:"error",args:[l]})}});
+document.addEventListener("DOMContentLoaded", () => {
+    // Evita que o painel seja executado em iframes
+    if (window.self !== window.top) {
+        return;
+    }
+
+    // Carrega a biblioteca Axe para testes de acessibilidade
+    const axeScript = document.createElement("script");
+    axeScript.src = "js/vendor/axe.min.js";
+    document.head.appendChild(axeScript);
+
+    // --- HTML para o Painel e o Botão de Ativação ---
+    const panelHTML = `
+        <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
+            <span class="material-symbols-outlined">developer_mode</span>
+        </div>
+        <div id="dev-panel" class="hidden fixed bottom-0 left-0 w-full h-2/3 bg-gray-900 text-white shadow-2xl z-[99] flex flex-col font-mono text-sm">
+            <div class="flex items-center justify-between bg-gray-800 p-2 border-b border-gray-700">
+                <div class="flex items-center gap-4 min-w-0">
+                    <h2 class="font-bold text-lg px-2 flex-shrink-0">Pitchutcha Dev Panel</h2>
+                    <nav class="flex gap-1 overflow-x-auto whitespace-nowrap">
+                        <button data-tab="elements" class="dev-tab active-tab">Elements</button>
+                        <button data-tab="console" class="dev-tab">Console</button>
+                        <button data-tab="storage" class="dev-tab">Storage</button>
+                        <button data-tab="network" class="dev-tab">Network</button>
+                        <button data-tab="recursos" class="dev-tab">Recursos</button>
+                        <button data-tab="acessibilidade" class="dev-tab">Acessibilidade</button>
+                        <button data-tab="testes" class="dev-tab">Testes</button>
+                        <button data-tab="info" class="dev-tab">Info</button>
+                    </nav>
+                </div>
+                <button id="close-dev-panel" class="p-2 rounded-full hover:bg-gray-700">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div id="dev-panel-content" class="flex-1 overflow-auto flex">
+                </div>
+            <div id="console-input-container" class="hidden items-center p-2 border-t border-gray-700">
+                <span class="material-symbols-outlined text-sky-400">chevron_right</span>
+                <input type="text" id="console-input" class="flex-1 bg-transparent border-none focus:outline-none ml-2" placeholder="Executar JavaScript...">
+            </div>
+        </div>
+    `;
+
+    // Adiciona o HTML ao corpo da página
+    const panelWrapper = document.createElement("div");
+    panelWrapper.innerHTML = panelHTML;
+    document.body.appendChild(panelWrapper);
+
+    // --- Referências aos Elementos do DOM ---
+    const triggerButton = document.getElementById("dev-tools-trigger");
+    const devPanel = document.getElementById("dev-panel");
+    const closeButton = document.getElementById("close-dev-panel");
+    const panelContent = document.getElementById("dev-panel-content");
+    const consoleInput = document.getElementById("console-input");
+    const consoleInputContainer = document.getElementById("console-input-container");
+    const devTabs = document.querySelectorAll(".dev-tab");
+    
+    // --- Variáveis de Estado ---
+    let isInspecting = false;
+    let lastInspectedElement = null;
+
+    // --- Lógica Principal ---
+
+    // Abre e fecha o painel
+    triggerButton.addEventListener("click", () => {
+        devPanel.classList.toggle("hidden");
+        // Se o painel foi aberto, carrega a aba de elementos por padrão
+        if (!devPanel.classList.contains("hidden")) {
+            renderTabContent("elements");
+        }
+    });
+
+    closeButton.addEventListener("click", () => devPanel.classList.add("hidden"));
+    
+    // Troca de abas
+    devTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            devTabs.forEach(t => t.classList.remove("active-tab"));
+            tab.classList.add("active-tab");
+            renderTabContent(tab.dataset.tab);
+        });
+    });
+
+    // Função central para renderizar o conteúdo de cada aba
+    function renderTabContent(tabId) {
+        panelContent.innerHTML = ""; // Limpa o conteúdo anterior
+        consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
+
+        switch (tabId) {
+            case "elements":
+                renderElementsTab();
+                break;
+            case "console":
+                renderConsoleTab();
+                break;
+            case "storage":
+                renderStorageTab();
+                break;
+            case "network":
+                renderNetworkTab();
+                break;
+            case "recursos":
+                renderRecursosTab();
+                break;
+            case "acessibilidade":
+                renderAcessibilidadeTab();
+                break;
+            case "testes":
+                renderTestesTab();
+                break;
+            case "info":
+                renderInfoTab();
+                break;
+        }
+    }
+
+    // --- Funções de Renderização das Abas ---
+
+    function renderElementsTab() {
+        panelContent.innerHTML = `
+            <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
+            <div id="styles-container" class="w-1/2 overflow-auto p-2">
+                <div class="flex items-center gap-2 mb-2">
+                    <button id="inspector-toggle" class="p-1 rounded hover:bg-gray-700" title="Inspecionar um elemento na página">
+                        <span class="material-symbols-outlined">ads_click</span>
+                    </button>
+                    <h3 class="font-bold">Computed Styles</h3>
+                </div>
+                <div id="computed-styles-container">Clique em um elemento para ver os estilos.</div>
+            </div>
+        `;
+        const elementsContainer = document.getElementById("elements-tree-container");
+        elementsContainer.appendChild(buildElementsTree(document.documentElement));
+
+        const inspectorToggle = document.getElementById("inspector-toggle");
+        inspectorToggle.addEventListener("click", toggleInspector);
+    }
+    
+    function renderConsoleTab() {
+        panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2"></div>';
+    }
+
+    function renderStorageTab() {
+        let tableRows = "";
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            const value = localStorage.getItem(key);
+            tableRows += `
+                <tr class='border-b border-gray-800'>
+                    <td class='p-2 align-top text-orange-400'>${key}</td>
+                    <td class='p-2 align-top text-green-400 whitespace-pre-wrap break-all'>${value}</td>
+                </tr>`;
+        }
+        panelContent.innerHTML = `
+            <div class="p-2 w-full">
+                <h3 class="font-bold text-lg mb-2">Local Storage</h3>
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-gray-700">
+                            <th class="p-2 w-1/4">Key</th>
+                            <th class="p-2">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+            </div>`;
+    }
+
+    function renderNetworkTab() {
+        const nav = performance.getEntriesByType("navigation")[0];
+        panelContent.innerHTML = `
+        <div class="p-4 w-full">
+            <table class='w-full text-left'>
+                <tbody>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(nav.responseEnd - nav.responseStart).toFixed(0)} ms</td></tr>
+                </tbody>
+            </table>
+        </div>`;
+    }
+    
+    function renderRecursosTab() {
+        const resources = performance.getEntriesByType("resource");
+        let tableRows = "";
+        resources.forEach(r => {
+            tableRows += `<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${r.name.split("/").pop()}</td><td class='p-2'>${r.initiatorType}</td><td class='p-2'>${(r.transferSize / 1024).toFixed(2)}</td><td class='p-2'>${r.duration.toFixed(0)}</td></tr>`;
+        });
+        panelContent.innerHTML = `
+        <div class="p-4 w-full">
+            <table class='w-full text-left'>
+                <thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead>
+                <tbody>${tableRows}</tbody>
+            </table>
+        </div>`;
+    }
+
+    function renderAcessibilidadeTab() {
+        panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
+        document.getElementById("run-axe").addEventListener("click", runAxeAudit);
+    }
+    
+    function renderTestesTab() {
+        panelContent.innerHTML = '<div class="p-4"><button id="run-tests" class="dev-button">Rodar Testes de Diagnóstico</button><div id="test-results" class="mt-4"></div></div>';
+        document.getElementById("run-tests").addEventListener("click", runDiagnosticTests);
+    }
+
+    function renderInfoTab() {
+        panelContent.innerHTML = `
+        <div class="p-4 w-full">
+            <table class='w-full text-left'>
+                <tbody>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr>
+                </tbody>
+            </table>
+        </div>`;
+    }
+
+
+    // --- Lógica do Console ---
+    consoleInput.addEventListener("keydown", e => {
+        if (e.key === "Enter" && consoleInput.value) {
+            const command = consoleInput.value;
+            consoleInput.value = "";
+            logToPanel({ type: "log", args: [`> ${command}`] });
+            try {
+                const result = new Function(`return ${command}`)();
+                logToPanel({ type: "info", args: [result] });
+            } catch (error) {
+                logToPanel({ type: "error", args: [error.toString()] });
+            }
+        }
+    });
+
+    function logToPanel(log) {
+        const consoleOutput = document.getElementById("console-output");
+        if (!consoleOutput) return;
+        
+        let color = "text-white";
+        if (log.type === "error") color = "text-red-400";
+        if (log.type === "warn") color = "text-yellow-400";
+        if (log.type === "info") color = "text-sky-400";
+
+        const item = document.createElement("div");
+        item.className = `console-log-item py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
+        item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><div class="flex-1">${log.args.map(arg => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ")}</div>`;
+        
+        consoleOutput.appendChild(item);
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    // Sobrescreve o console original para capturar logs
+    ["log", "warn", "error", "info"].forEach(type => {
+        const original = console[type];
+        console[type] = (...args) => {
+            original.apply(console, args);
+            logToPanel({ type, args });
+        };
+    });
+    
+    // --- Lógica da Aba "Elements" ---
+
+    function buildElementsTree(rootElement) {
+        const treeContainer = document.createElement('div');
+
+        function createNode(element, depth) {
+            const nodeWrapper = document.createElement('div');
+            const nodeHeader = document.createElement('div');
+            nodeHeader.className = 'flex items-center cursor-pointer hover:bg-gray-800 rounded p-0.5';
+            nodeHeader.style.paddingLeft = `${depth}rem`;
+
+            const attributes = Array.from(element.attributes).map(attr => 
+                `<span class="text-orange-400">${attr.name}</span><span class="text-gray-500">="</span><span class="text-green-400">${attr.value}</span><span class="text-gray-500">"</span>`
+            ).join(" ");
+            
+            const hasChildren = element.children.length > 0;
+            const arrow = hasChildren ? `<span class="material-symbols-outlined text-sm expand-icon">arrow_right</span>` : `<span class='w-4 inline-block'></span>`;
+            
+            nodeHeader.innerHTML = `${arrow}<span class='text-gray-500'>&lt;</span><span class='text-pink-400'>${element.tagName.toLowerCase()}</span> <span class="attributes">${attributes}</span><span class='text-gray-500'>&gt;</span>`;
+            
+            const childrenContainer = document.createElement('div');
+            childrenContainer.className = 'element-children hidden';
+            
+            nodeWrapper.appendChild(nodeHeader);
+            nodeWrapper.appendChild(childrenContainer);
+
+            nodeHeader.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = childrenContainer.classList.toggle('hidden');
+                nodeHeader.querySelector('.expand-icon').textContent = isOpen ? 'arrow_right' : 'arrow_drop_down';
+                
+                // Exibe os estilos ao clicar
+                highlightInspectedElement(element);
+                displayComputedStyles(element);
+            });
+
+            if (hasChildren) {
+                for (const child of element.children) {
+                    childrenContainer.appendChild(createNode(child, depth + 1));
+                }
+            }
+            return nodeWrapper;
+        }
+        
+        treeContainer.appendChild(createNode(rootElement, 0));
+        return treeContainer;
+    }
+
+    function displayComputedStyles(element) {
+        const container = document.getElementById("computed-styles-container");
+        if (!container) return;
+        
+        const styles = window.getComputedStyle(element);
+        const properties = Array.from(styles).filter(prop => !prop.startsWith("-")).sort();
+        
+        let tableHTML = "<table class='w-full text-left text-xs'>";
+        properties.forEach(prop => {
+            tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`;
+        });
+        tableHTML += "</table>";
+        container.innerHTML = tableHTML;
+    }
+
+    function highlightInspectedElement(element) {
+        if (lastInspectedElement) {
+            lastInspectedElement.style.outline = '';
+        }
+        element.style.outline = '2px solid #0ea5e9';
+        lastInspected
