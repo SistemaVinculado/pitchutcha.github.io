@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("pagespeed-report-container");
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
+    let lighthouseData = null; // Armazena os dados do JSON
 
     if (!container) {
         return;
@@ -13,11 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return 'text-red-500';
     };
 
-    // Função para criar o HTML do relatório
-    const createReportHTML = (title, data) => {
-        if (!data || !data.scores) {
-            return `<div class="p-6 bg-[var(--background-secondary)] border border-[var(--secondary-color)] rounded-lg"><h3 class="text-lg font-semibold">${title}</h3><p>Relatório não disponível ou em processamento.</p></div>`;
+    // Função principal que desenha o relatório na tela
+    const renderReport = (view) => { // 'view' pode ser 'mobile' ou 'desktop'
+        if (!lighthouseData || !lighthouseData[view]) {
+            container.innerHTML = `<p class="text-red-500">Dados do relatório para '${view}' não foram encontrados.</p>`;
+            return;
         }
+
+        const data = lighthouseData[view];
+        const title = view === 'mobile' ? 'Relatório de Simulação (Celular)' : 'Relatório de Simulação (Computador)';
+        const oppositeView = view === 'mobile' ? 'Computador' : 'Celular';
 
         const opportunitiesHTML = data.opportunities && data.opportunities.length > 0
             ? data.opportunities.map(op => `
@@ -31,10 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
             `).join('')
             : '<li><p class="text-[var(--text-secondary)]">Ótimo trabalho! Nenhuma oportunidade de melhoria de alto impacto encontrada.</p></li>';
 
-        return `
+        const reportHTML = `
             <div class="p-6 bg-[var(--background-secondary)] border border-[var(--secondary-color)] rounded-lg">
-                <h3 class="text-lg font-semibold text-[var(--text-primary)] mb-4">${title}</h3>
-                
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
                     <div>
                         <p class="text-3xl font-bold ${getScoreColor(data.scores.performance)}">${data.scores.performance}</p>
@@ -74,6 +78,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             </div>
         `;
+        
+        container.innerHTML = `
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)]">${title}</h2>
+                <button id="device-toggle-btn" class="text-sm font-medium text-[var(--primary-color)] hover:opacity-80 transition-opacity flex items-center gap-2">
+                    <span>Ver relatório para ${oppositeView}</span>
+                    <span class="material-symbols-outlined">swap_horiz</span>
+                </button>
+            </div>
+            ${reportHTML}
+        `;
+
+        document.getElementById('device-toggle-btn').addEventListener('click', () => {
+            renderReport(oppositeView.toLowerCase());
+        });
     };
 
     fetch(`${baseUrl}pagespeed-data.json?cache_bust=` + Date.now())
@@ -84,11 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return response.json();
         })
         .then(data => {
-            const reportHTML = createReportHTML("Relatório de Simulação (Celular)", data);
-            container.innerHTML = `
-                <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Relatório PageSpeed Insights</h2>
-                ${reportHTML}
-            `;
+            lighthouseData = data;
+            renderReport('mobile'); // Inicia com a visão de celular por padrão
         })
         .catch(error => {
             console.error("Erro ao carregar dados do PageSpeed:", error);
