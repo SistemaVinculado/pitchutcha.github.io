@@ -1,0 +1,20 @@
+[
+  {
+    "file": "index1.html",
+    "line": 8,
+    "column": 13,
+    "endLine": 8,
+    "endColumn": 14,
+    "severity": "warning",
+    "message": "Missing semicolon."
+  },
+  {
+    "file": "index1.html",
+    "line": 6,
+    "column": 9,
+    "endLine": 6,
+    "endColumn": 30,
+    "severity": "error",
+    "message": "Unexpected token in CSS."
+  }
+]
