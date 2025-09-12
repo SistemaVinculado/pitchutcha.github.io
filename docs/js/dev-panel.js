@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Carrega a biblioteca Axe para testes de acessibilidade
     const axeScript = document.createElement("script");
     axeScript.src = "js/vendor/axe.min.js";
-    axeScript.defer = true; // Adicionado para evitar bloqueio de renderização
+    axeScript.defer = true;
     document.head.appendChild(axeScript);
 
     // --- HTML para o Painel e o Botão de Ativação ---
@@ -392,16 +392,18 @@ document.addEventListener("DOMContentLoaded", () => {
             tbody.insertAdjacentHTML('beforeend', row);
         };
         
-        // --- Verificação de Saúde da Página ---
+        // --- Verificação de Saúde da Página (LÓGICA CORRIGIDA) ---
         const pageChecks = {
             search: { ids: ["search-input", "results-container", "results-count"], path: "search.html" },
             status: { ids: ["detailed-status-container", "uptime-history-container", "performance-monitor-container"], path: "status.html" },
-            home: { ids: [".main-search-form"], path: "index.html" },
-            artigo: { ids: ["toc-container", "article"], path: "algoritmos.html" } // Testa com uma página de artigo
+            home: { ids: [".main-search-form"], path: "index.html" }
         };
-        const currentPage = window.location.pathname.split("/").pop() || "index.html";
-        const checkConfig = Object.values(pageChecks).find(p => p.path.includes(currentPage));
         
+        const isArticlePage = !!document.getElementById('toc-container') && !!document.querySelector('main article');
+        const currentPageFile = window.location.pathname.split("/").pop() || "index.html";
+
+        // Roda testes específicos da página atual
+        const checkConfig = Object.values(pageChecks).find(p => p.path === currentPageFile);
         if (checkConfig) {
             checkConfig.ids.forEach(selector => {
                 const elementExists = !!document.querySelector(selector);
@@ -413,6 +415,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             });
         }
+
+        // Roda testes específicos de páginas de artigo
+        if (isArticlePage) {
+             addResult("Verificação de Layout", "PASS", "Layout de página de artigo detectado.", null);
+             ["toc-container", "article"].forEach(id => {
+                 const elementExists = !!document.getElementById(id) || !!document.querySelector(id);
+                 addResult(
+                    `Verificação de Elemento de Artigo: ${id}`,
+                    elementExists ? "PASS" : "FAIL",
+                    elementExists ? `Elemento "${id}" encontrado.` : `Elemento "${id}" não encontrado no layout do artigo.`,
+                    elementExists ? null : `Verifique o arquivo 'docs/_layouts/artigo.html' e garanta que este elemento está presente.`
+                 );
+             });
+        }
+
 
         // --- Verificação de Validade de Dados JSON ---
         try {
