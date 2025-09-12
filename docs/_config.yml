@@ -7,3 +7,11 @@ description: Uma enciclopédia de documentação sobre Ciência da Computação.
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+
+# Adicione esta seção no final para ignorar os arquivos do Tailwind
+exclude:
+  - package.json
+  - package-lock.json
+  - tailwind.config.js
+  - node_modules
+  - css/input.css
