@@ -9,14 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Injeta o CSS para a funcionalidade de expandir/recolher
     const accordionStyles = `
         .component-details {
             border-radius: 0.5rem;
             overflow: hidden;
             border: 1px solid var(--secondary-color);
             background-color: var(--background-secondary);
-            margin-bottom: 0.5rem; /* Adiciona espaço entre os blocos */
+            margin-bottom: 0.5rem;
         }
         .component-summary {
             display: flex;
@@ -30,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             display: none;
         }
         .component-details-content {
-            padding: 1rem; /* Adiciona espaçamento interno */
+            padding: 1rem;
             padding-top: 0;
             border-top: 1px solid var(--secondary-color);
         }
@@ -87,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { name: "Página de Status", url: "status.html" },
         { name: "CSS Principal", url: "css/style.css" },
         { name: "JS Principal", url: "js/script.js" },
+        { name: "JS Painel de Dev", url: "js/dev-panel.js" },
         { name: "Banco de Dados da Busca", url: "search.json", checkIntegrity: true }
     ];
 
@@ -116,9 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         <li><span class="label">Detalhes</span><span class="value">${metrics.details}</span></li>
                         <li><span class="label">Tempo de Carregamento</span><span class="value">${metrics.loadTime !== null ? metrics.loadTime + 'ms' : 'N/A'}</span></li>
                         <li><span class="label">Tamanho do Arquivo</span><span class="value">${metrics.fileSize !== null ? (metrics.fileSize / 1024).toFixed(2) + ' KB' : 'N/A'}</span></li>
-                        <li><span class="label">Tempo até Interatividade (TTI)</span><span class="value na">Não aplicável</span></li>
-                        <li><span class="label">Performance de Renderização</span><span class="value na">Não aplicável</span></li>
-                        <li><span class="label">Responsividade</span><span class="value na">Verificação manual</span></li>
+                        <li><span class="label">Tempo até Interatividade (TTI)</span><span class="value na">Use a aba "Lighthouse"</span></li>
+                        <li><span class="label">Performance de Renderização</span><span class="value na">Use a aba "Lighthouse"</span></li>
+                        <li><span class="label">Responsividade</span><span class="value na">Use o Modo de Dispositivo (Ctrl+Shift+M)</span></li>
                     </ul>
                 </div>
             </details>
@@ -144,28 +144,22 @@ document.addEventListener("DOMContentLoaded", () => {
         let finalStatus = "operational";
         detailedContainer.innerHTML = ''; 
 
-        // Limpa as medições de performance para garantir dados frescos
-        if (performance.clearResourceTimings) {
-            performance.clearResourceTimings();
-        }
-
         for (const component of components) {
             let status = "outage";
             let details = "";
             let metrics = { details: "Falha no teste", loadTime: null, fileSize: null };
+            const startTime = performance.now();
 
             try {
-                const resourceUrl = baseUrl + component.url;
-                const response = await fetch(resourceUrl, { cache: "no-store" });
-                
-                // Busca os dados de performance para este recurso específico
-                const entry = performance.getEntriesByName(resourceUrl).pop();
+                const response = await fetch(baseUrl + component.url, { cache: "no-store" });
+                const duration = (performance.now() - startTime);
 
                 if (response.ok) {
-                    metrics.loadTime = entry ? entry.duration.toFixed(0) : 0;
-                    metrics.fileSize = entry ? entry.decodedBodySize : (await response.clone().blob()).size;
-                    
-                    status = metrics.loadTime > 1000 ? "degraded" : "operational";
+                    const blob = await response.clone().blob();
+                    metrics.fileSize = blob.size;
+                    metrics.loadTime = duration.toFixed(0);
+
+                    status = duration > 1500 ? "degraded" : "operational";
                     details = `Componente operacional.`;
 
                     if (component.checkIntegrity) {
