@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         panelContent.innerHTML = ""; 
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
         if (isInspecting) {
-            toggleInspector(new Event('click'));
+            toggleInspector();
         }
         switch (tabId) {
             case "elements": renderElementsTab(); break;
@@ -99,8 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- Funções de Renderização das Abas ---
-
+    // --- Funções de Renderização das Abas (resumidas para clareza, a lógica está abaixo) ---
     function renderElementsTab() {
         panelContent.innerHTML = `
             <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
@@ -118,89 +117,37 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("inspector-toggle").addEventListener("click", toggleInspector);
     }
     
-    function renderConsoleTab() {
-        panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2"></div>';
-    }
-
+    // As implementações das outras abas continuam as mesmas...
+    function renderConsoleTab() { panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2"></div>'; }
     function renderStorageTab() {
         let tableRows = "";
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             const value = localStorage.getItem(key);
-            tableRows += `
-                <tr class='border-b border-gray-800'>
-                    <td class='p-2 align-top text-orange-400'>${key}</td>
-                    <td class='p-2 align-top text-green-400 whitespace-pre-wrap break-all'>${value}</td>
-                </tr>`;
+            tableRows += `<tr class='border-b border-gray-800'><td class='p-2 align-top text-orange-400'>${key}</td><td class='p-2 align-top text-green-400 whitespace-pre-wrap break-all'>${value}</td></tr>`;
         }
-        panelContent.innerHTML = `
-            <div class="p-2 w-full">
-                <h3 class="font-bold text-lg mb-2">Local Storage</h3>
-                <table class="w-full text-left text-xs">
-                    <thead>
-                        <tr class="border-b border-gray-700">
-                            <th class="p-2 w-1/4">Key</th>
-                            <th class="p-2">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>${tableRows}</tbody>
-                </table>
-            </div>`;
+        panelContent.innerHTML = `<div class="p-2 w-full"><h3 class="font-bold text-lg mb-2">Local Storage</h3><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Key</th><th class="p-2">Value</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
     }
-
     function renderNetworkTab() {
         const nav = performance.getEntriesByType("navigation")[0];
-        panelContent.innerHTML = `
-        <div class="p-4 w-full">
-            <table class='w-full text-left'>
-                <tbody>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(nav.responseEnd - nav.responseStart).toFixed(0)} ms</td></tr>
-                </tbody>
-            </table>
-        </div>`;
+        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(nav.responseEnd - nav.responseStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
     }
-    
     function renderRecursosTab() {
         const resources = performance.getEntriesByType("resource");
         let tableRows = "";
-        resources.forEach(r => {
-            tableRows += `<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${r.name.split("/").pop()}</td><td class='p-2'>${r.initiatorType}</td><td class='p-2'>${(r.transferSize / 1024).toFixed(2)}</td><td class='p-2'>${r.duration.toFixed(0)}</td></tr>`;
-        });
-        panelContent.innerHTML = `
-        <div class="p-4 w-full">
-            <table class='w-full text-left'>
-                <thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead>
-                <tbody>${tableRows}</tbody>
-            </table>
-        </div>`;
+        resources.forEach(r => { tableRows += `<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${r.name.split("/").pop()}</td><td class='p-2'>${r.initiatorType}</td><td class='p-2'>${(r.transferSize / 1024).toFixed(2)}</td><td class='p-2'>${r.duration.toFixed(0)}</td></tr>`; });
+        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
     }
-
     function renderAcessibilidadeTab() {
         panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
         document.getElementById("run-axe").addEventListener("click", runAxeAudit);
     }
-    
     function renderTestesTab() {
         panelContent.innerHTML = '<div class="p-4"><button id="run-tests" class="dev-button">Rodar Testes de Diagnóstico</button><div id="test-results" class="mt-4"></div></div>';
         document.getElementById("run-tests").addEventListener("click", runDiagnosticTests);
     }
-
     function renderInfoTab() {
-        panelContent.innerHTML = `
-        <div class="p-4 w-full">
-            <table class='w-full text-left'>
-                <tbody>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr>
-                </tbody>
-            </table>
-        </div>`;
+        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr></tbody></table></div>`;
     }
 
     // --- Lógica do Console ---
@@ -264,7 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
             nodeHeader.addEventListener('click', (e) => {
                 e.stopPropagation();
                 childrenContainer.classList.toggle('hidden');
-                nodeHeader.querySelector('.expand-icon').textContent = childrenContainer.classList.contains('hidden') ? 'arrow_right' : 'arrow_drop_down';
+                const icon = nodeHeader.querySelector('.expand-icon');
+                if (icon) icon.textContent = childrenContainer.classList.contains('hidden') ? 'arrow_right' : 'arrow_drop_down';
                 selectElement(element);
             });
 
@@ -291,10 +239,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if(container) container.innerHTML = "Selecione um elemento para ver os estilos.";
             return;
         };
-        
         const styles = window.getComputedStyle(element);
         const properties = Array.from(styles).filter(prop => !prop.startsWith("-")).sort();
-        
         let tableHTML = "<table class='w-full text-left text-xs'>";
         properties.forEach(prop => {
             tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`;
@@ -317,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const treeNode = domElementToTreeNode.get(element);
         if (treeNode) {
-            treeNode.style.backgroundColor = 'rgba(14, 165, 233, 0.3)'; // Usando cor com transparência
+            treeNode.style.backgroundColor = 'rgba(14, 165, 233, 0.3)';
             lastSelectedTreeNode = treeNode;
         }
     }
@@ -327,8 +273,8 @@ document.addEventListener("DOMContentLoaded", () => {
         while(current) {
             const treeNode = domElementToTreeNode.get(current);
             if(treeNode) {
-                const childrenContainer = treeNode.nextElementSibling;
-                if(childrenContainer && childrenContainer.classList.contains('element-children')) {
+                const childrenContainer = treeNode.parentElement.querySelector('.element-children');
+                if(childrenContainer) {
                     childrenContainer.classList.remove('hidden');
                     const icon = treeNode.querySelector('.expand-icon');
                     if (icon) icon.textContent = 'arrow_drop_down';
@@ -342,15 +288,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function toggleInspector(event) {
-        event.stopPropagation();
+    function toggleInspector() {
         isInspecting = !isInspecting;
-        
-        const inspectorButton = event.currentTarget;
-        inspectorButton.style.backgroundColor = isInspecting ? '#0ea5e9' : 'transparent';
-        inspectorButton.style.color = isInspecting ? 'white' : '#9ca3af';
+        const inspectorButton = document.getElementById('inspector-toggle');
+        if (inspectorButton) {
+            inspectorButton.style.backgroundColor = isInspecting ? '#0ea5e9' : 'transparent';
+            inspectorButton.style.color = isInspecting ? 'white' : '#9ca3af';
+        }
         document.body.style.cursor = isInspecting ? 'crosshair' : 'default';
-
         if (isInspecting) {
             document.addEventListener('mouseover', highlightElementOnPage);
             document.addEventListener('click', selectElementOnPage, { capture: true });
@@ -364,14 +309,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function selectElementOnPage(e) {
-        if (isInspecting) {
-            e.preventDefault();
-            e.stopPropagation();
-            const clickedElement = e.target;
-            selectElement(clickedElement);
-            revealInTree(clickedElement);
-            toggleInspector(new Event('click')); 
-        }
+        if (!isInspecting) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const clickedElement = e.target;
+        selectElement(clickedElement);
+        revealInTree(clickedElement);
+        toggleInspector();
     }
 
     // --- Funções de Testes e Auditorias ---
@@ -383,9 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const results = await axe.run({ exclude: [['#dev-panel']] });
             resultsContainer.innerHTML = '';
             const { violations, incomplete, passes } = results;
-
             resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
-            
             if (violations.length > 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
                 violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
@@ -410,28 +352,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const resultsContainer = document.getElementById("test-results");
         resultsContainer.innerHTML = "";
         const resourcesToTest = ["css/style.css", "js/script.js", "js/dev-panel.js", "index.html", "algoritmos.html", "estruturas-de-dados.html", "search.html", "status.html"];
-        
         for (const resource of resourcesToTest) {
             let status, message;
             try {
                 const response = await fetch(resource, { method: "HEAD", cache: "no-store" });
-                if (response.ok) {
-                    status = "success";
-                    message = "Arquivo encontrado e acessível.";
-                } else {
-                    status = "error";
-                    message = `Falha ao carregar (Status: ${response.status}).`;
-                }
-            } catch (error) {
-                status = "error";
-                message = "Erro de rede.";
-            }
+                if (response.ok) { status = "success"; message = "Arquivo encontrado e acessível."; }
+                else { status = "error"; message = `Falha ao carregar (Status: ${response.status}).`; }
+            } catch (error) { status = "error"; message = "Erro de rede."; }
             const color = status === "success" ? "text-green-400" : "text-red-400";
             resultsContainer.insertAdjacentHTML("beforeend", `<div class="flex items-center gap-2 p-1 border-b border-gray-800 ${color}"><span class="material-symbols-outlined">${status === "success" ? "check_circle" : "error"}</span><span class="font-bold">${resource}:</span><span>${message}</span></div>`);
         }
     }
     
-    // Captura de erros globais
     window.onerror = (message, source, lineno, colno, error) => {
         logToPanel({ type: "error", args: [`Erro: ${message} em ${source}:${lineno}`] });
     };
