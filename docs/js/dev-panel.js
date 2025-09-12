@@ -295,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 childrenContainer.classList.toggle('hidden');
                 nodeHeader.querySelector('.expand-icon').textContent = childrenContainer.classList.contains('hidden') ? 'arrow_right' : 'arrow_drop_down';
                 
-                // Exibe os estilos ao clicar
                 highlightInspectedElement(element);
                 displayComputedStyles(element);
             });
@@ -357,7 +356,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function highlightElementOnPage(e) {
-        // Evita destacar o próprio painel
         if(e.target.closest("#dev-panel")) return;
         highlightInspectedElement(e.target);
     }
@@ -368,11 +366,11 @@ document.addEventListener("DOMContentLoaded", () => {
             e.stopPropagation();
 
             const clickedElement = e.target;
-            // Desativa o modo de inspeção após a seleção
-            toggleInspector(new Event('click')); 
-            
-            // Exibe os estilos do elemento clicado
             displayComputedStyles(clickedElement);
+            
+            // Desativa o modo de inspeção após a seleção
+            // É importante chamar isso por último
+            toggleInspector(new Event('click')); 
         }
     }
 
@@ -399,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if(passes.length > 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
-                passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1"><p class="font-bold">${p.help}</p></div>`));
+                passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${p.help}</p></div>`));
             }
             if(violations.length === 0 && incomplete.length === 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
