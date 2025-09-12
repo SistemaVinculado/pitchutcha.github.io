@@ -1,44 +1,44 @@
 {
   "metrics": {
-    "api_latency": "41ms",
-    "inference_time": "143ms",
+    "api_latency": "54ms",
+    "inference_time": "138ms",
     "error_rate": "0.04%"
   },
   "graphs": {
     "latency_history": [
-      68,
-      57,
-      59,
-      33,
-      27,
-      40,
-      59,
+      46,
+      48,
+      24,
       55,
-      66,
-      17,
-      26,
-      12
+      65,
+      53,
+      40,
+      30,
+      51,
+      49,
+      51,
+      45
     ],
     "inference_by_model": [
       {
         "model": "GPT-4",
-        "time": 234
+        "time": 210
       },
       {
         "model": "GPT-3.5",
-        "time": 104
+        "time": 100
       },
       {
         "model": "DALL-E",
-        "time": 252
+        "time": 303
       },
       {
         "model": "Whisper",
-        "time": 57
+        "time": 91
       },
       {
         "model": "Embeds",
-        "time": 40
+        "time": 20
       }
     ]
   },
@@ -67,10 +67,30 @@
       "create_datetime": 1757459040,
       "logs": [
         {
+          "id": 4217323186,
+          "type": 2,
+          "datetime": 1757621312,
+          "duration": 24930,
+          "reason": {
+            "code": "200",
+            "detail": "OK"
+          }
+        },
+        {
+          "id": 4217303255,
+          "type": 1,
+          "datetime": 1757620374,
+          "duration": 938,
+          "reason": {
+            "code": "404",
+            "detail": "Not Found"
+          }
+        },
+        {
           "id": 4214017620,
           "type": 2,
           "datetime": 1757469888,
-          "duration": 126695,
+          "duration": 150486,
           "reason": {
             "code": "200",
             "detail": "OK"
@@ -87,8 +107,8 @@
           }
         }
       ],
-      "custom_uptime_ratio": "100.000-100.000",
-      "custom_down_durations": "0-0",
+      "custom_uptime_ratio": "99.468-99.468",
+      "custom_down_durations": "938-938",
       "lastLogTypeBeforeStartDate": {}
     }
   ]
