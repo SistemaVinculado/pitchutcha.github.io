@@ -1,18 +1,108 @@
-document.addEventListener("DOMContentLoaded",()=>{const e=document.querySelector('meta[name="base-url"]')?.content||"",t=document.getElementById("overall-status-indicator"),o=document.getElementById("overall-status-text"),n=document.getElementById("detailed-status-container");if(t&&n){const s=[{name:"Página Principal",url:"index.html",type:"Página"},{name:"Página de Algoritmos",url:"algoritmos.html",type:"Página"},{name:"Página de Estrutura de Dados",url:"estruturas-de-dados.html",type:"Página"},{name:"Página de Busca",url:"search.html",type:"Página"},{name:"Página de Status",url:"status.html",type:"Página"},{name:"CSS Principal",url:"css/style.css",type:"Recurso"},{name:"JS Principal",url:"js/script.js",type:"Recurso"},{name:"JS da Busca",url:"js/search.js",type:"Recurso"},{name:"Painel de Dev",url:"js/dev-panel.js",type:"Recurso"},{name:"Banco de Dados da Busca",url:"search.json",type:"Recurso",checkIntegrity:!0}],a=1e3;async function r(){let r="operational";for(const l of s){const s=performance.now();let c="outage",i="";try{const u=await fetch(`${e}${l.url}`,{cache:"no-store"}),d=performance.now()-s;u.ok?l.checkIntegrity?await u.text().then(e=>{""===e.trim()?(c="outage",i="Falha: Arquivo está vazio. Dica: Verifique se o conteúdo não foi apagado.",r="outage"):(JSON.parse(e),c="operational",i=`Componente íntegro e operacional (${d.toFixed(0)}ms).`)}):d>a?(c="degraded",i=`Aviso: Componente com lentidão (${d.toFixed(0)}ms). Dica: Verifique o tamanho do arquivo.`,"operational"===r&&(r="degraded")):(c="operational",i=`Componente operacional (${d.toFixed(0)}ms).`):(c="outage",i=`Falha: Arquivo não encontrado (Erro ${u.status}). Dica: Verifique o nome e o caminho do arquivo.`,r="outage")}catch(e){c="outage",i=`Falha Crítica: ${e.message}. Dica: Verifique se o arquivo está corrompido ou se há erro de rede.`,r="outage"}l(l.name,c,i)}c(r)}function l(e,t,o){const s={operational:{text:"Operational",pulseColor:"ping-green",dotColor:"bg-green-500",textColor:"text-green-600"},degraded:{text:"Degraded",pulseColor:"ping-yellow",dotColor:"bg-yellow-500",textColor:"text-yellow-600"},outage:{text:"Outage",pulseColor:"ping-red",dotColor:"bg-red-500",textColor:"text-red-500"}},a=s[t]||{text:"Unknown",pulseColor:"ping-gray",dotColor:"bg-gray-400",textColor:"text-gray-400"};const r=`
+document.addEventListener("DOMContentLoaded", () => {
+    const overallStatusIndicator = document.getElementById("overall-status-indicator");
+    const overallStatusText = document.getElementById("overall-status-text");
+    const detailedContainer = document.getElementById("detailed-status-container");
+    const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
+
+    if (!overallStatusIndicator || !overallStatusText || !detailedContainer) {
+        console.error("Elementos essenciais da página de status não foram encontrados.");
+        return;
+    }
+
+    const components = [
+        { name: "Página Principal", url: "index.html" },
+        { name: "Página de Algoritmos", url: "algoritmos.html" },
+        { name: "CSS Principal", url: "css/style.css" },
+        { name: "JS Principal", url: "js/script.js" },
+        { name: "Banco de Dados da Busca", url: "search.json", checkIntegrity: true }
+    ];
+
+    const updateComponentStatus = (name, status, details) => {
+        const statusMap = {
+            operational: { text: "Operacional", pulse: "ping-green", dot: "bg-green-500", textClass: "text-green-600" },
+            degraded: { text: "Lento", pulse: "ping-yellow", dot: "bg-yellow-500", textClass: "text-yellow-600" },
+            outage: { text: "Falha", pulse: "ping-red", dot: "bg-red-500", textClass: "text-red-500" }
+        };
+
+        const currentStatus = statusMap[status] || statusMap.outage;
+        
+        const componentHTML = `
             <div class="flex items-center justify-between p-4 border-b border-[var(--secondary-color)] last:border-b-0">
                 <div>
-                    <p class="text-[var(--text-primary)] font-semibold">${e}</p>
-                    <p class="text-sm text-[var(--text-secondary)]">${o}</p>
+                    <p class="text-[var(--text-primary)] font-semibold">${name}</p>
+                    <p class="text-sm text-[var(--text-secondary)]">${details}</p>
                 </div>
                 <div class="flex items-center gap-2 text-sm">
                     <span class="relative flex h-3 w-3">
-                        <span class="ping-pulse ${a.pulseColor}"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 ${a.dotColor}"></span>
+                        <span class="ping-pulse ${currentStatus.pulse}"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.dot}"></span>
                     </span>
-                    <span class="capitalize font-medium ${a.textColor}">${a.text}</span>
+                    <span class="capitalize font-medium ${currentStatus.textClass}">${currentStatus.text}</span>
                 </div>
-            </div>
-        `;n.insertAdjacentHTML("beforeend",r)}function c(e){const n={operational:{pulseColor:"ping-green",dotColor:"bg-green-500",text:"Todos os sistemas operacionais",textColor:"text-green-600"},degraded:{pulseColor:"ping-yellow",dotColor:"bg-yellow-500",text:"Performance degradada",textColor:"text-yellow-600"},outage:{pulseColor:"ping-red",dotColor:"bg-red-500",text:"Falha crítica no sistema",textColor:"text-red-500"}},s=n[e]||n.degraded;const a=`
-            <span class="ping-pulse ${s.pulseColor}"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 ${s.dotColor}"></span>
-        `;t.innerHTML=a,o.className=s.textColor,o.textContent=s.text}r()}});
+            </div>`;
+        detailedContainer.insertAdjacentHTML("beforeend", componentHTML);
+    };
+
+    const updateOverallStatus = (status) => {
+        const statusMap = {
+            operational: { pulse: "ping-green", dot: "bg-green-500", text: "Todos os sistemas operacionais", textClass: "text-green-600" },
+            degraded: { pulse: "ping-yellow", dot: "bg-yellow-500", text: "Performance degradada", textClass: "text-yellow-600" },
+            outage: { pulse: "ping-red", dot: "bg-red-500", text: "Falha crítica no sistema", textClass: "text-red-500" }
+        };
+
+        const currentStatus = statusMap[status] || statusMap.outage;
+        
+        const indicatorHTML = `
+            <span class="ping-pulse ${currentStatus.pulse}"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.dot}"></span>`;
+        
+        overallStatusIndicator.innerHTML = indicatorHTML;
+        overallStatusText.textContent = currentStatus.text;
+        overallStatusText.className = `font-medium ${currentStatus.textClass}`;
+    };
+
+    const runChecks = async () => {
+        let finalStatus = "operational";
+        detailedContainer.innerHTML = ''; // Limpa o contêiner antes de começar
+
+        for (const component of components) {
+            let status = "outage";
+            let details = "";
+            const startTime = performance.now();
+
+            try {
+                const response = await fetch(baseUrl + component.url, { cache: "no-store" });
+                const duration = (performance.now() - startTime).toFixed(0);
+
+                if (response.ok) {
+                    status = duration > 1000 ? "degraded" : "operational";
+                    details = `Componente operacional (${duration}ms).`;
+
+                    if (component.checkIntegrity) {
+                        const text = await response.text();
+                        JSON.parse(text); // Valida se é um JSON válido
+                        if (text.trim() === "[]" || text.trim() === "") {
+                           status = "outage";
+                           details = "Falha: Arquivo de dados está vazio.";
+                        }
+                    }
+                } else {
+                    status = "outage";
+                    details = `Falha: Recurso não encontrado (Erro ${response.status}).`;
+                }
+            } catch (err) {
+                status = "outage";
+                details = `Falha Crítica: ${err.message}.`;
+            }
+            
+            if (status === 'outage') finalStatus = 'outage';
+            if (status === 'degraded' && finalStatus !== 'outage') finalStatus = 'degraded';
+            
+            updateComponentStatus(component.name, status, details);
+        }
+        
+        updateOverallStatus(finalStatus);
+    };
+
+    runChecks();
+});
