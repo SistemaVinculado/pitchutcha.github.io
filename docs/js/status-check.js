@@ -9,13 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Injeta o CSS para a nova funcionalidade de expandir/recolher
+    // Injeta o CSS para a funcionalidade de expandir/recolher
     const accordionStyles = `
         .component-details {
             border-radius: 0.5rem;
             overflow: hidden;
             border: 1px solid var(--secondary-color);
             background-color: var(--background-secondary);
+            margin-bottom: 0.5rem; /* Adiciona espaço entre os blocos */
         }
         .component-summary {
             display: flex;
@@ -23,14 +24,18 @@ document.addEventListener("DOMContentLoaded", () => {
             justify-content: space-between;
             padding: 1rem;
             cursor: pointer;
-            list-style: none; /* Remove a seta padrão do <summary> */
+            list-style: none;
         }
         .component-summary::-webkit-details-marker {
-            display: none; /* Remove a seta padrão no Chrome/Safari */
+            display: none;
         }
         .component-details-content {
-            padding: 0 1rem 1rem 1rem;
+            padding: 1rem; /* Adiciona espaçamento interno */
+            padding-top: 0;
             border-top: 1px solid var(--secondary-color);
+        }
+        .component-details[open] .component-details-content {
+            padding-top: 1rem;
         }
         .component-details .icon-toggle::before {
             content: 'expand_more';
@@ -42,6 +47,32 @@ document.addEventListener("DOMContentLoaded", () => {
         .component-details[open] .icon-toggle::before {
             transform: rotate(180deg);
         }
+        .details-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+        .details-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+        .details-list li:last-child {
+            border-bottom: none;
+        }
+        .details-list .label {
+            color: var(--text-secondary);
+        }
+        .details-list .value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .details-list .value.na {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
     `;
     const styleSheet = document.createElement("style");
     styleSheet.innerText = accordionStyles;
@@ -49,28 +80,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     const components = [
-        { name: "Página Principal", url: "index.html", type: "Página" },
-        { name: "Página de Algoritmos", url: "algoritmos.html", type: "Página" },
-        { name: "Página de Estrutura de Dados", url: "estruturas-de-dados.html", type: "Página" },
-        { name: "Página de Busca", url: "search.html", type: "Página" },
-        { name: "Página de Status", url: "status.html", type: "Página" },
-        { name: "CSS Principal", url: "css/style.css", type: "Recurso" },
-        { name: "JS Principal", url: "js/script.js", type: "Recurso" },
-        { name: "JS da Busca", url: "js/search.js", type: "Recurso" },
-        { name: "Painel de Dev", url: "js/dev-panel.js", type: "Recurso" },
-        { name: "Banco de Dados da Busca", url: "search.json", type: "Recurso", checkIntegrity: true }
+        { name: "Página Principal", url: "index.html" },
+        { name: "Página de Algoritmos", url: "algoritmos.html" },
+        { name: "Página de Estrutura de Dados", url: "estruturas-de-dados.html" },
+        { name: "Página de Busca", url: "search.html" },
+        { name: "Página de Status", url: "status.html" },
+        { name: "CSS Principal", url: "css/style.css" },
+        { name: "JS Principal", url: "js/script.js" },
+        { name: "Banco de Dados da Busca", url: "search.json", checkIntegrity: true }
     ];
 
-    const updateComponentStatus = (name, status, details) => {
+    const updateComponentStatus = (name, status, metrics) => {
         const statusMap = {
-            operational: { text: "Operacional", pulse: "ping-green", dot: "bg-green-500", textClass: "text-green-600", icon: "check_circle" },
-            degraded: { text: "Lento", pulse: "ping-yellow", dot: "bg-yellow-500", textClass: "text-yellow-600", icon: "warning" },
-            outage: { text: "Falha", pulse: "ping-red", dot: "bg-red-500", textClass: "text-red-500", icon: "error" }
+            operational: { text: "Operacional", textClass: "text-green-600", icon: "check_circle" },
+            degraded: { text: "Lento", textClass: "text-yellow-600", icon: "warning" },
+            outage: { text: "Falha", textClass: "text-red-500", icon: "error" }
         };
         const currentStatus = statusMap[status] || statusMap.outage;
         
         const componentHTML = `
-            <details class="component-details mb-2">
+            <details class="component-details">
                 <summary class="component-summary">
                     <div class="flex items-center gap-4">
                         <span class="material-symbols-outlined ${currentStatus.textClass}">${currentStatus.icon}</span>
@@ -82,7 +111,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </summary>
                 <div class="component-details-content">
-                    <p class="text-sm text-[var(--text-secondary)]">${details}</p>
+                    <ul class="details-list">
+                        <li><span class="label">Status</span><span class="value ${currentStatus.textClass}">${currentStatus.text}</span></li>
+                        <li><span class="label">Detalhes</span><span class="value">${metrics.details}</span></li>
+                        <li><span class="label">Tempo de Carregamento</span><span class="value">${metrics.loadTime !== null ? metrics.loadTime + 'ms' : 'N/A'}</span></li>
+                        <li><span class="label">Tamanho do Arquivo</span><span class="value">${metrics.fileSize !== null ? (metrics.fileSize / 1024).toFixed(2) + ' KB' : 'N/A'}</span></li>
+                        <li><span class="label">Tempo até Interatividade (TTI)</span><span class="value na">Não aplicável</span></li>
+                        <li><span class="label">Performance de Renderização</span><span class="value na">Não aplicável</span></li>
+                        <li><span class="label">Responsividade</span><span class="value na">Verificação manual</span></li>
+                    </ul>
                 </div>
             </details>
         `;
@@ -107,18 +144,29 @@ document.addEventListener("DOMContentLoaded", () => {
         let finalStatus = "operational";
         detailedContainer.innerHTML = ''; 
 
+        // Limpa as medições de performance para garantir dados frescos
+        if (performance.clearResourceTimings) {
+            performance.clearResourceTimings();
+        }
+
         for (const component of components) {
             let status = "outage";
             let details = "";
-            const startTime = performance.now();
+            let metrics = { details: "Falha no teste", loadTime: null, fileSize: null };
 
             try {
-                const response = await fetch(baseUrl + component.url, { cache: "no-store" });
-                const duration = (performance.now() - startTime).toFixed(0);
+                const resourceUrl = baseUrl + component.url;
+                const response = await fetch(resourceUrl, { cache: "no-store" });
+                
+                // Busca os dados de performance para este recurso específico
+                const entry = performance.getEntriesByName(resourceUrl).pop();
 
                 if (response.ok) {
-                    status = duration > 1000 ? "degraded" : "operational";
-                    details = `Componente operacional (${duration}ms).`;
+                    metrics.loadTime = entry ? entry.duration.toFixed(0) : 0;
+                    metrics.fileSize = entry ? entry.decodedBodySize : (await response.clone().blob()).size;
+                    
+                    status = metrics.loadTime > 1000 ? "degraded" : "operational";
+                    details = `Componente operacional.`;
 
                     if (component.checkIntegrity) {
                         const text = await response.text();
@@ -137,10 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 details = `Falha Crítica: ${err.message}.`;
             }
             
+            metrics.details = details;
             if (status === 'outage') finalStatus = 'outage';
             if (status === 'degraded' && finalStatus !== 'outage') finalStatus = 'degraded';
             
-            updateComponentStatus(component.name, status, details);
+            updateComponentStatus(component.name, status, metrics);
         }
         
         updateOverallStatus(finalStatus);
