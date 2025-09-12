@@ -1,12 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Evita que o painel seja executado em iframes
     if (window.self !== window.top) {
         return;
     }
 
+    // Carrega a biblioteca Axe para testes de acessibilidade
     const axeScript = document.createElement("script");
     axeScript.src = "js/vendor/axe.min.js";
     document.head.appendChild(axeScript);
 
+    // --- HTML para o Painel e o Botão de Ativação ---
     const panelHTML = `
         <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
             <span class="material-symbols-outlined">developer_mode</span>
@@ -15,15 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="flex items-center justify-between bg-gray-800 p-2 border-b border-gray-700">
                 <div class="flex items-center gap-4 min-w-0">
                     <h2 class="font-bold text-lg px-2 flex-shrink-0">Pitchutcha Dev Panel</h2>
-                    <nav class="flex gap-1 overflow-x-auto whitespace-nowrap">
+                    <nav class="flex gap-1 overflow-x-auto whitespace-rap">
                         <button data-tab="elements" class="dev-tab active-tab">Elements</button>
                         <button data-tab="console" class="dev-tab">Console</button>
                         <button data-tab="storage" class="dev-tab">Storage</button>
-                        <button data-tab="network" class="dev-tab">Network</button>
-                        <button data-tab="recursos" class="dev-tab">Recursos</button>
-                        <button data-tab="acessibilidade" class="dev-tab">Acessibilidade</button>
                         <button data-tab="testes" class="dev-tab">Testes</button>
-                        <button data-tab="info" class="dev-tab">Info</button>
+                        <button data-tab="acessibilidade" class="dev-tab">Acessibilidade</button>
                     </nav>
                 </div>
                 <button id="close-dev-panel" class="p-2 rounded-full hover:bg-gray-700">
@@ -46,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const devPanel = document.getElementById("dev-panel");
     const closeButton = document.getElementById("close-dev-panel");
     const panelContent = document.getElementById("dev-panel-content");
-    const consoleInput = document.getElementById("console-input");
     const consoleInputContainer = document.getElementById("console-input-container");
     const devTabs = document.querySelectorAll(".dev-tab");
     
@@ -55,13 +54,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastSelectedTreeNode = null;
     const domElementToTreeNode = new WeakMap();
 
+    // Expor estado para diagnóstico
+    window.devPanelState = {
+        isInspecting: () => isInspecting,
+        listeners: {}
+    };
+
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
         if (!devPanel.classList.contains("hidden")) {
             renderTabContent("elements");
         }
     });
-
     closeButton.addEventListener("click", () => devPanel.classList.add("hidden"));
     
     devTabs.forEach(tab => {
@@ -75,18 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTabContent(tabId) {
         panelContent.innerHTML = ""; 
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
-        if (isInspecting) {
-            toggleInspector();
-        }
+        if (isInspecting) toggleInspector();
+        
         switch (tabId) {
             case "elements": renderElementsTab(); break;
             case "console": renderConsoleTab(); break;
             case "storage": renderStorageTab(); break;
-            case "network": renderNetworkTab(); break;
-            case "recursos": renderRecursosTab(); break;
-            case "acessibilidade": renderAcessibilidadeTab(); break;
             case "testes": renderTestesTab(); break;
-            case "info": renderInfoTab(); break;
+            case "acessibilidade": renderAcessibilidadeTab(); break;
+            default: panelContent.innerHTML = `<div class="p-4">Aba não encontrada: ${tabId}</div>`;
         }
     }
 
@@ -113,71 +114,22 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             const value = localStorage.getItem(key);
-            tableRows += `<tr class='border-b border-gray-800'><td class='p-2 align-top text-orange-400'>${key}</td><td class='p-2 align-top text-green-400 whitespace-pre-wrap break-all'>${value}</td></tr>`;
+            tableRows += `<tr class='border-b border-gray-800'><td class='p-2 text-orange-400'>${key}</td><td class='p-2 text-green-400'>${value}</td></tr>`;
         }
         panelContent.innerHTML = `<div class="p-2 w-full"><h3 class="font-bold text-lg mb-2">Local Storage</h3><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Key</th><th class="p-2">Value</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
     }
-    function renderNetworkTab() {
-        const nav = performance.getEntriesByType("navigation")[0];
-        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(nav.responseEnd - nav.responseStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
-    }
-    function renderRecursosTab() {
-        const resources = performance.getEntriesByType("resource");
-        let tableRows = "";
-        resources.forEach(r => { tableRows += `<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${r.name.split("/").pop()}</td><td class='p-2'>${r.initiatorType}</td><td class='p-2'>${(r.transferSize / 1024).toFixed(2)}</td><td class='p-2'>${r.duration.toFixed(0)}</td></tr>`; });
-        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
-    }
+    
     function renderAcessibilidadeTab() {
         panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
         document.getElementById("run-axe").addEventListener("click", runAxeAudit);
     }
-    function renderTestesTab() {
-        panelContent.innerHTML = '<div class="p-4"><button id="run-tests" class="dev-button">Rodar Testes de Diagnóstico</button><div id="test-results" class="mt-4"></div></div>';
-        document.getElementById("run-tests").addEventListener("click", runDiagnosticTests);
-    }
-    function renderInfoTab() {
-        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr></tbody></table></div>`;
-    }
-
-    // --- Lógica do Console ---
-    consoleInput.addEventListener("keydown", e => {
-        if (e.key === "Enter" && consoleInput.value) {
-            const command = consoleInput.value;
-            consoleInput.value = "";
-            logToPanel({ type: "log", args: [`> ${command}`] });
-            try {
-                const result = new Function(`return ${command}`)();
-                logToPanel({ type: "info", args: [result] });
-            } catch (error) {
-                logToPanel({ type: "error", args: [error.toString()] });
-            }
-        }
-    });
-
-    function logToPanel(log) {
-        const consoleOutput = document.getElementById("console-output");
-        if (!consoleOutput) return;
-        let color = "text-white";
-        if (log.type === "error") color = "text-red-400";
-        if (log.type === "warn") color = "text-yellow-400";
-        if (log.type === "info") color = "text-sky-400";
-        const item = document.createElement("div");
-        item.className = `console-log-item py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
-        item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><div class="flex-1">${log.args.map(arg => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ")}</div>`;
-        consoleOutput.appendChild(item);
-        consoleOutput.scrollTop = consoleOutput.scrollHeight;
-    }
-
-    ["log", "warn", "error", "info"].forEach(type => {
-        const original = console[type];
-        console[type] = (...args) => {
-            original.apply(console, args);
-            logToPanel({ type, args });
-        };
-    });
     
-    // --- Lógica da Aba "Elements" ---
+    function renderTestesTab() {
+        panelContent.innerHTML = `<div class="p-4 w-full"><button id="run-diagnostics" class="dev-button">Rodar Diagnóstico Completo do Sistema</button><div id="test-results" class="mt-4"></div></div>`;
+        document.getElementById("run-diagnostics").addEventListener("click", runComprehensiveDiagnostics);
+    }
 
+    // --- Lógica da Aba "Elements" ---
     function buildElementsTree(rootElement) {
         const treeContainer = document.createElement('div');
         function createNode(element, depth) {
@@ -217,43 +169,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function selectElement(element) {
-        console.log("DIAGNÓSTICO: Função selectElement chamada para:", element.tagName);
         highlightOnPage(element);
         highlightInTree(element);
         displayComputedStyles(element);
     }
     
     function displayComputedStyles(element) {
-        console.log("DIAGNÓSTICO: Função displayComputedStyles chamada para:", element.tagName);
         const container = document.getElementById("computed-styles-container");
-        if (!container || !element) {
-            if(container) container.innerHTML = "Selecione um elemento para ver os estilos.";
-            console.log("DIAGNÓSTICO: Container ou elemento não encontrado.");
-            return;
-        };
+        if (!container || !element) { if(container) container.innerHTML = "Selecione um elemento para ver os estilos."; return; };
         const styles = window.getComputedStyle(element);
         const properties = Array.from(styles).filter(prop => !prop.startsWith("-")).sort();
         let tableHTML = "<table class='w-full text-left text-xs'>";
-        properties.forEach(prop => {
-            tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`;
-        });
+        properties.forEach(prop => { tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`; });
         tableHTML += "</table>";
         container.innerHTML = tableHTML;
-        console.log("DIAGNÓSTICO: Estilos renderizados.");
     }
 
     function highlightOnPage(element) {
-        if (lastInspectedElement) {
-            lastInspectedElement.style.outline = '';
-        }
+        if (lastInspectedElement) lastInspectedElement.style.outline = '';
         element.style.outline = '2px solid #0ea5e9';
         lastInspectedElement = element;
     }
 
     function highlightInTree(element) {
-        if (lastSelectedTreeNode) {
-            lastSelectedTreeNode.style.backgroundColor = '';
-        }
+        if (lastSelectedTreeNode) lastSelectedTreeNode.style.backgroundColor = '';
         const treeNode = domElementToTreeNode.get(element);
         if (treeNode) {
             treeNode.style.backgroundColor = 'rgba(14, 165, 233, 0.3)';
@@ -276,14 +215,11 @@ document.addEventListener("DOMContentLoaded", () => {
             current = current.parentElement;
         }
         const finalNode = domElementToTreeNode.get(element);
-        if (finalNode) {
-            finalNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        if (finalNode) finalNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     function toggleInspector() {
         isInspecting = !isInspecting;
-        console.log("DIAGNÓSTICO: Modo de inspeção alterado para:", isInspecting);
         const inspectorButton = document.getElementById('inspector-toggle');
         if (inspectorButton) {
             inspectorButton.style.backgroundColor = isInspecting ? '#0ea5e9' : 'transparent';
@@ -291,76 +227,98 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.body.style.cursor = isInspecting ? 'crosshair' : 'default';
         if (isInspecting) {
-            document.addEventListener('mouseover', highlightElementOnPage);
-            document.addEventListener('click', selectElementOnPage, { capture: true });
+            document.addEventListener('mouseover', highlightOnPage);
+            window.devPanelState.listeners['click'] = selectElementOnPage;
+            document.addEventListener('click', window.devPanelState.listeners['click'], { capture: true });
         } else {
             document.removeEventListener('mouseover', highlightElementOnPage);
-            document.removeEventListener('click', selectElementOnPage, { capture: true });
-            if(lastInspectedElement) {
-                lastInspectedElement.style.outline = '';
-            }
+            document.removeEventListener('click', window.devPanelState.listeners['click'], { capture: true });
+            delete window.devPanelState.listeners['click'];
+            if(lastInspectedElement) lastInspectedElement.style.outline = '';
         }
     }
     
     function selectElementOnPage(e) {
-        console.log("DIAGNÓSTICO: Clique na página detectado em modo de inspeção.");
         if (!isInspecting) return;
         e.preventDefault();
         e.stopPropagation();
         const clickedElement = e.target;
-        console.log("DIAGNÓSTICO: Elemento clicado:", clickedElement.tagName);
         selectElement(clickedElement);
         revealInTree(clickedElement);
         toggleInspector();
     }
-
-    // --- Funções de Testes e Auditorias ---
-
-    async function runAxeAudit() {
-        const resultsContainer = document.getElementById("axe-results");
-        resultsContainer.innerHTML = "Analisando...";
-        try {
-            const results = await axe.run({ exclude: [['#dev-panel']] });
-            resultsContainer.innerHTML = '';
-            const { violations, incomplete, passes } = results;
-            resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
-            if (violations.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
-                violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
-            }
-            if (incomplete.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
-                incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
-            }
-            if (passes.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
-                passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${p.help}</p></div>`));
-            }
-            if (violations.length === 0 && incomplete.length === 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
-            }
-        } catch (err) {
-            resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
-        }
-    }
-
-    async function runDiagnosticTests() {
-        const resultsContainer = document.getElementById("test-results");
-        resultsContainer.innerHTML = "";
-        const resourcesToTest = ["css/style.css", "js/script.js", "js/dev-panel.js", "index.html", "algoritmos.html", "estruturas-de-dados.html", "search.html", "status.html"];
-        for (const resource of resourcesToTest) {
-            let status, message;
-            try {
-                const response = await fetch(resource, { method: "HEAD", cache: "no-store" });
-                if (response.ok) { status = "success"; message = "Arquivo encontrado e acessível."; }
-                else { status = "error"; message = `Falha ao carregar (Status: ${response.status}).`; }
-            } catch (error) { status = "error"; message = "Erro de rede."; }
-            const color = status === "success" ? "text-green-400" : "text-red-400";
-            resultsContainer.insertAdjacentHTML("beforeend", `<div class="flex items-center gap-2 p-1 border-b border-gray-800 ${color}"><span class="material-symbols-outlined">${status === "success" ? "check_circle" : "error"}</span><span class="font-bold">${resource}:</span><span>${message}</span></div>`);
-        }
-    }
     
-    window.onerror = (message, source, lineno, colno, error) => {
-        logToPanel({ type: "error", args: [`Erro: ${message} em ${source}:${lineno}`] });
-    };
+    // --- Lógica de Diagnóstico ---
+    async function runComprehensiveDiagnostics() {
+        const resultsContainer = document.getElementById("test-results");
+        resultsContainer.innerHTML = `
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="border-b border-gray-700">
+                        <th class="p-2 w-1/3">Teste</th>
+                        <th class="p-2 w-1/6">Resultado</th>
+                        <th class="p-2">Detalhes / Solução Sugerida</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>`;
+        const tbody = resultsContainer.querySelector("tbody");
+
+        const addResult = (test, status, details) => {
+            const statusColor = status ? 'text-green-400' : 'text-red-400';
+            const statusIcon = status ? 'check_circle' : 'error';
+            const row = `
+                <tr class="border-b border-gray-800">
+                    <td class="p-2 align-top">${test}</td>
+                    <td class="p-2 align-top font-bold ${statusColor}"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">${statusIcon}</span> ${status ? 'PASS' : 'FAIL'}</span></td>
+                    <td class="p-2 align-top text-gray-400">${details}</td>
+                </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
+        };
+
+        // Teste 1: Verificação de Elementos DOM Essenciais
+        const trigger = document.getElementById('dev-tools-trigger');
+        addResult('Elemento Trigger do Painel (#dev-tools-trigger)', !!trigger, trigger ? 'Elemento principal do painel foi encontrado no DOM.' : 'O elemento que ativa o painel não foi encontrado. Isso indica uma falha na injeção do HTML inicial do script. Verifique se há erros de console que impedem a execução do script.');
+        
+        // Teste 2: Verificação de Carregamento de Scripts
+        let scriptLoaded = Array.from(document.scripts).some(s => s.src.includes('script.js'));
+        addResult('Carregamento de `script.js`', scriptLoaded, scriptLoaded ? 'Tag <script> para script.js foi encontrada.' : 'Não foi encontrada a tag <script src="js/script.js">. Verifique se a tag está presente no final dos seus arquivos HTML.');
+
+        // Teste 3: Lógica do Inspetor
+        const inspectorButton = document.getElementById('inspector-toggle');
+        if (inspectorButton) {
+            const initialState = window.devPanelState.isInspecting();
+            inspectorButton.click(); // Simula um clique para ligar
+            const turnedOnState = window.devPanelState.isInspecting();
+            inspectorButton.click(); // Simula um clique para desligar
+            const turnedOffState = window.devPanelState.isInspecting();
+            const pass = initialState === false && turnedOnState === true && turnedOffState === false;
+            addResult('Lógica de Ativação do Inspetor', pass, pass ? 'O estado do inspetor (ligado/desligado) está a ser alterado corretamente.' : `Falha na lógica de estado. Estado inicial: ${initialState}, após 1º clique: ${turnedOnState}, após 2º clique: ${turnedOffState}. O problema está na função \`toggleInspector\`.`);
+        } else {
+             addResult('Lógica de Ativação do Inspetor', false, 'Botão do inspetor (#inspector-toggle) não foi encontrado para o teste.');
+        }
+
+        // Teste 4: Verificação do Listener de Clique do Inspetor
+        if(inspectorButton) {
+            inspectorButton.click(); // Liga o inspetor
+            const listenerAttached = typeof window.devPanelState.listeners['click'] === 'function';
+            addResult('Anexação do Listener de Clique do Inspetor', listenerAttached, listenerAttached ? 'O listener de clique foi anexado ao documento com sucesso.' : 'O listener de clique não foi anexado. O erro está na função `toggleInspector` que não está a adicionar o `EventListener`.');
+            inspectorButton.click(); // Desliga o inspetor
+        } else {
+            addResult('Anexação do Listener de Clique do Inspetor', false, 'Botão do inspetor (#inspector-toggle) não foi encontrado para o teste.');
+        }
+
+        // Teste 5: Validade do JSON de Busca
+        try {
+            const response = await fetch('search.json');
+            if (response.ok) {
+                await response.json();
+                addResult('Arquivo `search.json`', true, 'Arquivo encontrado e o seu conteúdo é um JSON válido.');
+            } else {
+                addResult('Arquivo `search.json`', false, `Arquivo não encontrado ou inacessível (Status: ${response.status}). Verifique o caminho e as permissões do arquivo.`);
+            }
+        } catch(e) {
+            addResult('Arquivo `search.json`', false, 'Arquivo encontrado, mas o conteúdo não é um JSON válido. Verifique a sintaxe do arquivo.');
+        }
+    }
 });
