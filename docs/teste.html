@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Página de Teste de Diagnóstico</title>
+</head>
+<body style="font-family: sans-serif; background-color: #f0f0f0; color: #333; padding: 20px;">
+
+    <h1>Página de Teste de Diagnóstico</h1>
+    <p>Este arquivo testa se os elementos essenciais podem ser encontrados pelo JavaScript.</p>
+    <hr>
+
+    <h2>Elementos de Teste (Copiados do status.html e search.html):</h2>
+    <div id="detailed-status-container" style="border: 1px solid blue; padding: 10px; margin-bottom: 10px;">
+        Este é o #detailed-status-container.
+    </div>
+    <div id="uptime-history-container" style="border: 1px solid blue; padding: 10px; margin-bottom: 10px;">
+        Este é o #uptime-history-container.
+    </div>
+    <div id="performance-monitor-container" style="border: 1px solid blue; padding: 10px; margin-bottom: 10px;">
+        Este é o #performance-monitor-container.
+    </div>
+    <input id="search-input" type="text" value="Teste de Input" style="border: 1px solid blue; padding: 10px; margin-bottom: 10px;">
+    <div id="results-container" style="border: 1px solid blue; padding: 10px; margin-bottom: 10px;">
+        Este é o #results-container.
+    </div>
+    <p id="results-count" style="border: 1px solid blue; padding: 10px; margin-bottom: 10px;">
+        Este é o #results-count.
+    </p>
+
+    <hr>
+    
+    <div id="resultado-teste" style="border: 2px solid black; padding: 15px; background-color: white;">
+        Testando...
+    </div>
+
+    <script>
+        window.onload = function() {
+            const resultadoDiv = document.getElementById('resultado-teste');
+            let resultadosHTML = '<h2>Resultados do Teste:</h2><ul>';
+            
+            const idsParaTestar = [
+                'detailed-status-container',
+                'uptime-history-container',
+                'performance-monitor-container',
+                'search-input',
+                'results-container',
+                'results-count'
+            ];
+
+            idsParaTestar.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) {
+                    resultadosHTML += `<li style="color: green; font-weight: bold;">SUCESSO: Elemento #${id} foi encontrado.</li>`;
+                } else {
+                    resultadosHTML += `<li style="color: red; font-weight: bold;">FALHA: Elemento #${id} NÃO foi encontrado.</li>`;
+                }
+            });
+
+            resultadosHTML += '</ul>';
+            resultadoDiv.innerHTML = resultadosHTML;
+        };
+    </script>
+
+</body>
+</html>
