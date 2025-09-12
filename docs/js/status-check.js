@@ -116,9 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         <li><span class="label">Detalhes</span><span class="value">${metrics.details}</span></li>
                         <li><span class="label">Tempo de Carregamento</span><span class="value">${metrics.loadTime !== null ? metrics.loadTime + 'ms' : 'N/A'}</span></li>
                         <li><span class="label">Tamanho do Arquivo</span><span class="value">${metrics.fileSize !== null ? (metrics.fileSize / 1024).toFixed(2) + ' KB' : 'N/A'}</span></li>
-                        <li><span class="label">Tempo até Interatividade (TTI)</span><span class="value na">Use a aba "Lighthouse"</span></li>
-                        <li><span class="label">Performance de Renderização</span><span class="value na">Use a aba "Lighthouse"</span></li>
-                        <li><span class="label">Responsividade</span><span class="value na">Use o Modo de Dispositivo (Ctrl+Shift+M)</span></li>
+                        <li><span class="label">Tempo até Interatividade (TTI)</span><span class="value na">Ver Relatório PageSpeed</span></li>
+                        <li><span class="label">Performance de Renderização</span><span class="value na">Ver Relatório PageSpeed</span></li>
+                        <li><span class="label">Responsividade</span><span class="value na">Use o Modo de Dispositivo</span></li>
                     </ul>
                 </div>
             </details>
@@ -144,6 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let finalStatus = "operational";
         detailedContainer.innerHTML = ''; 
 
+        // Limpa as medições de performance para garantir dados frescos
+        if (performance.clearResourceTimings) {
+            performance.clearResourceTimings();
+        }
+
         for (const component of components) {
             let status = "outage";
             let details = "";
@@ -151,7 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const startTime = performance.now();
 
             try {
-                const response = await fetch(baseUrl + component.url, { cache: "no-store" });
+                const resourceUrl = baseUrl + component.url;
+                const response = await fetch(resourceUrl, { cache: "no-store" });
                 const duration = (performance.now() - startTime);
 
                 if (response.ok) {
