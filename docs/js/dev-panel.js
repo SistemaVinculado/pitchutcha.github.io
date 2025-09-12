@@ -1,15 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Evita que o painel seja executado em iframes
     if (window.self !== window.top) {
         return;
     }
 
-    // Carrega a biblioteca Axe para testes de acessibilidade
     const axeScript = document.createElement("script");
     axeScript.src = "js/vendor/axe.min.js";
     document.head.appendChild(axeScript);
 
-    // --- HTML para o Painel e o Botão de Ativação ---
     const panelHTML = `
         <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
             <span class="material-symbols-outlined">developer_mode</span>
@@ -33,8 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <div id="dev-panel-content" class="flex-1 overflow-auto flex">
-                </div>
+            <div id="dev-panel-content" class="flex-1 overflow-auto flex"></div>
             <div id="console-input-container" class="hidden items-center p-2 border-t border-gray-700">
                 <span class="material-symbols-outlined text-sky-400">chevron_right</span>
                 <input type="text" id="console-input" class="flex-1 bg-transparent border-none focus:outline-none ml-2" placeholder="Executar JavaScript...">
@@ -42,12 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
     `;
 
-    // Adiciona o HTML ao corpo da página
     const panelWrapper = document.createElement("div");
     panelWrapper.innerHTML = panelHTML;
     document.body.appendChild(panelWrapper);
 
-    // --- Referências aos Elementos do DOM ---
     const triggerButton = document.getElementById("dev-tools-trigger");
     const devPanel = document.getElementById("dev-panel");
     const closeButton = document.getElementById("close-dev-panel");
@@ -56,13 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const consoleInputContainer = document.getElementById("console-input-container");
     const devTabs = document.querySelectorAll(".dev-tab");
     
-    // --- Variáveis de Estado e Mapeamento ---
     let isInspecting = false;
     let lastInspectedElement = null;
     let lastSelectedTreeNode = null;
     const domElementToTreeNode = new WeakMap();
-
-    // --- Lógica Principal ---
 
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
@@ -99,7 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- Funções de Renderização das Abas (resumidas para clareza, a lógica está abaixo) ---
     function renderElementsTab() {
         panelContent.innerHTML = `
             <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
@@ -117,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("inspector-toggle").addEventListener("click", toggleInspector);
     }
     
-    // As implementações das outras abas continuam as mesmas...
     function renderConsoleTab() { panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2"></div>'; }
     function renderStorageTab() {
         let tableRows = "";
@@ -228,15 +217,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function selectElement(element) {
+        console.log("DIAGNÓSTICO: Função selectElement chamada para:", element.tagName);
         highlightOnPage(element);
         highlightInTree(element);
         displayComputedStyles(element);
     }
     
     function displayComputedStyles(element) {
+        console.log("DIAGNÓSTICO: Função displayComputedStyles chamada para:", element.tagName);
         const container = document.getElementById("computed-styles-container");
         if (!container || !element) {
             if(container) container.innerHTML = "Selecione um elemento para ver os estilos.";
+            console.log("DIAGNÓSTICO: Container ou elemento não encontrado.");
             return;
         };
         const styles = window.getComputedStyle(element);
@@ -247,6 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         tableHTML += "</table>";
         container.innerHTML = tableHTML;
+        console.log("DIAGNÓSTICO: Estilos renderizados.");
     }
 
     function highlightOnPage(element) {
@@ -290,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleInspector() {
         isInspecting = !isInspecting;
+        console.log("DIAGNÓSTICO: Modo de inspeção alterado para:", isInspecting);
         const inspectorButton = document.getElementById('inspector-toggle');
         if (inspectorButton) {
             inspectorButton.style.backgroundColor = isInspecting ? '#0ea5e9' : 'transparent';
@@ -309,10 +303,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function selectElementOnPage(e) {
+        console.log("DIAGNÓSTICO: Clique na página detectado em modo de inspeção.");
         if (!isInspecting) return;
         e.preventDefault();
         e.stopPropagation();
         const clickedElement = e.target;
+        console.log("DIAGNÓSTICO: Elemento clicado:", clickedElement.tagName);
         selectElement(clickedElement);
         revealInTree(clickedElement);
         toggleInspector();
