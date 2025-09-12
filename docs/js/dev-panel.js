@@ -56,16 +56,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const consoleInputContainer = document.getElementById("console-input-container");
     const devTabs = document.querySelectorAll(".dev-tab");
     
-    // --- Variáveis de Estado ---
+    // --- Variáveis de Estado e Mapeamento ---
     let isInspecting = false;
     let lastInspectedElement = null;
+    let lastSelectedTreeNode = null;
+    const domElementToTreeNode = new WeakMap();
 
     // --- Lógica Principal ---
 
-    // Abre e fecha o painel
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
-        // Se o painel foi aberto, carrega a aba de elementos por padrão
         if (!devPanel.classList.contains("hidden")) {
             renderTabContent("elements");
         }
@@ -73,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     closeButton.addEventListener("click", () => devPanel.classList.add("hidden"));
     
-    // Troca de abas
     devTabs.forEach(tab => {
         tab.addEventListener("click", () => {
             devTabs.forEach(t => t.classList.remove("active-tab"));
@@ -82,36 +81,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Função central para renderizar o conteúdo de cada aba
     function renderTabContent(tabId) {
-        panelContent.innerHTML = ""; // Limpa o conteúdo anterior
+        panelContent.innerHTML = ""; 
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
-
+        if (isInspecting) {
+            toggleInspector(new Event('click'));
+        }
         switch (tabId) {
-            case "elements":
-                renderElementsTab();
-                break;
-            case "console":
-                renderConsoleTab();
-                break;
-            case "storage":
-                renderStorageTab();
-                break;
-            case "network":
-                renderNetworkTab();
-                break;
-            case "recursos":
-                renderRecursosTab();
-                break;
-            case "acessibilidade":
-                renderAcessibilidadeTab();
-                break;
-            case "testes":
-                renderTestesTab();
-                break;
-            case "info":
-                renderInfoTab();
-                break;
+            case "elements": renderElementsTab(); break;
+            case "console": renderConsoleTab(); break;
+            case "storage": renderStorageTab(); break;
+            case "network": renderNetworkTab(); break;
+            case "recursos": renderRecursosTab(); break;
+            case "acessibilidade": renderAcessibilidadeTab(); break;
+            case "testes": renderTestesTab(); break;
+            case "info": renderInfoTab(); break;
         }
     }
 
@@ -128,13 +112,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     <h3 class="font-bold">Computed Styles</h3>
                 </div>
                 <div id="computed-styles-container">Clique em um elemento para ver os estilos.</div>
-            </div>
-        `;
+            </div>`;
         const elementsContainer = document.getElementById("elements-tree-container");
         elementsContainer.appendChild(buildElementsTree(document.documentElement));
-
-        const inspectorToggle = document.getElementById("inspector-toggle");
-        inspectorToggle.addEventListener("click", toggleInspector);
+        document.getElementById("inspector-toggle").addEventListener("click", toggleInspector);
     }
     
     function renderConsoleTab() {
@@ -222,7 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
     }
 
-
     // --- Lógica do Console ---
     consoleInput.addEventListener("keydown", e => {
         if (e.key === "Enter" && consoleInput.value) {
@@ -241,21 +221,17 @@ document.addEventListener("DOMContentLoaded", () => {
     function logToPanel(log) {
         const consoleOutput = document.getElementById("console-output");
         if (!consoleOutput) return;
-        
         let color = "text-white";
         if (log.type === "error") color = "text-red-400";
         if (log.type === "warn") color = "text-yellow-400";
         if (log.type === "info") color = "text-sky-400";
-
         const item = document.createElement("div");
         item.className = `console-log-item py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
         item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><div class="flex-1">${log.args.map(arg => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ")}</div>`;
-        
         consoleOutput.appendChild(item);
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
 
-    // Sobrescreve o console original para capturar logs
     ["log", "warn", "error", "info"].forEach(type => {
         const original = console[type];
         console[type] = (...args) => {
@@ -268,25 +244,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function buildElementsTree(rootElement) {
         const treeContainer = document.createElement('div');
-
         function createNode(element, depth) {
             const nodeWrapper = document.createElement('div');
             const nodeHeader = document.createElement('div');
-            nodeHeader.className = 'flex items-center cursor-pointer hover:bg-gray-800 rounded p-0.5';
+            nodeHeader.className = 'element-node-header flex items-center cursor-pointer hover:bg-gray-800 rounded p-0.5';
             nodeHeader.style.paddingLeft = `${depth}rem`;
+            domElementToTreeNode.set(element, nodeHeader);
 
-            const attributes = Array.from(element.attributes).map(attr => 
-                `<span class="text-orange-400">${attr.name}</span><span class="text-gray-500">="</span><span class="text-green-400">${attr.value}</span><span class="text-gray-500">"</span>`
-            ).join(" ");
-            
+            const attributes = Array.from(element.attributes).map(attr => `<span class="text-orange-400">${attr.name}</span><span class="text-gray-500">="</span><span class="text-green-400">${attr.value}</span><span class="text-gray-500">"</span>`).join(" ");
             const hasChildren = element.children.length > 0;
             const arrow = hasChildren ? `<span class="material-symbols-outlined text-sm expand-icon">arrow_right</span>` : `<span class='w-4 inline-block'></span>`;
-            
             nodeHeader.innerHTML = `${arrow}<span class='text-gray-500'>&lt;</span><span class='text-pink-400'>${element.tagName.toLowerCase()}</span> <span class="attributes">${attributes}</span><span class='text-gray-500'>&gt;</span>`;
             
             const childrenContainer = document.createElement('div');
             childrenContainer.className = 'element-children hidden';
-            
             nodeWrapper.appendChild(nodeHeader);
             nodeWrapper.appendChild(childrenContainer);
 
@@ -294,9 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.stopPropagation();
                 childrenContainer.classList.toggle('hidden');
                 nodeHeader.querySelector('.expand-icon').textContent = childrenContainer.classList.contains('hidden') ? 'arrow_right' : 'arrow_drop_down';
-                
-                highlightInspectedElement(element);
-                displayComputedStyles(element);
+                selectElement(element);
             });
 
             if (hasChildren) {
@@ -306,14 +275,22 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             return nodeWrapper;
         }
-        
         treeContainer.appendChild(createNode(rootElement, 0));
         return treeContainer;
     }
 
+    function selectElement(element) {
+        highlightOnPage(element);
+        highlightInTree(element);
+        displayComputedStyles(element);
+    }
+    
     function displayComputedStyles(element) {
         const container = document.getElementById("computed-styles-container");
-        if (!container) return;
+        if (!container || !element) {
+            if(container) container.innerHTML = "Selecione um elemento para ver os estilos.";
+            return;
+        };
         
         const styles = window.getComputedStyle(element);
         const properties = Array.from(styles).filter(prop => !prop.startsWith("-")).sort();
@@ -326,12 +303,43 @@ document.addEventListener("DOMContentLoaded", () => {
         container.innerHTML = tableHTML;
     }
 
-    function highlightInspectedElement(element) {
+    function highlightOnPage(element) {
         if (lastInspectedElement) {
             lastInspectedElement.style.outline = '';
         }
         element.style.outline = '2px solid #0ea5e9';
         lastInspectedElement = element;
+    }
+
+    function highlightInTree(element) {
+        if (lastSelectedTreeNode) {
+            lastSelectedTreeNode.style.backgroundColor = '';
+        }
+        const treeNode = domElementToTreeNode.get(element);
+        if (treeNode) {
+            treeNode.style.backgroundColor = 'rgba(14, 165, 233, 0.3)'; // Usando cor com transparência
+            lastSelectedTreeNode = treeNode;
+        }
+    }
+
+    function revealInTree(element) {
+        let current = element;
+        while(current) {
+            const treeNode = domElementToTreeNode.get(current);
+            if(treeNode) {
+                const childrenContainer = treeNode.nextElementSibling;
+                if(childrenContainer && childrenContainer.classList.contains('element-children')) {
+                    childrenContainer.classList.remove('hidden');
+                    const icon = treeNode.querySelector('.expand-icon');
+                    if (icon) icon.textContent = 'arrow_drop_down';
+                }
+            }
+            current = current.parentElement;
+        }
+        const finalNode = domElementToTreeNode.get(element);
+        if (finalNode) {
+            finalNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     }
 
     function toggleInspector(event) {
@@ -354,22 +362,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-
-    function highlightElementOnPage(e) {
-        if(e.target.closest("#dev-panel")) return;
-        highlightInspectedElement(e.target);
-    }
     
     function selectElementOnPage(e) {
         if (isInspecting) {
             e.preventDefault();
             e.stopPropagation();
-
             const clickedElement = e.target;
-            displayComputedStyles(clickedElement);
-            
-            // Desativa o modo de inspeção após a seleção
-            // É importante chamar isso por último
+            selectElement(clickedElement);
+            revealInTree(clickedElement);
             toggleInspector(new Event('click')); 
         }
     }
@@ -381,28 +381,26 @@ document.addEventListener("DOMContentLoaded", () => {
         resultsContainer.innerHTML = "Analisando...";
         try {
             const results = await axe.run({ exclude: [['#dev-panel']] });
-            
             resultsContainer.innerHTML = '';
             const { violations, incomplete, passes } = results;
 
             resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
             
-            if(violations.length > 0) {
+            if (violations.length > 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
                 violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
             }
-            if(incomplete.length > 0) {
+            if (incomplete.length > 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
                 incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
             }
-            if(passes.length > 0) {
+            if (passes.length > 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
                 passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${p.help}</p></div>`));
             }
-            if(violations.length === 0 && incomplete.length === 0) {
+            if (violations.length === 0 && incomplete.length === 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
             }
-
         } catch (err) {
             resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
         }
