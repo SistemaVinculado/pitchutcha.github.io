@@ -55,12 +55,21 @@ jobs:
       - name: Criar diretório para o CSS crítico
         run: mkdir -p docs/_includes/critical-css
 
-      # 7. Extrai o CSS crítico para a página de artigo e salva-o
+      # 7. Extrai o CSS crítico para o layout 'artigo' de forma dinâmica
       - name: Extrair CSS crítico para o layout 'artigo'
-        run: >
-          critical docs/_site/Algoritmos/2025/09/07/introduction-to-algorithm-design.html --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/artigo.css || echo "Geração de CSS para artigo falhou, mas não vai bloquear o workflow"
+        run: |
+          # Encontra o primeiro post gerado para usar como referência para o layout 'artigo'
+          POST_PATH=$(find docs/_site -type f -path "*/20[0-9][0-9]/*/*/*/*.html" | head -n 1)
+          if [ -z "$POST_PATH" ]; then
+            echo "Nenhum post encontrado para gerar o CSS crítico. Pulando."
+            # Cria um arquivo vazio para evitar erros nos passos seguintes
+            touch docs/_includes/critical-css/artigo.css
+          else
+            echo "Usando o post: $POST_PATH para gerar CSS do artigo."
+            critical $POST_PATH --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/artigo.css || echo "Geração de CSS para artigo falhou, mas não vai bloquear o workflow"
+          fi
 
-      # 8. Extrai o CSS crítico para a página inicial e salva-o
+      # 8. Extrai o CSS crítico para a página inicial
       - name: Extrair CSS crítico para a página inicial
         run: >
           critical docs/_site/index.html --base docs/_site/ --inline-critical-css > docs/_includes/critical-css/main.css || echo "Geração de CSS para main falhou, mas não vai bloquear o workflow"
