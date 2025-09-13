@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.1.0"; // <-- VERIFICADOR DE VERSÃO
+    const DEV_PANEL_VERSION = "1.2.0"; // Versão atualizada com console melhorado
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
     const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div id="dev-panel-content" class="flex-1 overflow-auto flex"></div>
             <div id="console-input-container" class="hidden items-center p-2 border-t border-gray-700">
                 <span class="material-symbols-outlined text-sky-400">chevron_right</span>
-                <input type="text" id="console-input" class="flex-1 bg-transparent border-none focus:outline-none ml-2" placeholder="Executar JavaScript...">
+                <textarea id="console-input" class="flex-1 bg-transparent border-none focus:outline-none ml-2 resize-none" rows="1" placeholder="Executar JavaScript... (Shift+Enter para nova linha)"></textarea>
             </div>
         </div>
     `;
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
         if (!devPanel.classList.contains("hidden")) {
-            renderTabContent("info"); // Abre na aba Info por padrão
+            renderTabContent("info"); 
         }
     });
     closeButton.addEventListener("click", () => devPanel.classList.add("hidden"));
@@ -122,22 +122,36 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
+    // FUNÇÃO DO CONSOLE ATUALIZADA
     function renderConsoleTab() { 
         panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2"></div>';
         const consoleInput = document.getElementById("console-input");
-        if(consoleInput) {
+        if (consoleInput) {
             consoleInput.addEventListener("keydown", e => {
-                 if (e.key === "Enter" && consoleInput.value) {
+                // Executa com Enter (sem Shift)
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault(); 
                     const command = consoleInput.value;
-                    consoleInput.value = "";
-                    logToPanel({ type: "log", args: [`> ${command}`] });
-                    try {
-                        const result = new Function(`return ${command}`)();
-                        logToPanel({ type: "info", args: [result] });
-                    } catch (error) {
-                        logToPanel({ type: "error", args: [error.toString()] });
+                    if (command) {
+                        consoleInput.value = "";
+                        consoleInput.rows = 1; // Reseta a altura
+                        logToPanel({ type: "log", args: [`> ${command}`] });
+                        try {
+                            // Usamos eval para permitir comandos mais complexos
+                            const result = eval(command);
+                            if (result !== undefined) {
+                                logToPanel({ type: "info", args: [result] });
+                            }
+                        } catch (error) {
+                            logToPanel({ type: "error", args: [error.toString()] });
+                        }
                     }
                 }
+            });
+            // Auto-ajuste da altura do textarea
+            consoleInput.addEventListener('input', () => {
+                consoleInput.style.height = 'auto';
+                consoleInput.style.height = (consoleInput.scrollHeight) + 'px';
             });
         }
     }
@@ -207,7 +221,22 @@ document.addEventListener("DOMContentLoaded", () => {
         if (log.type === "info") color = "text-sky-400";
         const item = document.createElement("div");
         item.className = `console-log-item py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
-        item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><div class="flex-1">${log.args.map(arg => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ")}</div>`;
+        
+        let content = '';
+        try {
+            content = log.args.map(arg => {
+                if (typeof arg === "string") return arg;
+                if (arg instanceof Node) return arg.outerHTML; // Mostra o HTML de elementos
+                // Formata objetos e arrays de forma legível
+                return JSON.stringify(arg, (key, value) => 
+                    typeof value === 'object' && value !== null ? value : value, 2
+                );
+            }).join(" ");
+        } catch (e) {
+            content = "Não foi possível exibir o objeto."
+        }
+
+        item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><div class="flex-1 whitespace-pre-wrap">${content}</div>`;
         consoleOutput.appendChild(item);
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
@@ -441,7 +470,6 @@ document.addEventListener("DOMContentLoaded", () => {
                  );
              });
         }
-
 
         try {
             const response = await fetch(`${baseUrl}search.json?cache_bust=` + Date.now());
