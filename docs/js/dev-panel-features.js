@@ -164,10 +164,8 @@ DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
     });
 };
 
-
 /**
  * ABA DE ELEMENTOS
- * Contém a lógica para inspecionar o DOM.
  */
 DevPanelFeatures.renderElementsTab = function(panelContent, state, helpers) {
     panelContent.innerHTML = `
@@ -182,7 +180,6 @@ DevPanelFeatures.renderElementsTab = function(panelContent, state, helpers) {
     document.getElementById("elements-tree-container").appendChild(helpers.buildElementsTree(document.documentElement, state, helpers));
     document.getElementById("inspector-toggle").addEventListener("click", () => helpers.toggleInspector(state, helpers));
 };
-
 
 /**
  * ABA DE CONSOLE
@@ -215,7 +212,6 @@ DevPanelFeatures.renderConsoleTab = function(panelContent, helpers) {
     }
 };
 
-
 /**
  * ABA DE STORAGE
  */
@@ -228,7 +224,6 @@ DevPanelFeatures.renderStorageTab = function(panelContent) {
     }
     panelContent.innerHTML = `<div class="p-2 w-full"><h3 class="font-bold text-lg mb-2">Local Storage</h3><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Key</th><th class="p-2">Value</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
 };
-
 
 /**
  * ABA DE TESTES
@@ -257,7 +252,6 @@ DevPanelFeatures.runComprehensiveDiagnostics = async function(baseUrl) {
         }
     } catch (e) { addResult("Validação de `search.json`", "FAIL", "Não é um JSON válido."); }
 };
-
 
 /**
  * ABA DE INFO
@@ -289,5 +283,61 @@ DevPanelFeatures.renderInfoTab = function(panelContent, devPanelVersion) {
             document.documentElement.style.setProperty('--tab-size-preference', newSize);
             localStorage.setItem('tabSizePreference', newSize);
         });
+    }
+};
+
+// --- FUNÇÕES RESTAURADAS ---
+
+/**
+ * ABA DE NETWORK
+ */
+DevPanelFeatures.renderNetworkTab = function(panelContent) {
+    const nav = performance.getEntriesByType("navigation")[0];
+    if(!nav) {
+        panelContent.innerHTML = `<div class="p-4">Informação de Network não disponível.</div>`;
+        return;
+    };
+    panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(nav.responseEnd - nav.responseStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
+};
+
+/**
+ * ABA DE RECURSOS
+ */
+DevPanelFeatures.renderRecursosTab = function(panelContent) {
+    const resources = performance.getEntriesByType("resource");
+    let tableRows = "";
+    resources.forEach(r => { tableRows += `<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${r.name.split("/").pop()}</td><td class='p-2'>${r.initiatorType}</td><td class='p-2'>${(r.transferSize / 1024).toFixed(2)}</td><td class='p-2'>${r.duration.toFixed(0)}</td></tr>`; });
+    panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
+};
+
+/**
+ * ABA DE ACESSIBILIDADE
+ */
+DevPanelFeatures.renderAcessibilidadeTab = function(panelContent) {
+    panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
+    document.getElementById("run-axe")?.addEventListener("click", DevPanelFeatures.runAxeAudit);
+};
+
+DevPanelFeatures.runAxeAudit = async function() {
+    const resultsContainer = document.getElementById("axe-results");
+    if(!resultsContainer) return;
+    resultsContainer.innerHTML = "Analisando...";
+    if (typeof axe === 'undefined') {
+        resultsContainer.innerHTML = `<p class="text-red-500">Biblioteca Axe não carregada.</p>`;
+        return;
+    }
+    try {
+        const results = await axe.run({ exclude: [['#dev-panel']] });
+        resultsContainer.innerHTML = '';
+        const { violations, incomplete, passes } = results;
+        if (violations.length === 0 && incomplete.length === 0) {
+             resultsContainer.innerHTML = '<p class="text-green-400 font-bold">Parabéns! Nenhum problema de acessibilidade encontrado.</p>';
+        }
+        if (violations.length > 0) {
+            resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mb-2">Violações</h4>');
+            violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 bg-red-900/50"><p>${v.help}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400">Saiba mais</a></div>`));
+        }
+    } catch (err) {
+        resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
     }
 };
