@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.6.0"; // Versão com correções e auditoria integrada
+    const DEV_PANEL_VERSION = "1.6.1"; // Versão com correções
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
 
     const applySavedPreferences = () => {
@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
     axeScript.defer = true;
     document.head.appendChild(axeScript);
 
-    // Estrutura HTML do Painel, agora com a lista de abas corrigida
     const panelHTML = `
         <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
             <span class="material-symbols-outlined">developer_mode</span>
@@ -62,7 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const consoleInputContainer = document.getElementById("console-input-container");
     const devTabs = document.querySelectorAll(".dev-tab");
 
-    // Objeto de estado para a aba Elements
     let elementsState = {
         isInspecting: false,
         lastInspectedElement: null,
@@ -70,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         domElementToTreeNode: new WeakMap()
     };
     
-    // Objeto com helpers que manipulam o estado e o DOM do painel
     const helpers = {
         logToPanel: (log) => {
             const consoleOutput = document.getElementById("console-output");
@@ -82,15 +79,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const item = document.createElement("div");
             item.className = `py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
             let contentText = log.args.map(arg => {
-                if (arg instanceof Error) return arg.stack;
+                if (arg instanceof Error) return arg.stack || arg.message;
                 if (typeof arg === "string") return arg;
-                try { return JSON.stringify(arg, null, 2); } catch(e) { return "[Object]" }
+                try { return JSON.stringify(arg, null, 2); } catch(e) { return "[Não foi possível serializar o objeto]" }
             }).join(" ");
             item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><pre class="flex-1 whitespace-pre-wrap">${contentText}</pre>`;
             consoleOutput.appendChild(item);
             consoleOutput.scrollTop = consoleOutput.scrollHeight;
         },
-        // Helpers específicos da aba Elements
         buildElementsTree: (element, depth = 0) => {
             if (!element.tagName || element.closest('#dev-panel')) return null;
             const nodeWrapper = document.createElement('div');
@@ -146,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         displayComputedStyles: (element) => {
             const container = document.getElementById("computed-styles-container");
-            if (!container) return;
+            if (!container || !element) return;
             const styles = window.getComputedStyle(element);
             let tableHTML = "<table class='w-full text-left text-xs'>";
             Array.from(styles).forEach(prop => {
@@ -198,19 +194,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
     
-    // Sobrescreve o console para logar no painel
     ["log", "warn", "error", "info"].forEach(type => {
         const original = console[type];
         console[type] = (...args) => {
             original.apply(console, args);
-            // Apenas loga no painel se ele estiver aberto
             if (devPanel && !devPanel.classList.contains('hidden')) {
                 helpers.logToPanel({ type, args });
             }
         };
     });
 
-    // Gatilhos principais do painel
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
         if (!devPanel.classList.contains("hidden") && !document.querySelector('.dev-tab.active-tab')) {
@@ -232,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-    // Roteador de abas que chama as funções do dev-panel-features.js
     function renderTabContent(tabId) {
         panelContent.innerHTML = ""; 
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
