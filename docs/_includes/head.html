@@ -3,6 +3,8 @@
 
 <title>Pitchutcha - {{ page.title | default: site.title }}</title>
 <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
+<meta name="base-url" content="{{ '/' | relative_url }}">
+<meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
 <link rel="canonical" href="{{ page.url | absolute_url }}">
 
 <meta property="og:title" content="{{ page.title | default: site.title }}">
