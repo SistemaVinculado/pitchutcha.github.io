@@ -35,7 +35,6 @@ jobs:
               }
             }
           }' > ./.lighthouserc-mobile.json
-
           # Configuração para Computador (com "preset: desktop")
           echo '{
             "ci": {
@@ -62,13 +61,13 @@ jobs:
           urls: |
             https://sistemavinculado.github.io/pitchutcha.github.io/
           uploadArtifacts: true
-          artifactName: lighthouse-report-mobile # Nome único para o artefato
+          artifactName: lighthouse-report-mobile
           temporaryPublicStorage: true
           configPath: './.lighthouserc-mobile.json'
       
       - name: Renomear Relatório de Celular
         run: |
-          REPORT_PATH=$(ls .lighthouseci/lhr-*.json | head -n 1)
+          REPORT_PATH=$(ls -t .lighthouseci/lhr-*.json | head -n 1)
           mv $REPORT_PATH ./.lighthouseci/lhr-mobile.json
 
       # 4. Roda a auditoria para COMPUTADOR
@@ -78,16 +77,18 @@ jobs:
           urls: |
             https://sistemavinculado.github.io/pitchutcha.github.io/
           uploadArtifacts: true
-          artifactName: lighthouse-report-desktop # Nome único para o artefato
+          artifactName: lighthouse-report-desktop
           temporaryPublicStorage: true
           configPath: './.lighthouserc-desktop.json'
       
+      # 5. Renomeia o Relatório de Computador (Lógica Corrigida)
       - name: Renomear Relatório de Computador
         run: |
-          REPORT_PATH=$(ls .lighthouseci/lhr-*.json | head -n 1)
+          # Encontra o arquivo JSON que AINDA NÃO foi renomeado para lhr-mobile.json
+          REPORT_PATH=$(find .lighthouseci -name "lhr-*.json" ! -name "lhr-mobile.json")
           mv $REPORT_PATH ./.lighthouseci/lhr-desktop.json
 
-      # 5. Processa e combina os dois relatórios em um único arquivo
+      # 6. Processa e combina os dois relatórios
       - name: Processar e Combinar Relatórios
         run: |
           JQ_EXTRACT_FUNCTION='
@@ -114,7 +115,7 @@ jobs:
             desktop: (input | extract)
           }' ./.lighthouseci/lhr-mobile.json ./.lighthouseci/lhr-desktop.json > ./docs/pagespeed-data.json
 
-      # 6. Faz o commit do novo arquivo de dados
+      # 7. Faz o commit do novo arquivo de dados
       - name: Fazer commit do arquivo pagespeed-data.json
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
