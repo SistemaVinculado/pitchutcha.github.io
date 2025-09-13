@@ -1,30 +1,28 @@
 // docs/js/dev-panel-features.js
 
-// Cria um objeto global para armazenar as funções das abas.
+// Objeto global para armazenar as funções das abas.
 window.DevPanelFeatures = {};
 
 /**
  * ABA DE AUDITORIA
- * Contém a lógica para escanear todas as páginas do site.
  */
 DevPanelFeatures.renderAuditoriaTab = function(panelContent, baseUrl) {
     panelContent.innerHTML = `
-        <div class="p-4 w-full">
-            <div class="flex items-center justify-between mb-4">
+        <div class="p-4 w-full flex flex-col h-full">
+            <div class="flex items-center justify-between mb-4 flex-shrink-0">
                 <div>
                     <h3 class="font-bold text-lg">Auditoria Global do Site</h3>
                     <p class="text-sm text-gray-400">Executa uma série de testes em todas as páginas conhecidas do site.</p>
                 </div>
-                <div>
+                <div id="audit-controls" class="flex items-center gap-2">
                     <button id="run-global-audit" class="dev-button bg-sky-600 hover:bg-sky-500 border-sky-500">Iniciar Auditoria</button>
-                    <button id="copy-audit-report" class="dev-button hidden ml-2">Copiar Relatório</button>
+                    <button id="copy-audit-report" class="dev-button hidden">Copiar Relatório</button>
                 </div>
             </div>
-            <div id="audit-results" class="bg-gray-800 p-2 rounded-md overflow-auto h-[calc(100%-100px)]">
+            <div id="audit-results" class="bg-gray-800 p-2 rounded-md flex-grow overflow-auto">
                 <div class="p-4 text-center text-gray-500">Aguardando início da auditoria...</div>
             </div>
         </div>`;
-
     document.getElementById('run-global-audit').addEventListener('click', () => DevPanelFeatures.runGlobalAudit(baseUrl));
 };
 
@@ -38,13 +36,13 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     copyButton.classList.add('hidden');
     resultsContainer.innerHTML = '<div class="p-4 text-center text-gray-400">Iniciando auditoria...</div>';
 
-    const pagesToScan = ['index.html', 'algoritmos.html', 'estruturas-de-dados.html', 'search.html', 'status.html'];
+    let pagesToScan = ['index.html', 'algoritmos.html', 'estruturas-de-dados.html', 'search.html', 'status.html'];
     
     try {
         const response = await fetch(`${baseUrl}search.json`);
         if (response.ok) {
             const posts = await response.json();
-            posts.forEach(post => pagesToScan.push(post.url.replace(baseUrl, '')));
+            posts.forEach(post => pagesToScan.push(post.url));
         }
     } catch(e) { console.warn("Não foi possível carregar a lista de posts de search.json."); }
 
@@ -52,15 +50,20 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     let fullReportText = `Relatório de Auditoria Global - ${new Date().toLocaleString('pt-BR')}\n\n`;
 
     const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
+    iframe.style.cssText = 'position: absolute; width: 1px; height: 1px; left: -9999px;';
     document.body.appendChild(iframe);
 
     resultsContainer.innerHTML = ''; 
 
     for (let i = 0; i < uniquePages.length; i++) {
-        const page = uniquePages[i];
-        const url = page.startsWith('/') ? `${baseUrl}${page.substring(1)}` : `${baseUrl}${page}`;
-        resultsContainer.innerHTML += `<div class="p-2 text-sky-400">Analisando (${i+1}/${uniquePages.length}): ${page}...</div>`;
+        let page = uniquePages[i];
+        page = page.startsWith('/') ? page.substring(1) : page;
+        const url = `${baseUrl}${page}`;
+        const progressDiv = document.createElement('div');
+        progressDiv.className = 'p-2 text-sky-400';
+        progressDiv.textContent = `Analisando (${i+1}/${uniquePages.length}): ${page}...`;
+        resultsContainer.appendChild(progressDiv);
+        resultsContainer.scrollTop = resultsContainer.scrollHeight;
         
         const pageResults = await DevPanelFeatures.analyzePageInIframe(iframe, url);
         
@@ -83,10 +86,8 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     }
 
     document.body.removeChild(iframe);
-    resultsContainer.innerHTML += `<div class="p-2 text-green-400">Auditoria concluída em ${uniquePages.length} páginas.</div>`;
     runButton.disabled = false;
     runButton.textContent = 'Executar Novamente';
-
     copyButton.classList.remove('hidden');
     copyButton.onclick = () => {
         navigator.clipboard.writeText(fullReportText).then(() => {
@@ -175,8 +176,9 @@ DevPanelFeatures.renderElementsTab = function(panelContent, state, helpers) {
                 <button id="inspector-toggle" class="p-1 rounded hover:bg-gray-700" title="Inspecionar"><span class="material-symbols-outlined">ads_click</span></button>
                 <h3 class="font-bold">Computed Styles</h3>
             </div>
-            <div id="computed-styles-container">Clique em um elemento para ver os estilos.</div>
+            <div id="computed-styles-container">Clique em um elemento na página ou na árvore para ver os estilos.</div>
         </div>`;
+    document.getElementById("elements-tree-container").innerHTML = '';
     document.getElementById("elements-tree-container").appendChild(helpers.buildElementsTree(document.documentElement, state, helpers));
     document.getElementById("inspector-toggle").addEventListener("click", () => helpers.toggleInspector(state, helpers));
 };
@@ -184,7 +186,7 @@ DevPanelFeatures.renderElementsTab = function(panelContent, state, helpers) {
 /**
  * ABA DE CONSOLE
  */
-DevPanelFeatures.renderConsoleTab = function(panelContent, helpers) {
+DevPanelFeatures.renderConsoleTab = function(panelContent, baseUrl, state, helpers) {
     panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2 relative"></div>';
     const consoleInput = document.getElementById("console-input");
     if (consoleInput) {
@@ -194,20 +196,15 @@ DevPanelFeatures.renderConsoleTab = function(panelContent, helpers) {
                 const command = consoleInput.value;
                 if (command) {
                     consoleInput.value = "";
-                    consoleInput.rows = 1;
                     helpers.logToPanel({ type: "log", args: [`> ${command}`] });
                     try {
                         const result = eval(command);
                         if (result !== undefined) helpers.logToPanel({ type: "info", args: [result] });
                     } catch (error) {
-                        helpers.logToPanel({ type: "error", args: [error.toString()] });
+                        helpers.logToPanel({ type: "error", args: [error] });
                     }
                 }
             }
-        });
-        consoleInput.addEventListener('input', () => {
-            consoleInput.style.height = 'auto';
-            consoleInput.style.height = `${consoleInput.scrollHeight}px`;
         });
     }
 };
@@ -224,69 +221,6 @@ DevPanelFeatures.renderStorageTab = function(panelContent) {
     }
     panelContent.innerHTML = `<div class="p-2 w-full"><h3 class="font-bold text-lg mb-2">Local Storage</h3><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Key</th><th class="p-2">Value</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
 };
-
-/**
- * ABA DE TESTES
- */
-DevPanelFeatures.renderTestesTab = function(panelContent, baseUrl) {
-    panelContent.innerHTML = `<div class="p-4 w-full"><button id="run-diagnostics" class="dev-button">Rodar Diagnóstico da Página Atual</button><div id="test-results" class="mt-4"></div></div>`;
-    document.getElementById("run-diagnostics")?.addEventListener("click", () => DevPanelFeatures.runComprehensiveDiagnostics(baseUrl));
-};
-
-DevPanelFeatures.runComprehensiveDiagnostics = async function(baseUrl) {
-    const resultsContainer = document.getElementById("test-results");
-    if (!resultsContainer) return;
-    resultsContainer.innerHTML = `<table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2">Teste</th><th class="p-2">Resultado</th><th class="p-2">Detalhes</th></tr></thead><tbody></tbody></table>`;
-    const tbody = resultsContainer.querySelector("tbody");
-    const addResult = (test, status, details) => {
-        const statusColor = status === "PASS" ? 'text-green-400' : 'text-red-400';
-        tbody.innerHTML += `<tr class="border-b border-gray-800"><td class="p-2">${test}</td><td class="p-2 font-bold ${statusColor}">${status}</td><td class="p-2">${details}</td></tr>`;
-    };
-    try {
-        const response = await fetch(`${baseUrl}search.json`);
-        if (response.ok) {
-            const data = await response.json();
-            addResult("Validação de `search.json`", data.length > 0 ? "PASS" : "FAIL", data.length > 0 ? "Arquivo contém dados." : "Arquivo vazio.");
-        } else {
-            addResult("Validação de `search.json`", "FAIL", `Não encontrado (Status: ${response.status}).`);
-        }
-    } catch (e) { addResult("Validação de `search.json`", "FAIL", "Não é um JSON válido."); }
-};
-
-/**
- * ABA DE INFO
- */
-DevPanelFeatures.renderInfoTab = function(panelContent, devPanelVersion) {
-    const buildTimeMeta = document.querySelector('meta[name="jekyll-build-time"]');
-    const buildTime = buildTimeMeta ? new Date(buildTimeMeta.content).toLocaleString("pt-BR") : 'Não encontrado';
-    panelContent.innerHTML = `
-        <div class="p-4 w-full">
-            <table class='w-full text-left'><tbody>
-                <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Versão do Painel</td><td class='p-2'>${devPanelVersion}</td></tr>
-                <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção</td><td class='p-2'>${buildTime}</td></tr>
-                <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
-            </tbody></table>
-            <div class="mt-6 pt-4 border-t border-gray-700">
-                <h3 class="font-bold text-lg mb-2">Preferências</h3>
-                <div class="flex items-center gap-4 text-white">
-                    <label for="tab-size-select">Tamanho da tabulação (espaços):</label>
-                    <select id="tab-size-select" class="bg-gray-800 border border-gray-600 rounded p-1"><option value="2">2</option><option value="4">4</option><option value="8">8</option></select>
-                </div>
-            </div>
-        </div>`;
-    const tabSizeSelect = document.getElementById('tab-size-select');
-    if (tabSizeSelect) {
-        const savedTabSize = localStorage.getItem('tabSizePreference') || '4';
-        tabSizeSelect.value = savedTabSize;
-        tabSizeSelect.addEventListener('change', (e) => {
-            const newSize = e.target.value;
-            document.documentElement.style.setProperty('--tab-size-preference', newSize);
-            localStorage.setItem('tabSizePreference', newSize);
-        });
-    }
-};
-
-// --- FUNÇÕES RESTAURADAS ---
 
 /**
  * ABA DE NETWORK
@@ -330,14 +264,88 @@ DevPanelFeatures.runAxeAudit = async function() {
         const results = await axe.run({ exclude: [['#dev-panel']] });
         resultsContainer.innerHTML = '';
         const { violations, incomplete, passes } = results;
+        resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
         if (violations.length === 0 && incomplete.length === 0) {
-             resultsContainer.innerHTML = '<p class="text-green-400 font-bold">Parabéns! Nenhum problema de acessibilidade encontrado.</p>';
+             resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
         }
         if (violations.length > 0) {
-            resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mb-2">Violações</h4>');
-            violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 bg-red-900/50"><p>${v.help}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400">Saiba mais</a></div>`));
+            resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
+            violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
+        }
+        if (incomplete.length > 0) {
+            resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
+            incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
         }
     } catch (err) {
         resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
+    }
+};
+
+
+/**
+ * ABA DE TESTES
+ */
+DevPanelFeatures.renderTestesTab = function(panelContent, baseUrl) {
+    panelContent.innerHTML = `<div class="p-4 w-full"><button id="run-diagnostics" class="dev-button">Rodar Diagnóstico da Página Atual</button><div id="test-results" class="mt-4"></div></div>`;
+    document.getElementById("run-diagnostics")?.addEventListener("click", () => DevPanelFeatures.runComprehensiveDiagnostics(baseUrl));
+};
+
+DevPanelFeatures.runComprehensiveDiagnostics = async function(baseUrl) {
+    const resultsContainer = document.getElementById("test-results");
+    if (!resultsContainer) return;
+    resultsContainer.innerHTML = `<div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4"><p class="font-bold">Nota:</p><p class="text-xs text-sky-400">Estes testes são baseados em heurísticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção.</p></div><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Teste</th><th class="p-2 w-1/6">Resultado</th><th class="p-2">Detalhes</th></tr></thead><tbody></tbody></table>`;
+    const tbody = resultsContainer.querySelector("tbody");
+    const addResult = (test, status, details, suggestion) => {
+        const isPass = status === "PASS";
+        const statusColor = isPass ? 'text-green-400' : (status === "FAIL" ? 'text-red-400' : 'text-yellow-400');
+        const statusIcon = isPass ? 'check_circle' : (status === "FAIL" ? 'error' : 'warning');
+        tbody.innerHTML += `<tr class="border-b border-gray-800"><td class="p-2 align-top">${test}</td><td class="p-2 align-top font-bold ${statusColor}"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">${statusIcon}</span> ${status}</span></td><td class="p-2 align-top text-gray-400"><p>${details}</p>${suggestion ? `<p class="mt-1 text-sky-400 text-xs"><span class="font-bold">Sugestão:</span> ${suggestion}</p>` : ''}</td></tr>`;
+    };
+    
+    // Testes...
+    try {
+        const response = await fetch(`${baseUrl}search.json?v=${Date.now()}`);
+        addResult("Validação de `search.json`", response.ok ? "PASS" : "FAIL", response.ok ? "Arquivo encontrado." : `Arquivo não encontrado (Status: ${response.status}). A busca não funcionará.`, !response.ok ? "Execute o build do Jekyll ou verifique se o arquivo foi movido ou renomeado." : null);
+    } catch (e) { addResult("Validação de `search.json`", "FAIL", "Falha na requisição.", "Verifique a conexão de rede ou o console do navegador para mais detalhes."); }
+    
+    document.querySelectorAll("script[src]:not([src^='https://'])").forEach(script => {
+        const isDeferred = script.hasAttribute('defer') || script.hasAttribute('async');
+        addResult(`Performance do Script: ${script.src.split('/').pop()}`, isDeferred ? "PASS" : "RECOMENDAÇÃO", isDeferred ? "O script é carregado de forma assíncrona." : "O script pode estar bloqueando a renderização da página.", !isDeferred ? "Adicione o atributo 'defer' à tag <script> para melhorar a performance de carregamento." : null);
+    });
+
+    const missingAlts = document.querySelectorAll('img:not([alt])');
+    addResult("Acessibilidade: Imagens sem `alt`", missingAlts.length === 0 ? "PASS" : "FAIL", `${missingAlts.length} imagem(ns) sem o atributo 'alt'.`, missingAlts.length > 0 ? "Toda imagem deve ter um atributo `alt`. Se for decorativa, use `alt=\"\"`. Caso contrário, forneça uma descrição concisa." : null);
+};
+
+/**
+ * ABA DE INFO
+ */
+DevPanelFeatures.renderInfoTab = function(panelContent, devPanelVersion) {
+    const buildTimeMeta = document.querySelector('meta[name="jekyll-build-time"]');
+    const buildTime = buildTimeMeta ? new Date(buildTimeMeta.content).toLocaleString("pt-BR") : 'Não encontrado';
+    panelContent.innerHTML = `
+        <div class="p-4 w-full">
+            <table class='w-full text-left'><tbody>
+                <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Versão do Painel</td><td class='p-2'>${devPanelVersion}</td></tr>
+                <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção</td><td class='p-2'>${buildTime}</td></tr>
+                <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
+            </tbody></table>
+            <div class="mt-6 pt-4 border-t border-gray-700">
+                <h3 class="font-bold text-lg mb-2">Preferências</h3>
+                <div class="flex items-center gap-4 text-white">
+                    <label for="tab-size-select">Tamanho da tabulação (espaços):</label>
+                    <select id="tab-size-select" class="bg-gray-800 border border-gray-600 rounded p-1"><option value="2">2</option><option value="4">4</option><option value="8">8</option></select>
+                </div>
+            </div>
+        </div>`;
+    const tabSizeSelect = document.getElementById('tab-size-select');
+    if (tabSizeSelect) {
+        const savedTabSize = localStorage.getItem('tabSizePreference') || '4';
+        tabSizeSelect.value = savedTabSize;
+        tabSizeSelect.addEventListener('change', (e) => {
+            const newSize = e.target.value;
+            document.documentElement.style.setProperty('--tab-size-preference', newSize);
+            localStorage.setItem('tabSizePreference', newSize);
+        });
     }
 };
