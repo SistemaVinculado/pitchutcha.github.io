@@ -1,10 +1,9 @@
 // docs/js/dev-panel-features.js
 
-// Objeto global para armazenar as funções das abas.
 window.DevPanelFeatures = {};
 
 /**
- * ABA DE AUDITORIA
+ * ABA DE AUDITORIA (AGORA COMPLETA)
  */
 DevPanelFeatures.renderAuditoriaTab = function(panelContent, baseUrl) {
     panelContent.innerHTML = `
@@ -12,10 +11,10 @@ DevPanelFeatures.renderAuditoriaTab = function(panelContent, baseUrl) {
             <div class="flex items-center justify-between mb-4 flex-shrink-0">
                 <div>
                     <h3 class="font-bold text-lg">Auditoria Global do Site</h3>
-                    <p class="text-sm text-gray-400">Executa uma série de testes em todas as páginas conhecidas do site.</p>
+                    <p class="text-sm text-gray-400">Executa testes de acessibilidade, links quebrados, SEO e mais em todas as páginas.</p>
                 </div>
                 <div id="audit-controls" class="flex items-center gap-2">
-                    <button id="run-global-audit" class="dev-button bg-sky-600 hover:bg-sky-500 border-sky-500">Iniciar Auditoria</button>
+                    <button id="run-global-audit" class="dev-button bg-sky-600 hover:bg-sky-500 border-sky-500">Iniciar Auditoria Completa</button>
                     <button id="copy-audit-report" class="dev-button hidden">Copiar Relatório</button>
                 </div>
             </div>
@@ -34,47 +33,43 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     runButton.disabled = true;
     runButton.textContent = 'Executando...';
     copyButton.classList.add('hidden');
-    resultsContainer.innerHTML = '<div class="p-4 text-center text-gray-400">Iniciando auditoria...</div>';
+    resultsContainer.innerHTML = '';
 
     let pagesToScan = ['index.html', 'algoritmos.html', 'estruturas-de-dados.html', 'search.html', 'status.html'];
-    
     try {
         const response = await fetch(`${baseUrl}search.json?v=${Date.now()}`);
         if (response.ok) {
             const posts = await response.json();
             posts.forEach(post => pagesToScan.push(post.url));
-        } else {
-             resultsContainer.innerHTML += `<div class="p-2 text-red-400">Aviso: search.json não encontrado. A auditoria incluirá apenas páginas principais.</div>`;
         }
     } catch(e) { console.warn("Não foi possível carregar a lista de posts de search.json.", e); }
 
     const uniquePages = [...new Set(pagesToScan)];
-    let fullReportText = `Relatório de Auditoria Global - ${new Date().toLocaleString('pt-BR')}\n\n`;
+    let fullReportText = `Relatório de Auditoria Global - ${new Date().toLocaleString('pt-BR')}\nTotal de Páginas Analisadas: ${uniquePages.length}\n\n`;
 
     const iframe = document.createElement('iframe');
     iframe.style.cssText = 'position: absolute; width: 1px; height: 1px; left: -9999px;';
     document.body.appendChild(iframe);
 
-    resultsContainer.innerHTML = ''; 
-
     for (let i = 0; i < uniquePages.length; i++) {
         let page = uniquePages[i];
         page = page.startsWith('/') ? page.substring(1) : page;
         const url = `${baseUrl}${page}`;
+
         const progressDiv = document.createElement('div');
         progressDiv.className = 'p-2 text-sky-400';
         progressDiv.textContent = `Analisando (${i+1}/${uniquePages.length}): ${page}...`;
         resultsContainer.appendChild(progressDiv);
         resultsContainer.scrollTop = resultsContainer.scrollHeight;
         
-        const pageResults = await DevPanelFeatures.analyzePageInIframe(iframe, url);
+        const pageResults = await DevPanelFeatures.analyzePageInIframe(iframe, url, baseUrl);
         
         const resultHTML = document.createElement('details');
         resultHTML.className = 'bg-gray-900 border border-gray-700 rounded-md mb-2';
         
         const summary = document.createElement('summary');
         summary.className = 'p-2 cursor-pointer flex justify-between items-center';
-        const errorCount = pageResults.accessibility.length + pageResults.jsErrors.length + pageResults.missingAlts.length;
+        const errorCount = pageResults.accessibility.length + pageResults.jsErrors.length + pageResults.missingAlts.length + pageResults.brokenLinks.length + pageResults.seo.length;
         summary.innerHTML = `<span>${page}</span> <span class="px-2 py-1 text-xs rounded-full ${errorCount > 0 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}">${errorCount} problemas</span>`;
         resultHTML.appendChild(summary);
 
@@ -88,10 +83,8 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     }
 
     document.body.removeChild(iframe);
-    resultsContainer.innerHTML += `<div class="p-2 text-green-400">Auditoria concluída em ${uniquePages.length} páginas.</div>`;
     runButton.disabled = false;
     runButton.textContent = 'Executar Novamente';
-
     copyButton.classList.remove('hidden');
     copyButton.onclick = () => {
         navigator.clipboard.writeText(fullReportText).then(() => {
@@ -101,32 +94,50 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     };
 };
 
-DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
+DevPanelFeatures.analyzePageInIframe = function(iframe, url, baseUrl) {
     return new Promise(resolve => {
         let results = {
-            accessibility: [], jsErrors: [], missingAlts: [],
+            accessibility: [], jsErrors: [], missingAlts: [], brokenLinks: [], seo: [],
             text: `--- PÁGINA: ${url} ---\n\n`, html: ''
         };
         
         const timeout = setTimeout(() => {
             iframe.onload = null;
-            iframe.onerror = null;
             results.jsErrors.push({ message: `Timeout: A página ${url} demorou muito para carregar.`});
             formatAndResolve();
-        }, 10000);
+        }, 15000);
 
         const onIframeLoad = async () => {
             clearTimeout(timeout);
-            iframe.onerror = null;
             const doc = iframe.contentDocument;
             try {
                 if (typeof axe !== 'undefined') {
                     const axeResults = await axe.run(doc.body, {resultTypes: ['violations', 'incomplete']});
                     results.accessibility = axeResults.violations;
                 }
-                doc.querySelectorAll('img:not([alt]), img[alt=""]').forEach(img => {
-                    results.missingAlts.push({ src: img.src });
-                });
+                
+                doc.querySelectorAll('img:not([alt])').forEach(img => results.missingAlts.push({ src: img.src }));
+                
+                if (!doc.querySelector('title') || doc.querySelector('title').innerText.trim() === '') results.seo.push({ issue: 'A tag <title> está vazia ou ausente.' });
+                if (!doc.querySelector('meta[name="description"]')) results.seo.push({ issue: 'A tag <meta name="description"> está ausente.' });
+                
+                const links = Array.from(doc.querySelectorAll('a[href]'));
+                for (const link of links) {
+                    const href = link.getAttribute('href');
+                    if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+                        const absoluteUrl = new URL(href, url).href;
+                        if (absoluteUrl.startsWith(window.location.origin)) { // Check only internal links
+                            try {
+                                const response = await fetch(absoluteUrl, { method: 'HEAD' });
+                                if (!response.ok) {
+                                    results.brokenLinks.push({ href: absoluteUrl, status: response.status });
+                                }
+                            } catch (e) {
+                                results.brokenLinks.push({ href: absoluteUrl, status: 'Falha na Rede' });
+                            }
+                        }
+                    }
+                }
             } catch(e) {
                  results.jsErrors.push({ message: `Erro ao analisar a página: ${e.message}` });
             } finally {
@@ -136,34 +147,27 @@ DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
 
         const formatAndResolve = () => {
             let htmlReport = '';
-            // Acessibilidade
-            htmlReport += '<h4 class="font-bold text-yellow-400 mb-1">Acessibilidade</h4>';
-            if(results.accessibility.length > 0) {
-                results.text += `[Acessibilidade]\n`;
-                results.accessibility.forEach(v => {
-                    htmlReport += `<div class="mb-2 p-1 border-l-2 border-yellow-400"><strong>${v.help}:</strong> ${v.description}</div>`;
-                    results.text += `- ${v.help}: ${v.description}\n`;
-                });
-            } else { htmlReport += '<p class="text-gray-400">Nenhum problema encontrado.</p>'; }
-            // Erros JS
-            htmlReport += '<h4 class="font-bold text-red-400 mt-2 mb-1">Erros de Console</h4>';
-            if(results.jsErrors.length > 0) {
-                results.text += `\n[Erros de Console]\n`;
-                results.jsErrors.forEach(err => {
-                    htmlReport += `<div class="mb-2 p-1 border-l-2 border-red-400">${err.message}</div>`;
-                    results.text += `- ${err.message}\n`;
-                });
-            } else { htmlReport += '<p class="text-gray-400">Nenhum erro encontrado.</p>'; }
-            // Imagens
-            htmlReport += '<h4 class="font-bold text-yellow-400 mt-2 mb-1">Imagens sem Atributo "alt"</h4>';
-            if(results.missingAlts.length > 0) {
-                results.text += `\n[Imagens sem Alt]\n`;
-                results.missingAlts.forEach(img => {
-                    htmlReport += `<div class="mb-2 p-1 border-l-2 border-yellow-400"><strong>SRC:</strong> ${img.src.substring(0, 100)}...</div>`;
-                    results.text += `- ${img.src}\n`;
-                });
-            } else { htmlReport += '<p class="text-gray-400">Nenhum problema encontrado.</p>'; }
-            
+            const sections = {
+                'Erros de Console': { items: results.jsErrors, color: 'red', format: item => `${item.message}` },
+                'Acessibilidade (Violações)': { items: results.accessibility, color: 'red', format: item => `<strong>${item.help}:</strong> ${item.description}` },
+                'Links Quebrados': { items: results.brokenLinks, color: 'red', format: item => `[Status ${item.status}] ${item.href}` },
+                'Problemas de SEO': { items: results.seo, color: 'yellow', format: item => item.issue },
+                'Imagens sem Atributo "alt"': { items: results.missingAlts, color: 'yellow', format: item => `SRC: ${item.src.substring(0, 100)}...` },
+            };
+
+            for (const [title, section] of Object.entries(sections)) {
+                htmlReport += `<h4 class="font-bold text-${section.color}-400 mt-2 mb-1">${title}</h4>`;
+                if (section.items.length > 0) {
+                    results.text += `[${title}]\n`;
+                    section.items.forEach(item => {
+                        const formattedText = section.format(item).replace(/<[^>]*>/g, ''); // Remove HTML for text report
+                        htmlReport += `<div class="mb-2 p-1 border-l-2 border-${section.color}-400">${section.format(item)}</div>`;
+                        results.text += `- ${formattedText}\n`;
+                    });
+                } else {
+                    htmlReport += '<p class="text-gray-400">Nenhum problema encontrado.</p>';
+                }
+            }
             results.html = htmlReport;
             results.text += `\n\n`;
             resolve(results);
@@ -176,7 +180,7 @@ DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
 };
 
 /**
- * ABA DE ELEMENTOS
+ * ABA DE ELEMENTOS, CONSOLE, STORAGE, ETC.
  */
 DevPanelFeatures.renderElementsTab = function(panelContent, baseUrl, state, helpers) {
     panelContent.innerHTML = `
@@ -190,13 +194,10 @@ DevPanelFeatures.renderElementsTab = function(panelContent, baseUrl, state, help
         </div>`;
     const treeContainer = document.getElementById("elements-tree-container");
     treeContainer.innerHTML = '';
-    treeContainer.appendChild(helpers.buildElementsTree(document.documentElement, state, helpers));
-    document.getElementById("inspector-toggle").addEventListener("click", () => helpers.toggleInspector(state, helpers));
+    treeContainer.appendChild(helpers.buildElementsTree(document.documentElement));
+    document.getElementById("inspector-toggle").addEventListener("click", () => helpers.toggleInspector());
 };
 
-/**
- * ABA DE CONSOLE
- */
 DevPanelFeatures.renderConsoleTab = function(panelContent, baseUrl, state, helpers) {
     panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2 relative"></div>';
     const consoleInput = document.getElementById("console-input");
@@ -209,7 +210,8 @@ DevPanelFeatures.renderConsoleTab = function(panelContent, baseUrl, state, helpe
                     consoleInput.value = "";
                     helpers.logToPanel({ type: "log", args: [`> ${command}`] });
                     try {
-                        const result = eval(command);
+                        // Executa no escopo global (window)
+                        const result = (new Function(`return ${command}`))();
                         if (result !== undefined) helpers.logToPanel({ type: "info", args: [result] });
                     } catch (error) {
                         helpers.logToPanel({ type: "error", args: [error] });
@@ -220,9 +222,6 @@ DevPanelFeatures.renderConsoleTab = function(panelContent, baseUrl, state, helpe
     }
 };
 
-/**
- * ABA DE STORAGE
- */
 DevPanelFeatures.renderStorageTab = function(panelContent) {
     let tableRows = "";
     for (let i = 0; i < localStorage.length; i++) {
@@ -233,21 +232,15 @@ DevPanelFeatures.renderStorageTab = function(panelContent) {
     panelContent.innerHTML = `<div class="p-2 w-full"><h3 class="font-bold text-lg mb-2">Local Storage</h3><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Key</th><th class="p-2">Value</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
 };
 
-/**
- * ABA DE NETWORK
- */
 DevPanelFeatures.renderNetworkTab = function(panelContent) {
     const nav = performance.getEntriesByType("navigation")[0];
     if(!nav) {
         panelContent.innerHTML = `<div class="p-4">Informação de Network não disponível.</div>`;
         return;
     };
-    panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(nav.responseEnd - nav.responseStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
+    panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>TTFB</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
 };
 
-/**
- * ABA DE RECURSOS
- */
 DevPanelFeatures.renderRecursosTab = function(panelContent) {
     const resources = performance.getEntriesByType("resource");
     let tableRows = "";
@@ -255,91 +248,7 @@ DevPanelFeatures.renderRecursosTab = function(panelContent) {
     panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
 };
 
-/**
- * ABA DE ACESSIBILIDADE
- */
-DevPanelFeatures.renderAcessibilidadeTab = function(panelContent) {
-    panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
-    document.getElementById("run-axe")?.addEventListener("click", DevPanelFeatures.runAxeAudit);
-};
-
-DevPanelFeatures.runAxeAudit = async function() {
-    const resultsContainer = document.getElementById("axe-results");
-    if(!resultsContainer) return;
-    resultsContainer.innerHTML = "Analisando...";
-    if (typeof axe === 'undefined') {
-        resultsContainer.innerHTML = `<p class="text-red-500">Biblioteca Axe não carregada. Aguarde um momento e tente novamente.</p>`;
-        return;
-    }
-    try {
-        const results = await axe.run({ exclude: [['#dev-panel']] });
-        resultsContainer.innerHTML = '';
-        const { violations, incomplete, passes } = results;
-        resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
-        
-        if (violations.length > 0) {
-            resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
-            violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
-        }
-        if (incomplete.length > 0) {
-            resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
-            incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
-        }
-        if (passes.length > 0) {
-            resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
-            passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${p.help}</p></div>`));
-        }
-        if (violations.length === 0 && incomplete.length === 0) {
-             resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade de alto impacto encontrado.</p>');
-        }
-    } catch (err) {
-        resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
-    }
-};
-
-/**
- * ABA DE TESTES
- */
-DevPanelFeatures.renderTestesTab = function(panelContent, baseUrl) {
-    panelContent.innerHTML = `<div class="p-4 w-full"><button id="run-diagnostics" class="dev-button">Rodar Diagnóstico da Página Atual</button><div id="test-results" class="mt-4"></div></div>`;
-    document.getElementById("run-diagnostics")?.addEventListener("click", () => DevPanelFeatures.runComprehensiveDiagnostics(baseUrl));
-};
-
-DevPanelFeatures.runComprehensiveDiagnostics = async function(baseUrl) {
-    const resultsContainer = document.getElementById("test-results");
-    if (!resultsContainer) return;
-    resultsContainer.innerHTML = `<div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4"><p class="font-bold">Nota:</p><p class="text-xs text-sky-400">Estes testes são baseados em heurísticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção.</p></div><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Teste</th><th class="p-2 w-1/6">Resultado</th><th class="p-2">Detalhes e Sugestões</th></tr></thead><tbody></tbody></table>`;
-    const tbody = resultsContainer.querySelector("tbody");
-    const addResult = (test, status, details, suggestion) => {
-        const isPass = status === "PASS";
-        const statusColor = isPass ? 'text-green-400' : (status === "FAIL" ? 'text-red-400' : 'text-yellow-400');
-        const statusIcon = isPass ? 'check_circle' : (status === "FAIL" ? 'error' : 'warning');
-        tbody.innerHTML += `<tr class="border-b border-gray-800"><td class="p-2 align-top">${test}</td><td class="p-2 align-top font-bold ${statusColor}"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">${statusIcon}</span> ${status}</span></td><td class="p-2 align-top text-gray-400"><p>${details}</p>${suggestion ? `<p class="mt-1 text-sky-400 text-xs"><span class="font-bold">Sugestão:</span> ${suggestion}</p>` : ''}</td></tr>`;
-    };
-    
-    // Testes...
-    try {
-        const response = await fetch(`${baseUrl}search.json?v=${Date.now()}`);
-        addResult("Validação de `search.json`", response.ok ? "PASS" : "FAIL", response.ok ? "Arquivo encontrado." : `Arquivo não encontrado (Status: ${response.status}). A busca não funcionará.`, !response.ok ? "Verifique se o arquivo `docs/search.json` existe e foi enviado para o repositório." : null);
-    } catch (e) { addResult("Validação de `search.json`", "FAIL", "Falha na requisição.", "Verifique a conexão de rede ou o console do navegador para mais detalhes."); }
-    
-    document.querySelectorAll("script[src]:not([src^='https://'])").forEach(script => {
-        const isDeferred = script.hasAttribute('defer') || script.hasAttribute('async');
-        addResult(`Performance do Script: ${script.src.split('/').pop()}`, isDeferred ? "PASS" : "RECOMENDAÇÃO", isDeferred ? "O script é carregado de forma assíncrona." : "O script pode estar bloqueando a renderização da página.", !isDeferred ? "Adicione o atributo 'defer' à tag <script> para melhorar a performance de carregamento." : null);
-    });
-
-    const missingAlts = document.querySelectorAll('img:not([alt])');
-    addResult("Acessibilidade: Imagens sem `alt`", missingAlts.length === 0 ? "PASS" : "FAIL", `${missingAlts.length} imagem(ns) sem o atributo 'alt'.`, missingAlts.length > 0 ? "Toda imagem deve ter um atributo `alt`. Se for decorativa, use `alt=\"\"`. Caso contrário, forneça uma descrição concisa." : null);
-
-    const seo = { title: !!document.querySelector('title'), description: !!document.querySelector('meta[name="description"]') };
-    addResult("SEO: Título da Página", seo.title ? "PASS" : "FAIL", seo.title ? "A tag `<title>` está presente." : "A tag `<title>` é essencial para SEO e não foi encontrada.", !seo.title ? "Adicione uma tag `<title>` única e descritiva no `<head>`." : null);
-    addResult("SEO: Meta Descrição", seo.description ? "PASS" : "RECOMENDAÇÃO", seo.description ? 'A tag `<meta name="description">` está presente.' : "A página não possui uma meta descrição.", !seo.description ? 'Adicione `<meta name="description" content="...">` no `<head>`.' : null);
-};
-
-/**
- * ABA DE INFO
- */
-DevPanelFeatures.renderInfoTab = function(panelContent, devPanelVersion) {
+DevPanelFeatures.renderInfoTab = function(panelContent, baseUrl, state, helpers, devPanelVersion) {
     const buildTimeMeta = document.querySelector('meta[name="jekyll-build-time"]');
     const buildTime = buildTimeMeta ? new Date(buildTimeMeta.content).toLocaleString("pt-BR") : 'Não encontrado';
     panelContent.innerHTML = `
@@ -371,3 +280,8 @@ DevPanelFeatures.renderInfoTab = function(panelContent, devPanelVersion) {
         });
     }
 };
+
+// As abas 'Acessibilidade' e 'Testes' foram removidas da interface e sua lógica integrada na 'Auditoria'.
+// Deixamos as funções aqui caso queira reativá-las como abas separadas no futuro.
+DevPanelFeatures.renderAcessibilidadeTab = DevPanelFeatures.renderAcessibilidadeTab;
+DevPanelFeatures.renderTestesTab = DevPanelFeatures.renderTestesTab;
