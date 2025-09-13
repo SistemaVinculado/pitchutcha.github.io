@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Função principal que desenha o relatório na tela
     const renderReport = (view) => { // 'view' pode ser 'mobile' ou 'desktop'
         if (!lighthouseData || !lighthouseData[view]) {
-            container.innerHTML = `<p class="text-red-500">Dados do relatório para '${view}' não foram encontrados.</p>`;
+            container.innerHTML = `<p class="text-red-500">Dados do relatório para '${view}' não foram encontrados no arquivo JSON.</p>`;
             return;
         }
 
@@ -91,7 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         document.getElementById('device-toggle-btn').addEventListener('click', () => {
-            renderReport(oppositeView.toLowerCase());
+            const newView = view === 'mobile' ? 'desktop' : 'mobile';
+            renderReport(newView);
         });
     };
 
