@@ -4,10 +4,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.3.0"; // Versão atualizada com "Copiar" no console
+    const DEV_PANEL_VERSION = "1.4.0"; // Versão atualizada com Tab-Size
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
     const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
+
+    // NOVO: Aplica preferências salvas assim que a página carrega
+    const applySavedPreferences = () => {
+        // Aplica a preferência de tamanho de tabulação
+        const savedTabSize = localStorage.getItem('tabSizePreference');
+        if (savedTabSize) {
+            document.documentElement.style.setProperty('--tab-size-preference', savedTabSize);
+        }
+    };
+    applySavedPreferences();
+
 
     // Carrega a biblioteca Axe para testes de acessibilidade
     const axeScript = document.createElement("script");
@@ -100,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // ... (as funções renderElementsTab, renderConsoleTab, etc., continuam iguais a antes)
     function renderElementsTab() {
         panelContent.innerHTML = `
             <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
@@ -194,20 +206,55 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    /**
+     * ATUALIZADO: Aba de Informações
+     * Adicionada a seção de Preferências com o controle de tab-size.
+     */
     function renderInfoTab() {
         const buildTimeMeta = document.querySelector('meta[name="jekyll-build-time"]');
         const buildTime = buildTimeMeta ? new Date(buildTimeMeta.content).toLocaleString("pt-BR") : 'Não encontrado';
 
-        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody>
-            <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Versão do Painel</td><td class='p-2'>${DEV_PANEL_VERSION}</td></tr>
-            <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção do Site</td><td class='p-2'>${buildTime}</td></tr>
-            <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
-            <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr>
-            <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr>
-            <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr>
-        </tbody></table></div>`;
+        panelContent.innerHTML = `
+            <div class="p-4 w-full">
+                <table class='w-full text-left'><tbody>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Versão do Painel</td><td class='p-2'>${DEV_PANEL_VERSION}</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção do Site</td><td class='p-2'>${buildTime}</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr>
+                </tbody></table>
+
+                <div class="mt-6 pt-4 border-t border-gray-700">
+                    <h3 class="font-bold text-lg mb-2">Preferências</h3>
+                    <div class="flex items-center gap-4 text-white">
+                        <label for="tab-size-select">Tamanho da tabulação (espaços):</label>
+                        <select id="tab-size-select" class="bg-gray-800 border border-gray-600 rounded p-1 focus:outline-none focus:ring-1 focus:ring-sky-400">
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Lógica para o controle de tab-size
+        const tabSizeSelect = document.getElementById('tab-size-select');
+        if (tabSizeSelect) {
+            const savedTabSize = localStorage.getItem('tabSizePreference') || '4';
+            tabSizeSelect.value = savedTabSize;
+
+            tabSizeSelect.addEventListener('change', (e) => {
+                const newSize = e.target.value;
+                document.documentElement.style.setProperty('--tab-size-preference', newSize);
+                localStorage.setItem('tabSizePreference', newSize);
+            });
+        }
     }
 
+
+    // ... (o restante do arquivo, como logToPanel, buildElementsTree, runAxeAudit, runComprehensiveDiagnostics, etc., permanece o mesmo)
     // FUNÇÃO ATUALIZADA COM BOTÃO DE COPIAR
     function logToPanel(log) {
         const consoleOutput = document.getElementById("console-output");
@@ -552,4 +599,5 @@ document.addEventListener("DOMContentLoaded", () => {
              addResult("Acessibilidade: Imagens sem `alt`", "PASS", "Todas as imagens possuem o atributo `alt`.", null);
         }
     }
+
 });
