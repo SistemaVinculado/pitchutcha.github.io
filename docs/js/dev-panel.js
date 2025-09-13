@@ -1,10 +1,10 @@
-// docs/js/dev-panel.js (Versão 1.8.0 - Unificada e Completa)
+// docs/js/dev-panel.js (Versão Unificada e Corrigida)
 
 document.addEventListener("DOMContentLoaded", () => {
     // Evita que o painel seja executado em iframes
     if (window.self !== window.top) return;
 
-    const DEV_PANEL_VERSION = "1.8.0";
+    const DEV_PANEL_VERSION = "1.7.0"; // Versão com correções e auditoria integrada
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
 
     // Aplica preferências salvas ao carregar
@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
     panelWrapper.innerHTML = panelHTML;
     document.body.appendChild(panelWrapper);
 
-    // --- Seletores e Variáveis de Estado ---
     const triggerButton = document.getElementById("dev-tools-trigger");
     const devPanel = document.getElementById("dev-panel");
     const closeButton = document.getElementById("close-dev-panel");
@@ -67,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastSelectedTreeNode = null;
     const domElementToTreeNode = new WeakMap();
 
-    // --- Funções Auxiliares (Helpers) ---
     const logToPanel = (log) => {
         const consoleOutput = document.getElementById("console-output");
         if (!consoleOutput) return;
@@ -91,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const original = console[type];
         console[type] = (...args) => {
             original.apply(console, args);
-            if (devPanel && !devPanel.classList.contains('hidden') && document.getElementById('console-output')) {
+            if (devPanel && !devPanel.classList.contains('hidden')) {
                 logToPanel({ type, args });
             }
         };
@@ -99,12 +97,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const highlightOnPage = (element) => {
         if (lastInspectedElement) lastInspectedElement.style.outline = '';
-        if (element && typeof element.style !== 'undefined' && !element.closest('#dev-panel')) {
+        if (element && typeof element.style !== 'undefined') {
             element.style.outline = '2px solid #0ea5e9';
             lastInspectedElement = element;
         }
     };
-    
+
+    const highlightInTree = (element) => {
+        if (lastSelectedTreeNode) lastSelectedTreeNode.style.backgroundColor = '';
+        const treeNode = domElementToTreeNode.get(element);
+        if (treeNode) {
+            treeNode.style.backgroundColor = 'rgba(14, 165, 233, 0.3)';
+            lastSelectedTreeNode = treeNode;
+        }
+    };
+
     const displayComputedStyles = (element) => {
         const container = document.getElementById("computed-styles-container");
         if (!container || !element) return;
@@ -115,15 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         tableHTML += "</table>";
         container.innerHTML = tableHTML;
-    };
-
-    const highlightInTree = (element) => {
-        if (lastSelectedTreeNode) lastSelectedTreeNode.style.backgroundColor = '';
-        const treeNode = domElementToTreeNode.get(element);
-        if (treeNode) {
-            treeNode.style.backgroundColor = 'rgba(14, 165, 233, 0.3)';
-            lastSelectedTreeNode = treeNode;
-        }
     };
 
     const selectElement = (element) => {
@@ -162,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const hasChildren = element.children.length > 0;
         const arrow = hasChildren ? `<span class="material-symbols-outlined text-sm expand-icon">arrow_right</span>` : `<span class='w-4 inline-block'></span>`;
         nodeHeader.innerHTML = `${arrow}<span class='text-gray-500'>&lt;</span><span class='text-pink-400'>${element.tagName.toLowerCase()}</span> ${attributes}<span class='text-gray-500'>&gt;</span>`;
-        
+
         const childrenContainer = document.createElement('div');
         childrenContainer.className = 'element-children hidden';
         nodeWrapper.append(nodeHeader, childrenContainer);
@@ -183,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return nodeWrapper;
     };
-    
+
     const toggleInspector = () => {
         isInspecting = !isInspecting;
         const button = document.getElementById('inspector-toggle');
@@ -201,7 +199,9 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleInspector();
         };
 
-        const mouseoverHandler = (e) => { if (isInspecting) highlightOnPage(e.target); };
+        const mouseoverHandler = (e) => {
+            if (isInspecting) highlightOnPage(e.target);
+        };
 
         if (isInspecting) {
             document.addEventListener('mouseover', mouseoverHandler);
@@ -218,10 +218,10 @@ document.addEventListener("DOMContentLoaded", () => {
             let issues = { accessibility: [], jsErrors: [], missingAlts: [], brokenLinks: [], seo: [], bestPractices: [], performance: [] };
             let text = `--- PÁGINA: ${url} ---\n\n`;
             let html = '';
-            
+
             const timeout = setTimeout(() => {
                 iframe.onload = null;
-                issues.jsErrors.push({ message: `Timeout: A página ${url} demorou muito para carregar.`});
+                issues.jsErrors.push({ message: `Timeout: A página ${url} demorou muito para carregar.` });
                 formatAndResolve();
             }, 15000);
 
@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const win = iframe.contentWindow;
                 try {
                     if (typeof axe !== 'undefined') {
-                        const axeResults = await axe.run(doc.documentElement, {resultTypes: ['violations']});
+                        const axeResults = await axe.run(doc.body, { resultTypes: ['violations'] });
                         issues.accessibility = axeResults.violations;
                     }
                     doc.querySelectorAll('img:not([alt])').forEach(img => issues.missingAlts.push({ el: img.outerHTML }));
@@ -281,7 +281,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // --- RENDERIZADORES DE ABAS ---
     const tabRenderers = {
         renderAuditoriaTab: function() {
             panelContent.innerHTML = `
@@ -305,8 +304,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const runButton = document.getElementById('run-global-audit');
                 const copyButton = document.getElementById('copy-audit-report');
                 
-                runButton.disabled = true; runButton.textContent = 'Executando...';
-                copyButton.classList.add('hidden'); resultsContainer.innerHTML = '';
+                runButton.disabled = true;
+                runButton.textContent = 'Executando...';
+                copyButton.classList.add('hidden');
+                resultsContainer.innerHTML = '';
             
                 let pagesToScan = ['index.html', 'algoritmos.html', 'estruturas-de-dados.html', 'search.html', 'status.html'];
                 try {
@@ -346,7 +347,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             
                 document.body.removeChild(iframe);
-                runButton.disabled = false; runButton.textContent = 'Executar Novamente';
+                runButton.disabled = false;
+                runButton.textContent = 'Executar Novamente';
                 copyButton.classList.remove('hidden');
                 copyButton.onclick = () => {
                     navigator.clipboard.writeText(fullReportText).then(() => {
@@ -414,7 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const resources = performance.getEntriesByType("resource");
             let tableRows = "";
             resources.forEach(r => { tableRows += `<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${r.name.split("/").pop()}</td><td class='p-2'>${r.initiatorType}</td><td class='p-2'>${(r.transferSize / 1024).toFixed(2)} KB</td><td class='p-2'>${r.duration.toFixed(0)} ms</td></tr>`; });
-            panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class="border-b border-gray-700"><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho</th><th class='p-2'>Tempo</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
+            panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho</th><th class='p-2'>Tempo</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
         },
         renderInfoTab: function() {
             const buildTimeMeta = document.querySelector('meta[name="jekyll-build-time"]');
@@ -449,7 +451,6 @@ document.addEventListener("DOMContentLoaded", () => {
         },
     };
 
-    // --- LÓGICA PRINCIPAL DE INICIALIZAÇÃO ---
     const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
     function renderTabContent(tabId) {
@@ -461,8 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (renderer) {
             renderer();
         } else {
-            console.error(`Render function for tab '${tabId}' not found.`);
-            panelContent.innerHTML = `<div class="p-4">Erro: Função para renderizar a aba '${tabId}' não encontrada.</div>`;
+            panelContent.innerHTML = `<div class="p-4">Funcionalidade da aba '${tabId}' não encontrada.</div>`;
         }
     }
 
