@@ -1,0 +1,507 @@
+7c7
+<     const DEV_PANEL_VERSION = "1.3.1"; // Versão com cópia de violações
+---
+>     const DEV_PANEL_VERSION = "1.3.0"; // Versão original funcional
+85d84
+<         if (isInspecting) toggleInspector();
+86a86,89
+>         if (isInspecting) {
+>             toggleInspector();
+>         }
+>         
+101c104,122
+<         panelContent.innerHTML = `...`; // Conteúdo original omitido para brevidade
+---
+>         panelContent.innerHTML = `
+>             <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
+>             <div id="styles-container" class="w-1/2 overflow-auto p-2">
+>                 <div class="flex items-center gap-2 mb-2">
+>                     <button id="inspector-toggle" class="p-1 rounded hover:bg-gray-700" title="Inspecionar um elemento na página">
+>                         <span class="material-symbols-outlined">ads_click</span>
+>                     </button>
+>                     <h3 class="font-bold">Computed Styles</h3>
+>                 </div>
+>                 <div id="computed-styles-container">Clique em um elemento para ver os estilos.</div>
+>             </div>`;
+>         const elementsContainer = document.getElementById("elements-tree-container");
+>         if(elementsContainer) {
+>              elementsContainer.appendChild(buildElementsTree(document.documentElement));
+>         }
+>         const inspectorToggle = document.getElementById("inspector-toggle");
+>         if(inspectorToggle) {
+>             inspectorToggle.addEventListener("click", toggleInspector);
+>         }
+105c126,152
+<         panelContent.innerHTML = `...`; // Conteúdo original omitido para brevidade
+---
+>         panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2 relative"></div>';
+>         const consoleInput = document.getElementById("console-input");
+>         if (consoleInput) {
+>             consoleInput.addEventListener("keydown", e => {
+>                 if (e.key === "Enter" && !e.shiftKey) {
+>                     e.preventDefault(); 
+>                     const command = consoleInput.value;
+>                     if (command) {
+>                         consoleInput.value = "";
+>                         consoleInput.rows = 1;
+>                         logToPanel({ type: "log", args: [`> ${command}`] });
+>                         try {
+>                             const result = eval(command);
+>                             if (result !== undefined) {
+>                                 logToPanel({ type: "info", args: [result] });
+>                             }
+>                         } catch (error) {
+>                             logToPanel({ type: "error", args: [error.toString()] });
+>                         }
+>                     }
+>                 }
+>             });
+>             consoleInput.addEventListener('input', () => {
+>                 consoleInput.style.height = 'auto';
+>                 consoleInput.style.height = (consoleInput.scrollHeight) + 'px';
+>             });
+>         }
+109c156,162
+<         // ... (código original)
+---
+>         let tableRows = "";
+>         for (let i = 0; i < localStorage.length; i++) {
+>             const key = localStorage.key(i);
+>             const value = localStorage.getItem(key);
+>             tableRows += `<tr class='border-b border-gray-800'><td class='p-2 align-top text-orange-400'>${key}</td><td class='p-2 align-top text-green-400 whitespace-pre-wrap break-all'>${value}</td></tr>`;
+>         }
+>         panelContent.innerHTML = `<div class="p-2 w-full"><h3 class="font-bold text-lg mb-2">Local Storage</h3><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Key</th><th class="p-2">Value</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
+113c166,171
+<         // ... (código original)
+---
+>         const nav = performance.getEntriesByType("navigation")[0];
+>         if(!nav) {
+>             panelContent.innerHTML = `<div class="p-4">Informação de Network não disponível.</div>`;
+>             return;
+>         };
+>         panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(nav.responseEnd - nav.responseStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
+117c175,178
+<         // ... (código original)
+---
+>         const resources = performance.getEntriesByType("resource");
+>         let tableRows = "";
+>         resources.forEach(r => { tableRows += `<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${r.name.split("/").pop()}</td><td class='p-2'>${r.initiatorType}</td><td class='p-2'>${(r.transferSize / 1024).toFixed(2)}</td><td class='p-2'>${r.duration.toFixed(0)}</td></tr>`; });
+>         panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
+120d180
+<     // ATUALIZADO: renderAcessibilidadeTab
+122,130c182,186
+<         panelContent.innerHTML = `
+<             <div class="p-4">
+<                 <div class="flex items-center gap-2">
+<                     <button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button>
+<                     <button id="copy-axe-violations" class="dev-button hidden">Copiar Violações</button>
+<                 </div>
+<                 <div id="axe-results" class="mt-4"></div>
+<             </div>`;
+<         document.getElementById("run-axe").addEventListener("click", runAxeAudit);
+---
+>         panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
+>         const runAxeButton = document.getElementById("run-axe");
+>         if(runAxeButton) {
+>             runAxeButton.addEventListener("click", runAxeAudit);
+>         }
+134c190,194
+<         // ... (código original)
+---
+>         panelContent.innerHTML = `<div class="p-4 w-full"><button id="run-diagnostics" class="dev-button">Rodar Diagnóstico Avançado</button><div id="test-results" class="mt-4"></div></div>`;
+>         const runDiagnosticsButton = document.getElementById("run-diagnostics");
+>         if(runDiagnosticsButton) {
+>             runDiagnosticsButton.addEventListener("click", runComprehensiveDiagnostics);
+>         }
+138c198,208
+<         // ... (código original)
+---
+>         const buildTimeMeta = document.querySelector('meta[name="jekyll-build-time"]');
+>         const buildTime = buildTimeMeta ? new Date(buildTimeMeta.content).toLocaleString("pt-BR") : 'Não encontrado';
+> 
+>         panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody>
+>             <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Versão do Painel</td><td class='p-2'>${DEV_PANEL_VERSION}</td></tr>
+>             <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção do Site</td><td class='p-2'>${buildTime}</td></tr>
+>             <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
+>             <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr>
+>             <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr>
+>             <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr>
+>         </tbody></table></div>`;
+142c212,253
+<         // ... (código original)
+---
+>         const consoleOutput = document.getElementById("console-output");
+>         if (!consoleOutput) return;
+> 
+>         let color = "text-white";
+>         if (log.type === "error") color = "text-red-400";
+>         if (log.type === "warn") color = "text-yellow-400";
+>         if (log.type === "info") color = "text-sky-400";
+>         
+>         const item = document.createElement("div");
+>         item.className = `console-log-item group relative py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
+>         
+>         let contentText = '';
+>         try {
+>             contentText = log.args.map(arg => {
+>                 if (typeof arg === "string") return arg;
+>                 if (arg instanceof Node) return arg.outerHTML;
+>                 return JSON.stringify(arg, null, 2);
+>             }).join(" ");
+>         } catch (e) {
+>             contentText = "Não foi possível exibir o objeto.";
+>         }
+> 
+>         item.innerHTML = `
+>             <span class="opacity-50">${new Date().toLocaleTimeString()}</span>
+>             <div class="flex-1 whitespace-pre-wrap">${contentText}</div>
+>             <button class="copy-log-btn absolute top-1 right-1 p-1 text-xs bg-gray-700 rounded-md text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">Copiar</button>
+>         `;
+>         
+>         consoleOutput.appendChild(item);
+> 
+>         const copyButton = item.querySelector('.copy-log-btn');
+>         copyButton.addEventListener('click', () => {
+>             navigator.clipboard.writeText(contentText).then(() => {
+>                 copyButton.textContent = 'Copiado!';
+>                 setTimeout(() => { copyButton.textContent = 'Copiar'; }, 2000);
+>             }).catch(err => {
+>                 copyButton.textContent = 'Erro!';
+>                 console.error('Falha ao copiar: ', err);
+>             });
+>         });
+> 
+>         consoleOutput.scrollTop = consoleOutput.scrollHeight;
+146c257,261
+<         // ... (código original)
+---
+>         const original = console[type];
+>         console[type] = (...args) => {
+>             original.apply(console, args);
+>             logToPanel({ type, args });
+>         };
+150c265
+<         // ... (código original)
+---
+>         logToPanel({ type: "error", args: [`Erro: ${message} em ${source}:${lineno}`] });
+154c269,302
+<         // ... (código original)
+---
+>         const treeContainer = document.createElement('div');
+>         function createNode(element, depth) {
+>             if (!element.tagName) return null;
+>             const nodeWrapper = document.createElement('div');
+>             const nodeHeader = document.createElement('div');
+>             nodeHeader.className = 'element-node-header flex items-center cursor-pointer hover:bg-gray-800 rounded p-0.5';
+>             nodeHeader.style.paddingLeft = `${depth}rem`;
+>             domElementToTreeNode.set(element, nodeHeader);
+>             const attributes = Array.from(element.attributes).map(attr => `<span class="text-orange-400">${attr.name}</span><span class="text-gray-500">="</span><span class="text-green-400">${attr.value}</span><span class="text-gray-500">"</span>`).join(" ");
+>             const hasChildren = element.children.length > 0;
+>             const arrow = hasChildren ? `<span class="material-symbols-outlined text-sm expand-icon">arrow_right</span>` : `<span class='w-4 inline-block'></span>`;
+>             nodeHeader.innerHTML = `${arrow}<span class='text-gray-500'>&lt;</span><span class='text-pink-400'>${element.tagName.toLowerCase()}</span> <span class="attributes">${attributes}</span><span class='text-gray-500'>&gt;</span>`;
+>             const childrenContainer = document.createElement('div');
+>             childrenContainer.className = 'element-children hidden';
+>             nodeWrapper.appendChild(nodeHeader);
+>             nodeWrapper.appendChild(childrenContainer);
+>             nodeHeader.addEventListener('click', (e) => {
+>                 e.stopPropagation();
+>                 childrenContainer.classList.toggle('hidden');
+>                 const icon = nodeHeader.querySelector('.expand-icon');
+>                 if (icon) icon.textContent = childrenContainer.classList.contains('hidden') ? 'arrow_right' : 'arrow_drop_down';
+>                 selectElement(element);
+>             });
+>             if (hasChildren) {
+>                 for (const child of element.children) {
+>                     const childNode = createNode(child, depth + 1);
+>                     if (childNode) childrenContainer.appendChild(childNode);
+>                 }
+>             }
+>             return nodeWrapper;
+>         }
+>         const rootNode = createNode(rootElement, 0);
+>         if (rootNode) treeContainer.appendChild(rootNode);
+>         return treeContainer;
+158c306,308
+<         // ... (código original)
+---
+>         highlightOnPage(element);
+>         highlightInTree(element);
+>         displayComputedStyles(element);
+162c312,319
+<         // ... (código original)
+---
+>         const container = document.getElementById("computed-styles-container");
+>         if (!container || !element) { if(container) container.innerHTML = "Selecione um elemento para ver os estilos."; return; };
+>         const styles = window.getComputedStyle(element);
+>         const properties = Array.from(styles).filter(prop => !prop.startsWith("-")).sort();
+>         let tableHTML = "<table class='w-full text-left text-xs'>";
+>         properties.forEach(prop => { tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`; });
+>         tableHTML += "</table>";
+>         container.innerHTML = tableHTML;
+166c323,325
+<         // ... (código original)
+---
+>         if (lastInspectedElement) lastInspectedElement.style.outline = '';
+>         element.style.outline = '2px solid #0ea5e9';
+>         lastInspectedElement = element;
+170c329,334
+<         // ... (código original)
+---
+>         if (lastSelectedTreeNode) lastSelectedTreeNode.style.backgroundColor = '';
+>         const treeNode = domElementToTreeNode.get(element);
+>         if (treeNode) {
+>             treeNode.style.backgroundColor = 'rgba(14, 165, 233, 0.3)';
+>             lastSelectedTreeNode = treeNode;
+>         }
+174c338,352
+<         // ... (código original)
+---
+>         let current = element;
+>         while(current) {
+>             const treeNode = domElementToTreeNode.get(current);
+>             if(treeNode) {
+>                 const childrenContainer = treeNode.parentElement.querySelector('.element-children');
+>                 if(childrenContainer) {
+>                     childrenContainer.classList.remove('hidden');
+>                     const icon = treeNode.querySelector('.expand-icon');
+>                     if (icon) icon.textContent = 'arrow_drop_down';
+>                 }
+>             }
+>             current = current.parentElement;
+>         }
+>         const finalNode = domElementToTreeNode.get(element);
+>         if (finalNode) finalNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+178c356,369
+<         // ... (código original)
+---
+>         isInspecting = !isInspecting;
+>         const inspectorButton = document.getElementById('inspector-toggle');
+>         if (inspectorButton) {
+>             inspectorButton.style.backgroundColor = isInspecting ? '#0ea5e9' : 'transparent';
+>             inspectorButton.style.color = isInspecting ? 'white' : '#9ca3af';
+>         }
+>         document.body.style.cursor = isInspecting ? 'crosshair' : 'default';
+>         if (isInspecting) {
+>             document.addEventListener('mouseover', highlightOnPage);
+>             document.addEventListener('click', selectElementOnPage, { capture: true });
+>         } else {
+>             document.removeEventListener('mouseover', highlightOnPage);
+>             document.removeEventListener('click', selectElementOnPage, { capture: true });
+>         }
+182c373,382
+<         // ... (código original)
+---
+>         if (!isInspecting || e.target.closest("#dev-panel")) return;
+>         e.preventDefault();
+>         e.stopPropagation();
+>         
+>         const clickedElement = e.target;
+>         
+>         selectElement(clickedElement);
+>         revealInTree(clickedElement);
+>         
+>         toggleInspector();
+185d384
+<     // ATUALIZADO: runAxeAudit
+188,190c387
+<         const copyButton = document.getElementById("copy-axe-violations");
+<         if(!resultsContainer || !copyButton) return;
+< 
+---
+>         if(!resultsContainer) return;
+192,193d388
+<         copyButton.classList.add("hidden"); // Esconde o botão durante a análise
+< 
+195,197d389
+<             if (typeof axe === 'undefined') {
+<                 throw new Error("Biblioteca Axe não carregada.");
+<             }
+201,204c393
+< 
+<             // ... (código de exibição original omitido para brevidade)
+<             
+<             // Lógica para o novo botão de copiar
+---
+>             resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
+206,229c395,407
+<                 copyButton.classList.remove("hidden");
+<                 
+<                 let reportText = `Relatório de Violações de Acessibilidade (Críticas/Sérias)\n`;
+<                 reportText += `=========================================================\n`;
+<                 reportText += `Página: ${window.location.href}\n`;
+<                 reportText += `Data: ${new Date().toLocaleString('pt-BR')}\n\n`;
+< 
+<                 violations.forEach((violation, index) => {
+<                     reportText += `--- VIOLAÇÃO ${index + 1} ---\n`;
+<                     reportText += `ID da Regra: ${violation.id}\n`;
+<                     reportText += `Impacto: ${violation.impact}\n`;
+<                     reportText += `Descrição: ${violation.description}\n`;
+<                     reportText += `Ajuda: ${violation.helpUrl}\n\n`;
+<                 });
+< 
+<                 copyButton.onclick = () => {
+<                     navigator.clipboard.writeText(reportText).then(() => {
+<                         copyButton.textContent = 'Copiado!';
+<                         setTimeout(() => { copyButton.textContent = 'Copiar Violações'; }, 2000);
+<                     }).catch(err => {
+<                         console.error("Falha ao copiar relatório: ", err);
+<                         copyButton.textContent = 'Erro ao copiar';
+<                     });
+<                 };
+---
+>                 resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
+>                 violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
+>             }
+>             if (incomplete.length > 0) {
+>                 resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
+>                 incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
+>             }
+>             if (passes.length > 0) {
+>                 resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
+>                 passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${p.help}</p></div>`));
+>             }
+>             if (violations.length === 0 && incomplete.length === 0) {
+>                 resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
+231d408
+< 
+238c415,552
+<         // ... (código original)
+---
+>         const resultsContainer = document.getElementById("test-results");
+>         if (!resultsContainer) return;
+> 
+>         resultsContainer.innerHTML = `
+>             <div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4">
+>                 <p class="font-bold">Nota do Desenvolvedor:</p>
+>                 <p class="text-xs text-sky-400">Estes testes são baseados em heurísticas e melhores práticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção. Use as sugestões como um guia para melhorar a qualidade do projeto.</p>
+>             </div>
+>             <table class="w-full text-left text-xs">
+>                 <thead>
+>                     <tr class="border-b border-gray-700">
+>                         <th class="p-2 w-1/4">Teste de Diagnóstico</th>
+>                         <th class="p-2 w-1/6">Resultado</th>
+>                         <th class="p-2">Detalhes e Sugestões</th>
+>                     </tr>
+>                 </thead>
+>                 <tbody></tbody>
+>             </table>`;
+>         const tbody = resultsContainer.querySelector("tbody");
+> 
+>         const addResult = (test, status, details, suggestion) => {
+>             const isPass = status === "PASS";
+>             const statusColor = isPass ? 'text-green-400' : (status === "FAIL" ? 'text-red-400' : 'text-yellow-400');
+>             const statusIcon = isPass ? 'check_circle' : (status === "FAIL" ? 'error' : 'warning');
+>             const row = `
+>                 <tr class="border-b border-gray-800">
+>                     <td class="p-2 align-top">${test}</td>
+>                     <td class="p-2 align-top font-bold ${statusColor}"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">${statusIcon}</span> ${status}</span></td>
+>                     <td class="p-2 align-top text-gray-400">
+>                         <p>${details}</p>
+>                         ${suggestion ? `<p class="mt-1 text-sky-400 text-xs"><span class="font-bold">Sugestão:</span> ${suggestion}</p>` : ''}
+>                     </td>
+>                 </tr>`;
+>             tbody.insertAdjacentHTML('beforeend', row);
+>         };
+>         
+>         const pageChecks = {
+>             search: { ids: ["search-input", "results-container", "results-count"], path: "search.html" },
+>             status: { ids: ["detailed-status-container", "uptime-history-container", "performance-monitor-container"], path: "status.html" },
+>             home: { ids: [".main-search-form"], path: "index.html" }
+>         };
+>         
+>         const isArticlePage = !!document.querySelector('body main aside#toc-container') && !!document.querySelector('body main div article');
+>         const currentPageFile = window.location.pathname.split("/").pop() || "index.html";
+>         
+>         const checkConfig = Object.values(pageChecks).find(p => p.path === currentPageFile);
+>         if (checkConfig) {
+>             checkConfig.ids.forEach(selector => {
+>                 const elementExists = !!document.querySelector(selector);
+>                 addResult(
+>                     `Verificação de Elemento: ${selector}`,
+>                     elementExists ? "PASS" : "FAIL",
+>                     elementExists ? `Elemento essencial "${selector}" encontrado.` : `Elemento crítico "${selector}" não foi encontrado nesta página.`,
+>                     elementExists ? null : `Verifique o HTML da página e garanta que o elemento com seletor "${selector}" existe e não foi removido ou teve seu ID/classe alterado.`
+>                 );
+>             });
+>         }
+>         
+>         if (isArticlePage) {
+>              addResult("Verificação de Layout", "PASS", "Layout de página de artigo detectado.", null);
+>              ["toc-container", "article"].forEach(selector => {
+>                  const elementExists = !!document.querySelector(selector);
+>                  addResult(
+>                     `Verificação de Elemento de Artigo: ${selector}`,
+>                     elementExists ? "PASS" : "FAIL",
+>                     elementExists ? `Elemento "${selector}" encontrado.` : `Elemento "${selector}" não encontrado no layout do artigo.`,
+>                     elementExists ? null : `Verifique o arquivo 'docs/_layouts/artigo.html' e garanta que este elemento está presente.`
+>                  );
+>              });
+>         }
+> 
+>         try {
+>             const response = await fetch(`${baseUrl}search.json?cache_bust=` + Date.now());
+>             if (response.ok) {
+>                 const data = await response.json();
+>                 if (data.length > 0 && data[0].title && data[0].url) {
+>                     addResult("Validação de `search.json`", "PASS", "Arquivo encontrado, JSON é válido e contém dados.", null);
+>                 } else {
+>                     addResult("Validação de `search.json`", "FAIL", "JSON é válido, mas está vazio ou a estrutura está incorreta.", "Verifique o processo de build (Jekyll) para garantir que os dados dos posts estão sendo exportados corretamente para `search.json`.");
+>                 }
+>             } else {
+>                 addResult("Validação de `search.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}). A busca não funcionará.`, "Execute o build do Jekyll ou verifique se o arquivo foi movido ou renomeado.");
+>             }
+>         } catch (e) {
+>             addResult("Validação de `search.json`", "FAIL", "O conteúdo do arquivo não é um JSON válido.", "Inspecione o arquivo `search.json` para encontrar e corrigir erros de sintaxe.");
+>         }
+> 
+>         try {
+>             const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=` + Date.now());
+>             if (response.ok) {
+>                 const data = await response.json();
+>                 if (data.monitors && data.metrics) {
+>                      addResult("Validação de `uptime-data.json`", "PASS", "Arquivo encontrado, JSON é válido e contém as chaves esperadas.", null);
+>                 } else {
+>                     addResult("Validação de `uptime-data.json`", "FAIL", "JSON é válido, mas não contém as chaves 'monitors' ou 'metrics'.", "Verifique o workflow `uptime.yml` do GitHub Actions para garantir que ele está gerando e combinando os dados corretamente.");
+>                 }
+>             } else {
+>                  addResult("Validação de `uptime-data.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}). A página de status não funcionará.`, "Verifique se o workflow `uptime.yml` está rodando corretamente e salvando o arquivo no local esperado.");
+>             }
+>         } catch (e) {
+>             addResult("Validação de `uptime-data.json`", "FAIL", "O conteúdo do arquivo não é um JSON válido.", "Inspecione `uptime-data.json`. Provavelmente houve um erro na execução do workflow `uptime.yml` que corrompeu o arquivo.");
+>         }
+> 
+>         document.querySelectorAll("script[src]:not([src^='https://'])").forEach(script => {
+>             const isDeferred = script.hasAttribute('defer') || script.hasAttribute('async');
+>             addResult(
+>                 `Performance do Script: ${script.src.split('/').pop()}`,
+>                 isDeferred ? "PASS" : "RECOMENDAÇÃO",
+>                 isDeferred ? "O script é carregado de forma assíncrona." : "O script pode estar bloqueando a renderização da página.",
+>                 isDeferred ? null : "Adicione o atributo 'defer' à tag <script> para melhorar a performance de carregamento."
+>             );
+>         });
+> 
+>         const seo = {
+>             title: !!document.querySelector('title'),
+>             description: !!document.querySelector('meta[name="description"]')
+>         };
+>         addResult("SEO: Título da Página", seo.title ? "PASS" : "FAIL", seo.title ? "A tag `<title>` está presente." : "A tag `<title>` é essencial para SEO e acessibilidade e não foi encontrada.", seo.title ? null : "Adicione uma tag `<title>` única e descritiva dentro da seção `<head>` do HTML.");
+>         addResult("SEO: Meta Descrição", seo.description ? "PASS" : "RECOMENDAÇÃO", seo.description ? 'A tag `<meta name="description">` está presente.' : "A página não possui uma meta descrição, o que pode impactar como ela aparece nos resultados de busca.", seo.description ? null : 'Adicione `<meta name="description" content="Uma descrição concisa da página.">` dentro da seção `<head>`.');
+> 
+>         const brokenLinks = document.querySelectorAll('a[href=""], a[href="#"], a:not([href])');
+>         if (brokenLinks.length > 0) {
+>             addResult("Qualidade: Links Quebrados/Vazios", "FAIL", `${brokenLinks.length} link(s) com destino vazio ou inválido foram encontrados.`, "Inspecione os links destacados e adicione um `href` válido ou remova a tag `<a>` se não for um link.");
+>             [...brokenLinks].forEach(link => {
+>                 const clone = link.cloneNode(true);
+>                 clone.style.cssText = "color: red; border: 1px solid red;";
+>                 link.replaceWith(clone);
+>             });
+>         } else {
+>             addResult("Qualidade: Links Quebrados/Vazios", "PASS", "Nenhum link com destino vazio ou inválido encontrado.", null);
+>         }
+>         
+>         const missingAlts = document.querySelectorAll('img:not([alt])');
+>         if (missingAlts.length > 0) {
+>              addResult("Acessibilidade: Imagens sem `alt`", "FAIL", `${missingAlts.length} imagem(ns) sem o atributo 'alt'.`, "Toda imagem deve ter um atributo `alt`. Se for decorativa, use `alt=\"\"`. Caso contrário, forneça uma descrição concisa do conteúdo da imagem.");
+>         } else {
+>              addResult("Acessibilidade: Imagens sem `alt`", "PASS", "Todas as imagens possuem o atributo `alt`.", null);
+>         }
