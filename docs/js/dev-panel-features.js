@@ -11,7 +11,7 @@ DevPanelFeatures.renderAuditoriaTab = function(panelContent, baseUrl) {
             <div class="flex items-center justify-between mb-4 flex-shrink-0">
                 <div>
                     <h3 class="font-bold text-lg">Auditoria Global do Site</h3>
-                    <p class="text-sm text-gray-400">Executa testes de acessibilidade, links quebrados, SEO e mais em todas as páginas.</p>
+                    <p class="text-sm text-gray-400">Executa testes de acessibilidade, performance, SEO e mais em todas as páginas.</p>
                 </div>
                 <div id="audit-controls" class="flex items-center gap-2">
                     <button id="run-global-audit" class="dev-button bg-sky-600 hover:bg-sky-500 border-sky-500">Iniciar Auditoria Completa</button>
@@ -62,15 +62,15 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
         resultsContainer.appendChild(progressDiv);
         resultsContainer.scrollTop = resultsContainer.scrollHeight;
         
-        const pageResults = await DevPanelFeatures.analyzePageInIframe(iframe, url, baseUrl);
+        const pageResults = await DevPanelFeatures.analyzePageInIframe(iframe, url);
         
         const resultHTML = document.createElement('details');
         resultHTML.className = 'bg-gray-900 border border-gray-700 rounded-md mb-2';
         
         const summary = document.createElement('summary');
         summary.className = 'p-2 cursor-pointer flex justify-between items-center';
-        const errorCount = pageResults.accessibility.length + pageResults.jsErrors.length + pageResults.missingAlts.length + pageResults.brokenLinks.length + pageResults.seo.length;
-        summary.innerHTML = `<span>${page}</span> <span class="px-2 py-1 text-xs rounded-full ${errorCount > 0 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}">${errorCount} problemas</span>`;
+        const issueCount = Object.values(pageResults.issues).reduce((acc, val) => acc + val.length, 0);
+        summary.innerHTML = `<span>${page}</span> <span class="px-2 py-1 text-xs rounded-full ${issueCount > 0 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}">${issueCount} problemas</span>`;
         resultHTML.appendChild(summary);
 
         const content = document.createElement('div');
@@ -94,87 +94,76 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     };
 };
 
-DevPanelFeatures.analyzePageInIframe = function(iframe, url, baseUrl) {
+DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
     return new Promise(resolve => {
-        let results = {
-            accessibility: [], jsErrors: [], missingAlts: [], brokenLinks: [], seo: [],
-            text: `--- PÁGINA: ${url} ---\n\n`, html: ''
-        };
+        let issues = { accessibility: [], jsErrors: [], missingAlts: [], brokenLinks: [], seo: [], bestPractices: [], performance: [] };
+        let text = `--- PÁGINA: ${url} ---\n\n`;
+        let html = '';
         
         const timeout = setTimeout(() => {
             iframe.onload = null;
-            results.jsErrors.push({ message: `Timeout: A página ${url} demorou muito para carregar.`});
+            issues.jsErrors.push({ message: `Timeout: A página ${url} demorou muito para carregar.`});
             formatAndResolve();
         }, 15000);
 
         const onIframeLoad = async () => {
             clearTimeout(timeout);
             const doc = iframe.contentDocument;
+            const win = iframe.contentWindow;
             try {
+                // Acessibilidade
                 if (typeof axe !== 'undefined') {
-                    const axeResults = await axe.run(doc.body, {resultTypes: ['violations', 'incomplete']});
-                    results.accessibility = axeResults.violations;
+                    const axeResults = await axe.run(doc.body, {resultTypes: ['violations']});
+                    issues.accessibility = axeResults.violations;
                 }
-                
-                doc.querySelectorAll('img:not([alt])').forEach(img => results.missingAlts.push({ src: img.src }));
-                
-                if (!doc.querySelector('title') || doc.querySelector('title').innerText.trim() === '') results.seo.push({ issue: 'A tag <title> está vazia ou ausente.' });
-                if (!doc.querySelector('meta[name="description"]')) results.seo.push({ issue: 'A tag <meta name="description"> está ausente.' });
-                
-                const links = Array.from(doc.querySelectorAll('a[href]'));
-                for (const link of links) {
-                    const href = link.getAttribute('href');
-                    if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
-                        const absoluteUrl = new URL(href, url).href;
-                        if (absoluteUrl.startsWith(window.location.origin)) { // Check only internal links
-                            try {
-                                const response = await fetch(absoluteUrl, { method: 'HEAD' });
-                                if (!response.ok) {
-                                    results.brokenLinks.push({ href: absoluteUrl, status: response.status });
-                                }
-                            } catch (e) {
-                                results.brokenLinks.push({ href: absoluteUrl, status: 'Falha na Rede' });
-                            }
-                        }
-                    }
+                // Qualidade e Melhores Práticas
+                doc.querySelectorAll('img:not([alt])').forEach(img => issues.missingAlts.push({ el: img.outerHTML }));
+                if (!doc.documentElement.hasAttribute('lang')) issues.bestPractices.push({ text: 'Atributo "lang" ausente na tag <html>.' });
+                // SEO
+                if (!doc.querySelector('title') || doc.querySelector('title').innerText.trim() === '') issues.seo.push({ text: 'A tag <title> está vazia ou ausente.' });
+                if (!doc.querySelector('meta[name="description"]')) issues.seo.push({ text: 'A tag <meta name="description"> está ausente.' });
+                if (!doc.querySelector('link[rel="canonical"]')) issues.seo.push({ text: 'A tag <link rel="canonical"> está ausente.' });
+                // Performance
+                const perf = win.performance.getEntriesByType("navigation")[0];
+                if(perf) {
+                    if (perf.domContentLoadedEventEnd > 2000) issues.performance.push({ text: `DOM Content Loaded Lento: ${perf.domContentLoadedEventEnd.toFixed(0)}ms`});
                 }
             } catch(e) {
-                 results.jsErrors.push({ message: `Erro ao analisar a página: ${e.message}` });
+                 issues.jsErrors.push({ message: `Erro ao analisar a página: ${e.message}` });
             } finally {
                 formatAndResolve();
             }
         };
 
         const formatAndResolve = () => {
-            let htmlReport = '';
             const sections = {
-                'Erros de Console': { items: results.jsErrors, color: 'red', format: item => `${item.message}` },
-                'Acessibilidade (Violações)': { items: results.accessibility, color: 'red', format: item => `<strong>${item.help}:</strong> ${item.description}` },
-                'Links Quebrados': { items: results.brokenLinks, color: 'red', format: item => `[Status ${item.status}] ${item.href}` },
-                'Problemas de SEO': { items: results.seo, color: 'yellow', format: item => item.issue },
-                'Imagens sem Atributo "alt"': { items: results.missingAlts, color: 'yellow', format: item => `SRC: ${item.src.substring(0, 100)}...` },
+                'Erros Críticos': { items: issues.jsErrors, color: 'red', format: item => item.message },
+                'Acessibilidade (Violações)': { items: issues.accessibility, color: 'red', format: item => `<strong>${item.help}:</strong> ${item.description}` },
+                'Links Quebrados': { items: issues.brokenLinks, color: 'red', format: item => `[Status ${item.status}] ${item.href}` },
+                'Melhores Práticas e Qualidade': { items: [...issues.missingAlts, ...issues.bestPractices], color: 'yellow', format: item => item.el || item.text },
+                'SEO': { items: issues.seo, color: 'yellow', format: item => item.text },
+                'Performance': { items: issues.performance, color: 'yellow', format: item => item.text },
             };
 
             for (const [title, section] of Object.entries(sections)) {
-                htmlReport += `<h4 class="font-bold text-${section.color}-400 mt-2 mb-1">${title}</h4>`;
+                html += `<h4 class="font-bold text-${section.color}-400 mt-2 mb-1">${title}</h4>`;
                 if (section.items.length > 0) {
-                    results.text += `[${title}]\n`;
+                    text += `[${title}]\n`;
                     section.items.forEach(item => {
-                        const formattedText = section.format(item).replace(/<[^>]*>/g, ''); // Remove HTML for text report
-                        htmlReport += `<div class="mb-2 p-1 border-l-2 border-${section.color}-400">${section.format(item)}</div>`;
-                        results.text += `- ${formattedText}\n`;
+                        const formattedText = section.format(item).replace(/<[^>]*>/g, '');
+                        html += `<div class="mb-2 p-1 border-l-2 border-${section.color}-400">${section.format(item)}</div>`;
+                        text += `- ${formattedText}\n`;
                     });
                 } else {
-                    htmlReport += '<p class="text-gray-400">Nenhum problema encontrado.</p>';
+                    html += '<p class="text-gray-400">Nenhum problema encontrado.</p>';
                 }
             }
-            results.html = htmlReport;
-            results.text += `\n\n`;
-            resolve(results);
+            text += `\n\n`;
+            resolve({issues, html, text});
         };
         
         iframe.onload = onIframeLoad;
-        iframe.contentWindow.onerror = (message) => { results.jsErrors.push({ message }); return true; };
+        iframe.contentWindow.onerror = (message) => { issues.jsErrors.push({ message }); return true; };
         iframe.src = url;
     });
 };
@@ -210,8 +199,8 @@ DevPanelFeatures.renderConsoleTab = function(panelContent, baseUrl, state, helpe
                     consoleInput.value = "";
                     helpers.logToPanel({ type: "log", args: [`> ${command}`] });
                     try {
-                        // Executa no escopo global (window)
-                        const result = (new Function(`return ${command}`))();
+                        // Usando `window.eval` para executar no escopo global
+                        const result = window.eval(command);
                         if (result !== undefined) helpers.logToPanel({ type: "info", args: [result] });
                     } catch (error) {
                         helpers.logToPanel({ type: "error", args: [error] });
@@ -238,7 +227,7 @@ DevPanelFeatures.renderNetworkTab = function(panelContent) {
         panelContent.innerHTML = `<div class="p-4">Informação de Network não disponível.</div>`;
         return;
     };
-    panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>TTFB</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
+    panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>TTFB</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
 };
 
 DevPanelFeatures.renderRecursosTab = function(panelContent) {
@@ -280,8 +269,3 @@ DevPanelFeatures.renderInfoTab = function(panelContent, baseUrl, state, helpers,
         });
     }
 };
-
-// As abas 'Acessibilidade' e 'Testes' foram removidas da interface e sua lógica integrada na 'Auditoria'.
-// Deixamos as funções aqui caso queira reativá-las como abas separadas no futuro.
-DevPanelFeatures.renderAcessibilidadeTab = DevPanelFeatures.renderAcessibilidadeTab;
-DevPanelFeatures.renderTestesTab = DevPanelFeatures.renderTestesTab;
