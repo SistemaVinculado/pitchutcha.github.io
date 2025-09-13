@@ -92,9 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const updateComponentStatus = (name, status, metrics) => {
         const statusMap = {
-            operational: { text: "Operacional", textClass: "text-green-600", icon: "check_circle" },
-            degraded: { text: "Lento", textClass: "text-yellow-600", icon: "warning" },
-            outage: { text: "Falha", textClass: "text-red-500", icon: "error" }
+            operational: { text: "Operacional", pulse: "ping-green", dot: "bg-green-500", textClass: "text-green-600", icon: "check_circle" },
+            degraded: { text: "Lento", pulse: "ping-yellow", dot: "bg-yellow-500", textClass: "text-yellow-600", icon: "warning" },
+            outage: { text: "Falha", pulse: "ping-red", dot: "bg-red-500", textClass: "text-red-500", icon: "error" }
         };
         const currentStatus = statusMap[status] || statusMap.outage;
         
@@ -102,7 +102,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <details class="component-details">
                 <summary class="component-summary">
                     <div class="flex items-center gap-4">
-                        <span class="material-symbols-outlined ${currentStatus.textClass}">${currentStatus.icon}</span>
+                        <span class="relative flex h-3 w-3">
+                            <span class="ping-pulse ${currentStatus.pulse}"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.dot}"></span>
+                        </span>
                         <p class="text-[var(--text-primary)] font-semibold">${name}</p>
                     </div>
                     <div class="flex items-center gap-3">
@@ -144,7 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let finalStatus = "operational";
         detailedContainer.innerHTML = ''; 
 
-        // Limpa as medições de performance para garantir dados frescos
         if (performance.clearResourceTimings) {
             performance.clearResourceTimings();
         }
