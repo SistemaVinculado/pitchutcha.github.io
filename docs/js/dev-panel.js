@@ -1,11 +1,11 @@
-<script>
 document.addEventListener("DOMContentLoaded", () => {
     // Evita que o painel seja executado em iframes
     if (window.self !== window.top) {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.3.1"; // Versão mesclada
+    const DEV_PANEL_VERSION = "1.3.0"; // Versão original funcional
+
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
     const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
 
@@ -178,16 +178,8 @@ document.addEventListener("DOMContentLoaded", () => {
         panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
     }
     
-    // ATUALIZADO: renderAcessibilidadeTab (B + A: inclui botão de copiar)
     function renderAcessibilidadeTab() {
-        panelContent.innerHTML = `
-            <div class="p-4">
-                <div class="flex items-center gap-2">
-                    <button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button>
-                    <button id="copy-axe-violations" class="dev-button hidden">Copiar Violações</button>
-                </div>
-                <div id="axe-results" class="mt-4"></div>
-            </div>`;
+        panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
         const runAxeButton = document.getElementById("run-axe");
         if(runAxeButton) {
             runAxeButton.addEventListener("click", runAxeAudit);
@@ -390,23 +382,14 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleInspector();
     }
 
-    // ATUALIZADO: runAxeAudit (mescla B exibindo resultados + A botão de copiar)
     async function runAxeAudit() {
         const resultsContainer = document.getElementById("axe-results");
-        const copyButton = document.getElementById("copy-axe-violations");
-        if(!resultsContainer || !copyButton) return;
-
+        if(!resultsContainer) return;
         resultsContainer.innerHTML = "Analisando...";
-        copyButton.classList.add("hidden"); // Esconde o botão durante a análise
-
         try {
-            if (typeof axe === 'undefined') {
-                throw new Error("Biblioteca Axe não carregada.");
-            }
             const results = await axe.run({ exclude: [['#dev-panel']] });
             resultsContainer.innerHTML = '';
             const { violations, incomplete, passes } = results;
-
             resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
             if (violations.length > 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
@@ -423,35 +406,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (violations.length === 0 && incomplete.length === 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
             }
-
-            // Lógica adicional do Código A: gerar texto de relatório e permitir cópia
-            if (violations.length > 0) {
-                copyButton.classList.remove("hidden");
-                
-                let reportText = `Relatório de Violações de Acessibilidade (Críticas/Sérias)\n`;
-                reportText += `=========================================================\n`;
-                reportText += `Página: ${window.location.href}\n`;
-                reportText += `Data: ${new Date().toLocaleString('pt-BR')}\n\n`;
-
-                violations.forEach((violation, index) => {
-                    reportText += `--- VIOLAÇÃO ${index + 1} ---\n`;
-                    reportText += `ID da Regra: ${violation.id}\n`;
-                    reportText += `Impacto: ${violation.impact}\n`;
-                    reportText += `Descrição: ${violation.description}\n`;
-                    reportText += `Ajuda: ${violation.helpUrl}\n\n`;
-                });
-
-                copyButton.onclick = () => {
-                    navigator.clipboard.writeText(reportText).then(() => {
-                        copyButton.textContent = 'Copiado!';
-                        setTimeout(() => { copyButton.textContent = 'Copiar Violações'; }, 2000);
-                    }).catch(err => {
-                        console.error("Falha ao copiar relatório: ", err);
-                        copyButton.textContent = 'Erro ao copiar';
-                    });
-                };
-            }
-
         } catch (err) {
             resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
         }
@@ -598,4 +552,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
-</script>
