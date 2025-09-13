@@ -39,12 +39,14 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     let pagesToScan = ['index.html', 'algoritmos.html', 'estruturas-de-dados.html', 'search.html', 'status.html'];
     
     try {
-        const response = await fetch(`${baseUrl}search.json`);
+        const response = await fetch(`${baseUrl}search.json?v=${Date.now()}`);
         if (response.ok) {
             const posts = await response.json();
             posts.forEach(post => pagesToScan.push(post.url));
+        } else {
+             resultsContainer.innerHTML += `<div class="p-2 text-red-400">Aviso: search.json não encontrado. A auditoria incluirá apenas páginas principais.</div>`;
         }
-    } catch(e) { console.warn("Não foi possível carregar a lista de posts de search.json."); }
+    } catch(e) { console.warn("Não foi possível carregar a lista de posts de search.json.", e); }
 
     const uniquePages = [...new Set(pagesToScan)];
     let fullReportText = `Relatório de Auditoria Global - ${new Date().toLocaleString('pt-BR')}\n\n`;
@@ -86,8 +88,10 @@ DevPanelFeatures.runGlobalAudit = async function(baseUrl) {
     }
 
     document.body.removeChild(iframe);
+    resultsContainer.innerHTML += `<div class="p-2 text-green-400">Auditoria concluída em ${uniquePages.length} páginas.</div>`;
     runButton.disabled = false;
     runButton.textContent = 'Executar Novamente';
+
     copyButton.classList.remove('hidden');
     copyButton.onclick = () => {
         navigator.clipboard.writeText(fullReportText).then(() => {
@@ -105,23 +109,29 @@ DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
         };
         
         const timeout = setTimeout(() => {
-            iframe.removeEventListener('load', onIframeLoad);
+            iframe.onload = null;
+            iframe.onerror = null;
             results.jsErrors.push({ message: `Timeout: A página ${url} demorou muito para carregar.`});
             formatAndResolve();
         }, 10000);
 
         const onIframeLoad = async () => {
             clearTimeout(timeout);
-            iframe.removeEventListener('load', onIframeLoad);
+            iframe.onerror = null;
             const doc = iframe.contentDocument;
-            if (typeof axe !== 'undefined') {
-                const axeResults = await axe.run(doc.body);
-                results.accessibility = axeResults.violations;
+            try {
+                if (typeof axe !== 'undefined') {
+                    const axeResults = await axe.run(doc.body, {resultTypes: ['violations', 'incomplete']});
+                    results.accessibility = axeResults.violations;
+                }
+                doc.querySelectorAll('img:not([alt]), img[alt=""]').forEach(img => {
+                    results.missingAlts.push({ src: img.src });
+                });
+            } catch(e) {
+                 results.jsErrors.push({ message: `Erro ao analisar a página: ${e.message}` });
+            } finally {
+                formatAndResolve();
             }
-            doc.querySelectorAll('img:not([alt]), img[alt=""]').forEach(img => {
-                results.missingAlts.push({ src: img.src });
-            });
-            formatAndResolve();
         };
 
         const formatAndResolve = () => {
@@ -149,7 +159,7 @@ DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
             if(results.missingAlts.length > 0) {
                 results.text += `\n[Imagens sem Alt]\n`;
                 results.missingAlts.forEach(img => {
-                    htmlReport += `<div class="mb-2 p-1 border-l-2 border-yellow-400"><strong>SRC:</strong> ${img.src}</div>`;
+                    htmlReport += `<div class="mb-2 p-1 border-l-2 border-yellow-400"><strong>SRC:</strong> ${img.src.substring(0, 100)}...</div>`;
                     results.text += `- ${img.src}\n`;
                 });
             } else { htmlReport += '<p class="text-gray-400">Nenhum problema encontrado.</p>'; }
@@ -158,8 +168,8 @@ DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
             results.text += `\n\n`;
             resolve(results);
         };
-
-        iframe.addEventListener('load', onIframeLoad);
+        
+        iframe.onload = onIframeLoad;
         iframe.contentWindow.onerror = (message) => { results.jsErrors.push({ message }); return true; };
         iframe.src = url;
     });
@@ -168,7 +178,7 @@ DevPanelFeatures.analyzePageInIframe = function(iframe, url) {
 /**
  * ABA DE ELEMENTOS
  */
-DevPanelFeatures.renderElementsTab = function(panelContent, state, helpers) {
+DevPanelFeatures.renderElementsTab = function(panelContent, baseUrl, state, helpers) {
     panelContent.innerHTML = `
         <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
         <div id="styles-container" class="w-1/2 overflow-auto p-2">
@@ -178,8 +188,9 @@ DevPanelFeatures.renderElementsTab = function(panelContent, state, helpers) {
             </div>
             <div id="computed-styles-container">Clique em um elemento na página ou na árvore para ver os estilos.</div>
         </div>`;
-    document.getElementById("elements-tree-container").innerHTML = '';
-    document.getElementById("elements-tree-container").appendChild(helpers.buildElementsTree(document.documentElement, state, helpers));
+    const treeContainer = document.getElementById("elements-tree-container");
+    treeContainer.innerHTML = '';
+    treeContainer.appendChild(helpers.buildElementsTree(document.documentElement, state, helpers));
     document.getElementById("inspector-toggle").addEventListener("click", () => helpers.toggleInspector(state, helpers));
 };
 
@@ -257,7 +268,7 @@ DevPanelFeatures.runAxeAudit = async function() {
     if(!resultsContainer) return;
     resultsContainer.innerHTML = "Analisando...";
     if (typeof axe === 'undefined') {
-        resultsContainer.innerHTML = `<p class="text-red-500">Biblioteca Axe não carregada.</p>`;
+        resultsContainer.innerHTML = `<p class="text-red-500">Biblioteca Axe não carregada. Aguarde um momento e tente novamente.</p>`;
         return;
     }
     try {
@@ -265,9 +276,7 @@ DevPanelFeatures.runAxeAudit = async function() {
         resultsContainer.innerHTML = '';
         const { violations, incomplete, passes } = results;
         resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
-        if (violations.length === 0 && incomplete.length === 0) {
-             resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
-        }
+        
         if (violations.length > 0) {
             resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
             violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
@@ -276,11 +285,17 @@ DevPanelFeatures.runAxeAudit = async function() {
             resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
             incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
         }
+        if (passes.length > 0) {
+            resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
+            passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${p.help}</p></div>`));
+        }
+        if (violations.length === 0 && incomplete.length === 0) {
+             resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade de alto impacto encontrado.</p>');
+        }
     } catch (err) {
         resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
     }
 };
-
 
 /**
  * ABA DE TESTES
@@ -293,7 +308,7 @@ DevPanelFeatures.renderTestesTab = function(panelContent, baseUrl) {
 DevPanelFeatures.runComprehensiveDiagnostics = async function(baseUrl) {
     const resultsContainer = document.getElementById("test-results");
     if (!resultsContainer) return;
-    resultsContainer.innerHTML = `<div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4"><p class="font-bold">Nota:</p><p class="text-xs text-sky-400">Estes testes são baseados em heurísticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção.</p></div><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Teste</th><th class="p-2 w-1/6">Resultado</th><th class="p-2">Detalhes</th></tr></thead><tbody></tbody></table>`;
+    resultsContainer.innerHTML = `<div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4"><p class="font-bold">Nota:</p><p class="text-xs text-sky-400">Estes testes são baseados em heurísticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção.</p></div><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Teste</th><th class="p-2 w-1/6">Resultado</th><th class="p-2">Detalhes e Sugestões</th></tr></thead><tbody></tbody></table>`;
     const tbody = resultsContainer.querySelector("tbody");
     const addResult = (test, status, details, suggestion) => {
         const isPass = status === "PASS";
@@ -305,7 +320,7 @@ DevPanelFeatures.runComprehensiveDiagnostics = async function(baseUrl) {
     // Testes...
     try {
         const response = await fetch(`${baseUrl}search.json?v=${Date.now()}`);
-        addResult("Validação de `search.json`", response.ok ? "PASS" : "FAIL", response.ok ? "Arquivo encontrado." : `Arquivo não encontrado (Status: ${response.status}). A busca não funcionará.`, !response.ok ? "Execute o build do Jekyll ou verifique se o arquivo foi movido ou renomeado." : null);
+        addResult("Validação de `search.json`", response.ok ? "PASS" : "FAIL", response.ok ? "Arquivo encontrado." : `Arquivo não encontrado (Status: ${response.status}). A busca não funcionará.`, !response.ok ? "Verifique se o arquivo `docs/search.json` existe e foi enviado para o repositório." : null);
     } catch (e) { addResult("Validação de `search.json`", "FAIL", "Falha na requisição.", "Verifique a conexão de rede ou o console do navegador para mais detalhes."); }
     
     document.querySelectorAll("script[src]:not([src^='https://'])").forEach(script => {
@@ -315,6 +330,10 @@ DevPanelFeatures.runComprehensiveDiagnostics = async function(baseUrl) {
 
     const missingAlts = document.querySelectorAll('img:not([alt])');
     addResult("Acessibilidade: Imagens sem `alt`", missingAlts.length === 0 ? "PASS" : "FAIL", `${missingAlts.length} imagem(ns) sem o atributo 'alt'.`, missingAlts.length > 0 ? "Toda imagem deve ter um atributo `alt`. Se for decorativa, use `alt=\"\"`. Caso contrário, forneça uma descrição concisa." : null);
+
+    const seo = { title: !!document.querySelector('title'), description: !!document.querySelector('meta[name="description"]') };
+    addResult("SEO: Título da Página", seo.title ? "PASS" : "FAIL", seo.title ? "A tag `<title>` está presente." : "A tag `<title>` é essencial para SEO e não foi encontrada.", !seo.title ? "Adicione uma tag `<title>` única e descritiva no `<head>`." : null);
+    addResult("SEO: Meta Descrição", seo.description ? "PASS" : "RECOMENDAÇÃO", seo.description ? 'A tag `<meta name="description">` está presente.' : "A página não possui uma meta descrição.", !seo.description ? 'Adicione `<meta name="description" content="...">` no `<head>`.' : null);
 };
 
 /**
@@ -329,6 +348,9 @@ DevPanelFeatures.renderInfoTab = function(panelContent, devPanelVersion) {
                 <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Versão do Painel</td><td class='p-2'>${devPanelVersion}</td></tr>
                 <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção</td><td class='p-2'>${buildTime}</td></tr>
                 <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
+                <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr>
+                <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr>
+                <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr>
             </tbody></table>
             <div class="mt-6 pt-4 border-t border-gray-700">
                 <h3 class="font-bold text-lg mb-2">Preferências</h3>
