@@ -4,14 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.4.0"; // Versão atualizada com Tab-Size
+    const DEV_PANEL_VERSION = "1.5.0"; // Versão com Auditoria Global
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
     const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
 
-    // NOVO: Aplica preferências salvas assim que a página carrega
     const applySavedPreferences = () => {
-        // Aplica a preferência de tamanho de tabulação
         const savedTabSize = localStorage.getItem('tabSizePreference');
         if (savedTabSize) {
             document.documentElement.style.setProperty('--tab-size-preference', savedTabSize);
@@ -19,14 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     applySavedPreferences();
 
-
-    // Carrega a biblioteca Axe para testes de acessibilidade
     const axeScript = document.createElement("script");
     axeScript.src = `${baseUrl}js/vendor/axe.min.js`;
     axeScript.defer = true;
     document.head.appendChild(axeScript);
 
-    // --- HTML para o Painel e o Botão de Ativação ---
     const panelHTML = `
         <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
             <span class="material-symbols-outlined">developer_mode</span>
@@ -36,12 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="flex items-center gap-4 min-w-0">
                     <h2 class="font-bold text-lg px-2 flex-shrink-0">Pitchutcha Dev Panel</h2>
                     <nav class="flex gap-1 overflow-x-auto whitespace-nowrap">
-                        <button data-tab="elements" class="dev-tab active-tab">Elements</button>
+                        <button data-tab="auditoria" class="dev-tab active-tab">Auditoria</button>
+                        <button data-tab="elements" class="dev-tab">Elements</button>
                         <button data-tab="console" class="dev-tab">Console</button>
                         <button data-tab="storage" class="dev-tab">Storage</button>
-                        <button data-tab="network" class="dev-tab">Network</button>
-                        <button data-tab="recursos" class="dev-tab">Recursos</button>
-                        <button data-tab="acessibilidade" class="dev-tab">Acessibilidade</button>
                         <button data-tab="testes" class="dev-tab">Testes</button>
                         <button data-tab="info" class="dev-tab">Info</button>
                     </nav>
@@ -53,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div id="dev-panel-content" class="flex-1 overflow-auto flex"></div>
             <div id="console-input-container" class="hidden items-center p-2 border-t border-gray-700">
                 <span class="material-symbols-outlined text-sky-400">chevron_right</span>
-                <textarea id="console-input" class="flex-1 bg-transparent border-none focus:outline-none ml-2 resize-none" rows="1" placeholder="Executar JavaScript... (Shift+Enter para nova linha)"></textarea>
+                <textarea id="console-input" class="flex-1 bg-transparent border-none focus:outline-none ml-2 resize-none" rows="1" placeholder="Executar JavaScript..."></textarea>
             </div>
         </div>
     `;
@@ -77,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
         if (!devPanel.classList.contains("hidden")) {
-            renderTabContent("info"); 
+            renderTabContent("auditoria"); 
         }
     });
     closeButton.addEventListener("click", () => devPanel.classList.add("hidden"));
@@ -93,25 +86,189 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTabContent(tabId) {
         panelContent.innerHTML = ""; 
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
-        
-        if (isInspecting) {
-            toggleInspector();
-        }
+        if (isInspecting) toggleInspector();
         
         switch (tabId) {
+            case "auditoria": renderAuditoriaTab(); break;
             case "elements": renderElementsTab(); break;
             case "console": renderConsoleTab(); break;
             case "storage": renderStorageTab(); break;
-            case "network": renderNetworkTab(); break;
-            case "recursos": renderRecursosTab(); break;
-            case "acessibilidade": renderAcessibilidadeTab(); break;
             case "testes": renderTestesTab(); break;
             case "info": renderInfoTab(); break;
-            default: panelContent.innerHTML = `<div class="p-4">Aba não encontrada: ${tabId}</div>`;
+            default: panelContent.innerHTML = `<div class="p-4">Aba não implementada: ${tabId}</div>`;
         }
     }
 
-    // ... (as funções renderElementsTab, renderConsoleTab, etc., continuam iguais a antes)
+    // --- ABA DE AUDITORIA GLOBAL ---
+    function renderAuditoriaTab() {
+        panelContent.innerHTML = `
+            <div class="p-4 w-full">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-lg">Auditoria Global do Site</h3>
+                        <p class="text-sm text-gray-400">Executa uma série de testes em todas as páginas conhecidas do site.</p>
+                    </div>
+                    <div>
+                        <button id="run-global-audit" class="dev-button bg-sky-600 hover:bg-sky-500 border-sky-500">Iniciar Auditoria</button>
+                        <button id="copy-audit-report" class="dev-button hidden ml-2">Copiar Relatório</button>
+                    </div>
+                </div>
+                <div id="audit-results" class="bg-gray-800 p-2 rounded-md overflow-auto h-[calc(100%-100px)]">
+                    <div class="p-4 text-center text-gray-500">Aguardando início da auditoria...</div>
+                </div>
+            </div>`;
+        document.getElementById('run-global-audit').addEventListener('click', runGlobalAudit);
+    }
+    
+    async function runGlobalAudit() {
+        const resultsContainer = document.getElementById('audit-results');
+        const runButton = document.getElementById('run-global-audit');
+        const copyButton = document.getElementById('copy-audit-report');
+        
+        runButton.disabled = true;
+        runButton.textContent = 'Executando...';
+        copyButton.classList.add('hidden');
+        resultsContainer.innerHTML = '<div class="p-4 text-center text-gray-400">Iniciando auditoria...</div>';
+
+        const pagesToScan = [
+            'index.html', 'algoritmos.html', 'estruturas-de-dados.html', 'search.html', 'status.html'
+        ];
+        
+        try {
+            const response = await fetch(`${baseUrl}search.json`);
+            if (response.ok) {
+                const posts = await response.json();
+                posts.forEach(post => pagesToScan.push(post.url.replace(baseUrl, '')));
+            }
+        } catch(e) {
+            console.warn("Não foi possível carregar a lista de posts de search.json.");
+        }
+
+        const uniquePages = [...new Set(pagesToScan)];
+        let fullReportText = `Relatório de Auditoria Global - ${new Date().toLocaleString('pt-BR')}\n\n`;
+
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+
+        resultsContainer.innerHTML = ''; 
+
+        for (let i = 0; i < uniquePages.length; i++) {
+            const page = uniquePages[i];
+            const url = page.startsWith('/') ? `${baseUrl}${page.substring(1)}` : `${baseUrl}${page}`;
+            resultsContainer.innerHTML += `<div class="p-2 text-sky-400">Analisando (${i+1}/${uniquePages.length}): ${page}...</div>`;
+            
+            const pageResults = await analyzePageInIframe(iframe, url);
+            
+            const resultHTML = document.createElement('details');
+            resultHTML.className = 'bg-gray-900 border border-gray-700 rounded-md mb-2';
+            
+            const summary = document.createElement('summary');
+            summary.className = 'p-2 cursor-pointer flex justify-between items-center';
+            const errorCount = pageResults.accessibility.length + pageResults.brokenLinks.length + pageResults.jsErrors.length + pageResults.missingAlts.length;
+            summary.innerHTML = `<span>${page}</span> <span class="px-2 py-1 text-xs rounded-full ${errorCount > 0 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}">${errorCount} problemas</span>`;
+            resultHTML.appendChild(summary);
+
+            const content = document.createElement('div');
+            content.className = 'p-4 border-t border-gray-700 text-xs';
+            content.innerHTML = pageResults.html;
+            resultHTML.appendChild(content);
+
+            resultsContainer.appendChild(resultHTML);
+            fullReportText += pageResults.text;
+        }
+
+        document.body.removeChild(iframe);
+        resultsContainer.innerHTML += `<div class="p-2 text-green-400">Auditoria concluída em ${uniquePages.length} páginas.</div>`;
+        runButton.disabled = false;
+        runButton.textContent = 'Executar Novamente';
+
+        copyButton.classList.remove('hidden');
+        copyButton.onclick = () => {
+            navigator.clipboard.writeText(fullReportText).then(() => {
+                copyButton.textContent = 'Copiado!';
+                setTimeout(() => copyButton.textContent = 'Copiar Relatório', 2000);
+            });
+        };
+    }
+
+    function analyzePageInIframe(iframe, url) {
+        return new Promise(resolve => {
+            let results = {
+                accessibility: [], brokenLinks: [], jsErrors: [], missingAlts: [],
+                text: `--- PÁGINA: ${url} ---\n\n`, html: ''
+            };
+            
+            const timeout = setTimeout(() => {
+                iframe.removeEventListener('load', onIframeLoad);
+                results.jsErrors.push({ message: `Timeout: A página ${url} demorou muito para carregar.`});
+                formatAndResolve();
+            }, 10000); // Timeout de 10 segundos por página
+
+            const onIframeLoad = async () => {
+                clearTimeout(timeout);
+                iframe.removeEventListener('load', onIframeLoad);
+                const doc = iframe.contentDocument;
+
+                if (typeof axe !== 'undefined') {
+                    const axeResults = await axe.run(doc.body);
+                    results.accessibility = axeResults.violations;
+                }
+
+                doc.querySelectorAll('img:not([alt]), img[alt=""]').forEach(img => {
+                    results.missingAlts.push({ src: img.src });
+                });
+
+                formatAndResolve();
+            };
+
+            const formatAndResolve = () => {
+                let htmlReport = '';
+                // Acessibilidade
+                htmlReport += '<h4 class="font-bold text-yellow-400 mb-1">Acessibilidade</h4>';
+                if(results.accessibility.length > 0) {
+                    results.text += `[Acessibilidade]\n`;
+                    results.accessibility.forEach(v => {
+                        htmlReport += `<div class="mb-2 p-1 border-l-2 border-yellow-400"><strong>${v.help}:</strong> ${v.description}</div>`;
+                        results.text += `- ${v.help}: ${v.description}\n`;
+                    });
+                } else { htmlReport += '<p class="text-gray-400">Nenhum problema encontrado.</p>'; }
+
+                // Erros JS
+                htmlReport += '<h4 class="font-bold text-red-400 mt-2 mb-1">Erros de Console</h4>';
+                if(results.jsErrors.length > 0) {
+                    results.text += `\n[Erros de Console]\n`;
+                    results.jsErrors.forEach(err => {
+                        htmlReport += `<div class="mb-2 p-1 border-l-2 border-red-400">${err.message}</div>`;
+                        results.text += `- ${err.message}\n`;
+                    });
+                } else { htmlReport += '<p class="text-gray-400">Nenhum erro encontrado.</p>'; }
+                
+                // Imagens
+                htmlReport += '<h4 class="font-bold text-yellow-400 mt-2 mb-1">Imagens sem Atributo "alt"</h4>';
+                if(results.missingAlts.length > 0) {
+                    results.text += `\n[Imagens sem Alt]\n`;
+                    results.missingAlts.forEach(img => {
+                        htmlReport += `<div class="mb-2 p-1 border-l-2 border-yellow-400"><strong>SRC:</strong> ${img.src}</div>`;
+                        results.text += `- ${img.src}\n`;
+                    });
+                } else { htmlReport += '<p class="text-gray-400">Nenhum problema encontrado.</p>'; }
+                
+                results.html = htmlReport;
+                results.text += `\n\n`;
+                resolve(results);
+            };
+
+            iframe.addEventListener('load', onIframeLoad);
+            iframe.contentWindow.onerror = (message) => {
+                results.jsErrors.push({ message });
+                return true; 
+            };
+            iframe.src = url;
+        });
+    }
+
+    // --- Outras Abas (Funções Originais) ---
     function renderElementsTab() {
         panelContent.innerHTML = `
             <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
@@ -124,18 +281,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div id="computed-styles-container">Clique em um elemento para ver os estilos.</div>
             </div>`;
-        const elementsContainer = document.getElementById("elements-tree-container");
-        if(elementsContainer) {
-             elementsContainer.appendChild(buildElementsTree(document.documentElement));
-        }
-        const inspectorToggle = document.getElementById("inspector-toggle");
-        if(inspectorToggle) {
-            inspectorToggle.addEventListener("click", toggleInspector);
-        }
+        document.getElementById("elements-tree-container").appendChild(buildElementsTree(document.documentElement));
+        document.getElementById("inspector-toggle").addEventListener("click", toggleInspector);
     }
     
     function renderConsoleTab() { 
-        panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2 relative"></div>'; // Adicionado 'relative'
+        panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2 relative"></div>';
         const consoleInput = document.getElementById("console-input");
         if (consoleInput) {
             consoleInput.addEventListener("keydown", e => {
@@ -148,9 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         logToPanel({ type: "log", args: [`> ${command}`] });
                         try {
                             const result = eval(command);
-                            if (result !== undefined) {
-                                logToPanel({ type: "info", args: [result] });
-                            }
+                            if (result !== undefined) logToPanel({ type: "info", args: [result] });
                         } catch (error) {
                             logToPanel({ type: "error", args: [error.toString()] });
                         }
@@ -159,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             consoleInput.addEventListener('input', () => {
                 consoleInput.style.height = 'auto';
-                consoleInput.style.height = (consoleInput.scrollHeight) + 'px';
+                consoleInput.style.height = `${consoleInput.scrollHeight}px`;
             });
         }
     }
@@ -174,77 +323,33 @@ document.addEventListener("DOMContentLoaded", () => {
         panelContent.innerHTML = `<div class="p-2 w-full"><h3 class="font-bold text-lg mb-2">Local Storage</h3><table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2 w-1/4">Key</th><th class="p-2">Value</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
     }
     
-    function renderNetworkTab() {
-        const nav = performance.getEntriesByType("navigation")[0];
-        if(!nav) {
-            panelContent.innerHTML = `<div class="p-4">Informação de Network não disponível.</div>`;
-            return;
-        };
-        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><tbody><tr class='border-b border-gray-800'><td class='p-2 font-bold'>Tempo Total de Carregamento</td><td class='p-2'>${nav.duration.toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Lookup de DNS</td><td class='p-2'>${(nav.domainLookupEnd - nav.domainLookupStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Conexão TCP</td><td class='p-2'>${(nav.connectEnd - nav.connectStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Tempo até Primeiro Byte (TTFB)</td><td class='p-2'>${(nav.responseStart - nav.requestStart).toFixed(0)} ms</td></tr><tr class='border-b border-gray-800'><td class='p-2'>Download do Conteúdo</td><td class='p-2'>${(nav.responseEnd - nav.responseStart).toFixed(0)} ms</td></tr></tbody></table></div>`;
-    }
-
-    function renderRecursosTab() {
-        const resources = performance.getEntriesByType("resource");
-        let tableRows = "";
-        resources.forEach(r => { tableRows += `<tr class='border-b border-gray-800'><td class='p-2 truncate max-w-xs'>${r.name.split("/").pop()}</td><td class='p-2'>${r.initiatorType}</td><td class='p-2'>${(r.transferSize / 1024).toFixed(2)}</td><td class='p-2'>${r.duration.toFixed(0)}</td></tr>`; });
-        panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
-    }
-    
-    function renderAcessibilidadeTab() {
-        panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
-        const runAxeButton = document.getElementById("run-axe");
-        if(runAxeButton) {
-            runAxeButton.addEventListener("click", runAxeAudit);
-        }
-    }
-    
     function renderTestesTab() {
-        panelContent.innerHTML = `<div class="p-4 w-full"><button id="run-diagnostics" class="dev-button">Rodar Diagnóstico Avançado</button><div id="test-results" class="mt-4"></div></div>`;
-        const runDiagnosticsButton = document.getElementById("run-diagnostics");
-        if(runDiagnosticsButton) {
-            runDiagnosticsButton.addEventListener("click", runComprehensiveDiagnostics);
-        }
+        panelContent.innerHTML = `<div class="p-4 w-full"><button id="run-diagnostics" class="dev-button">Rodar Diagnóstico da Página Atual</button><div id="test-results" class="mt-4"></div></div>`;
+        document.getElementById("run-diagnostics")?.addEventListener("click", runComprehensiveDiagnostics);
     }
 
-    /**
-     * ATUALIZADO: Aba de Informações
-     * Adicionada a seção de Preferências com o controle de tab-size.
-     */
     function renderInfoTab() {
         const buildTimeMeta = document.querySelector('meta[name="jekyll-build-time"]');
         const buildTime = buildTimeMeta ? new Date(buildTimeMeta.content).toLocaleString("pt-BR") : 'Não encontrado';
-
         panelContent.innerHTML = `
             <div class="p-4 w-full">
                 <table class='w-full text-left'><tbody>
                     <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Versão do Painel</td><td class='p-2'>${DEV_PANEL_VERSION}</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção do Site</td><td class='p-2'>${buildTime}</td></tr>
+                    <tr class='border-b border-gray-800'><td class='p-2 font-bold text-sky-400'>Hora da Construção</td><td class='p-2'>${buildTime}</td></tr>
                     <tr class='border-b border-gray-800'><td class='p-2 font-bold'>User Agent</td><td class='p-2'>${navigator.userAgent}</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Viewport</td><td class='p-2'>${window.innerWidth}px x ${window.innerHeight}px</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Plataforma</td><td class='p-2'>${navigator.platform}</td></tr>
-                    <tr class='border-b border-gray-800'><td class='p-2 font-bold'>Linguagem</td><td class='p-2'>${navigator.language}</td></tr>
                 </tbody></table>
-
                 <div class="mt-6 pt-4 border-t border-gray-700">
                     <h3 class="font-bold text-lg mb-2">Preferências</h3>
                     <div class="flex items-center gap-4 text-white">
                         <label for="tab-size-select">Tamanho da tabulação (espaços):</label>
-                        <select id="tab-size-select" class="bg-gray-800 border border-gray-600 rounded p-1 focus:outline-none focus:ring-1 focus:ring-sky-400">
-                            <option value="2">2</option>
-                            <option value="4">4</option>
-                            <option value="8">8</option>
-                        </select>
+                        <select id="tab-size-select" class="bg-gray-800 border border-gray-600 rounded p-1"><option value="2">2</option><option value="4">4</option><option value="8">8</option></select>
                     </div>
                 </div>
-            </div>
-        `;
-
-        // Lógica para o controle de tab-size
+            </div>`;
         const tabSizeSelect = document.getElementById('tab-size-select');
         if (tabSizeSelect) {
             const savedTabSize = localStorage.getItem('tabSizePreference') || '4';
             tabSizeSelect.value = savedTabSize;
-
             tabSizeSelect.addEventListener('change', (e) => {
                 const newSize = e.target.value;
                 document.documentElement.style.setProperty('--tab-size-preference', newSize);
@@ -253,51 +358,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
-    // ... (o restante do arquivo, como logToPanel, buildElementsTree, runAxeAudit, runComprehensiveDiagnostics, etc., permanece o mesmo)
-    // FUNÇÃO ATUALIZADA COM BOTÃO DE COPIAR
     function logToPanel(log) {
         const consoleOutput = document.getElementById("console-output");
         if (!consoleOutput) return;
-
         let color = "text-white";
         if (log.type === "error") color = "text-red-400";
         if (log.type === "warn") color = "text-yellow-400";
         if (log.type === "info") color = "text-sky-400";
-        
         const item = document.createElement("div");
         item.className = `console-log-item group relative py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
-        
-        let contentText = '';
-        try {
-            contentText = log.args.map(arg => {
-                if (typeof arg === "string") return arg;
-                if (arg instanceof Node) return arg.outerHTML;
-                return JSON.stringify(arg, null, 2);
-            }).join(" ");
-        } catch (e) {
-            contentText = "Não foi possível exibir o objeto.";
-        }
-
+        let contentText = log.args.map(arg => typeof arg === "string" ? arg : JSON.stringify(arg, null, 2)).join(" ");
         item.innerHTML = `
             <span class="opacity-50">${new Date().toLocaleTimeString()}</span>
             <div class="flex-1 whitespace-pre-wrap">${contentText}</div>
-            <button class="copy-log-btn absolute top-1 right-1 p-1 text-xs bg-gray-700 rounded-md text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">Copiar</button>
-        `;
-        
+            <button class="copy-log-btn absolute top-1 right-1 p-1 text-xs bg-gray-700 rounded-md text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">Copiar</button>`;
         consoleOutput.appendChild(item);
-
-        const copyButton = item.querySelector('.copy-log-btn');
-        copyButton.addEventListener('click', () => {
-            navigator.clipboard.writeText(contentText).then(() => {
-                copyButton.textContent = 'Copiado!';
-                setTimeout(() => { copyButton.textContent = 'Copiar'; }, 2000);
-            }).catch(err => {
-                copyButton.textContent = 'Erro!';
-                console.error('Falha ao copiar: ', err);
-            });
+        item.querySelector('.copy-log-btn').addEventListener('click', () => {
+            navigator.clipboard.writeText(contentText);
         });
-
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
 
@@ -322,14 +400,13 @@ document.addEventListener("DOMContentLoaded", () => {
             nodeHeader.className = 'element-node-header flex items-center cursor-pointer hover:bg-gray-800 rounded p-0.5';
             nodeHeader.style.paddingLeft = `${depth}rem`;
             domElementToTreeNode.set(element, nodeHeader);
-            const attributes = Array.from(element.attributes).map(attr => `<span class="text-orange-400">${attr.name}</span><span class="text-gray-500">="</span><span class="text-green-400">${attr.value}</span><span class="text-gray-500">"</span>`).join(" ");
+            const attributes = Array.from(element.attributes).map(attr => `<span class="text-orange-400">${attr.name}</span>="<span class="text-green-400">${attr.value}</span>"`).join(" ");
             const hasChildren = element.children.length > 0;
             const arrow = hasChildren ? `<span class="material-symbols-outlined text-sm expand-icon">arrow_right</span>` : `<span class='w-4 inline-block'></span>`;
             nodeHeader.innerHTML = `${arrow}<span class='text-gray-500'>&lt;</span><span class='text-pink-400'>${element.tagName.toLowerCase()}</span> <span class="attributes">${attributes}</span><span class='text-gray-500'>&gt;</span>`;
             const childrenContainer = document.createElement('div');
             childrenContainer.className = 'element-children hidden';
-            nodeWrapper.appendChild(nodeHeader);
-            nodeWrapper.appendChild(childrenContainer);
+            nodeWrapper.append(nodeHeader, childrenContainer);
             nodeHeader.addEventListener('click', (e) => {
                 e.stopPropagation();
                 childrenContainer.classList.toggle('hidden');
@@ -345,8 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             return nodeWrapper;
         }
-        const rootNode = createNode(rootElement, 0);
-        if (rootNode) treeContainer.appendChild(rootNode);
+        treeContainer.appendChild(createNode(rootElement, 0));
         return treeContainer;
     }
 
@@ -358,11 +434,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function displayComputedStyles(element) {
         const container = document.getElementById("computed-styles-container");
-        if (!container || !element) { if(container) container.innerHTML = "Selecione um elemento para ver os estilos."; return; };
+        if (!container || !element) { if(container) container.innerHTML = "Selecione um elemento."; return; };
         const styles = window.getComputedStyle(element);
-        const properties = Array.from(styles).filter(prop => !prop.startsWith("-")).sort();
         let tableHTML = "<table class='w-full text-left text-xs'>";
-        properties.forEach(prop => { tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`; });
+        Array.from(styles).forEach(prop => {
+            tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`;
+        });
         tableHTML += "</table>";
         container.innerHTML = tableHTML;
     }
@@ -388,24 +465,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const treeNode = domElementToTreeNode.get(current);
             if(treeNode) {
                 const childrenContainer = treeNode.parentElement.querySelector('.element-children');
-                if(childrenContainer) {
-                    childrenContainer.classList.remove('hidden');
-                    const icon = treeNode.querySelector('.expand-icon');
-                    if (icon) icon.textContent = 'arrow_drop_down';
-                }
+                if(childrenContainer) childrenContainer.classList.remove('hidden');
+                const icon = treeNode.querySelector('.expand-icon');
+                if (icon) icon.textContent = 'arrow_drop_down';
             }
             current = current.parentElement;
         }
-        const finalNode = domElementToTreeNode.get(element);
-        if (finalNode) finalNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        domElementToTreeNode.get(element)?.scrollIntoView({ block: 'center' });
     }
 
     function toggleInspector() {
         isInspecting = !isInspecting;
-        const inspectorButton = document.getElementById('inspector-toggle');
-        if (inspectorButton) {
-            inspectorButton.style.backgroundColor = isInspecting ? '#0ea5e9' : 'transparent';
-            inspectorButton.style.color = isInspecting ? 'white' : '#9ca3af';
+        const button = document.getElementById('inspector-toggle');
+        if (button) {
+            button.style.backgroundColor = isInspecting ? '#0ea5e9' : 'transparent';
         }
         document.body.style.cursor = isInspecting ? 'crosshair' : 'default';
         if (isInspecting) {
@@ -421,12 +494,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isInspecting || e.target.closest("#dev-panel")) return;
         e.preventDefault();
         e.stopPropagation();
-        
-        const clickedElement = e.target;
-        
-        selectElement(clickedElement);
-        revealInTree(clickedElement);
-        
+        selectElement(e.target);
+        revealInTree(e.target);
         toggleInspector();
     }
 
@@ -434,25 +503,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const resultsContainer = document.getElementById("axe-results");
         if(!resultsContainer) return;
         resultsContainer.innerHTML = "Analisando...";
+        if (typeof axe === 'undefined') {
+            resultsContainer.innerHTML = `<p class="text-red-500">Axe library not loaded.</p>`;
+            return;
+        }
         try {
             const results = await axe.run({ exclude: [['#dev-panel']] });
             resultsContainer.innerHTML = '';
             const { violations, incomplete, passes } = results;
-            resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
-            if (violations.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
-                violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
-            }
-            if (incomplete.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
-                incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
-            }
-            if (passes.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
-                passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${p.help}</p></div>`));
-            }
             if (violations.length === 0 && incomplete.length === 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
+                 resultsContainer.innerHTML = '<p class="text-green-400 font-bold">Parabéns! Nenhum problema de acessibilidade encontrado.</p>';
+            }
+            if (violations.length > 0) {
+                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mb-2">Violações</h4>');
+                violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 bg-red-900/50"><p>${v.help}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400">Saiba mais</a></div>`));
             }
         } catch (err) {
             resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
@@ -462,142 +526,24 @@ document.addEventListener("DOMContentLoaded", () => {
     async function runComprehensiveDiagnostics() {
         const resultsContainer = document.getElementById("test-results");
         if (!resultsContainer) return;
-
-        resultsContainer.innerHTML = `
-            <div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4">
-                <p class="font-bold">Nota do Desenvolvedor:</p>
-                <p class="text-xs text-sky-400">Estes testes são baseados em heurísticas e melhores práticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção. Use as sugestões como um guia para melhorar a qualidade do projeto.</p>
-            </div>
-            <table class="w-full text-left text-xs">
-                <thead>
-                    <tr class="border-b border-gray-700">
-                        <th class="p-2 w-1/4">Teste de Diagnóstico</th>
-                        <th class="p-2 w-1/6">Resultado</th>
-                        <th class="p-2">Detalhes e Sugestões</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>`;
+        resultsContainer.innerHTML = `<table class="w-full text-left text-xs"><thead><tr class="border-b border-gray-700"><th class="p-2">Teste</th><th class="p-2">Resultado</th><th class="p-2">Detalhes</th></tr></thead><tbody></tbody></table>`;
         const tbody = resultsContainer.querySelector("tbody");
-
-        const addResult = (test, status, details, suggestion) => {
-            const isPass = status === "PASS";
-            const statusColor = isPass ? 'text-green-400' : (status === "FAIL" ? 'text-red-400' : 'text-yellow-400');
-            const statusIcon = isPass ? 'check_circle' : (status === "FAIL" ? 'error' : 'warning');
-            const row = `
-                <tr class="border-b border-gray-800">
-                    <td class="p-2 align-top">${test}</td>
-                    <td class="p-2 align-top font-bold ${statusColor}"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">${statusIcon}</span> ${status}</span></td>
-                    <td class="p-2 align-top text-gray-400">
-                        <p>${details}</p>
-                        ${suggestion ? `<p class="mt-1 text-sky-400 text-xs"><span class="font-bold">Sugestão:</span> ${suggestion}</p>` : ''}
-                    </td>
-                </tr>`;
-            tbody.insertAdjacentHTML('beforeend', row);
+        const addResult = (test, status, details) => {
+            const statusColor = status === "PASS" ? 'text-green-400' : 'text-red-400';
+            tbody.innerHTML += `<tr class="border-b border-gray-800"><td class="p-2">${test}</td><td class="p-2 font-bold ${statusColor}">${status}</td><td class="p-2">${details}</td></tr>`;
         };
         
-        const pageChecks = {
-            search: { ids: ["search-input", "results-container", "results-count"], path: "search.html" },
-            status: { ids: ["detailed-status-container", "uptime-history-container", "performance-monitor-container"], path: "status.html" },
-            home: { ids: [".main-search-form"], path: "index.html" }
-        };
-        
-        const isArticlePage = !!document.querySelector('body main aside#toc-container') && !!document.querySelector('body main div article');
-        const currentPageFile = window.location.pathname.split("/").pop() || "index.html";
-        
-        const checkConfig = Object.values(pageChecks).find(p => p.path === currentPageFile);
-        if (checkConfig) {
-            checkConfig.ids.forEach(selector => {
-                const elementExists = !!document.querySelector(selector);
-                addResult(
-                    `Verificação de Elemento: ${selector}`,
-                    elementExists ? "PASS" : "FAIL",
-                    elementExists ? `Elemento essencial "${selector}" encontrado.` : `Elemento crítico "${selector}" não foi encontrado nesta página.`,
-                    elementExists ? null : `Verifique o HTML da página e garanta que o elemento com seletor "${selector}" existe e não foi removido ou teve seu ID/classe alterado.`
-                );
-            });
-        }
-        
-        if (isArticlePage) {
-             addResult("Verificação de Layout", "PASS", "Layout de página de artigo detectado.", null);
-             ["toc-container", "article"].forEach(selector => {
-                 const elementExists = !!document.querySelector(selector);
-                 addResult(
-                    `Verificação de Elemento de Artigo: ${selector}`,
-                    elementExists ? "PASS" : "FAIL",
-                    elementExists ? `Elemento "${selector}" encontrado.` : `Elemento "${selector}" não encontrado no layout do artigo.`,
-                    elementExists ? null : `Verifique o arquivo 'docs/_layouts/artigo.html' e garanta que este elemento está presente.`
-                 );
-             });
-        }
-
         try {
-            const response = await fetch(`${baseUrl}search.json?cache_bust=` + Date.now());
+            const response = await fetch(`${baseUrl}search.json`);
             if (response.ok) {
                 const data = await response.json();
-                if (data.length > 0 && data[0].title && data[0].url) {
-                    addResult("Validação de `search.json`", "PASS", "Arquivo encontrado, JSON é válido e contém dados.", null);
-                } else {
-                    addResult("Validação de `search.json`", "FAIL", "JSON é válido, mas está vazio ou a estrutura está incorreta.", "Verifique o processo de build (Jekyll) para garantir que os dados dos posts estão sendo exportados corretamente para `search.json`.");
-                }
+                if (data.length > 0) addResult("Validação de `search.json`", "PASS", "Arquivo encontrado e contém dados.");
+                else addResult("Validação de `search.json`", "FAIL", "Arquivo vazio.");
             } else {
-                addResult("Validação de `search.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}). A busca não funcionará.`, "Execute o build do Jekyll ou verifique se o arquivo foi movido ou renomeado.");
+                addResult("Validação de `search.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}).`);
             }
         } catch (e) {
-            addResult("Validação de `search.json`", "FAIL", "O conteúdo do arquivo não é um JSON válido.", "Inspecione o arquivo `search.json` para encontrar e corrigir erros de sintaxe.");
-        }
-
-        try {
-            const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=` + Date.now());
-            if (response.ok) {
-                const data = await response.json();
-                if (data.monitors && data.metrics) {
-                     addResult("Validação de `uptime-data.json`", "PASS", "Arquivo encontrado, JSON é válido e contém as chaves esperadas.", null);
-                } else {
-                    addResult("Validação de `uptime-data.json`", "FAIL", "JSON é válido, mas não contém as chaves 'monitors' ou 'metrics'.", "Verifique o workflow `uptime.yml` do GitHub Actions para garantir que ele está gerando e combinando os dados corretamente.");
-                }
-            } else {
-                 addResult("Validação de `uptime-data.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}). A página de status não funcionará.`, "Verifique se o workflow `uptime.yml` está rodando corretamente e salvando o arquivo no local esperado.");
-            }
-        } catch (e) {
-            addResult("Validação de `uptime-data.json`", "FAIL", "O conteúdo do arquivo não é um JSON válido.", "Inspecione `uptime-data.json`. Provavelmente houve um erro na execução do workflow `uptime.yml` que corrompeu o arquivo.");
-        }
-
-        document.querySelectorAll("script[src]:not([src^='https://'])").forEach(script => {
-            const isDeferred = script.hasAttribute('defer') || script.hasAttribute('async');
-            addResult(
-                `Performance do Script: ${script.src.split('/').pop()}`,
-                isDeferred ? "PASS" : "RECOMENDAÇÃO",
-                isDeferred ? "O script é carregado de forma assíncrona." : "O script pode estar bloqueando a renderização da página.",
-                isDeferred ? null : "Adicione o atributo 'defer' à tag <script> para melhorar a performance de carregamento."
-            );
-        });
-
-        const seo = {
-            title: !!document.querySelector('title'),
-            description: !!document.querySelector('meta[name="description"]')
-        };
-        addResult("SEO: Título da Página", seo.title ? "PASS" : "FAIL", seo.title ? "A tag `<title>` está presente." : "A tag `<title>` é essencial para SEO e acessibilidade e não foi encontrada.", seo.title ? null : "Adicione uma tag `<title>` única e descritiva dentro da seção `<head>` do HTML.");
-        addResult("SEO: Meta Descrição", seo.description ? "PASS" : "RECOMENDAÇÃO", seo.description ? 'A tag `<meta name="description">` está presente.' : "A página não possui uma meta descrição, o que pode impactar como ela aparece nos resultados de busca.", seo.description ? null : 'Adicione `<meta name="description" content="Uma descrição concisa da página.">` dentro da seção `<head>`.');
-
-        const brokenLinks = document.querySelectorAll('a[href=""], a[href="#"], a:not([href])');
-        if (brokenLinks.length > 0) {
-            addResult("Qualidade: Links Quebrados/Vazios", "FAIL", `${brokenLinks.length} link(s) com destino vazio ou inválido foram encontrados.`, "Inspecione os links destacados e adicione um `href` válido ou remova a tag `<a>` se não for um link.");
-            [...brokenLinks].forEach(link => {
-                const clone = link.cloneNode(true);
-                clone.style.cssText = "color: red; border: 1px solid red;";
-                link.replaceWith(clone);
-            });
-        } else {
-            addResult("Qualidade: Links Quebrados/Vazios", "PASS", "Nenhum link com destino vazio ou inválido encontrado.", null);
-        }
-        
-        const missingAlts = document.querySelectorAll('img:not([alt])');
-        if (missingAlts.length > 0) {
-             addResult("Acessibilidade: Imagens sem `alt`", "FAIL", `${missingAlts.length} imagem(ns) sem o atributo 'alt'.`, "Toda imagem deve ter um atributo `alt`. Se for decorativa, use `alt=\"\"`. Caso contrário, forneça uma descrição concisa do conteúdo da imagem.");
-        } else {
-             addResult("Acessibilidade: Imagens sem `alt`", "PASS", "Todas as imagens possuem o atributo `alt`.", null);
+            addResult("Validação de `search.json`", "FAIL", "Não é um JSON válido.");
         }
     }
-
 });
