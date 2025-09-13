@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.5.2"; // Versão com correções
+    const DEV_PANEL_VERSION = "1.6.0"; // Versão com correções e auditoria integrada
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
 
     const applySavedPreferences = () => {
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     axeScript.defer = true;
     document.head.appendChild(axeScript);
 
-    // Estrutura HTML do Painel com todas as abas restauradas
+    // Estrutura HTML do Painel, agora com a lista de abas corrigida
     const panelHTML = `
         <div id="dev-tools-trigger" class="fixed bottom-4 right-4 z-[100] bg-slate-800 text-white p-3 rounded-full shadow-lg cursor-pointer hover:bg-slate-700 transition-transform hover:scale-110">
             <span class="material-symbols-outlined">developer_mode</span>
@@ -38,8 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         <button data-tab="storage" class="dev-tab">Storage</button>
                         <button data-tab="network" class="dev-tab">Network</button>
                         <button data-tab="recursos" class="dev-tab">Recursos</button>
-                        <button data-tab="acessibilidade" class="dev-tab">Acessibilidade</button>
-                        <button data-tab="testes" class="dev-tab">Testes</button>
                         <button data-tab="info" class="dev-tab">Info</button>
                     </nav>
                 </div>
@@ -71,10 +69,29 @@ document.addEventListener("DOMContentLoaded", () => {
         lastSelectedTreeNode: null,
         domElementToTreeNode: new WeakMap()
     };
-
-    // Objeto com funções auxiliares que manipulam o estado do painel
-    const elementsHelpers = {
-        buildElementsTree: function(element, depth = 0) {
+    
+    // Objeto com helpers que manipulam o estado e o DOM do painel
+    const helpers = {
+        logToPanel: (log) => {
+            const consoleOutput = document.getElementById("console-output");
+            if (!consoleOutput) return;
+            let color = "text-white";
+            if (log.type === "error") color = "text-red-400";
+            if (log.type === "warn") color = "text-yellow-400";
+            if (log.type === "info") color = "text-sky-400";
+            const item = document.createElement("div");
+            item.className = `py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
+            let contentText = log.args.map(arg => {
+                if (arg instanceof Error) return arg.stack;
+                if (typeof arg === "string") return arg;
+                try { return JSON.stringify(arg, null, 2); } catch(e) { return "[Object]" }
+            }).join(" ");
+            item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><pre class="flex-1 whitespace-pre-wrap">${contentText}</pre>`;
+            consoleOutput.appendChild(item);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        },
+        // Helpers específicos da aba Elements
+        buildElementsTree: (element, depth = 0) => {
             if (!element.tagName || element.closest('#dev-panel')) return null;
             const nodeWrapper = document.createElement('div');
             const nodeHeader = document.createElement('div');
@@ -96,21 +113,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 childrenContainer.classList.toggle('hidden');
                 const icon = nodeHeader.querySelector('.expand-icon');
                 if (icon) icon.textContent = childrenContainer.classList.contains('hidden') ? 'arrow_right' : 'arrow_drop_down';
-                this.selectElement(element);
+                helpers.selectElement(element);
             });
 
             if (hasChildren) {
                 for (const child of element.children) {
-                    const childNode = this.buildElementsTree(child, depth + 1);
+                    const childNode = helpers.buildElementsTree(child, depth + 1);
                     if (childNode) childrenContainer.appendChild(childNode);
                 }
             }
             return nodeWrapper;
         },
         selectElement: (element) => {
-            elementsHelpers.highlightOnPage(element);
-            elementsHelpers.highlightInTree(element);
-            elementsHelpers.displayComputedStyles(element);
+            helpers.highlightOnPage(element);
+            helpers.highlightInTree(element);
+            helpers.displayComputedStyles(element);
         },
         highlightOnPage: (element) => {
             if (elementsState.lastInspectedElement) elementsState.lastInspectedElement.style.outline = '';
@@ -133,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const styles = window.getComputedStyle(element);
             let tableHTML = "<table class='w-full text-left text-xs'>";
             Array.from(styles).forEach(prop => {
-                tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`;
+                tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400 break-all'>${styles.getPropertyValue(prop)}</td></tr>`;
             });
             tableHTML += "</table>";
             container.innerHTML = tableHTML;
@@ -141,23 +158,23 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleInspector: () => {
             elementsState.isInspecting = !elementsState.isInspecting;
             const button = document.getElementById('inspector-toggle');
-            if (button) button.style.backgroundColor = elementsState.isInspecting ? '#0ea5e9' : 'transparent';
+            if (button) {
+                button.style.backgroundColor = elementsState.isInspecting ? '#0ea5e9' : 'transparent';
+                button.style.color = elementsState.isInspecting ? 'white' : '';
+            }
             document.body.style.cursor = elementsState.isInspecting ? 'crosshair' : 'default';
 
-            const mouseoverHandler = (e) => elementsHelpers.highlightOnPage(e.target);
             const clickHandler = (e) => {
                 if (!elementsState.isInspecting || e.target.closest("#dev-panel")) return;
                 e.preventDefault(); e.stopPropagation();
-                elementsHelpers.selectElement(e.target);
-                elementsHelpers.revealInTree(e.target);
-                elementsHelpers.toggleInspector();
+                helpers.selectElement(e.target);
+                helpers.revealInTree(e.target);
+                helpers.toggleInspector();
             };
 
             if (elementsState.isInspecting) {
-                document.addEventListener('mouseover', mouseoverHandler);
                 document.addEventListener('click', clickHandler, { capture: true });
             } else {
-                document.removeEventListener('mouseover', mouseoverHandler);
                 document.removeEventListener('click', clickHandler, { capture: true });
                 if (elementsState.lastInspectedElement) elementsState.lastInspectedElement.style.outline = '';
             }
@@ -176,45 +193,24 @@ document.addEventListener("DOMContentLoaded", () => {
                  }
                  current = current.parentElement;
              }
-             elementsState.domElementToTreeNode.get(element)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+             const finalNode = elementsState.domElementToTreeNode.get(element);
+             if(finalNode) finalNode.scrollIntoView({ block: 'center', behavior: 'smooth' });
         }
     };
-
-    const logToPanel = function(log) {
-        const consoleOutput = document.getElementById("console-output");
-        if (!consoleOutput) return;
-        let color = "text-white";
-        if (log.type === "error") color = "text-red-400";
-        if (log.type === "warn") color = "text-yellow-400";
-        if (log.type === "info") color = "text-sky-400";
-        const item = document.createElement("div");
-        item.className = `py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
-        
-        let contentText = log.args.map(arg => {
-            if (arg instanceof Error) return arg.stack;
-            if (typeof arg === "string") return arg;
-            try {
-                return JSON.stringify(arg, null, 2);
-            } catch(e) { return "[Object]" }
-        }).join(" ");
-        
-        item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><pre class="flex-1 whitespace-pre-wrap">${contentText}</pre>`;
-        consoleOutput.appendChild(item);
-        consoleOutput.scrollTop = consoleOutput.scrollHeight;
-    };
-    elementsHelpers.logToPanel = logToPanel; // Passa a função de log para os helpers também
-
+    
     // Sobrescreve o console para logar no painel
     ["log", "warn", "error", "info"].forEach(type => {
         const original = console[type];
         console[type] = (...args) => {
             original.apply(console, args);
-            logToPanel({ type, args });
+            // Apenas loga no painel se ele estiver aberto
+            if (devPanel && !devPanel.classList.contains('hidden')) {
+                helpers.logToPanel({ type, args });
+            }
         };
     });
-    window.onerror = (message, source, lineno) => { logToPanel({ type: "error", args: [`Uncaught Error: ${message} in ${source}:${lineno}`] }); };
 
-
+    // Gatilhos principais do painel
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
         if (!devPanel.classList.contains("hidden") && !document.querySelector('.dev-tab.active-tab')) {
@@ -236,15 +232,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
+    // Roteador de abas que chama as funções do dev-panel-features.js
     function renderTabContent(tabId) {
         panelContent.innerHTML = ""; 
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
         
-        if (elementsState.isInspecting) elementsHelpers.toggleInspector();
+        if (elementsState.isInspecting) helpers.toggleInspector();
 
         const featureFunctionName = `render${capitalize(tabId)}Tab`;
         if (window.DevPanelFeatures && typeof window.DevPanelFeatures[featureFunctionName] === 'function') {
-            window.DevPanelFeatures[featureFunctionName](panelContent, baseUrl, elementsState, elementsHelpers, DEV_PANEL_VERSION);
+            window.DevPanelFeatures[featureFunctionName](panelContent, baseUrl, elementsState, helpers, DEV_PANEL_VERSION);
         } else {
             panelContent.innerHTML = `<div class="p-4">Funcionalidade da aba '${tabId}' não encontrada.</div>`;
         }
