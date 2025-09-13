@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.3.1"; // Versão com cópia de violações
+    const DEV_PANEL_VERSION = "1.3.0"; // Versão original funcional
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
     const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
@@ -178,18 +178,12 @@ document.addEventListener("DOMContentLoaded", () => {
         panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
     }
     
-    // ATUALIZADO: renderAcessibilidadeTab com botão de copiar violações
     function renderAcessibilidadeTab() {
-        panelContent.innerHTML = `
-            <div class="p-4">
-                <div class="flex items-center gap-2">
-                    <button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button>
-                    <button id="copy-axe-violations" class="dev-button hidden">Copiar Violações</button>
-                </div>
-                <div id="axe-results" class="mt-4"></div>
-            </div>`;
-        const runBtn = document.getElementById("run-axe");
-        if (runBtn) runBtn.addEventListener("click", runAxeAudit);
+        panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
+        const runAxeButton = document.getElementById("run-axe");
+        if(runAxeButton) {
+            runAxeButton.addEventListener("click", runAxeAudit);
+        }
     }
     
     function renderTestesTab() {
@@ -388,25 +382,15 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleInspector();
     }
 
-    // ATUALIZADO: runAxeAudit (integra lógica A -> B + botão de copiar relatório)
     async function runAxeAudit() {
         const resultsContainer = document.getElementById("axe-results");
-        const copyButton = document.getElementById("copy-axe-violations");
-        if(!resultsContainer || !copyButton) return;
-
+        if(!resultsContainer) return;
         resultsContainer.innerHTML = "Analisando...";
-        copyButton.classList.add("hidden"); // Esconde o botão durante a análise
-
         try {
-            if (typeof axe === 'undefined') {
-                throw new Error("Biblioteca Axe não carregada.");
-            }
             const results = await axe.run({ exclude: [['#dev-panel']] });
             resultsContainer.innerHTML = '';
-            const { violations = [], incomplete = [], passes = [] } = results;
-
+            const { violations, incomplete, passes } = results;
             resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
-
             if (violations.length > 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
                 violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
@@ -422,45 +406,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (violations.length === 0 && incomplete.length === 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
             }
-
-            // Lógica para o botão de copiar relatório (apenas se houver violações)
-            if (violations.length > 0) {
-                copyButton.classList.remove("hidden");
-                
-                let reportText = `Relatório de Violações de Acessibilidade (Críticas/Sérias)\n`;
-                reportText += `=========================================================\n`;
-                reportText += `Página: ${window.location.href}\n`;
-                reportText += `Data: ${new Date().toLocaleString('pt-BR')}\n\n`;
-
-                violations.forEach((violation, index) => {
-                    reportText += `--- VIOLAÇÃO ${index + 1} ---\n`;
-                    reportText += `ID da Regra: ${violation.id}\n`;
-                    reportText += `Impacto: ${violation.impact}\n`;
-                    reportText += `Descrição: ${violation.description}\n`;
-                    reportText += `Ajuda: ${violation.help}\n`;
-                    reportText += `Ajuda URL: ${violation.helpUrl}\n`;
-                    if (violation.nodes && violation.nodes.length) {
-                        reportText += `Elementos afetados:\n`;
-                        violation.nodes.forEach(node => {
-                            const targetText = Array.isArray(node.target) ? node.target.join(' , ') : (node.target || node.html || '');
-                            reportText += ` - ${targetText}\n`;
-                        });
-                    }
-                    reportText += `\n`;
-                });
-
-                copyButton.onclick = () => {
-                    navigator.clipboard.writeText(reportText).then(() => {
-                        copyButton.textContent = 'Copiado!';
-                        setTimeout(() => { copyButton.textContent = 'Copiar Violações'; }, 2000);
-                    }).catch(err => {
-                        console.error("Falha ao copiar relatório: ", err);
-                        copyButton.textContent = 'Erro ao copiar';
-                        setTimeout(() => { copyButton.textContent = 'Copiar Violações'; }, 2000);
-                    });
-                };
-            }
-
         } catch (err) {
             resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
         }
@@ -585,4 +530,25 @@ document.addEventListener("DOMContentLoaded", () => {
             description: !!document.querySelector('meta[name="description"]')
         };
         addResult("SEO: Título da Página", seo.title ? "PASS" : "FAIL", seo.title ? "A tag `<title>` está presente." : "A tag `<title>` é essencial para SEO e acessibilidade e não foi encontrada.", seo.title ? null : "Adicione uma tag `<title>` única e descritiva dentro da seção `<head>` do HTML.");
-        addResult("SEO: Meta Descrição", seo.description ? "PASS" : "RECOMENDAÇÃO", seo.description ? 'A tag `<meta name=\"description\">` está presente.' : "A página não possui uma meta descrição, o que pode impactar como ela aparece nos resultados de busca.", seo.description ? null : 'Adicione `<meta name="description" content="Uma descrição concisa da página.">` dentro da seção `<head>`.');
+        addResult("SEO: Meta Descrição", seo.description ? "PASS" : "RECOMENDAÇÃO", seo.description ? 'A tag `<meta name="description">` está presente.' : "A página não possui uma meta descrição, o que pode impactar como ela aparece nos resultados de busca.", seo.description ? null : 'Adicione `<meta name="description" content="Uma descrição concisa da página.">` dentro da seção `<head>`.');
+
+        const brokenLinks = document.querySelectorAll('a[href=""], a[href="#"], a:not([href])');
+        if (brokenLinks.length > 0) {
+            addResult("Qualidade: Links Quebrados/Vazios", "FAIL", `${brokenLinks.length} link(s) com destino vazio ou inválido foram encontrados.`, "Inspecione os links destacados e adicione um `href` válido ou remova a tag `<a>` se não for um link.");
+            [...brokenLinks].forEach(link => {
+                const clone = link.cloneNode(true);
+                clone.style.cssText = "color: red; border: 1px solid red;";
+                link.replaceWith(clone);
+            });
+        } else {
+            addResult("Qualidade: Links Quebrados/Vazios", "PASS", "Nenhum link com destino vazio ou inválido encontrado.", null);
+        }
+        
+        const missingAlts = document.querySelectorAll('img:not([alt])');
+        if (missingAlts.length > 0) {
+             addResult("Acessibilidade: Imagens sem `alt`", "FAIL", `${missingAlts.length} imagem(ns) sem o atributo 'alt'.`, "Toda imagem deve ter um atributo `alt`. Se for decorativa, use `alt=\"\"`. Caso contrário, forneça uma descrição concisa do conteúdo da imagem.");
+        } else {
+             addResult("Acessibilidade: Imagens sem `alt`", "PASS", "Todas as imagens possuem o atributo `alt`.", null);
+        }
+    }
+});
