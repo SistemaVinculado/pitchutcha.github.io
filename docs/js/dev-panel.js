@@ -1,10 +1,12 @@
 // docs/js/dev-panel.js
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Evita que o painel seja executado em iframes
-    if (window.self !== window.top) return;
+    // Evita que o painel seja executado em iframes ou se o objeto de features não carregou
+    if (window.self !== window.top || typeof DevPanelFeatures === 'undefined') {
+        return;
+    }
 
-    const DEV_PANEL_VERSION = "1.5.0";
+    const DEV_PANEL_VERSION = "1.5.1"; // Versão com correções
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
 
     // Aplica preferências salvas (como tab-size) assim que a página carrega
@@ -31,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="flex items-center justify-between bg-gray-800 p-2 border-b border-gray-700">
                 <div class="flex items-center gap-4 min-w-0">
                     <h2 class="font-bold text-lg px-2 flex-shrink-0">Pitchutcha Dev Panel</h2>
-                    <nav class="flex gap-1 overflow-x-auto whitespace-nowrap">
+                    <nav class="flex gap-1 overflow-x-auto whitespace-rap">
                         <button data-tab="auditoria" class="dev-tab">Auditoria</button>
                         <button data-tab="elements" class="dev-tab">Elements</button>
                         <button data-tab="console" class="dev-tab">Console</button>
@@ -64,11 +66,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const consoleInputContainer = document.getElementById("console-input-container");
     const devTabs = document.querySelectorAll(".dev-tab");
 
-    let isInspecting = false; // Estado do inspetor de elementos
+    // Objeto de estado para a aba Elements
+    let elementsState = {
+        isInspecting: false,
+        lastInspectedElement: null,
+        lastSelectedTreeNode: null,
+        domElementToTreeNode: new WeakMap()
+    };
 
+    // --- Lógica Principal do Painel ---
     triggerButton.addEventListener("click", () => {
         devPanel.classList.toggle("hidden");
-        // Se abriu e nenhuma aba está ativa, ativa a primeira
         if (!devPanel.classList.contains("hidden") && !document.querySelector('.dev-tab.active-tab')) {
             const firstTab = devTabs[0];
             firstTab.classList.add('active-tab');
@@ -86,23 +94,124 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    function capitalize(s) {
-        if (typeof s !== 'string') return '';
-        return s.charAt(0).toUpperCase() + s.slice(1);
-    }
+    const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
+    // Roteador que chama as funções do `dev-panel-features.js`
     function renderTabContent(tabId) {
         panelContent.innerHTML = ""; 
         consoleInputContainer.style.display = (tabId === "console") ? "flex" : "none";
-        
+        if (elementsState.isInspecting) elementsHelpers.toggleInspector();
+
         const featureFunctionName = `render${capitalize(tabId)}Tab`;
-        
-        // Verifica se o objeto de features e a função específica existem
         if (window.DevPanelFeatures && typeof window.DevPanelFeatures[featureFunctionName] === 'function') {
-            // Chama a função correspondente do arquivo dev-panel-features.js
-            window.DevPanelFeatures[featureFunctionName](panelContent, baseUrl, DEV_PANEL_VERSION);
+            window.DevPanelFeatures[featureFunctionName](panelContent, baseUrl, elementsState, elementsHelpers, DEV_PANEL_VERSION);
         } else {
             panelContent.innerHTML = `<div class="p-4">Funcionalidade da aba '${tabId}' não encontrada.</div>`;
         }
     }
+
+    // --- Helpers para a aba Elements ---
+    // Funções que manipulam o estado e são passadas para o módulo de features
+    const elementsHelpers = {
+        buildElementsTree: (element, depth = 0) => {
+            if (!element.tagName || element.closest('#dev-panel')) return null;
+            const nodeWrapper = document.createElement('div');
+            const nodeHeader = document.createElement('div');
+            nodeHeader.className = 'element-node-header flex items-center cursor-pointer hover:bg-gray-800 rounded p-0.5';
+            nodeHeader.style.paddingLeft = `${depth}rem`;
+            elementsState.domElementToTreeNode.set(element, nodeHeader);
+
+            const attributes = Array.from(element.attributes).map(attr => `<span class="text-orange-400">${attr.name}</span>="<span class="text-green-400">${attr.value}</span>"`).join(" ");
+            const hasChildren = element.children.length > 0;
+            const arrow = hasChildren ? `<span class="material-symbols-outlined text-sm expand-icon">arrow_right</span>` : `<span class='w-4 inline-block'></span>`;
+            nodeHeader.innerHTML = `${arrow}<span class='text-gray-500'>&lt;</span><span class='text-pink-400'>${element.tagName.toLowerCase()}</span> ${attributes}<span class='text-gray-500'>&gt;</span>`;
+            
+            const childrenContainer = document.createElement('div');
+            childrenContainer.className = 'element-children hidden';
+            nodeWrapper.append(nodeHeader, childrenContainer);
+
+            nodeHeader.addEventListener('click', (e) => {
+                e.stopPropagation();
+                childrenContainer.classList.toggle('hidden');
+                const icon = nodeHeader.querySelector('.expand-icon');
+                if (icon) icon.textContent = childrenContainer.classList.contains('hidden') ? 'arrow_right' : 'arrow_drop_down';
+                elementsHelpers.selectElement(element);
+            });
+
+            if (hasChildren) {
+                for (const child of element.children) {
+                    const childNode = elementsHelpers.buildElementsTree(child, depth + 1);
+                    if (childNode) childrenContainer.appendChild(childNode);
+                }
+            }
+            return nodeWrapper;
+        },
+        selectElement: (element) => {
+            elementsHelpers.highlightOnPage(element);
+            elementsHelpers.highlightInTree(element);
+            elementsHelpers.displayComputedStyles(element);
+        },
+        highlightOnPage: (element) => {
+            if (elementsState.lastInspectedElement) elementsState.lastInspectedElement.style.outline = '';
+            element.style.outline = '2px solid #0ea5e9';
+            elementsState.lastInspectedElement = element;
+        },
+        highlightInTree: (element) => {
+            if (elementsState.lastSelectedTreeNode) elementsState.lastSelectedTreeNode.style.backgroundColor = '';
+            const treeNode = elementsState.domElementToTreeNode.get(element);
+            if (treeNode) {
+                treeNode.style.backgroundColor = 'rgba(14, 165, 233, 0.3)';
+                elementsState.lastSelectedTreeNode = treeNode;
+            }
+        },
+        displayComputedStyles: (element) => {
+            const container = document.getElementById("computed-styles-container");
+            if (!container) return;
+            const styles = window.getComputedStyle(element);
+            let tableHTML = "<table class='w-full text-left text-xs'>";
+            Array.from(styles).forEach(prop => {
+                tableHTML += `<tr class='border-b border-gray-800'><td class='p-1 text-pink-400'>${prop}</td><td class='p-1 text-cyan-400'>${styles.getPropertyValue(prop)}</td></tr>`;
+            });
+            tableHTML += "</table>";
+            container.innerHTML = tableHTML;
+        },
+        toggleInspector: () => {
+            elementsState.isInspecting = !elementsState.isInspecting;
+            const button = document.getElementById('inspector-toggle');
+            if (button) button.style.backgroundColor = elementsState.isInspecting ? '#0ea5e9' : 'transparent';
+            document.body.style.cursor = elementsState.isInspecting ? 'crosshair' : 'default';
+
+            const mouseoverHandler = (e) => elementsHelpers.highlightOnPage(e.target);
+            const clickHandler = (e) => {
+                if (!elementsState.isInspecting || e.target.closest("#dev-panel")) return;
+                e.preventDefault(); e.stopPropagation();
+                elementsHelpers.selectElement(e.target);
+                elementsHelpers.revealInTree(e.target);
+                elementsHelpers.toggleInspector();
+            };
+
+            if (elementsState.isInspecting) {
+                document.addEventListener('mouseover', mouseoverHandler);
+                document.addEventListener('click', clickHandler, { capture: true });
+            } else {
+                document.removeEventListener('mouseover', mouseoverHandler);
+                document.removeEventListener('click', clickHandler, { capture: true });
+                if (elementsState.lastInspectedElement) elementsState.lastInspectedElement.style.outline = '';
+            }
+        },
+        revealInTree: (element) => {
+             let current = element;
+             while(current) {
+                 const treeNode = elementsState.domElementToTreeNode.get(current);
+                 if(treeNode) {
+                     const childrenContainer = treeNode.parentElement.querySelector('.element-children');
+                     if(childrenContainer) childrenContainer.classList.remove('hidden');
+                     const icon = treeNode.querySelector('.expand-icon');
+                     if (icon) icon.textContent = 'arrow_drop_down';
+                 }
+                 current = current.parentElement;
+             }
+             elementsState.domElementToTreeNode.get(element)?.scrollIntoView({ block: 'center' });
+        }
+    };
 });
