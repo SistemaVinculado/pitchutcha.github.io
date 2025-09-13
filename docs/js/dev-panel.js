@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.2.0"; // Versão atualizada com console melhorado
+    const DEV_PANEL_VERSION = "1.3.0"; // Versão atualizada com "Copiar" no console
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
     const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
@@ -122,22 +122,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
-    // FUNÇÃO DO CONSOLE ATUALIZADA
     function renderConsoleTab() { 
-        panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2"></div>';
+        panelContent.innerHTML = '<div id="console-output" class="flex-1 overflow-y-auto p-2 relative"></div>'; // Adicionado 'relative'
         const consoleInput = document.getElementById("console-input");
         if (consoleInput) {
             consoleInput.addEventListener("keydown", e => {
-                // Executa com Enter (sem Shift)
                 if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault(); 
                     const command = consoleInput.value;
                     if (command) {
                         consoleInput.value = "";
-                        consoleInput.rows = 1; // Reseta a altura
+                        consoleInput.rows = 1;
                         logToPanel({ type: "log", args: [`> ${command}`] });
                         try {
-                            // Usamos eval para permitir comandos mais complexos
                             const result = eval(command);
                             if (result !== undefined) {
                                 logToPanel({ type: "info", args: [result] });
@@ -148,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             });
-            // Auto-ajuste da altura do textarea
             consoleInput.addEventListener('input', () => {
                 consoleInput.style.height = 'auto';
                 consoleInput.style.height = (consoleInput.scrollHeight) + 'px';
@@ -212,32 +208,49 @@ document.addEventListener("DOMContentLoaded", () => {
         </tbody></table></div>`;
     }
 
+    // FUNÇÃO ATUALIZADA COM BOTÃO DE COPIAR
     function logToPanel(log) {
         const consoleOutput = document.getElementById("console-output");
         if (!consoleOutput) return;
+
         let color = "text-white";
         if (log.type === "error") color = "text-red-400";
         if (log.type === "warn") color = "text-yellow-400";
         if (log.type === "info") color = "text-sky-400";
-        const item = document.createElement("div");
-        item.className = `console-log-item py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
         
-        let content = '';
+        const item = document.createElement("div");
+        item.className = `console-log-item group relative py-1 px-2 border-b border-gray-800 flex gap-2 ${color}`;
+        
+        let contentText = '';
         try {
-            content = log.args.map(arg => {
+            contentText = log.args.map(arg => {
                 if (typeof arg === "string") return arg;
-                if (arg instanceof Node) return arg.outerHTML; // Mostra o HTML de elementos
-                // Formata objetos e arrays de forma legível
-                return JSON.stringify(arg, (key, value) => 
-                    typeof value === 'object' && value !== null ? value : value, 2
-                );
+                if (arg instanceof Node) return arg.outerHTML;
+                return JSON.stringify(arg, null, 2);
             }).join(" ");
         } catch (e) {
-            content = "Não foi possível exibir o objeto."
+            contentText = "Não foi possível exibir o objeto.";
         }
 
-        item.innerHTML = `<span class="opacity-50">${new Date().toLocaleTimeString()}</span><div class="flex-1 whitespace-pre-wrap">${content}</div>`;
+        item.innerHTML = `
+            <span class="opacity-50">${new Date().toLocaleTimeString()}</span>
+            <div class="flex-1 whitespace-pre-wrap">${contentText}</div>
+            <button class="copy-log-btn absolute top-1 right-1 p-1 text-xs bg-gray-700 rounded-md text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">Copiar</button>
+        `;
+        
         consoleOutput.appendChild(item);
+
+        const copyButton = item.querySelector('.copy-log-btn');
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(contentText).then(() => {
+                copyButton.textContent = 'Copiado!';
+                setTimeout(() => { copyButton.textContent = 'Copiar'; }, 2000);
+            }).catch(err => {
+                copyButton.textContent = 'Erro!';
+                console.error('Falha ao copiar: ', err);
+            });
+        });
+
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
 
