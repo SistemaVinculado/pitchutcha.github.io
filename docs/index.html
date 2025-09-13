@@ -33,7 +33,19 @@
     {% endfor %}
 </section>
 
-<section class="mt-16">
+<section class="my-16">
+    <div class="feature-block">
+        <div class="feature-block-icon">
+            <span class="material-symbols-outlined text-3xl">lightbulb</span>
+        </div>
+        <div class="feature-block-content">
+            <h4>Dica do Dia: Complexidade de Algoritmos</h4>
+            <p>Entender a Notação Big O é crucial para escrever um código eficiente. Um algoritmo O(log n) é significativamente mais rápido para grandes volumes de dados do que um O(n).</p>
+        </div>
+    </div>
+</section>
+
+<section>
     <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-8 text-center">Tópicos Recentes</h2>
     <div class="space-y-4">
         {% for post in site.posts offset: 2 %}
