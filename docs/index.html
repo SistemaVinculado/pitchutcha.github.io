@@ -24,10 +24,8 @@ layout: null
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 
-    <!-- Biblioteca Three.js para o Globo 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     
-    <!-- Estilos adicionais para o container do globo e a transição suave -->
     <style>
         #globe-container::after {
             content: '';
@@ -37,10 +35,10 @@ layout: null
             width: 100%;
             height: 40%;
             background: linear-gradient(to top, #0d1117, transparent);
-            z-index: 2; /* Fica acima do canvas, mas abaixo do texto */
+            z-index: 2;
         }
         body {
-             background-color: #0d1117; /* Garante fundo escuro consistente */
+             background-color: #0d1117;
         }
     </style>
 </head>
@@ -76,28 +74,21 @@ layout: null
     </div>
 
     <main>
-        <!-- SEÇÃO DO HERO COM O GLOBO 3D -->
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[75vh] md:min-h-[80vh] px-4 overflow-hidden">
-            
-            <!-- Container do Globo 3D (será posicionado no fundo) -->
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
-
-            <!-- Conteúdo do Hero (fica na frente do globo) -->
             <div class="relative z-10">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">Vamos construir a partir daqui</h1>
                 <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-400">O seu guia completo de Ciência da Computação para construir, escalar e otimizar software com conhecimento sólido.</p>
-                
                 <form action="search.html" method="get" class="main-search-form mt-8 flex justify-center w-full max-w-2xl mx-auto">
                     <input type="search" name="q" placeholder="Pesquisar por 'Busca Binária', 'Listas Ligadas'..." class="w-full bg-[#0d1117] border border-gray-600 rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
                     <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-md px-6 py-2.5">Pesquisar</button>
                 </form>
             </div>
         </div>
-
+        
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Produtividade Desencadeada</h2>
             <p class="mt-4 text-center text-gray-400 max-w-3xl mx-auto">Acelere a inovação em qualquer escala com a plataforma de desenvolvimento mais completa do mundo.</p>
-
             <div class="mt-12 grid md:grid-cols-2 gap-8">
                 <div class="p-8 rounded-lg feature-card">
                     <h3 class="text-2xl font-semibold">Artigos Aprofundados</h3>
@@ -117,7 +108,6 @@ layout: null
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Conhecimento é Segurança</h2>
             <p class="mt-4 text-center text-gray-400 max-w-3xl mx-auto">Incorpore as melhores práticas no seu fluxo de trabalho de desenvolvimento com funcionalidades que o ajudam a encontrar vulnerabilidades e a otimizar seu código.</p>
-
             <div class="mt-12 grid md:grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="p-6 rounded-lg feature-card">
                     <h3 class="text-xl font-semibold">Análise de Complexidade</h3>
@@ -178,155 +168,7 @@ layout: null
 
     <script src="js/script.js" defer></script>
     <script src="js/dev-panel.js" defer></script>
-    
-    <!-- SCRIPT DO GLOBO 3D -->
-    <script type="module">
-        // --- Configuração Básica ---
-        let scene, camera, renderer;
-        let globeGroup; 
-        const radius = 1; 
-        const comets = []; 
+    <script type="module" src="js/globe-animation.js" defer></script>
 
-        function init() {
-            const container = document.getElementById('globe-container');
-            if (!container) return;
-
-            // Cena
-            scene = new THREE.Scene();
-
-            // Câmera
-            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.z = 2.2; // Posição inicial da câmera ajustada
-
-            // Renderizador
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container.appendChild(renderer.domElement);
-
-            // Grupo do Globo
-            globeGroup = new THREE.Group();
-            scene.add(globeGroup);
-
-            // --- Fundo Estrelado ---
-            const starGeometry = new THREE.BufferGeometry();
-            const starVertices = [];
-            for (let i = 0; i < 10000; i++) {
-                const x = (Math.random() - 0.5) * 2000;
-                const y = (Math.random() - 0.5) * 2000;
-                const z = (Math.random() - 0.5) * 2000;
-                if (Math.sqrt(x*x + y*y + z*z) > 100) {
-                     starVertices.push(x, y, z);
-                }
-            }
-            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-            const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7, transparent: true, opacity: 0.8 });
-            const stars = new THREE.Points(starGeometry, starMaterial);
-            scene.add(stars);
-
-            // --- Pontos do Globo ---
-            const pointCount = 5000;
-            const vertices = [];
-            for (let i = 0; i < pointCount; i++) {
-                const phi = Math.acos(-1 + (2 * i) / pointCount);
-                const theta = Math.sqrt(pointCount * Math.PI) * phi;
-                const x = radius * Math.cos(theta) * Math.sin(phi);
-                const y = radius * Math.sin(theta) * Math.sin(phi);
-                const z = radius * Math.cos(phi);
-                vertices.push(x, y, z);
-            }
-            const pointsGeometry = new THREE.BufferGeometry();
-            pointsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-            const pointsMaterial = new THREE.PointsMaterial({ color: 0x4B8BBE, size: 0.005, transparent: true, opacity: 0.8 });
-            const points = new THREE.Points(pointsGeometry, pointsMaterial);
-            globeGroup.add(points);
-
-            // --- Linhas de Conexão ---
-            const lineSegments = 100;
-            const linePoints = [];
-            const allPositions = pointsGeometry.attributes.position.array;
-            for (let i = 0; i < lineSegments; i++) {
-                const startIndex = Math.floor(Math.random() * pointCount);
-                const endIndex = Math.floor(Math.random() * pointCount);
-                linePoints.push(
-                    allPositions[startIndex * 3], allPositions[startIndex * 3 + 1], allPositions[startIndex * 3 + 2],
-                    allPositions[endIndex * 3], allPositions[endIndex * 3 + 1], allPositions[endIndex * 3 + 2]
-                );
-            }
-            const lineGeometry = new THREE.BufferGeometry();
-            lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePoints, 3));
-            const lineMaterial = new THREE.LineBasicMaterial({ color: 0x4B8BBE, transparent: true, opacity: 0.05 });
-            const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-            globeGroup.add(lines);
-
-            // --- Arcos de Luz (Cometas) ---
-            setInterval(createComet, 2000);
-
-            // --- Listener de Evento de Redimensionamento ---
-            window.addEventListener('resize', onWindowResize, false);
-        }
-        
-        function createComet() {
-            const startPoint = getRandomPointOnSphere(radius);
-            const endPoint = getRandomPointOnSphere(radius);
-            const controlPoint = startPoint.clone().add(endPoint).multiplyScalar(0.5).normalize().multiplyScalar(radius * 1.5);
-            const curve = new THREE.QuadraticBezierCurve3(startPoint, controlPoint, endPoint);
-
-            const cometGeometry = new THREE.SphereGeometry(0.01, 8, 8);
-            const cometMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1.0 });
-            const comet = new THREE.Mesh(cometGeometry, cometMaterial);
-
-            comets.push({ mesh: comet, curve: curve, progress: 0 });
-            globeGroup.add(comet);
-        }
-
-        function getRandomPointOnSphere(r) {
-            const u = Math.random();
-            const v = Math.random();
-            const theta = 2 * Math.PI * u;
-            const phi = Math.acos(2 * v - 1);
-            const x = r * Math.sin(phi) * Math.cos(theta);
-            const y = r * Math.sin(phi) * Math.sin(theta);
-            const z = r * Math.cos(phi);
-            return new THREE.Vector3(x, y, z);
-        }
-        
-        function onWindowResize() {
-            const container = document.getElementById('globe-container');
-            if (!container) return;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Rotação automática constante
-            globeGroup.rotation.y += 0.0005;
-
-            // Animação dos cometas
-            for (let i = comets.length - 1; i >= 0; i--) {
-                const c = comets[i];
-                c.progress += 0.01;
-                
-                if (c.progress > 0.8) {
-                    c.mesh.material.opacity = 1.0 - (c.progress - 0.8) / 0.2;
-                }
-                
-                if (c.progress >= 1) {
-                    globeGroup.remove(c.mesh);
-                    comets.splice(i, 1);
-                } else {
-                    const point = c.curve.getPoint(c.progress);
-                    c.mesh.position.copy(point);
-                }
-            }
-            renderer.render(scene, camera);
-        }
-        
-        init();
-        animate();
-    </script>
 </body>
 </html>
