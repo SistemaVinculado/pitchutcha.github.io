@@ -40,6 +40,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
+     * NOVO: Lógica do Menu Móvel (para a nova landing page)
+     * Adicionada a partir da nova index.html para centralizar os scripts.
+     */
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    /**
      * NOVO: Lógica da Barra de Anúncios Global
      * Verifica se o banner foi dispensado e o exibe/oculta conforme necessário.
      */
