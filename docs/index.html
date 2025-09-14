@@ -7,10 +7,22 @@ layout: null
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pitchutcha: Vamos construir a partir daqui</title>
+
+    <meta name="description" content="O seu guia completo de Ciência da Computação para construir, escalar e otimizar software com conhecimento sólido.">
+    <meta property="og:title" content="Pitchutcha: Vamos construir a partir daqui">
+    <meta property="og:description" content="Explore guias detalhados, exemplos de código e artigos aprofundados sobre Algoritmos e Estruturas de Dados.">
+    <meta property="og:image" content="https://sistemavinculado.github.io/pitchutcha.github.io/assets/default-social-image.png">
+    <meta property="og:url" content="https://sistemavinculado.github.io/pitchutcha.github.io/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pitchutcha: Vamos construir a partir daqui">
+    <meta name="twitter:description" content="O seu guia completo de Ciência da Computação para construir, escalar e otimizar software com conhecimento sólido.">
+    <meta name="twitter:image" content="https://sistemavinculado.github.io/pitchutcha.github.io/assets/default-social-image.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 </head>
 <body>
 
@@ -26,12 +38,14 @@ layout: null
             </nav>
         </div>
         <div class="flex items-center space-x-4">
-            <input type="text" placeholder="Pesquisar na Pitchutcha" class="hidden lg:block bg-[#0d1117] border border-gray-600 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <form action="search.html" method="get" class="hidden lg:block">
+                <input type="search" name="q" placeholder="Pesquisar na Pitchutcha" class="bg-[#0d1117] border border-gray-600 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </form>
             <button class="rounded-full p-2 hover:bg-gray-800" id="theme-toggle">
                 <span class="sr-only">Alternar tema</span>
                 <span class="material-symbols-outlined">dark_mode</span>
             </button>
-            <button id="menu-btn" class="md:hidden">
+            <button id="menu-btn" class="md:hidden" aria-controls="mobile-menu" aria-expanded="false">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
@@ -54,10 +68,6 @@ layout: null
                 <input type="search" name="q" placeholder="Pesquisar por 'Busca Binária', 'Listas Ligadas'..." class="w-full bg-[#0d1117] border border-gray-600 rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
                 <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-md px-6 py-2.5">Pesquisar</button>
             </form>
-
-            <div class="mt-8">
-                <img src="https://github.githubassets.com/assets/hero-drone-05ea167425b0.jpg" alt="Globo animado de conexões de programadores" class="mx-auto w-full max-w-5xl">
-            </div>
         </div>
 
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
@@ -69,13 +79,13 @@ layout: null
                     <h3 class="text-2xl font-semibold">Artigos Aprofundados</h3>
                     <p class="mt-2 text-gray-400">Explore guias detalhados e exemplos de código práticos sobre os algoritmos mais importantes da computação moderna.</p>
                     <a href="algoritmos.html" class="mt-4 inline-block text-blue-400 hover:underline">Explore os Algoritmos &rarr;</a>
-                    <img src="https://placehold.co/600x400/000000/e6edf3?text=Visual+de+Algoritmos" class="mt-6 rounded-md" alt="Imagem da seção de Algoritmos">
+                    <img src="https://placehold.co/600x400/0d1117/e6edf3?text=Código+de+Algoritmo" loading="lazy" class="mt-6 rounded-md" alt="Exemplo de código de um algoritmo complexo.">
                 </div>
                 <div class="p-8 rounded-lg feature-card">
                     <h3 class="text-2xl font-semibold">Estruturas Fundamentais</h3>
                     <p class="mt-2 text-gray-400">Aprenda como organizar dados de forma eficiente com nossas explicações claras sobre Arrays, Listas, Árvores e outras estruturas de dados essenciais.</p>
                     <a href="estruturas-de-dados.html" class="mt-4 inline-block text-blue-400 hover:underline">Explore Estruturas de Dados &rarr;</a>
-                    <img src="https://placehold.co/600x400/000000/e6edf3?text=Visual+de+Estruturas+de+Dados" class="mt-6 rounded-md" alt="Imagem da seção de Estruturas de Dados">
+                    <img src="https://placehold.co/600x400/0d1117/e6edf3?text=Visualização+de+Árvore+Binária" loading="lazy" class="mt-6 rounded-md" alt="Diagrama de uma estrutura de dados de árvore binária.">
                 </div>
             </div>
         </div>
@@ -143,5 +153,6 @@ layout: null
     </footer>
 
     <script src="js/script.js" defer></script>
+    <script src="js/dev-panel.js" defer></script>
 </body>
 </html>
