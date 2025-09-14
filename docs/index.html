@@ -185,10 +185,6 @@ layout: null
         let scene, camera, renderer;
         let globeGroup; 
         const radius = 1; 
-
-        // --- Variáveis de Interação ---
-        let isMouseDown = false;
-        let previousMousePosition = { x: 0, y: 0 };
         const comets = []; 
 
         function init() {
@@ -266,8 +262,8 @@ layout: null
             // --- Arcos de Luz (Cometas) ---
             setInterval(createComet, 2000);
 
-            // --- Listeners de Eventos ---
-            addEventListeners();
+            // --- Listener de Evento de Redimensionamento ---
+            window.addEventListener('resize', onWindowResize, false);
         }
         
         function createComet() {
@@ -295,46 +291,6 @@ layout: null
             return new THREE.Vector3(x, y, z);
         }
         
-        function addEventListeners() {
-            const container = document.getElementById('globe-container');
-
-            container.addEventListener('mousedown', (e) => { isMouseDown = true; });
-            window.addEventListener('mouseup', (e) => { isMouseDown = false; });
-            window.addEventListener('mousemove', (e) => {
-                if (!isMouseDown) return;
-                const deltaX = e.clientX - previousMousePosition.x;
-                const deltaY = e.clientY - previousMousePosition.y;
-                globeGroup.rotation.y += deltaX * 0.005;
-                globeGroup.rotation.x += deltaY * 0.005;
-                previousMousePosition = { x: e.clientX, y: e.clientY };
-            });
-            
-            container.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 1) {
-                    isMouseDown = true;
-                    previousMousePosition.x = e.touches[0].clientX;
-                    previousMousePosition.y = e.touches[0].clientY;
-                }
-            }, { passive: true });
-            window.addEventListener('touchend', () => { isMouseDown = false; });
-            window.addEventListener('touchmove', (e) => {
-                if (!isMouseDown || e.touches.length !== 1) return;
-                const deltaX = e.touches[0].clientX - previousMousePosition.x;
-                const deltaY = e.touches[0].clientY - previousMousePosition.y;
-                globeGroup.rotation.y += deltaX * 0.005;
-                globeGroup.rotation.x += deltaY * 0.005;
-                previousMousePosition.x = e.touches[0].clientX;
-                previousMousePosition.y = e.touches[0].clientY;
-            }, { passive: true });
-
-            window.addEventListener('wheel', (e) => {
-                camera.position.z += e.deltaY * 0.005;
-                camera.position.z = Math.max(1.8, Math.min(camera.position.z, 5));
-            });
-            
-            window.addEventListener('resize', onWindowResize, false);
-        }
-
         function onWindowResize() {
             const container = document.getElementById('globe-container');
             if (!container) return;
@@ -346,10 +302,10 @@ layout: null
         function animate() {
             requestAnimationFrame(animate);
 
-            if (!isMouseDown) {
-                globeGroup.rotation.y += 0.0005;
-            }
+            // Rotação automática constante
+            globeGroup.rotation.y += 0.0005;
 
+            // Animação dos cometas
             for (let i = comets.length - 1; i >= 0; i--) {
                 const c = comets[i];
                 c.progress += 0.01;
@@ -374,4 +330,3 @@ layout: null
     </script>
 </body>
 </html>
-
