@@ -42,9 +42,9 @@
   src: url('../fonts/jetbrains-mono-v23-latin-500.woff2') format('woff2');
 }
 
-/* Configurações Globais e Tema Padrão (Alto Contraste) */
+/* Configurações Globais e Tema Padrão */
 :root {
-    --primary-color: #ffff00;
+    --primary-color: #1f6feb; /* Cor primária alterada para azul */
     --secondary-color: #1a1a1a;
     --text-primary: #ffffff;
     --text-secondary: #cccccc;
@@ -53,7 +53,7 @@
     --tab-size-preference: 4;
     --font-sans: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
-    --line-height-body: 1.65; /* RECOMENDAÇÃO: Altura de linha para leitura */
+    --line-height-body: 1.65;
 }
 
 body {
@@ -66,12 +66,10 @@ pre, code {
     -moz-tab-size: var(--tab-size-preference);
 }
 
-/* RECOMENDAÇÃO: Melhora a experiência de leitura nos artigos */
 article p, article li {
     line-height: var(--line-height-body);
 }
 
-/* RECOMENDAÇÃO: Adiciona feedback visual suave para elementos interativos */
 a, button {
     transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
