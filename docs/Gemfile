@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+# Define o Jekyll e todos os plugins compatíveis com o GitHub Pages
+gem "github-pages", group: :jekyll_plugins
+
+# Adiciona o plugin para minificação de HTML, CSS e JS
+gem "jekyll-minifier"
