@@ -21,14 +21,11 @@ jobs:
           PYODIDE_VERSION="v0.25.1"
           curl -L https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-${PYODIDE_VERSION}.tar.bz2 -o pyodide.tar.bz2
           tar -xvf pyodide.tar.bz2
-          # Copia apenas os arquivos de distribuição para a nossa pasta vendor
-          cp -r pyodide/dist/* docs/js/vendor/pyodide/
+          # CORREÇÃO: Copia da pasta extraída com o nome da versão.
+          cp -r pyodide-${PYODIDE_VERSION}/dist/* docs/js/vendor/pyodide/
 
       - name: Commit Pyodide files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "feat: Add Pyodide files locally to vendor directory"
           file_pattern: "docs/js/vendor/pyodide"
-          # Adiciona LFS para arquivos grandes se necessário (descomente se o push falhar)
-          # commit_options: '--all --force'
-          # push_options: '--force'
