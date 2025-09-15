@@ -27,6 +27,36 @@ layout: null
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     
     <style>
+        /* Estilos do Carrossel de Logos */
+        .logo-carousel-container {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .logo-carousel-track {
+            display: flex;
+            width: max-content; /* Garante que todos os logos estejam na mesma linha */
+            animation: scroll-left 40s linear infinite; /* Ajuste a duração para controlar a velocidade */
+        }
+        .logo-carousel-track:hover {
+            animation-play-state: paused; /* Pausa no hover */
+        }
+
+        .logo-carousel-item {
+            flex-shrink: 0; /* Impede que os itens encolham */
+            width: 180px; /* Largura fixa para cada logo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2rem; /* Espaçamento entre logos */
+            height: 60px; /* Altura para centralizar verticalmente */
+        }
+        
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Rola até a metade para o loop perfeito */
+        }
+
         #globe-container::after {
             content: '';
             position: absolute;
@@ -50,13 +80,13 @@ layout: null
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4zM0 16C0 7.16 7.16 0 16 0s16 7.16 16 16-7.16 16-16 16S0 24.84 0 16z"/>
             </svg>
             <nav class="hidden md:flex items-center space-x-4 text-[var(--text-secondary)]">
-                <a href="docs.html" class="hover:text-[var(--primary-color)]">Documentação</a>
-                <a href="status.html" class="hover:text-[var(--primary-color)]">Status</a>
+                <a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Documentação</a>
+                <a href="{{ '/status.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Status</a>
                 <a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="hover:text-[var(--primary-color)]">Open Source</a>
             </nav>
         </div>
         <div class="flex items-center space-x-4">
-            <form action="search.html" method="get" class="hidden lg:block">
+            <form action="{{ '/search.html' | relative_url }}" method="get" class="hidden lg:block">
                 <input type="search" name="q" placeholder="Pesquisar na Pitchutcha" class="bg-[#0d1117] border border-[var(--secondary-color)] rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500">
             </form>
             <button id="menu-btn" class="md:hidden" aria-controls="mobile-menu" aria-expanded="false">
@@ -68,8 +98,8 @@ layout: null
     </header>
 
     <div id="mobile-menu" class="hidden md:hidden bg-[#0d1117] absolute top-16 left-0 w-full z-40">
-        <a href="docs.html" class="block px-8 py-3 hover:bg-gray-800">Documentação</a>
-        <a href="status.html" class="block px-8 py-3 hover:bg-gray-800">Status</a>
+        <a href="{{ '/docs.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Documentação</a>
+        <a href="{{ '/status.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Status</a>
         <a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="block px-8 py-3 hover:bg-gray-800">Open Source</a>
     </div>
 
@@ -81,7 +111,7 @@ layout: null
             <div class="relative z-10">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">Domine os Fundamentos da Computação</h1>
                 <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Guias aprofundados, artigos e exemplos de código sobre Algoritmos e Estruturas de Dados para construir software de alta performance.</p>
-                <form action="search.html" method="get" class="main-search-form mt-8 flex justify-center w-full max-w-2xl mx-auto">
+                <form action="{{ '/search.html' | relative_url }}" method="get" class="main-search-form mt-8 flex justify-center w-full max-w-2xl mx-auto">
                     <input type="search" name="q" placeholder="Pesquisar por 'Busca Binária', 'Listas Ligadas'..." class="w-full bg-[#0d1117] border border-[var(--secondary-color)] rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
                     <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-md px-6 py-2.5">Pesquisar</button>
                 </form>
@@ -92,30 +122,63 @@ layout: null
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Produtividade Desencadeada</h2>
             <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto">Acelere a inovação em qualquer escala com a plataforma de desenvolvimento mais completa do mundo.</p>
             <div class="mt-12 grid md:grid-cols-2 gap-8">
+                {% assign article1 = site.articles | where:"title","Introdução ao Design de Algoritmos" | first %}
+                {% if article1 %}
                 <div class="p-8 rounded-lg feature-card">
-                    <h3 class="text-2xl font-semibold">Introdução ao Design de Algoritmos</h3>
-                    <p class="mt-2 text-[var(--text-secondary)]">Aprenda o básico de design e análise de algoritmos, incluindo complexidade, Big O, e paradigmas comuns como dividir para conquistar.</p>
-                    <a href="algoritmos.html" class="mt-4 inline-block text-[var(--primary-color)] hover:underline">Explorar Algoritmos &rarr;</a>
-                    <img src="/assets/images/introduction-to-algorithm-design.jpg" loading="lazy" class="mt-6 rounded-md" alt="Visualização dos pilares do Design de Algoritmos.">
+                    <h3 class="text-2xl font-semibold">{{ article1.title }}</h3>
+                    <p class="mt-2 text-[var(--text-secondary)]">{{ article1.excerpt }}</p>
+                    <a href="{{ article1.url | relative_url }}" class="mt-4 inline-block text-[var(--primary-color)] hover:underline">Explorar Artigo &rarr;</a>
+                    <img src="{{ article1.image | relative_url }}" loading="lazy" class="mt-6 rounded-md w-full h-auto object-cover" alt="{{ article1.alt_image_text | default: article1.title }}">
                 </div>
+                {% endif %}
+
+                {% assign article2 = site.articles | where:"title","Visão Geral de Estruturas de Dados" | first %}
+                {% if article2 %}
                 <div class="p-8 rounded-lg feature-card">
-                    <h3 class="text-2xl font-semibold">Visão Geral de Estruturas de Dados</h3>
-                    <p class="mt-2 text-[var(--text-secondary)]">Explore estruturas de dados como arrays, listas ligadas, pilhas e filas, e entenda sua importância na resolução eficiente de problemas.</p>
-                    <a href="estruturas-de-dados.html" class="mt-4 inline-block text-[var(--primary-color)] hover:underline">Explorar Estruturas de Dados &rarr;</a>
-                    <img src="/assets/images/data-structures-overview.jpg" loading="lazy" class="mt-6 rounded-md" alt="Visualização de Estruturas de Dados como Listas Ligadas e Tabelas Hash.">
+                    <h3 class="text-2xl font-semibold">{{ article2.title }}</h3>
+                    <p class="mt-2 text-[var(--text-secondary)]">{{ article2.excerpt }}</p>
+                    <a href="{{ article2.url | relative_url }}" class="mt-4 inline-block text-[var(--primary-color)] hover:underline">Explorar Artigo &rarr;</a>
+                    <img src="{{ article2.image | relative_url }}" loading="lazy" class="mt-6 rounded-md w-full h-auto object-cover" alt="{{ article2.alt_image_text | default: article2.title }}">
                 </div>
+                {% endif %}
             </div>
         </div>
         
-        <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
-            <h3 class="text-center text-lg text-[var(--text-secondary)]">Com a confiança de profissionais e estudantes de:</h3>
-            <div class="mt-8 flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
-                <svg class="h-8 fill-current text-gray-500 transition-colors hover:text-white" viewBox="0 0 128 32"><path d="M116.7,20.4h-5.5v-3.2h5.5v3.2Zm-6.3-13.4h6.3v2.8h-6.3v-2.8Zm-31.1,0h6.3v2.8h-6.3v-2.8Zm-6.3,0h6.3v2.8h-6.3v-2.8Zm-6.3,0h6.3v2.8h-6.3v-2.8Zm-6.3,0h6.3v2.8h-6.3v-2.8Zm-6.3,0h6.3v2.8h-6.3v-2.8Zm-6.3,0h6.3v2.8h-6.3v-2.8Zm-6.3,0h6.3v2.8h-6.3v-2.8Zm-6.3,0h6.3v2.8h-6.3v-2.8Zm-6.3,0h6.3v2.8h-6.3v-2.8Zm-6.3,0H11v2.8H4.7v-2.8Zm55.3,13.4h6.3v2.8h-6.3v-2.8Z M128,7V28c0,2.2-1.8,4-4,4H4c-2.2,0-4-1.8-4-4V7H128z M12,0C5.4,0,0,5.4,0,12v16c0,4.4,3.6,8,8,8h112c4.4,0,8-3.6,8-8V12c0-6.6-5.4-12-12-12H12z"/></svg>
-                <p class="text-2xl font-bold text-gray-500 transition-colors hover:text-white">Google</p>
-                <p class="text-2xl font-bold text-gray-500 transition-colors hover:text-white">USP</p>
-                <p class="text-2xl font-bold text-gray-500 transition-colors hover:text-white">Microsoft</p>
-                <p class="text-2xl font-bold text-gray-500 transition-colors hover:text-white">UFMG</p>
-                <svg class="h-8 fill-current text-gray-500 transition-colors hover:text-white" viewBox="0 0 128 32"><path d="M64,0C28.7,0,0,28.7,0,64s28.7,64,64,64s64-28.7,64-64S99.3,0,64,0z M88.4,96.8l-24-18.2l-24,18.2l4.6-26.7l-19.4-18.9l26.8-3.9L64,21.2l12,24.1l26.8,3.9l-19.4,18.9L88.4,96.8z"/></svg>
+        <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32 text-center">
+            <h3 class="text-lg text-[var(--text-secondary)]">Com a confiança de profissionais e estudantes de:</h3>
+            <div class="mt-8 logo-carousel-container">
+                <div class="logo-carousel-track">
+                    {% assign logos = "aws,google,microsoft,usp,ufmg,harvard,stanford,apple,meta,ibm,mit" | split: "," %}
+                    {% for i in (1..2) %} {# Loop para duplicar a pista #}
+                        {% for logo_name in logos %}
+                            <div class="logo-carousel-item">
+                                {% comment %} Substitua estas SVGs genéricas pelas logos reais, se tiver. {% endcomment %}
+                                {% case logo_name %}
+                                    {% when "aws" %}
+                                        <svg class="h-10 fill-current text-gray-500 hover:text-white transition-colors" role="img" viewBox="0 0 200 60"><title>Amazon Web Services</title><path d="M129.5 45.3c-2.3-2.1-4.8-3.4-7.5-3.9-2.7-.5-5.6-.4-8.7-.3-3.2 0-6.1.1-8.7.3-2.7.5-5.2 1.8-7.5 3.9-2.3 2.1-3.8 4.7-4.6 7.9-.8 3.2-.8 6.7-.8 10.5 0 3.8 0 7.3.8 10.5.8 3.2 2.3 5.8 4.6 7.9 2.3 2.1 4.8 3.4 7.5 3.9 2.7.5 5.6.4 8.7.3 3.2 0 6.1-.1 8.7-.3 2.7-.5 5.2-1.8 7.5-3.9 2.3-2.1 3.8-4.7 4.6-7.9.8-3.2.8-6.7.8-10.5 0-3.8 0-7.3-.8-10.5-.8-3.2-2.3-5.8-4.6-7.9zM120 74.3c-.7 1.8-1.7 3.1-3.1 3.9-1.4.8-2.9 1.2-4.6 1.2-1.7 0-3.2-.4-4.6-1.2-1.4-.8-2.4-2.1-3.1-3.9-.7-1.8-1.1-3.9-1.1-6.4 0-2.5.4-4.6 1.1-6.4.7-1.8 1.7-3.1 3.1-3.9 1.4-.8 2.9-1.2 4.6-1.2 1.7 0 3.2.4 4.6 1.2 1.4.8 2.4 2.1 3.1 3.9.7 1.8 1.1 3.9 1.1 6.4 0 2.5-.4 4.6-1.1 6.4zM169.1 45.3c-2.3-2.1-4.8-3.4-7.5-3.9-2.7-.5-5.6-.4-8.7-.3-3.2 0-6.1.1-8.7.3-2.7.5-5.2 1.8-7.5 3.9-2.3 2.1-3.8 4.7-4.6 7.9-.8 3.2-.8 6.7-.8 10.5 0 3.8 0 7.3.8 10.5.8 3.2 2.3 5.8 4.6 7.9 2.3 2.1 4.8 3.4 7.5 3.9 2.7.5 5.6.4 8.7.3 3.2 0 6.1-.1 8.7-.3 2.7-.5 5.2-1.8 7.5-3.9 2.3-2.1 3.8-4.7 4.6-7.9.8-3.2.8-6.7.8-10.5 0-3.8 0-7.3-.8-10.5-.8-3.2-2.3-5.8-4.6-7.9zM159.6 74.3c-.7 1.8-1.7 3.1-3.1 3.9-1.4.8-2.9 1.2-4.6 1.2-1.7 0-3.2-.4-4.6-1.2-1.4-.8-2.4-2.1-3.1-3.9-.7-1.8-1.1-3.9-1.1-6.4 0-2.5.4-4.6 1.1-6.4.7-1.8 1.7-3.1 3.1-3.9 1.4-.8 2.9-1.2 4.6-1.2 1.7 0 3.2.4 4.6 1.2 1.4.8 2.4 2.1 3.1 3.9.7 1.8 1.1 3.9 1.1 6.4 0 2.5-.4 4.6-1.1 6.4zM196.3 59.5l-2.7-2.3-1.6 1.8 2.7 2.3 1.6-1.8zM0 0h200v100H0V0z"/></svg>
+                                    {% when "google" %}
+                                        <svg class="h-8 fill-current text-gray-500 hover:text-white transition-colors" role="img" viewBox="0 0 24 24"><title>Google</title><path d="M12.24 10.27v1.89h6.66c-.28 1.86-2.12 3.61-6.66 3.61-4.04 0-7.33-3.29-7.33-7.33s3.29-7.33 7.33-7.33c2.19 0 3.6.95 4.41 1.73l1.37-1.35C16.89 2.37 14.62 0 12.24 0 5.48 0 0 5.48 0 12.24c0 6.76 5.48 12.24 12.24 12.24 6.36 0 10.66-4.63 10.66-10.36 0-.7-.06-1.39-.17-2.07z"/></svg>
+                                    {% when "microsoft" %}
+                                        <svg class="h-8 fill-current text-gray-500 hover:text-white transition-colors" role="img" viewBox="0 0 24 24"><title>Microsoft</title><path d="M0 0h11.458v11.458H0zm12.542 0H24v11.458H12.542zM0 12.542h11.458V24H0zm12.542 0H24V24H12.542z"/></svg>
+                                    {% when "apple" %}
+                                        <svg class="h-8 fill-current text-gray-500 hover:text-white transition-colors" role="img" viewBox="0 0 24 24"><title>Apple</title><path d="M16.923 11.23a4.747 4.747 0 0 0 .034-.515c0-1.85-.945-3.003-2.585-3.003-1.374 0-2.31 1.055-2.88 2.65-.968-1.07-2.383-2.73-4.04-2.7-1.78.026-3.24 1.13-3.99 2.87-1.71 4.09-.274 7.55 1.492 8.528 1.15.632 2.455.97 4.07.95 1.583-.02 2.767-.358 3.826-.983 1.132-.67 2.05-1.996 2.074-3.858-.024-1.127-.674-2.404-1.503-3.54zM12.187 0c.932-.016 1.942.545 2.515 1.637-.962.063-2.04.64-2.678 1.71-.53-1.096-.922-2.34-.163-3.347z"/></svg>
+                                    {% when "meta" %}
+                                        <svg class="h-8 fill-current text-gray-500 hover:text-white transition-colors" role="img" viewBox="0 0 24 24"><title>Meta</title><path d="M22.258 12.052c-.078-4.708-3.966-8.541-8.73-8.621-4.814-.08-8.73 3.794-8.73 8.513 0 4.71 3.966 8.541 8.73 8.622 4.814.08 8.73-3.794 8.73-8.513 0-.001-.002-.001-.003-.002zm-3.805-3.204a.812.812 0 0 0-1.18.243c-1.192 1.96-2.528 3.535-4.407 4.316-.92.378-1.921.36-2.835-.018a.813.813 0 0 0-.414-.727c-.207-.123-.46-.07-.61.127-.148.196-.062.464.127.61a2.122 2.122 0 0 0 1.077.58c1.32.26 2.573.197 3.79-.31 1.867-.775 3.33-2.38 4.61-4.526a.813.813 0 0 0-.21-.806zm-7.653 7.84a.812.812 0 0 0 .243 1.18c1.192 1.96 2.528 3.535 4.407 4.316.92.378 1.921.36 2.835-.018a.813.813 0 0 0 .414-.727c.207-.123.46-.07.61.127.148.196.062.464-.127.61a2.122 2.122 0 0 0-1.077.58c-1.32.26-2.573.197-3.79-.31-1.867-.775-3.33-2.38-4.61-4.526a.813.813 0 0 0 .21-.806z"/></svg>
+                                    {% when "ibm" %}
+                                        <svg class="h-8 fill-current text-gray-500 hover:text-white transition-colors" role="img" viewBox="0 0 24 24"><title>IBM</title><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm0-20C6.477 4 2 8.477 2 14s4.477 10 10 10 10-4.477 10-10S17.523 4 12 4z"/></svg>
+                                    {% when "mit" %}
+                                        <p class="text-xl font-bold text-gray-500 hover:text-white transition-colors">MIT</p>
+                                    {% when "stanford" %}
+                                        <p class="text-xl font-bold text-gray-500 hover:text-white transition-colors">Stanford</p>
+                                    {% when "usp" %}
+                                        <p class="text-xl font-bold text-gray-500 hover:text-white transition-colors">USP</p>
+                                    {% when "ufmg" %}
+                                        <p class="text-xl font-bold text-gray-500 hover:text-white transition-colors">UFMG</p>
+                                {% endcase %}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
@@ -155,7 +218,7 @@ layout: null
                 Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.
             </p>
             <div class="mt-10">
-                <a href="docs.html" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">
+                <a href="{{ '/docs.html' | relative_url }}" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">
                     Explorar a Documentação
                 </a>
             </div>
@@ -165,9 +228,9 @@ layout: null
     
     {% include footer.html %}
 
-    <script src="js/script.js" defer></script>
-    <script src="js/dev-panel.js" defer></script>
-    <script type="module" src="js/globe-animation.js" defer></script>
+    <script src="{{ '/js/script.js' | relative_url }}" defer></script>
+    <script src="{{ '/js/dev-panel.js' | relative_url }}" defer></script>
+    <script type="module" src="{{ '/js/globe-animation.js' | relative_url }}" defer></script>
     
 </body>
 </html>
