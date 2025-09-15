@@ -7,13 +7,14 @@ jobs:
   download-fonts:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Permissão para fazer commit no repositório
+      contents: write
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
 
       - name: Baixar Google Fonts (Inter, Noto Sans, JetBrains Mono)
-        uses: fonts-actions/google-fonts@v2
+        # CORREÇÃO: O nome correto do repositório da ação é "google-fonts-actions"
+        uses: google-fonts-actions/google-fonts@v2
         with:
           fonts: |
             Inter:wght@400;500;600;700
