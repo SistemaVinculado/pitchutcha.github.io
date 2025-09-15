@@ -44,7 +44,7 @@
 
 /* Configurações Globais e Tema Padrão */
 :root {
-    --primary-color: #1f6feb; /* Cor primária alterada para azul */
+    --primary-color: #1f6feb;
     --secondary-color: #1a1a1a;
     --text-primary: #ffffff;
     --text-secondary: #cccccc;
@@ -58,6 +58,8 @@
 
 body {
     font-family: var(--font-sans);
+    background-color: var(--background-primary);
+    color: var(--text-primary);
 }
 
 pre, code {
@@ -66,12 +68,49 @@ pre, code {
     -moz-tab-size: var(--tab-size-preference);
 }
 
-article p, article li {
-    line-height: var(--line-height-body);
+/* --- RECOMENDAÇÃO: ESTADO DE FOCO PADRONIZADO (A11y) --- */
+/* Aplica um anel de foco visível para navegação por teclado, sem afetar usuários de mouse. */
+*:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    border-radius: 4px;
 }
 
+
+/* --- RECOMENDAÇÃO: ESCALA TIPOGRÁFICA FORMAL (Hierarquia Visual) --- */
+article h1, article h2, article h3, article h4 {
+    color: var(--text-primary);
+    letter-spacing: -0.025em; /* tracking-tight */
+}
+article h1 { font-size: 2.25rem; font-weight: 800; } /* text-4xl font-extrabold */
+article h2 { font-size: 1.875rem; font-weight: 700; } /* text-3xl font-bold */
+article h3 { font-size: 1.5rem; font-weight: 600; }   /* text-2xl font-semibold */
+article h4 { font-size: 1.25rem; font-weight: 600; }  /* text-xl font-semibold */
+
+article p, article li {
+    line-height: var(--line-height-body);
+    color: var(--text-secondary);
+    font-size: 1.125rem; /* text-lg */
+}
+article a {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+article strong {
+    color: var(--text-primary);
+}
+article blockquote {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+    border-left: 4px solid var(--secondary-color);
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+
+/* RECOMENDAÇÃO: Adiciona feedback visual suave para elementos interativos */
 a, button {
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
 .global-banner { background-color: var(--primary-color); color: white; padding: 0.75rem 1rem; display: flex; justify-content: center; align-items: center; position: relative; font-size: 0.9rem; }
