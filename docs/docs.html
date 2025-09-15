@@ -1,7 +1,77 @@
 ---
 ---
-<!DOCTYPE html><html><head><meta charset="utf-8"/><style>:root{--primary-color:#137fec;--secondary-color:#e7edf3;--text-primary:#0d141b;--text-secondary:#4c739a;--background-primary:#fff;--background-secondary:#f8fafc}.dark{--primary-color:#137fec;--secondary-color:#1f2d37;--text-primary:#fff;--text-secondary:#94a3b8;--background-primary:#0f172a;--background-secondary:#1e293b}</style><title>Pitchutcha</title><meta name="base-url" content="{{ '/' | relative_url }}"><meta name="description" content="{{ site.description }}"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><link rel="preload" href="{{ '/css/style.css' | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}"></noscript><link rel="icon" href="data:image/x-icon;base64," type="image/x-icon"></head><body class="bg-[var(--background-secondary)] text-[var(--text-primary)]"><div class="flex h-screen overflow-hidden"><aside class="w-80 bg-[var(--background-primary)] border-r border-[var(--secondary-color)] flex flex-col flex-shrink-0"><div class="p-6"><div class="flex items-center justify-between"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-3xl text-[var(--text-primary)]"> science </span><h1 class="text-[var(--text-primary)] text-xl font-bold">Pitchutcha</h1></div></div><p class="text-[var(--text-secondary)] text-sm mt-1">Tópicos de Ciência da Computação</p></div><nav class="flex-grow px-4 overflow-y-auto"><ul class="space-y-1"> {% assign categories = site.articles | group_by: "category" | sort: "name" %} {% for category in categories %} {% assign category_name = category.name %} {% assign first_article_in_category = category.items | first %}<li><a class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-[var(--background-secondary)] text-[var(--text-secondary)] font-medium" href="{{ category_name | slugify | append: '.html' | relative_url }}"><span class="material-symbols-outlined">{{ first_article_in_category.icon | default: 'topic' }}</span> {{ category_name }}</a></li> {% endfor %}</ul></nav><div class="p-6 border-t border-[var(--secondary-color)]"><a href="{{ '/status.html' | relative_url }}" class="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"><div id="homepage-status-indicator" class="relative flex h-3 w-3"><span class="ping-pulse ping-gray"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-gray-400"></span></div><span id="homepage-status-text">Verificando status...</span></a></div></aside><main class="flex-1 overflow-y-auto"><div class="p-8 md:p-12"><div class="max-w-5xl mx-auto"><form class="main-search-form relative mb-12"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"> search </span><input class="w-full pl-12 pr-4 py-3 border border-[var(--secondary-color)] bg-[var(--background-primary)] rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] transition text-[var(--text-primary)] placeholder-[var(--text-secondary)]" placeholder="Pesquisar tópicos de Ciência da Computação..." type="search"/></form><section class="mb-12"><h2 class="text-3xl font-bold text-[var(--text-primary)] mb-8 text-center">Artigos em Destaque</h2>{% for article in site.articles limit: 2 %}{% if forloop.first %}<div class="river-section align-start"><div class="river-content"><h3 class="text-2xl font-semibold text-[var(--text-primary)] mb-3"><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h3><p class="text-[var(--text-secondary)] text-base mb-4">{{ article.excerpt }}</p><a class="text-blue-600 font-semibold text-sm inline-block hover:underline" href="{{ article.url | relative_url }}">Leia mais →</a></div><div class="river-visual"><a href="{{ article.url | relative_url }}"><img src="{{ article.image }}" alt="Imagem para {{ article.title }}"></a></div></div>{% else %}<div class="river-section align-end"><div class="river-content"><h3 class="text-2xl font-semibold text-[var(--text-primary)] mb-3"><a href="{{ article.url | relative_url }}">{{ article.title }}</a></h3><p class="text-[var(--text-secondary)] text-base mb-4">{{ article.excerpt }}</p><a class="text-blue-600 font-semibold text-sm inline-block hover:underline" href="{{ article.url | relative_url }}">Leia mais →</a></div><div class="river-visual"><a href="{{ article.url | relative_url }}"><img src="{{ article.image }}" alt="Imagem para {{ article.title }}"></a></div></div>{% endif %}{% endfor %}</section><section class="my-16"><div class="feature-block"><div class="feature-block-icon"><span class="material-symbols-outlined text-3xl">lightbulb</span></div><div class="feature-block-content"><h4>Dica do Dia: Complexidade de Algoritmos</h4><p>Entender a Notação Big O é crucial para escrever um código eficiente. Um algoritmo O(log n) é significativamente mais rápido para grandes volumes de dados do que um O(n).</p></div></div></section><section><h2 class="text-3xl font-bold text-[var(--text-primary)] mb-8 text-center">Tópicos Recentes</h2><div class="space-y-4">{% for article in site.articles offset: 2 %}<a href="{{ article.url | relative_url }}" class="block bg-[var(--background-primary)] p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"><h3 class="text-md font-semibold text-[var(--text-primary)]">{{ article.title }}</h3><p class="text-[var(--text-secondary)] text-sm mt-1">{{ article.excerpt | strip_html | truncatewords: 20 }}</p></a>{% endfor %}</div></section></div></div></main></div>
+<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Pitchutcha</title><meta name="base-url" content="{{ '/' | relative_url }}"><meta name="description" content="{{ site.description }}"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><link rel="preload" href="{{ '/css/style.css' | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}"></noscript><link rel="icon" href="data:image/x-icon;base64," type="image/x-icon"></head><body class="bg-[var(--background-secondary)] text-[var(--text-primary)]"><div class="flex h-screen overflow-hidden"><aside class="w-80 bg-[var(--background-primary)] border-r border-[var(--borders)] flex flex-col flex-shrink-0"><div class="p-6 border-b border-[var(--borders)]"><div class="flex items-center justify-between"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span><h1 class="text-[var(--text-primary)] text-xl font-bold">Pitchutcha</h1></div></div><p class="text-[var(--text-secondary)] text-sm mt-1">Tópicos de Ciência da Computação</p></div><nav class="flex-grow px-4 py-4 overflow-y-auto">
+                {% assign articles_by_category = site.articles | group_by: "category" | sort: "name" %}
+                <ul class="space-y-4">
+                    {% for category in articles_by_category %}
+                        <li>
+                            <h2 class="mb-2 text-sm font-semibold uppercase tracking-wider text-[var(--text-secondary)]">{{ category.name }}</h2>
+                            <ul class="space-y-1">
+                                {% assign sorted_articles = category.items | sort: 'title' %}
+                                {% for article in sorted_articles %}
+                                    <li>
+                                        <a class="flex items-center gap-3 px-3 py-1.5 rounded-md hover:bg-[var(--background-secondary)] text-[var(--text-secondary)] font-medium text-sm transition-colors" href="{{ article.url | relative_url }}">
+                                            <span class="material-symbols-outlined text-base">{{ article.icon | default: 'article' }}</span>
+                                            <span class="truncate">{{ article.title }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav><div class="p-6 border-t border-[var(--borders)]"><a href="{{ '/status.html' | relative_url }}" class="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--primary-color)]"><div id="homepage-status-indicator" class="relative flex h-3 w-3"><span class="ping-pulse ping-gray"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-gray-400"></span></div><span id="homepage-status-text">Verificando status...</span></a></div></aside><main class="flex-1 overflow-y-auto"><div class="p-8 md:p-12"><div class="max-w-5xl mx-auto"><form class="main-search-form relative mb-12" action="{{ '/search.html' | relative_url }}" method="get"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"> search </span><input class="w-full pl-12 pr-4 py-3 border border-[var(--borders)] bg-[var(--cards-elements)] rounded-lg focus:ring-2 focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] transition text-[var(--text-primary)] placeholder-[var(--text-secondary)]" placeholder="Pesquisar todos os artigos..." type="search" name="q"/></form>
+                
+                <section class="mb-12">
+                    <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-8 text-center">Comece por Aqui</h2>
+                    {% assign featured_articles = site.articles | limit: 2 %}
+                    {% for article in featured_articles %}
+                        {% if forloop.first %}
+                        <div class="river-section align-start">
+                            <div class="river-content">
+                                <h3 class="text-2xl font-semibold text-[var(--text-primary)] mb-3"><a href="{{ article.url | relative_url }}" class="hover:text-[var(--primary-color)]">{{ article.title }}</a></h3>
+                                <p class="text-[var(--text-secondary)] text-base mb-4">{{ article.excerpt }}</p>
+                                <a class="text-[var(--primary-color)] font-semibold text-sm inline-block hover:text-[var(--primary-hover)]" href="{{ article.url | relative_url }}">Leia mais →</a>
+                            </div>
+                            <div class="river-visual"><a href="{{ article.url | relative_url }}"><img src="{{ article.image | relative_url }}" alt="Imagem para {{ article.title }}"></a></div>
+                        </div>
+                        {% else %}
+                        <div class="river-section align-end">
+                            <div class="river-content">
+                                <h3 class="text-2xl font-semibold text-[var(--text-primary)] mb-3"><a href="{{ article.url | relative_url }}" class="hover:text-[var(--primary-color)]">{{ article.title }}</a></h3>
+                                <p class="text-[var(--text-secondary)] text-base mb-4">{{ article.excerpt }}</p>
+                                <a class="text-[var(--primary-color)] font-semibold text-sm inline-block hover:text-[var(--primary-hover)]" href="{{ article.url | relative_url }}">Leia mais →</a>
+                            </div>
+                            <div class="river-visual"><a href="{{ article.url | relative_url }}"><img src="{{ article.image | relative_url }}" alt="Imagem para {{ article.title }}"></a></div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </section>
+                
+                <section class="my-16">
+                    <div class="feature-block">
+                        <div class="feature-block-icon"><span class="material-symbols-outlined text-3xl">lightbulb</span></div>
+                        <div class="feature-block-content">
+                            <h4>Dica do Dia: Complexidade de Algoritmos</h4>
+                            <p>Entender a Notação Big O é crucial para escrever um código eficiente. Um algoritmo O(log n) é significativamente mais rápido para grandes volumes de dados do que um O(n).</p>
+                        </div>
+                    </div>
+                </section>
 
+                <section>
+                    <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-8 text-center">Tópicos Recentes</h2>
+                    <div class="space-y-4">
+                        {% for article in site.articles offset: 2 %}
+                        <a href="{{ article.url | relative_url }}" class="block bg-[var(--cards-elements)] p-4 rounded-lg border border-[var(--borders)] hover:border-[var(--primary-color)] transition-colors">
+                            <h3 class="text-md font-semibold text-[var(--text-primary)]">{{ article.title }}</h3>
+                            <p class="text-[var(--text-secondary)] text-sm mt-1">{{ article.excerpt | strip_html | truncatewords: 20 }}</p>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </section>
+
+            </div></div></main></div>
+    
     {% include footer.html %}
 
     {% include scripts.html %}
