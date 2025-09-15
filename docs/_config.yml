@@ -8,7 +8,8 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
 
-# ADICIONE ESTA NOVA SEÇÃO
+# Configuração da Coleção de Artigos
+# Isso substitui a necessidade da pasta _posts e do formato de data nos nomes dos arquivos.
 collections:
   articles:
     output: true
