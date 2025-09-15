@@ -1,6 +1,7 @@
 ---
 layout: artigo
 title: "Introdução ao Design de Algoritmos"
+date: 2025-09-07
 category: Algoritmos
 icon: memory
 excerpt: "Aprenda o básico de design e análise de algoritmos, incluindo complexidade, Big O, e paradigmas comuns como dividir para conquistar, programação dinâmica e algoritmos gulosos."
