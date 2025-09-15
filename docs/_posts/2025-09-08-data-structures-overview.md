@@ -13,6 +13,12 @@ image: "https://placehold.co/600x400/D1FAE5/047857?text=Estruturas+de+Dados"
         intro="Estruturas de dados são um conceito fundamental na ciência da computação, fornecendo uma maneira de organizar, gerenciar e armazenar dados de forma eficaz. A escolha da estrutura de dados correta é crucial para o desenvolvimento de algoritmos eficientes e aplicações de alto desempenho. Esta visão geral apresenta algumas das estruturas de dados mais comuns."
     %}
 
+    {% include image.html
+        src="../assets/images/data-structures-overview.jpg"
+        alt="Diagrama visualizando diferentes estruturas de dados como Listas Ligadas (sequência de nós), Tabela Hash (rede de nós), Fila (empilhamento de camadas) e Arrays (sequência de cubos)."
+        caption="Visualização de Estruturas de Dados, ilustrando a organização e o fluxo de dados em Listas Ligadas, Tabelas Hash e Filas."
+    %}
+
     {% include section-header.html 
         id="arrays"
         title="Arrays"
