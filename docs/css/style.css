@@ -1,8 +1,54 @@
-/* Fontes (Inter e Noto Sans) */
-/* inter-regular - latin */@font-face{font-display:swap;font-family:'Inter';font-style:normal;font-weight:400;src:url('../fonts/inter-v19-latin-regular.woff2') format('woff2')}/* inter-500 - latin */@font-face{font-display:swap;font-family:'Inter';font-style:normal;font-weight:500;src:url('../fonts/inter-v19-latin-500.woff2') format('woff2')}/* inter-600 - latin */@font-face{font-display:swap;font-family:'Inter';font-style:normal;font-weight:600;src:url('../fonts/inter-v19-latin-600.woff2') format('woff2')}/* inter-700 - latin */@font-face{font-display:swap;font-family:'Inter';font-style:normal;font-weight:700;src:url('../fonts/inter-v19-latin-700.woff2') format('woff2')}/* noto-sans-regular - latin */@font-face{font-display:swap;font-family:'Noto Sans';font-style:normal;font-weight:400;src:url('../fonts/noto-sans-v41-latin-regular.woff2') format('woff2')}/* noto-sans-500 - latin */@font-face{font-display:swap;font-family:'Noto Sans';font-style:normal;font-weight:500;src:url('../fonts/noto-sans-v41-latin-500.woff2') format('woff2')}/* noto-sans-600 - latin */@font-face{font-display:swap;font-family:'Noto Sans';font-style:normal;font-weight:600;src:url('../fonts/noto-sans-v41-latin-600.woff2') format('woff2')}/* noto-sans-700 - latin */@font-face{font-display:swap;font-family:'Noto Sans';font-style:normal;font-weight:700;src:url('../fonts/noto-sans-v41-latin-700.woff2') format('woff2')}
-/* ADICIONADO: JetBrains Mono */
-@font-face{font-display:swap;font-family:'JetBrains Mono';font-style:normal;font-weight:400;src:url('../fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2')}
-@font-face{font-display:swap;font-family:'JetBrains Mono';font-style:normal;font-weight:500;src:url('../fonts/jetbrains-mono-v23-latin-500.woff2') format('woff2')}
+/* Fontes (Inter e JetBrains Mono) */
+/* Assegure-se de que estes arquivos .woff2 estejam na pasta '../fonts/' */
+
+/* inter-regular - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/inter-v13-latin-regular.woff2') format('woff2');
+}
+/* inter-500 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/inter-v13-latin-500.woff2') format('woff2');
+}
+/* inter-600 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../fonts/inter-v13-latin-600.woff2') format('woff2');
+}
+/* inter-700 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/inter-v13-latin-700.woff2') format('woff2');
+}
+/* jetbrains-mono-regular - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2');
+}
+/* jetbrains-mono-500 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  src: url('../fonts/jetbrains-mono-v23-latin-500.woff2') format('woff2');
+}
 
 /* Configurações Globais e Temas */
 :root {
@@ -13,7 +59,8 @@
     --background-primary: #fff;
     --background-secondary: #f8fafc;
     --tab-size-preference: 4;
-    --font-sans: 'Inter', 'Noto Sans', sans-serif;
+    /* ATUALIZADO: Apenas Inter como fonte principal */
+    --font-sans: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 }
 
