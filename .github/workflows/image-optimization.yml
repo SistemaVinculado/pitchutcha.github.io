@@ -1,42 +1,41 @@
-# Nome do Workflow: Otimizar Imagens
-name: Optimize Images
+name: Compress Images
 
 on:
-  # Roda sempre que houver um push para a branch 'main'
-  push:
-    branches:
-      - main
+  pull_request:
+    # Executa a Action quando arquivos JPG, JPEG, PNG, WebP ou AVIF são adicionados ou alterados.
     paths:
-      - 'docs/assets/images/**.{jpg,jpeg,png,svg}'
-      - 'docs/assets/logos/**.{jpg,jpeg,png,svg}'
-  # Permite que você inicie manualmente pela aba "Actions" do GitHub
+      - '**.jpg'
+      - '**.jpeg'
+      - '**.png'
+      - '**.webp'
+      - '**.avif'
   workflow_dispatch:
 
 jobs:
-  build:
-    name: calibreapp/image-actions
+  compress-images: # Nome do job alterado para ser mais descritivo
+    # Executa apenas em Pull Requests do mesmo repositório, não de forks.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    name: Compress Images with Calibre
     runs-on: ubuntu-latest
     
+    # Boas práticas: Use permissões mínimas necessárias.
+    permissions:
+      contents: write # Necessário para fazer o commit das imagens otimizadas
+      pull-requests: write # Necessário para comentar no PR
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Compress Images
-        id: calibre
-        uses: calibreapp/image-actions@v1.1.0
+        # Use uma versão principal estável (@v1) em vez de @main para evitar quebras inesperadas.
+        uses: calibreapp/image-actions@v1 
         with:
-          # Token do GitHub para permitir que a action faça um commit de volta
+          # O bloco 'with' deve estar indentado sob o passo 'uses'.
+          jpegQuality: '85'
+          jpegProgressive: false
+          pngQuality: '80'
+          webpQuality: '85'
+          avifQuality: '75'
+          # Adicione o token do GitHub para que a action possa fazer commits
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          # Pastas para comprimir. O '**' significa que ele buscará em subdiretórios também.
-          compressOnly: |
-            docs/assets/images/**/*.{jpg,jpeg,png,svg}
-            docs/assets/logos/**/*.{jpg,jpeg,png,svg}
-
-      - name: Create Pull Request
-        if: steps.calibre.outputs.markdown != ''
-        uses: peter-evans/create-pull-request@v5
-        with:
-          title: '📸 Otimização automática de imagens'
-          body: ${{ steps.calibre.outputs.markdown }}
-          commit-message: 'chore: Otimiza imagens com [image-actions]'
-          branch: 'image-optimization'
