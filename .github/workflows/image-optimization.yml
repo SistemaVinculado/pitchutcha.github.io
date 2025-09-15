@@ -2,16 +2,16 @@
 name: Optimize Images
 
 on:
+  # Roda em Pull Requests que modificam imagens
+  pull_request:
+    paths:
+      - 'docs/assets/images/**.{jpg,jpeg,png,webp,avif}'
+      - 'docs/assets/logos/**.{jpg,jpeg,png,webp,avif}'
+  
   # Roda quando há um push para a branch 'main' com imagens
   push:
     branches:
       - main
-    paths:
-      - 'docs/assets/images/**.{jpg,jpeg,png,webp,avif}'
-      - 'docs/assets/logos/**.{jpg,jpeg,png,webp,avif}'
-
-  # Roda em Pull Requests que modificam imagens
-  pull_request:
     paths:
       - 'docs/assets/images/**.{jpg,jpeg,png,webp,avif}'
       - 'docs/assets/logos/**.{jpg,jpeg,png,webp,avif}'
@@ -24,43 +24,36 @@ jobs:
     name: Optimize Images with Calibre
     runs-on: ubuntu-latest
     
-    # Permissões necessárias para a Action
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    
     permissions:
       contents: write
       pull-requests: write
 
     steps:
       - name: Checkout Repo
-        # O checkout precisa buscar o histórico para comparar as mudanças
         uses: actions/checkout@v4
         with:
-          # Para pushes, faz o checkout da branch correta
           ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Compress Images
         id: calibre
-        # CORREÇÃO: Usa a versão específica e estável da action
-        uses: calibreapp/image-actions@v1.4.1
+        # CORREÇÃO: Usa o hash de commit específico da versão v1.4.1 para garantir a resolução
+        uses: calibreapp/image-actions@416b615b1362c4a0024f227f2c8f8d95a0b7713a # Pinned to v1.4.1
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          
-          # Em eventos que não são Pull Requests (push, manual), apenas comprime os arquivos.
-          # A criação do PR será feita no próximo passo.
           compressOnly: ${{ github.event_name != 'pull_request' }}
-          
-          # Suas configurações de qualidade de imagem:
           jpegQuality: '85'
           pngQuality: '80'
           webpQuality: '85'
           avifQuality: '75'
 
       - name: Create Pull Request for non-PR events
-        # Este passo só roda se o evento NÃO for um pull_request e se houver imagens otimizadas.
         if: github.event_name != 'pull_request' && steps.calibre.outputs.markdown != ''
         uses: peter-evans/create-pull-request@v5
         with:
           title: '📸 Otimização automática de imagens'
           body: ${{ steps.calibre.outputs.markdown }}
           commit-message: 'chore: Otimiza imagens com [image-actions]'
-          branch: 'auto-image-optimize' # Cria uma branch separada para as otimizações
+          branch: 'auto-image-optimize'
           delete-branch: true
