@@ -25,16 +25,18 @@ jobs:
 
       # 2. Baixa as fontes do Google Fonts usando a action correta
       - name: Baixar Google Fonts (Inter, Noto Sans, JetBrains Mono)
-        # CORREÇÃO: O caminho correto da action é 'fontsource/google-fonts-action'
-        uses: fontsource/google-fonts-action@v1
+        # CORREÇÃO: Usando a action 'rickstaa/google-fonts-downloader' que é funcional
+        uses: rickstaa/google-fonts-downloader@v1
         with:
-          # Lista de fontes e pesos a serem baixados
+          # Lista de fontes e pesos a serem baixados (sintaxe ajustada para a nova action)
           fonts: |
-            Inter:wght@400;500;600;700
-            Noto Sans:wght@400;500;600;700
-            JetBrains Mono:wght@400;500
+            Inter:400,500,600,700
+            Noto Sans:400,500,600,700
+            JetBrains Mono:400,500
           # Diretório de destino para os arquivos das fontes
-          output_dir: docs/fonts
+          output_dir: "docs/fonts"
+          # Opcional: Especifica que queremos apenas o formato woff2 para otimização
+          formats: "woff2"
           
       # 3. Faz o commit e push automático dos arquivos de fontes baixados
       - name: Commit and push font files
@@ -43,4 +45,4 @@ jobs:
           # Mensagem do commit
           commit_message: "feat: Update local fonts and add JetBrains Mono"
           # Padrão de arquivos para incluir no commit
-          file_pattern: "docs/fonts"
+          file_pattern: "docs/fonts/**" # Adicionado /** para garantir a captura de todos os arquivos no diretório
