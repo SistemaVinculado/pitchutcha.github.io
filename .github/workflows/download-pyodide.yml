@@ -16,30 +16,25 @@ jobs:
       - name: Create Pyodide vendor directory
         run: mkdir -p docs/js/vendor/pyodide
 
-      # --- ETAPA DE DOWNLOAD REFEITA USANDO UMA AÇÃO ESPECIALIZADA ---
       - name: Download and Extract Pyodide Release Asset
         uses: robinraju/release-downloader@v1.9
         with:
-          # Repositório de onde baixar
           repository: "pyodide/pyodide"
-          # A versão que queremos
           tag: "0.25.1"
-          # O nome exato do arquivo a ser baixado
-          fileName: "pyodide-v0.25.1.tar.bz2"
-          # Pede para a ação descompactar o arquivo automaticamente
+          # CORREÇÃO FINAL: Usando o nome de arquivo exato do release
+          fileName: "pyodide-src-0.25.1.tar.bz2"
           extract: true
-          # Token para evitar problemas de limite de requisições
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify Extracted Files and Move to Vendor
         run: |
           set -ex
-          echo "--- Verificando a estrutura de pastas criada pela ação ---"
+          echo "--- Verificando a estrutura de pastas extraída ---"
           ls -R
           
           echo "--- Movendo os arquivos da pasta 'dist' para o destino ---"
-          # A ação extrai para uma pasta com o nome do release, então o caminho é previsível
-          cp -r pyodide-v0.25.1/dist/* docs/js/vendor/pyodide/
+          # A pasta extraída terá o mesmo nome do arquivo, com '-src-'
+          cp -r pyodide-src-0.25.1/dist/* docs/js/vendor/pyodide/
 
       - name: Commit Pyodide files
         uses: stefanzweifel/git-auto-commit-action@v5
