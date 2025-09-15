@@ -1,41 +1,39 @@
-name: Compress Images
+# Nome do Workflow: Otimizar Imagens
+name: Optimize Images
 
 on:
   pull_request:
-    # Executa a Action quando arquivos JPG, JPEG, PNG, WebP ou AVIF são adicionados ou alterados.
+    # CORREÇÃO: Monitora apenas as pastas de assets relevantes para maior eficiência.
     paths:
-      - '**.jpg'
-      - '**.jpeg'
-      - '**.png'
-      - '**.webp'
-      - '**.avif'
+      - 'docs/assets/images/**.{jpg,jpeg,png,webp,avif}'
+      - 'docs/assets/logos/**.{jpg,jpeg,png,webp,avif}'
+  # Permite o acionamento manual
   workflow_dispatch:
 
 jobs:
-  compress-images: # Nome do job alterado para ser mais descritivo
-    # Executa apenas em Pull Requests do mesmo repositório, não de forks.
-    if: github.event.pull_request.head.repo.full_name == github.repository
+  compress-images:
+    # CORREÇÃO: Executa o job em Pull Requests do mesmo repositório OU em acionamentos manuais.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     name: Compress Images with Calibre
     runs-on: ubuntu-latest
     
-    # Boas práticas: Use permissões mínimas necessárias.
     permissions:
-      contents: write # Necessário para fazer o commit das imagens otimizadas
-      pull-requests: write # Necessário para comentar no PR
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Compress Images
-        # Use uma versão principal estável (@v1) em vez de @main para evitar quebras inesperadas.
         uses: calibreapp/image-actions@v1 
         with:
-          # O bloco 'with' deve estar indentado sob o passo 'uses'.
+          # Token do GitHub para permitir que a action faça commits e comente no PR.
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Suas configurações de qualidade de imagem:
           jpegQuality: '85'
           jpegProgressive: false
           pngQuality: '80'
           webpQuality: '85'
           avifQuality: '75'
-          # Adicione o token do GitHub para que a action possa fazer commits
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
