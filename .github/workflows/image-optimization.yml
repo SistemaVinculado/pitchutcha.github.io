@@ -1,0 +1,42 @@
+# Nome do Workflow: Otimizar Imagens
+name: Optimize Images
+
+on:
+  # Roda sempre que houver um push para a branch 'main'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/assets/images/**.{jpg,jpeg,png,svg}'
+      - 'docs/assets/logos/**.{jpg,jpeg,png,svg}'
+  # Permite que você inicie manualmente pela aba "Actions" do GitHub
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: calibreapp/image-actions
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Compress Images
+        id: calibre
+        uses: calibreapp/image-actions@v1.1.0
+        with:
+          # Token do GitHub para permitir que a action faça um commit de volta
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Pastas para comprimir. O '**' significa que ele buscará em subdiretórios também.
+          compressOnly: |
+            docs/assets/images/**/*.{jpg,jpeg,png,svg}
+            docs/assets/logos/**/*.{jpg,jpeg,png,svg}
+
+      - name: Create Pull Request
+        if: steps.calibre.outputs.markdown != ''
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: '📸 Otimização automática de imagens'
+          body: ${{ steps.calibre.outputs.markdown }}
+          commit-message: 'chore: Otimiza imagens com [image-actions]'
+          branch: 'image-optimization'
