@@ -1,6 +1,6 @@
 <figure class="my-8 flex flex-col items-center">
     <img 
-        src="{{ include.src }}" 
+        src="{{ include.src | relative_url }}" 
         alt="{{ include.alt | default: include.caption }}" 
         class="max-w-full h-auto rounded-lg shadow-md border border-[var(--secondary-color)]"
     >
