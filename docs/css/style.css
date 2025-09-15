@@ -50,36 +50,17 @@
   src: url('../fonts/jetbrains-mono-v23-latin-500.woff2') format('woff2');
 }
 
-/* Configurações Globais e Temas */
+/* Configurações Globais e Tema Padrão (Alto Contraste) */
 :root {
-    --primary-color: #137fec;
-    --secondary-color: #e7edf3;
-    --text-primary: #0d141b;
-    --text-secondary: #4c739a;
-    --background-primary: #fff;
-    --background-secondary: #f8fafc;
-    --tab-size-preference: 4;
-    /* ATUALIZADO: Apenas Inter como fonte principal */
-    --font-sans: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-}
-
-:root.dark {
-    --primary-color: #137fec;
-    --secondary-color: #1f2937;
-    --text-primary: #fff;
-    --text-secondary: #94a3b8;
-    --background-primary: #0f172a;
-    --background-secondary: #1e293b;
-}
-
-:root.high-contrast {
     --primary-color: #ffff00;
     --secondary-color: #1a1a1a;
     --text-primary: #ffffff;
     --text-secondary: #cccccc;
     --background-primary: #000000;
     --background-secondary: #111111;
+    --tab-size-preference: 4;
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
 }
 
 body {
