@@ -16,25 +16,19 @@ jobs:
       - name: Create Pyodide vendor directory
         run: mkdir -p docs/js/vendor/pyodide
 
-      # --- ETAPA DE DOWNLOAD REFEITA PARA SER MAIS ROBUSTA ---
-      - name: Download and Unzip Pyodide
+      - name: Download and Unzip Pyodide Distribution Files
         run: |
           PYODIDE_VERSION="v0.25.1"
-          # 1. Baixa o arquivo como antes
-          curl -L https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-${PYODIDE_VERSION}.tar.bz2 -o pyodide.tar.bz2
+          # 1. Baixa o arquivo .tar.bz2 que contém APENAS a pasta 'dist'
+          curl -L https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-dist-${PYODIDE_VERSION}.tar.bz2 -o pyodide-dist.tar.bz2
           
-          # 2. Cria uma pasta temporária com um nome que NÓS controlamos
-          mkdir pyodide-temp
-          
-          # 3. Extrai o conteúdo do arquivo para dentro da nossa pasta temporária
-          #    --strip-components=1 remove o diretório-pai de dentro do .tar.bz2
-          tar -xvf pyodide.tar.bz2 -C pyodide-temp --strip-components=1
-          
-          # 4. Copia os arquivos de um caminho agora 100% previsível
-          cp -r pyodide-temp/dist/* docs/js/vendor/pyodide/
+          # 2. Extrai o conteúdo diretamente para a nossa pasta de destino
+          #    Como este arquivo contém apenas a pasta 'dist', o --strip-components=1 remove a pasta 'dist'
+          #    e joga todo o seu conteúdo dentro de 'docs/js/vendor/pyodide/'
+          tar -xvf pyodide-dist.tar.bz2 --directory docs/js/vendor/pyodide --strip-components=1
 
       - name: Commit Pyodide files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "feat: Add Pyodide files locally to vendor directory"
+          commit_message: "feat: Add Pyodide distribution files locally"
           file_pattern: "docs/js/vendor/pyodide"
