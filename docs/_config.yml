@@ -9,16 +9,16 @@ kramdown:
   syntax_highlighter: rouge
 
 # Configuração da Coleção de Artigos
-# Isso substitui a necessidade da pasta _posts e do formato de data nos nomes dos arquivos.
 collections:
   articles:
     output: true
     permalink: /:collection/:name
 
-# --- RECOMENDAÇÃO DE PERFORMANCE (Requer instalação do plugin) ---
-# plugins:
-#   - jekyll-minifier
+# Ativa os plugins listados no Gemfile
+plugins:
+  - jekyll-minifier
 
-# jekyll_minifier:
-#   uglifier_args:
-#     harmony: true
+# Configurações do plugin de minificação
+jekyll_minifier:
+  uglifier_args:
+    harmony: true
