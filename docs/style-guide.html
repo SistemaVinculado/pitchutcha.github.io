@@ -1,107 +1,123 @@
 ---
-layout: minimal
-title: Pitchutcha - Guia de Estilos
+# Removendo o layout para tornar o arquivo autônomo
+layout: null 
 ---
-<div class="max-w-7xl mx-auto">
-    <div class="text-center mb-12 border-b border-gray-800 pb-8">
-        <h1 class="text-5xl font-bold text-[var(--text-primary)]">Guia de Estilos do Projeto Pitchutcha</h1>
-        <p class="mt-4 text-lg text-[var(--text-secondary)]">Documentação do Design System para garantir consistência e qualidade.</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <title>Pitchutcha - Guia de Estilos</title>
+    <meta name="robots" content="noindex">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
+    <style>
+        /* Estilos Globais Essenciais (Copiados de style.css para autonomia) */
+        :root {
+            --primary-color: #1f6feb;
+            --secondary-color: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --background-primary: #000000;
+            --background-secondary: #111111;
+        }
+        body {
+            font-family: 'Inter', sans-serif; /* A fonte Inter será carregada pelo Google Fonts ou fallback */
+            background-color: var(--background-secondary);
+            color: var(--text-primary);
+        }
+        article { color: var(--text-primary); }
+        article h1, article h2, article h3, article h4 { color: var(--text-primary); letter-spacing: -0.025em; }
+        article h1 { font-size: 2.25rem; font-weight: 800; }
+        article h2 { font-size: 1.875rem; font-weight: 700; }
+        article h3 { font-size: 1.5rem; font-weight: 600; }
+        article h4 { font-size: 1.25rem; font-weight: 600; }
+        article p, article li { line-height: 1.65; color: var(--text-secondary); font-size: 1.125rem; }
+        article a { color: var(--primary-color); text-decoration: underline; }
+        article strong { color: var(--text-primary); }
+        article blockquote { margin: 1.5rem 0; padding-left: 1.5rem; border-left: 4px solid var(--secondary-color); color: var(--text-secondary); font-style: italic; }
+        
+        /* Estilos de Highlight (Dracula Theme) */
+        figure.highlight, div.highlighter-rouge { position: relative; margin-bottom: 1rem; border-radius: 0.5rem; background: #282a36; color: #f8f8f2; font-size: .875rem; padding: 1rem; }
+        .highlight .c { color: #6272a4 } .highlight .err { color: #f8f8f2; background-color: #ff5555 } .highlight .k { color: #ff79c6 } .highlight .l { color: #bd93f9 } .highlight .n { color: #f8f8f2 } .highlight .o { color: #ff79c6 } .highlight .p { color: #f8f8f2 } .highlight .cm { color: #6272a4 } .highlight .cp { color: #ff79c6 } .highlight .c1 { color: #6272a4 } .highlight .cs { color: #6272a4 } .highlight .s { color: #f1fa8c } .highlight .na { color: #50fa7b } .highlight .nb { color: #8be9fd; font-style: italic } .highlight .nc { color: #50fa7b } .highlight .no { color: #bd93f9 } .highlight .nd { color: #ff79c6 } .highlight .nf { color: #50fa7b } .highlight .nt { color: #ff79c6 } .highlight .nv { color: #8be9fd; font-style: italic }
+    </style>
+</head>
+<body class="p-8 md:p-12">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12 border-b border-gray-800 pb-8">
+            <h1 class="text-5xl font-bold text-white">Guia de Estilos do Projeto Pitchutcha</h1>
+            <p class="mt-4 text-lg text-gray-400">Documentação do Design System para garantir consistência e qualidade.</p>
+            <div class="mt-4 p-4 bg-yellow-900/50 text-yellow-300 border border-yellow-700 rounded-lg">
+                <strong>Nota:</strong> Esta é uma página de referência visual. Para que os componentes (includes) sejam renderizados, o site deve ser visualizado através de um servidor Jekyll local (`bundle exec jekyll serve`).
+            </div>
+        </div>
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 text-white">Paleta de Cores</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <div class="text-center"><div class="w-full h-24 rounded-lg" style="background-color: var(--primary-color)"></div><p class="mt-2 font-semibold">Primary</p><p class="text-sm text-gray-400">#1f6feb</p></div>
+                <div class="text-center"><div class="w-full h-24 rounded-lg border border-gray-700" style="background-color: var(--text-primary)"></div><p class="mt-2 font-semibold">Text Primary</p><p class="text-sm text-gray-400">#ffffff</p></div>
+                <div class="text-center"><div class="w-full h-24 rounded-lg" style="background-color: var(--text-secondary)"></div><p class="mt-2 font-semibold">Text Secondary</p><p class="text-sm text-gray-400">#cccccc</p></div>
+                <div class="text-center"><div class="w-full h-24 rounded-lg border border-gray-700" style="background-color: var(--background-primary)"></div><p class="mt-2 font-semibold">Background Primary</p><p class="text-sm text-gray-400">#000000</p></div>
+                <div class="text-center"><div class="w-full h-24 rounded-lg" style="background-color: var(--background-secondary)"></div><p class="mt-2 font-semibold">Background Secondary</p><p class="text-sm text-gray-400">#111111</p></div>
+                <div class="text-center"><div class="w-full h-24 rounded-lg" style="background-color: var(--secondary-color)"></div><p class="mt-2 font-semibold">Border / Cards</p><p class="text-sm text-gray-400">#1a1a1a</p></div>
+            </div>
+        </section>
+
+        <hr class="border-gray-800 my-12">
+
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold mb-6 text-white">Escala Tipográfica (Dentro de um Artigo)</h2>
+            <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800">
+                <article>
+                    <h1>Este é um Título H1</h1>
+                    <p>Este é um parágrafo padrão. A altura de linha (`1.65`) torna o texto longo mais fácil e confortável de ler. A cor do texto principal é `var(--text-primary)` e a cor secundária é `var(--text-secondary)`.</p>
+                    <h2>Este é um Título H2</h2>
+                    <p>Um link dentro do texto se parece com <a href="#">isto</a>, usando a cor primária do site. <strong>Texto em negrito</strong> usa a cor de texto primária para maior destaque.</p>
+                    <h3>Este é um Título H3</h3>
+                    <p>Listas também seguem o padrão de altura de linha:</p>
+                    <ul class="list-disc pl-6 space-y-2"><li>Item de lista um.</li><li>Item de lista dois.</li></ul>
+                    <h4>Este é um Título H4</h4>
+                    <blockquote>Esta é uma citação (blockquote). Ela é usada para destacar informações importantes ou citações, com uma borda lateral e estilo itálico para diferenciação visual.</blockquote>
+                </article>
+            </div>
+        </section>
+        
+        <hr class="border-gray-800 my-12">
+
+        <section>
+            <h2 class="text-3xl font-bold mb-6 text-white">Componentes Reutilizáveis (Visualização)</h2>
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-300">Cabeçalho de Artigo</h3>
+                    <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800">
+                        <h1 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl">Título do Artigo de Exemplo</h1><p class="mt-6 text-lg text-[var(--text-secondary)]">Este é o parágrafo de introdução do artigo, gerado pelo componente reutilizável para garantir consistência em todas as páginas.</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-300">Cabeçalho de Seção</h3>
+                    <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800">
+                        <section class="pt-10"><h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Título da Seção de Exemplo</h2><p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">Este componente é usado para introduzir cada nova seção dentro de um artigo.</p></section>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-300">Imagem com Legenda</h3>
+                    <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800">
+                        <figure class="my-8 flex flex-col items-center"><img src="https://sistemavinculado.github.io/pitchutcha.github.io/assets/images/data-structures-overview.jpg" alt="Exemplo de imagem." class="max-w-full h-auto rounded-lg shadow-md border border-[var(--secondary-color)]"><figcaption class="mt-3 text-center text-sm text-[var(--text-secondary)] italic">Esta é uma legenda de exemplo para a imagem.</figcaption></figure>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-300">Botões</h3>
+                    <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800 flex items-center gap-4 flex-wrap">
+                        <a href="#" class="bg-[var(--primary-color)] hover:opacity-90 text-white font-semibold rounded-lg px-6 py-3 text-lg inline-block">Botão Primário</a>
+                        <button type="button" class="border border-gray-700 hover:bg-gray-800 text-white font-semibold rounded-lg px-6 py-3 text-lg inline-block">Botão Secundário</button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-6 text-[var(--text-primary)]">Paleta de Cores</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            <div class="text-center">
-                <div class="w-full h-24 rounded-lg bg-[var(--primary-color)]"></div>
-                <p class="mt-2 font-semibold text-[var(--text-primary)]">Primary</p>
-                <p class="text-sm text-[var(--text-secondary)]">#1f6feb</p>
-            </div>
-            <div class="text-center">
-                <div class="w-full h-24 rounded-lg bg-[var(--text-primary)] border border-gray-700"></div>
-                <p class="mt-2 font-semibold text-[var(--text-primary)]">Text Primary</p>
-                <p class="text-sm text-[var(--text-secondary)]">#ffffff</p>
-            </div>
-            <div class="text-center">
-                <div class="w-full h-24 rounded-lg" style="background-color: var(--text-secondary)"></div>
-                <p class="mt-2 font-semibold text-[var(--text-primary)]">Text Secondary</p>
-                <p class="text-sm text-[var(--text-secondary)]">#cccccc</p>
-            </div>
-            <div class="text-center">
-                <div class="w-full h-24 rounded-lg bg-[var(--background-primary)] border border-gray-700"></div>
-                <p class="mt-2 font-semibold text-[var(--text-primary)]">Background Primary</p>
-                <p class="text-sm text-[var(--text-secondary)]">#000000</p>
-            </div>
-            <div class="text-center">
-                <div class="w-full h-24 rounded-lg bg-[var(--background-secondary)]"></div>
-                <p class="mt-2 font-semibold text-[var(--text-primary)]">Background Secondary</p>
-                <p class="text-sm text-[var(--text-secondary)]">#111111</p>
-            </div>
-             <div class="text-center">
-                <div class="w-full h-24 rounded-lg bg-[var(--secondary-color)]"></div>
-                <p class="mt-2 font-semibold text-[var(--text-primary)]">Border / Cards</p>
-                <p class="text-sm text-[var(--text-secondary)]">#1a1a1a</p>
-            </div>
-        </div>
-    </section>
-
-    <hr class="border-gray-800 my-12">
-
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-6 text-[var(--text-primary)]">Escala Tipográfica (Dentro de um Artigo)</h2>
-        <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800">
-            <article>
-                <h1>Este é um Título H1</h1>
-                <p>Este é um parágrafo padrão. A altura de linha (`1.65`) torna o texto longo mais fácil e confortável de ler. A cor do texto principal é `var(--text-primary)` e a cor secundária é `var(--text-secondary)`.</p>
-                <h2>Este é um Título H2</h2>
-                <p>Um link dentro do texto se parece com <a href="#">isto</a>, usando a cor primária do site. <strong>Texto em negrito</strong> usa a cor de texto primária para maior destaque.</p>
-                <h3>Este é um Título H3</h3>
-                <p>Listas também seguem o padrão de altura de linha:</p>
-                <ul>
-                    <li class="my-2">Item de lista um.</li>
-                    <li class="my-2">Item de lista dois.</li>
-                    <li class="my-2">Item de lista três.</li>
-                </ul>
-                <h4>Este é um Título H4</h4>
-                <blockquote>Esta é uma citação (blockquote). Ela é usada para destacar informações importantes ou citações, com uma borda lateral e estilo itálico para diferenciação visual.</blockquote>
-            </article>
-        </div>
-    </section>
-    
-    <hr class="border-gray-800 my-12">
-
-    <section>
-        <h2 class="text-3xl font-bold mb-6 text-[var(--text-primary)]">Componentes Reutilizáveis (_includes)</h2>
-        <div class="space-y-8">
-            <div>
-                <h3 class="text-xl font-semibold mb-4 text-gray-300">Cabeçalho de Artigo (`article-header.html`)</h3>
-                <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800">
-                    {% include article-header.html title="Título do Artigo de Exemplo" intro="Este é o parágrafo de introdução do artigo, gerado pelo componente reutilizável para garantir consistência em todas as páginas." %}
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-xl font-semibold mb-4 text-gray-300">Cabeçalho de Seção (`section-header.html`)</h3>
-                <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800">
-                    {% include section-header.html id="exemplo" title="Título da Seção de Exemplo" text="Este componente é usado para introduzir cada nova seção dentro de um artigo." %}
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-xl font-semibold mb-4 text-gray-300">Imagem com Legenda (`image.html`)</h3>
-                <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800">
-                    {% include image.html src="/assets/images/data-structures-overview.jpg" alt="Exemplo de imagem." caption="Esta é uma legenda de exemplo para a imagem." %}
-                </div>
-            </div>
-            
-            <div>
-                <h3 class="text-xl font-semibold mb-4 text-gray-300">Botões</h3>
-                <div class="bg-[var(--background-primary)] p-8 rounded-lg border border-gray-800 flex items-center gap-4 flex-wrap">
-                    <a href="#" class="bg-[var(--primary-color)] hover:opacity-90 text-white font-semibold rounded-lg px-6 py-3 text-lg inline-block">Botão Primário</a>
-                    <button type="button" class="border border-gray-700 hover:bg-gray-800 text-white font-semibold rounded-lg px-6 py-3 text-lg inline-block">Botão Secundário</button>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-</div>
+</body>
+</html>
