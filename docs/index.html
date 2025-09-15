@@ -20,8 +20,8 @@ layout: null
     <style>
         /* Estilos para os novos componentes */
         .hero-tab-panel { display: none; }
-        .hero-tab-panel.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
-        .hero-tab-button.active { color: var(--text-primary); border-bottom-color: var(--primary-color); }
+        .hero-tab-panel[aria-hidden="false"] { display: flex; animation: fadeIn 0.5s ease-in-out; }
+        .hero-tab-button[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--primary-color); }
 
         .accordion-item summary::-webkit-details-marker { display: none; }
         .accordion-item summary { list-style: none; cursor: pointer; }
@@ -61,13 +61,13 @@ layout: null
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
 
             <div class="relative z-10 w-full max-w-5xl mx-auto">
-                <nav class="flex justify-center border-b border-gray-800 mb-8">
-                    <button data-tab="tab-algoritmos" class="hero-tab-button active text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors">Algoritmos</button>
-                    <button data-tab="tab-estruturas" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors">Estruturas de Dados</button>
-                    <button data-tab="tab-complexidade" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors">Análise de Complexidade</button>
+                <nav class="flex justify-center border-b border-gray-800 mb-8" role="tablist" aria-label="Tópicos Principais">
+                    <button id="tab-btn-algoritmos" role="tab" aria-selected="true" aria-controls="tab-panel-algoritmos" class="hero-tab-button active text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors">Algoritmos</button>
+                    <button id="tab-btn-estruturas" role="tab" aria-selected="false" aria-controls="tab-panel-estruturas" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors" tabindex="-1">Estruturas de Dados</button>
+                    <button id="tab-btn-complexidade" role="tab" aria-selected="false" aria-controls="tab-panel-complexidade" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors" tabindex="-1">Análise de Complexidade</button>
                 </nav>
 
-                <div id="tab-algoritmos" class="hero-tab-panel active items-center text-left gap-8">
+                <div id="tab-panel-algoritmos" role="tabpanel" aria-labelledby="tab-btn-algoritmos" aria-hidden="false" class="hero-tab-panel active items-center text-left gap-8">
                     <div class="w-full md:w-1/2">
                         <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Design de Algoritmos</h1>
                         <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Aprenda a criar soluções eficientes com paradigmas como Dividir para Conquistar, Programação Dinâmica e Algoritmos Gulosos.</p>
@@ -78,7 +78,7 @@ layout: null
                     </div>
                 </div>
 
-                <div id="tab-estruturas" class="hero-tab-panel items-center text-left gap-8">
+                <div id="tab-panel-estruturas" role="tabpanel" aria-labelledby="tab-btn-estruturas" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
                     <div class="w-full md:w-1/2">
                         <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Estruturas de Dados</h1>
                         <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Organize e gerencie dados de forma eficaz com Arrays, Listas Ligadas, Pilhas, Filas e Tabelas Hash para aplicações de alta performance.</p>
@@ -89,7 +89,7 @@ layout: null
                     </div>
                 </div>
                 
-                <div id="tab-complexidade" class="hero-tab-panel items-center text-left gap-8">
+                <div id="tab-panel-complexidade" role="tabpanel" aria-labelledby="tab-btn-complexidade" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
                     <div class="w-full md:w-1/2">
                         <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Análise de Complexidade</h1>
                         <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Entenda a Notação Big O e compare algoritmos como Busca Linear ($O(n)$) e Binária ($O(\log n)$) para escrever um código mais rápido.</p>
@@ -217,42 +217,65 @@ layout: null
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Lógica para o Hero Section com Abas
-            const tabButtons = document.querySelectorAll('.hero-tab-button');
-            const tabPanels = document.querySelectorAll('.hero-tab-panel');
+            // --- Lógica de Acessibilidade para o Hero Section com Abas ---
+            const tabs = document.querySelectorAll('[role="tab"]');
+            const tabList = document.querySelector('[role="tablist"]');
 
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    
-                    const targetPanelId = button.getAttribute('data-tab');
-                    
-                    tabPanels.forEach(panel => {
-                        if (panel.id === targetPanelId) {
-                            panel.classList.add('active');
-                        } else {
-                            panel.classList.remove('active');
-                        }
-                    });
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    activateTab(e.currentTarget);
+                });
+
+                tab.addEventListener('keydown', (e) => {
+                    let index = Array.prototype.indexOf.call(tabs, e.currentTarget);
+                    let newIndex = -1;
+
+                    if (e.key === 'ArrowRight') {
+                        newIndex = (index + 1) % tabs.length;
+                    } else if (e.key === 'ArrowLeft') {
+                        newIndex = (index - 1 + tabs.length) % tabs.length;
+                    }
+
+                    if (newIndex !== -1) {
+                        tabs[newIndex].focus();
+                        activateTab(tabs[newIndex]);
+                    }
                 });
             });
 
-            // Lógica para o Acordeão Interativo
+            function activateTab(tab) {
+                tabs.forEach(t => {
+                    t.setAttribute('aria-selected', 'false');
+                    t.setAttribute('tabindex', '-1');
+                    t.classList.remove('active');
+                    const panel = document.getElementById(t.getAttribute('aria-controls'));
+                    panel.setAttribute('aria-hidden', 'true');
+                    panel.classList.remove('active');
+                });
+
+                tab.setAttribute('aria-selected', 'true');
+                tab.setAttribute('tabindex', '0');
+                tab.classList.add('active');
+                
+                const activePanel = document.getElementById(tab.getAttribute('aria-controls'));
+                activePanel.setAttribute('aria-hidden', 'false');
+                activePanel.classList.add('active');
+            }
+
+            // --- Lógica para o Acordeão Interativo ---
             const accordionItems = document.querySelectorAll('.accordion-item');
             const accordionImage = document.getElementById('accordion-image-display');
             
             accordionItems.forEach(item => {
                 item.addEventListener('toggle', () => {
                     if (item.open) {
-                        // Fecha todos os outros itens
                         accordionItems.forEach(otherItem => {
                             if (otherItem !== item) {
                                 otherItem.removeAttribute('open');
                             }
                         });
                         
-                        // Atualiza a imagem
                         const newImageSrc = item.getAttribute('data-image');
                         if (newImageSrc && accordionImage) {
                             accordionImage.style.opacity = 0;
