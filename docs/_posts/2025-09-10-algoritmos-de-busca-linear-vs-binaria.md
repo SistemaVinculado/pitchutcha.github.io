@@ -8,19 +8,17 @@ image: "https://placehold.co/600x400/f3e8ff/8b5cf6?text=Busca+Linear+vs+Binária
 ---
 
 <article>
-    <h1 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl">Algoritmos de Busca: Linear vs. Binária</h1>
-    <p class="mt-6 text-lg text-[var(--text-secondary)]">
-        Encontrar informações de forma eficiente é uma das tarefas mais comuns na computação. Os algoritmos de busca fornecem os métodos para localizar um elemento específico dentro de uma estrutura de dados. Neste artigo, vamos explorar e comparar duas abordagens fundamentais: a busca linear e a busca binária.
-    </p>
-    <section class="pt-10" id="busca-linear">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Busca Linear (Linear Search)</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">
-            A busca linear é o método mais simples. Ela percorre sequencialmente cada elemento de uma lista, um por um, desde o início até o fim, comparando cada elemento com o valor alvo. A busca termina quando o elemento é encontrado ou quando a lista chega ao fim.
-            <br><br>
-            <strong>Principal Característica:</strong> Funciona em qualquer lista, ordenada ou não.
-            <br>
-            <strong>Complexidade de Tempo:</strong> O(n), pois no pior caso, pode ser necessário verificar todos os 'n' elementos da lista.
-        </p>
+    {% include article-header.html 
+        title="Algoritmos de Busca: Linear vs. Binária"
+        intro="Encontrar informações de forma eficiente é uma das tarefas mais comuns na computação. Os algoritmos de busca fornecem os métodos para localizar um elemento específico dentro de uma estrutura de dados. Neste artigo, vamos explorar e comparar duas abordagens fundamentais: a busca linear e a busca binária."
+    %}
+
+    {% include section-header.html 
+        id="busca-linear"
+        title="Busca Linear (Linear Search)"
+        text='A busca linear é o método mais simples. Ela percorre sequencialmente cada elemento de uma lista, um por um, desde o início até o fim, comparando cada elemento com o valor alvo. A busca termina quando o elemento é encontrado ou quando a lista chega ao fim.<br><br><strong>Principal Característica:</strong> Funciona em qualquer lista, ordenada ou não.<br><strong>Complexidade de Tempo:</strong> O(n), pois no pior caso, pode ser necessário verificar todos os "n" elementos da lista.'
+    %}
+
 {% highlight python %}
 def busca_linear(lista, alvo):
     """
@@ -32,16 +30,13 @@ def busca_linear(lista, alvo):
             return i  # Encontrou o alvo, retorna o índice
     return -1  # Alvo não está na lista
 {% endhighlight %}
-    </section>
-    <section class="pt-10" id="busca-binaria">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Busca Binária (Binary Search)</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">
-            A busca binária é um algoritmo muito mais eficiente, mas com um pré-requisito crucial: **a lista deve estar ordenada**. Ela funciona dividindo repetidamente o intervalo de busca pela metade. Se o valor do ponto médio for o alvo, a busca termina. Caso contrário, se o alvo for menor que o ponto médio, a busca continua na metade inferior; se for maior, continua na metade superior.
-            <br><br>
-            <strong>Principal Característica:</strong> Exige que a lista esteja previamente ordenada.
-            <br>
-            <strong>Complexidade de Tempo:</strong> O(log n), pois a cada passo, o problema é reduzido pela metade, tornando-a extremamente rápida para grandes volumes de dados.
-        </p>
+
+    {% include section-header.html 
+        id="busca-binaria"
+        title="Busca Binária (Binary Search)"
+        text='A busca binária é um algoritmo muito mais eficiente, mas com um pré-requisito crucial: <strong>a lista deve estar ordenada</strong>. Ela funciona dividindo repetidamente o intervalo de busca pela metade. Se o valor do ponto médio for o alvo, a busca termina. Caso contrário, se o alvo for menor que o ponto médio, a busca continua na metade inferior; se for maior, continua na metade superior.<br><br><strong>Principal Característica:</strong> Exige que a lista esteja previamente ordenada.<br><strong>Complexidade de Tempo:</strong> O(log n), pois a cada passo, o problema é reduzido pela metade, tornando-a extremamente rápida para grandes volumes de dados.'
+    %}
+
 {% highlight python %}
 def busca_binaria(lista_ordenada, alvo):
     """
@@ -66,7 +61,7 @@ def busca_binaria(lista_ordenada, alvo):
             
     return -1  # Alvo não está na lista
 {% endhighlight %}
-    </section>
+
     <section class="pt-10" id="comparacao">
         <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Quando Usar Cada Uma?</h2>
         <p class="mt-4 text-lg text-[var(--text-secondary)]">
