@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8"/>
-    <script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();</script>
     
     <title>Pitchutcha - {{ page.title | default: "Artigo" }}</title>
     <meta name="base-url" content="{{ '/' | relative_url }}">
@@ -57,10 +56,6 @@
                 <button class="relative rounded-full bg-[var(--secondary-color)] p-2 text-[var(--text-primary)] hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2">
                     <span class="sr-only">Ver notificações</span>
                     <i data-lucide="bell" class="w-5 h-5"></i>
-                </button>
-                <button class="rounded-full" id="theme-toggle">
-                    <span class="sr-only">Alternar tema</span>
-                    <i data-lucide="moon" class="w-5 h-5 text-[var(--text-primary)]"></i>
                 </button>
             </div>
         </header>
