@@ -13,6 +13,12 @@ image: "https://placehold.co/600x400/f3e8ff/8b5cf6?text=Busca+Linear+vs+Binária
         intro="Encontrar informações de forma eficiente é uma das tarefas mais comuns na computação. Os algoritmos de busca fornecem os métodos para localizar um elemento específico dentro de uma estrutura de dados. Neste artigo, vamos explorar e comparar duas abordagens fundamentais: a busca linear e a busca binária."
     %}
 
+    {% include image.html
+        src="../assets/images/search-algorithms-linear-vs-binary.jpg"
+        alt="Diagrama comparando a Busca Linear, que avança sequencialmente por um array, com a Busca Binária, que repetidamente foca no elemento central para descartar metade do campo de busca."
+        caption="Comparativo visual entre a Busca Linear, que verifica item por item ($O(n)$), e a Busca Binária, que divide o conjunto de dados a cada passo ($O(\log n)$)."
+    %}
+
     {% include section-header.html 
         id="busca-linear"
         title="Busca Linear (Linear Search)"
