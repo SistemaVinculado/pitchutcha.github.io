@@ -6,10 +6,12 @@ async function load(statusCallback) {
     isLoading = true;
     statusCallback('Carregando Pyodide...');
     
+    // ATUALIZAÇÃO: A função `loadPyodide` agora está disponível globalmente
+    // porque nós a carregamos com a tag <script> no HTML.
+    // Não precisamos mais passar o indexURL, ele encontrará os pacotes
+    // na mesma pasta do script principal.
     // @ts-ignore
-    pyodideInstance = await loadPyodide({
-        indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/"
-    });
+    pyodideInstance = await loadPyodide();
 
     statusCallback('Ambiente Pronto');
     isLoading = false;
@@ -19,6 +21,7 @@ export async function getPyodideInstance(statusCallback) {
     if (!pyodideInstance && !isLoading) {
         await load(statusCallback);
     }
+    // O resto do arquivo permanece o mesmo...
     return {
         run: async (code) => {
             if (!pyodideInstance) return "Pyodide não carregado.";
