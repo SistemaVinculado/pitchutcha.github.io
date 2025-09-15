@@ -16,32 +16,23 @@ jobs:
       - name: Create Pyodide vendor directory
         run: mkdir -p docs/js/vendor/pyodide
 
-      - name: Download, Inspect, and Move Pyodide
+      - name: Download and Unzip Pyodide
         run: |
-          # 'set -ex' é um modo de depuração. 'e' para o script em qualquer erro, 'x' mostra cada comando.
-          set -ex
+          set -ex # Modo de depuração para falhar em qualquer erro
           
           PYODIDE_VERSION="v0.25.1"
           
-          echo "--- 1. Baixando o arquivo de distribuição ---"
-          curl -L https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-dist-${PYODIDE_VERSION}.tar.bz2 -o pyodide-dist.tar.bz2
+          # 1. Baixa o arquivo .tar.bz2 COMPLETO (o link correto)
+          curl -L https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-${PYODIDE_VERSION}.tar.bz2 -o pyodide.tar.bz2
           
-          echo "--- 2. Verificando o arquivo baixado ---"
-          ls -l
+          # 2. Cria uma pasta temporária para extração controlada
+          mkdir pyodide-temp
           
-          echo "--- 3. Extraindo o conteúdo (de forma detalhada) ---"
-          # O '-v' em 'xvf' é para "verbose", ele vai listar todos os arquivos que extrair
-          tar -xvf pyodide-dist.tar.bz2
+          # 3. Extrai o conteúdo para dentro da pasta temporária, removendo o diretório-pai do arquivo
+          tar -xvf pyodide.tar.bz2 -C pyodide-temp --strip-components=1
           
-          echo "--- 4. Verificando a estrutura de pastas criada ---"
-          # 'ls -R' vai listar todas as pastas e arquivos recursivamente.
-          # Isso nos mostrará o caminho exato que foi criado.
-          ls -R
-          
-          echo "--- 5. Movendo os arquivos para o destino ---"
-          # Esta é a nossa melhor suposição: que uma pasta 'dist' foi criada.
-          # Se o 'ls -R' acima mostrar algo diferente, saberemos como corrigir.
-          mv dist/* docs/js/vendor/pyodide/
+          # 4. Copia APENAS a pasta 'dist' de dentro da extração para o nosso destino final
+          cp -r pyodide-temp/dist/* docs/js/vendor/pyodide/
 
       - name: Commit Pyodide files
         uses: stefanzweifel/git-auto-commit-action@v5
