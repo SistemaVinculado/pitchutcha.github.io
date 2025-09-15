@@ -1,6 +1,7 @@
 ---
 layout: artigo
 title: "Algoritmos de Busca: Linear vs. Binária"
+date: 2025-09-10
 category: Algoritmos
 icon: search
 excerpt: "Uma análise comparativa entre a busca linear e a busca binária, dois algoritmos fundamentais para encontrar elementos em uma coleção de dados. Entenda quando e porquê usar cada um."
