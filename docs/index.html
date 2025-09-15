@@ -47,23 +47,21 @@ layout: null
 
         .logo-carousel-item {
             flex-shrink: 0;
-            width: auto; /* Largura automática para acomodar diferentes logos */
+            width: auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0 1.5rem; /* Espaçamento diminuído */
+            padding: 0 1.5rem;
         }
         
         .logo-carousel-item img {
-            height: 40px; /* Tamanho aumentado */
+            height: 48px; /* Tamanho aumentado */
             width: auto;
-            /* Transforma qualquer logo em branco e depois aplica opacidade para o tom de cinza */
             filter: brightness(0) invert(1) opacity(0.6);
             transition: all 0.2s ease-in-out;
         }
 
         .logo-carousel-item img:hover {
-            /* No hover, o logo fica totalmente branco e opaco */
             filter: brightness(0) invert(1) opacity(1);
         }
 
@@ -172,7 +170,7 @@ layout: null
             </div>
         </div>
 
-        <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32 text-center">
+        <div class="px-4 md:px-8 lg:px-12 mt-16 md:mt-24 text-center">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Conhecimento é Segurança</h2>
             <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Incorpore as melhores práticas no seu fluxo de trabalho de desenvolvimento com funcionalidades que o ajudam a encontrar vulnerabilidades e a otimizar seu código.</p>
             <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
