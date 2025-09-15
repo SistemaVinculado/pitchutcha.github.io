@@ -7,7 +7,7 @@ jobs:
   download-fonts:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Permissão para fazer commit no repositório
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
             Noto Sans:wght@400;500;600;700
             JetBrains Mono:wght@400;500
           output_dir: docs/fonts
-
+          
       - name: Commit and push font files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
