@@ -14,15 +14,12 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
 
-      - name: Baixar Google Fonts (usando Muetze42)
-        # Usando a action que você sugeriu
-        uses: Muetze42/google-fonts-downloader@v1.1.1 # Usando uma versão específica
+      - name: Baixar Google Fonts
+        # CORREÇÃO: Usando a tag de versão principal @v1 em vez de uma inexistente
+        uses: Muetze42/google-fonts-downloader@v1
         with:
-          # O nome do parâmetro aqui é 'font_families'
           font_families: 'Inter:400,500,600,700|Noto Sans:400,500,600,700|JetBrains Mono:400,500'
-          # O diretório de saída
           output_dir: "docs/fonts"
-          # Formatos desejados
           formats: 'woff2'
           
       - name: Commit and push font files
