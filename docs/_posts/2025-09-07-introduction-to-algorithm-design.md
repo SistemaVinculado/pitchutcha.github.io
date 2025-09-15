@@ -14,7 +14,7 @@ image: "https://placehold.co/600x400/D1E7FC/2563EB?text=Design+de+Algoritmos"
     %}
 
     {% include image.html
-        src="../assets/images/introduction-to-algorithm-design.jpg"
+        src="/assets/images/introduction-to-algorithm-design.jpg"
         alt="Diagrama sobre Design de Algoritmos, mostrando o fluxo de instruções, o gráfico da Notação Big O, e ícones para paradigmas como Dividir para Conquistar e Programação Dinâmica."
         caption="Visualização dos pilares do Design de Algoritmos: instruções passo a passo, análise de eficiência (Big O) e paradigmas de design."
     %}
