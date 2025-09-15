@@ -16,7 +16,7 @@ const CONFIG = {
     cometSpeed: 0.01,
     rotationSpeed: 0.001,
     pulseInterval: 5, // A cada quantos segundos um novo pulso aleatório é criado
-    pulseDuration: 12, // Duração de vida de um pulso
+    pulseDuration: 16, // Duração de vida de um pulso
     pulseMaxRadius: 2.1, // Raio máximo que o pulso atinge
 };
 
