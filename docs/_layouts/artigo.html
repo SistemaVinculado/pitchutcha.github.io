@@ -37,10 +37,10 @@
                     <h1 class="text-xl font-bold">Pitchutcha</h1>
                 </div>
                 <nav class="hidden md:flex items-center gap-6">
-                    <a class="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)] transition-colors" href="{{ '/docs.html' | relative_url }}">Documentação</a>
-                    <a class="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)] transition-colors" href="{{ '/algoritmos.html' | relative_url }}">Referência da API</a>
-                    <a class="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)] transition-colors" href="#">Suporte</a>
-                    <a class="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)] transition-colors" href="#">Comunidade</a>
+                    <a class="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)]" href="{{ '/docs.html' | relative_url }}">Documentação</a>
+                    <a class="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Referência da API</a>
+                    <a class="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)]" href="#">Suporte</a>
+                    <a class="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)]" href="#">Comunidade</a>
                 </nav>
             </div>
             <div class="flex items-center gap-4">
@@ -65,12 +65,20 @@
                 <nav id="toc-container" class="space-y-2"></nav>
             </aside>
             <div class="flex-1 overflow-y-auto p-8 md:p-12">
-                <div class="mb-8 flex items-center space-x-2 text-sm text-gray-500 flex-wrap">
-                    <a class="hover:text-[var(--primary-color)] flex-shrink-0" href="{{ '/docs.html' | relative_url }}">Início</a>
-                    <span class="flex-shrink-0">/</span>
-                    <a class="hover:text-[var(--primary-color)] min-w-0 truncate" href="{{ page.category | slugify | prepend: '/' | append: '.html' | relative_url }}" title="{{ page.category }}">{{ page.category }}</a>
-                    <span class="flex-shrink-0">/</span>
-                    <span class="text-[var(--text-primary)] font-medium min-w-0 truncate" title="{{ page.title }}">{{ page.title }}</span>
+                <div class="mb-4 flex items-center justify-between text-sm text-[var(--text-secondary)] flex-wrap">
+                    <div class="flex items-center space-x-2 flex-wrap">
+                        <a class="hover:text-[var(--primary-color)] flex-shrink-0" href="{{ '/docs.html' | relative_url }}">Início</a>
+                        <span class="flex-shrink-0">/</span>
+                        <a class="hover:text-[var(--primary-color)] min-w-0 truncate" href="{{ page.category | slugify | prepend: '/' | append: '.html' | relative_url }}" title="{{ page.category }}">{{ page.category }}</a>
+                    </div>
+                    <div class="mt-2 md:mt-0">
+                        {% assign words = page.content | number_of_words %}
+                        {% if words < 360 %}
+                            Leitura de 1 min
+                        {% else %}
+                            Leitura de {{ words | divided_by: 180 }} min
+                        {% endif %}
+                    </div>
                 </div>
 
                 {{ content }}
