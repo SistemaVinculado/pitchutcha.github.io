@@ -14,3 +14,11 @@ collections:
   articles:
     output: true
     permalink: /:collection/:name
+
+# --- RECOMENDAÇÃO DE PERFORMANCE (Requer instalação do plugin) ---
+# plugins:
+#   - jekyll-minifier
+
+# jekyll_minifier:
+#   uglifier_args:
+#     harmony: true
