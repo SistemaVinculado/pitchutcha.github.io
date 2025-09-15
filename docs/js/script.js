@@ -10,36 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * ATUALIZADO: Seletor de Tema (Claro, Escuro, Alto Contraste)
-     * Cicla entre os três temas e salva a preferência do usuário.
-     */
-    const themeToggle = document.getElementById("theme-toggle");
-    if (themeToggle) {
-        const themes = ['light', 'dark', 'high-contrast'];
-        
-        const applyTheme = (theme) => {
-            document.documentElement.classList.remove(...themes);
-            if (theme !== 'light') {
-                document.documentElement.classList.add(theme);
-            }
-            localStorage.setItem('theme', theme);
-        };
-
-        // Aplica o tema salvo ao carregar a página
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme && themes.includes(savedTheme)) {
-            applyTheme(savedTheme);
-        }
-
-        themeToggle.addEventListener("click", () => {
-            let currentTheme = localStorage.getItem('theme') || 'light';
-            const currentIndex = themes.indexOf(currentTheme);
-            const nextTheme = themes[(currentIndex + 1) % themes.length];
-            applyTheme(nextTheme);
-        });
-    }
-
-    /**
      * NOVO: Lógica do Menu Móvel (para a nova landing page)
      * Adicionada a partir da nova index.html para centralizar os scripts.
      */
