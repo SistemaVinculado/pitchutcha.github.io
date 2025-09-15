@@ -27,6 +27,24 @@ layout: null
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     
     <style>
+        body {
+             background-color: #0d1117;
+             overflow-x: hidden;
+        }
+        /* FAZ O GLOBO SER O FUNDO DE TODA A PÁGINA */
+        #globe-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Coloca no fundo de tudo */
+        }
+        /* Garante que o conteúdo principal fique sobre o globo */
+        main, header, footer {
+            position: relative;
+            z-index: 1;
+        }
         #globe-container::after {
             content: '';
             position: absolute;
@@ -35,16 +53,15 @@ layout: null
             width: 100%;
             height: 40%;
             background: linear-gradient(to top, #0d1117, transparent);
-            z-index: 2; /* Fica acima do canvas, mas abaixo do texto */
-        }
-        body {
-             background-color: #0d1117; /* Garante fundo escuro consistente */
+            z-index: 2;
         }
     </style>
 </head>
 <body class="text-white">
 
-    <header class="p-4 md:px-8 lg:px-12 flex justify-between items-center z-30 relative">
+    <div id="globe-container"></div>
+
+    <header class="p-4 md:px-8 lg:px-12 flex justify-between items-center">
         <div class="flex items-center space-x-4">
             <svg height="32" aria-hidden="true" viewBox="0 0 32 32" version="1.1" width="32" class="fill-current text-white">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4zM0 16C0 7.16 7.16 0 16 0s16 7.16 16 16-7.16 16-16 16S0 24.84 0 16z"/>
@@ -75,13 +92,9 @@ layout: null
 
     <main>
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[75vh] md:min-h-[80vh] px-4 overflow-hidden">
-            
-            <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
-
             <div class="relative z-10">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">Vamos construir a partir daqui</h1>
                 <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-400">O seu guia completo de Ciência da Computação para construir, escalar e otimizar software com conhecimento sólido.</p>
-                
                 <form action="search.html" method="get" class="main-search-form mt-8 flex justify-center w-full max-w-2xl mx-auto">
                     <input type="search" name="q" placeholder="Pesquisar por 'Busca Binária', 'Listas Ligadas'..." class="w-full bg-[#0d1117] border border-gray-600 rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
                     <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-md px-6 py-2.5">Pesquisar</button>
@@ -92,7 +105,6 @@ layout: null
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Produtividade Desencadeada</h2>
             <p class="mt-4 text-center text-gray-400 max-w-3xl mx-auto">Acelere a inovação em qualquer escala com a plataforma de desenvolvimento mais completa do mundo.</p>
-
             <div class="mt-12 grid md:grid-cols-2 gap-8">
                 <div class="p-8 rounded-lg feature-card">
                     <h3 class="text-2xl font-semibold">Artigos Aprofundados</h3>
@@ -112,7 +124,6 @@ layout: null
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Conhecimento é Segurança</h2>
             <p class="mt-4 text-center text-gray-400 max-w-3xl mx-auto">Incorpore as melhores práticas no seu fluxo de trabalho de desenvolvimento com funcionalidades que o ajudam a encontrar vulnerabilidades e a otimizar seu código.</p>
-
             <div class="mt-12 grid md:grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="p-6 rounded-lg feature-card">
                     <h3 class="text-xl font-semibold">Análise de Complexidade</h3>
