@@ -16,13 +16,22 @@ jobs:
       - name: Create Pyodide vendor directory
         run: mkdir -p docs/js/vendor/pyodide
 
+      # --- ETAPA DE DOWNLOAD REFEITA PARA SER MAIS ROBUSTA ---
       - name: Download and Unzip Pyodide
         run: |
           PYODIDE_VERSION="v0.25.1"
+          # 1. Baixa o arquivo como antes
           curl -L https://github.com/pyodide/pyodide/releases/download/${PYODIDE_VERSION}/pyodide-${PYODIDE_VERSION}.tar.bz2 -o pyodide.tar.bz2
-          tar -xvf pyodide.tar.bz2
-          # CORREÇÃO: Copia da pasta extraída com o nome da versão.
-          cp -r pyodide-${PYODIDE_VERSION}/dist/* docs/js/vendor/pyodide/
+          
+          # 2. Cria uma pasta temporária com um nome que NÓS controlamos
+          mkdir pyodide-temp
+          
+          # 3. Extrai o conteúdo do arquivo para dentro da nossa pasta temporária
+          #    --strip-components=1 remove o diretório-pai de dentro do .tar.bz2
+          tar -xvf pyodide.tar.bz2 -C pyodide-temp --strip-components=1
+          
+          # 4. Copia os arquivos de um caminho agora 100% previsível
+          cp -r pyodide-temp/dist/* docs/js/vendor/pyodide/
 
       - name: Commit Pyodide files
         uses: stefanzweifel/git-auto-commit-action@v5
