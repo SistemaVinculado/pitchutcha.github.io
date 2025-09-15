@@ -27,34 +27,6 @@ layout: null
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     
     <style>
-        body {
-             background-color: #0d1117;
-             overflow-x: hidden;
-             position: relative; /* Necessário para o z-index do pseudo-elemento */
-        }
-
-        /* NOVO: Fundo de Estrelas animado com CSS */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 200vw;
-            height: 200vh;
-            background-image: 
-                radial-gradient(ellipse at center, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 60%),
-                radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 40%);
-            background-size: 1px 1px, 2px 2px;
-            background-position: 50% 50%;
-            animation: animate-stars 200s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes animate-stars {
-            from { transform: translate(-50%, -50%); }
-            to { transform: translate(0, 0); }
-        }
-        
         #globe-container::after {
             content: '';
             position: absolute;
@@ -64,6 +36,9 @@ layout: null
             height: 40%;
             background: linear-gradient(to top, #0d1117, transparent);
             z-index: 2;
+        }
+        body {
+             background-color: #0d1117;
         }
     </style>
 </head>
