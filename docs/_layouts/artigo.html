@@ -33,13 +33,13 @@
                 </nav>
             </div>
             <div class="flex items-center gap-4">
-                <form class="header-search-form relative hidden sm:block">
+                <form class="header-search-form relative hidden sm:block" action="{{ '/search.html' | relative_url }}" method="get">
                     <label>
                         <span class="sr-only">Pesquisar</span>
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                             <i data-lucide="search" class="w-5 h-5 text-[var(--text-secondary)]"></i>
                         </span>
-                        <input class="form-input block w-full rounded-md border-transparent bg-[var(--background-secondary)] py-2 pl-10 pr-3 text-sm placeholder:text-[var(--text-secondary)]" placeholder="Pesquisar documentação..." type="search"/>
+                        <input class="form-input block w-full rounded-md border-transparent bg-[var(--background-secondary)] py-2 pl-10 pr-3 text-sm placeholder:text-[var(--text-secondary)]" placeholder="Pesquisar documentação..." type="search" name="q"/>
                     </label>
                 </form>
             </div>
@@ -56,7 +56,7 @@
                     <ol class="flex items-center space-x-1 text-sm text-[var(--text-secondary)] flex-wrap">
                         <li><a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Início</a></li>
                         <li><span class="material-symbols-outlined text-base mx-1">chevron_right</span></li>
-                        <li><a href="{{ page.collection }}/{{ page.category | slugify }}.html" class="hover:text-[var(--primary-color)]">{{ page.category }}</a></li>
+                        <li><a href="/{{ page.category | slugify }}.html" class="hover:text-[var(--primary-color)]">{{ page.category }}</a></li>
                     </ol>
                 </nav>
 
