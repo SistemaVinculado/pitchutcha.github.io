@@ -1,0 +1,9 @@
+# Arquivo para guardar metadados e informações globais do site.
+# Você pode acessar esses dados em qualquer página com {{ site.data.site_meta. ... }}
+
+author:
+  name: "SistemaVinculado"
+  github_url: "https://github.com/SistemaVinculado"
+
+site:
+  github_url: "https://github.com/SistemaVinculado/pitchutcha.github.io"
