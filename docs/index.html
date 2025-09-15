@@ -4,7 +4,7 @@ layout: null
 <!DOCTYPE html>
 <html lang="pt" class="dark">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF--8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pitchutcha: Domine os Fundamentos da Computação</title>
 
@@ -37,12 +37,12 @@ layout: null
 
         .logo-carousel-track {
             display: flex;
-            width: max-content; /* Garante que todos os logos estejam na mesma linha */
-            animation: scroll-left 40s linear infinite; /* Ajuste a duração para controlar a velocidade */
+            width: max-content;
+            animation: scroll-left 40s linear infinite;
         }
         
         .logo-carousel-track:hover {
-            animation-play-state: paused; /* Pausa no hover */
+            animation-play-state: paused;
         }
 
         .logo-carousel-item {
@@ -52,12 +52,22 @@ layout: null
             justify-content: center;
             align-items: center;
             padding: 0 2rem;
-            height: 60px;
         }
         
+        .logo-carousel-item img {
+            height: 32px; /* 8 * 4 = 32px */
+            width: auto;
+            filter: grayscale(1) opacity(0.6);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .logo-carousel-item img:hover {
+            filter: grayscale(0) opacity(1);
+        }
+
         @keyframes scroll-left {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* Rola até a metade para o loop perfeito */
+            100% { transform: translateX(-50%); }
         }
 
         #globe-container::after {
@@ -129,13 +139,17 @@ layout: null
                     <h3 class="text-2xl font-semibold">Introdução ao Design de Algoritmos</h3>
                     <p class="mt-2 text-[var(--text-secondary)]">Aprenda o básico de design e análise de algoritmos, incluindo complexidade, Big O, e paradigmas comuns como dividir para conquistar.</p>
                     <a href="{{ '/algoritmos.html' | relative_url }}" class="mt-4 inline-block text-[var(--primary-color)] hover:underline">Explorar Algoritmos &rarr;</a>
-                    <img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" loading="lazy" class="mt-6 rounded-md" alt="Visualização dos pilares do Design de Algoritmos.">
+                    <div class="mt-6 h-56 overflow-hidden rounded-md">
+                        <img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" loading="lazy" class="w-full h-full object-cover" alt="Visualização dos pilares do Design de Algoritmos.">
+                    </div>
                 </div>
                 <div class="p-8 rounded-lg feature-card">
                     <h3 class="text-2xl font-semibold">Visão Geral de Estruturas de Dados</h3>
                     <p class="mt-2 text-[var(--text-secondary)]">Explore estruturas de dados como arrays, listas ligadas, pilhas e filas, e entenda sua importância na resolução eficiente de problemas.</p>
                     <a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="mt-4 inline-block text-[var(--primary-color)] hover:underline">Explorar Estruturas de Dados &rarr;</a>
-                    <img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" loading="lazy" class="mt-6 rounded-md" alt="Visualização de Estruturas de Dados como Listas Ligadas e Tabelas Hash.">
+                    <div class="mt-6 h-56 overflow-hidden rounded-md">
+                        <img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" loading="lazy" class="w-full h-full object-cover" alt="Visualização de Estruturas de Dados como Listas Ligadas e Tabelas Hash.">
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,41 +158,11 @@ layout: null
             <h3 class="text-center text-lg text-[var(--text-secondary)] mb-8">Com a confiança de profissionais e estudantes de:</h3>
             <div class="logo-carousel-container">
                 <div class="logo-carousel-track">
-                    {% comment %} A lista de logos é duplicada para criar o efeito de loop infinito {% endcomment %}
-                    {% assign logos = "aws,google,microsoft,meta,apple,ibm,oracle,intel,nvidia,stanford,mit,usp,ufmg" | split: "," %}
+                    {% assign logos = "google,microsoft,aws,apple,meta,ibm,oracle,intel,nvidia,github,cloudflare,figma" | split: "," %}
                     {% for i in (1..2) %}
                         {% for logo_name in logos %}
                             <div class="logo-carousel-item">
-                                <svg class="h-8 fill-current text-gray-500 hover:text-white transition-colors" role="img" viewBox="0 0 24 24">
-                                {% case logo_name %}
-                                    {% when "google" %}
-                                        <title>Google</title><path d="M12.24 10.27v1.89h6.66c-.28 1.86-2.12 3.61-6.66 3.61-4.04 0-7.33-3.29-7.33-7.33s3.29-7.33 7.33-7.33c2.19 0 3.6.95 4.41 1.73l1.37-1.35C16.89 2.37 14.62 0 12.24 0 5.48 0 0 5.48 0 12.24c0 6.76 5.48 12.24 12.24 12.24 6.36 0 10.66-4.63 10.66-10.36 0-.7-.06-1.39-.17-2.07z"/>
-                                    {% when "microsoft" %}
-                                        <title>Microsoft</title><path d="M0 0h11.458v11.458H0zm12.542 0H24v11.458H12.542zM0 12.542h11.458V24H0zm12.542 0H24V24H12.542z"/>
-                                    {% when "apple" %}
-                                        <title>Apple</title><path d="M16.923 11.23a4.747 4.747 0 0 0 .034-.515c0-1.85-.945-3.003-2.585-3.003-1.374 0-2.31 1.055-2.88 2.65-.968-1.07-2.383-2.73-4.04-2.7-1.78.026-3.24 1.13-3.99 2.87-1.71 4.09-.274 7.55 1.492 8.528 1.15.632 2.455.97 4.07.95 1.583-.02 2.767-.358 3.826-.983 1.132-.67 2.05-1.996 2.074-3.858-.024-1.127-.674-2.404-1.503-3.54zM12.187 0c.932-.016 1.942.545 2.515 1.637-.962.063-2.04.64-2.678 1.71-.53-1.096-.922-2.34-.163-3.347z"/>
-                                    {% when "meta" %}
-                                        <title>Meta</title><path d="M22.258 12.052c-.078-4.708-3.966-8.541-8.73-8.621-4.814-.08-8.73 3.794-8.73 8.513 0 4.71 3.966 8.541 8.73 8.622 4.814.08 8.73-3.794 8.73-8.513 0-.001-.002-.001-.003-.002zm-3.805-3.204a.812.812 0 0 0-1.18.243c-1.192 1.96-2.528 3.535-4.407 4.316-.92.378-1.921.36-2.835-.018a.813.813 0 0 0-.414-.727c-.207-.123-.46-.07-.61.127-.148.196-.062.464.127.61a2.122 2.122 0 0 0 1.077.58c1.32.26 2.573.197 3.79-.31 1.867-.775 3.33-2.38 4.61-4.526a.813.813 0 0 0-.21-.806zm-7.653 7.84a.812.812 0 0 0 .243 1.18c1.192 1.96 2.528 3.535 4.407 4.316.92.378 1.921.36 2.835-.018a.813.813 0 0 0 .414-.727c.207-.123.46-.07.61.127.148.196.062.464-.127.61a2.122 2.122 0 0 0-1.077.58c-1.32.26-2.573.197-3.79-.31-1.867-.775-3.33-2.38-4.61-4.526a.813.813 0 0 0 .21-.806z"/>
-                                    {% when "aws" %}
-                                        <title>Amazon Web Services</title><path d="M6.33 6.15h5.45v1.64H6.33zm11.89 0h5.45v1.64h-5.45zm-6.22 0h5.45v1.64h-5.45zM24 3.87v11.01c0 1.2-.95 2.16-2.12 2.16H2.12C.95 17.04 0 16.08 0 14.88V3.87h24zM6.6 0C2.97 0 0 2.97 0 6.6v10.8C0 20.03 2.97 23 6.6 23h10.8c3.63 0 6.6-2.97 6.6-6.6V6.6C24 2.97 21.03 0 17.4 0H6.6z"/>
-                                    {% when "ibm" %}
-                                        <title>IBM</title><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm0-20C6.477 4 2 8.477 2 14s4.477 10 10 10 10-4.477 10-10S17.523 4 12 4z"/>
-                                    {% when "oracle" %}
-                                        <title>Oracle</title><path d="M12.44 2.4a.45.45 0 00-.44-.45h-1a.45.45 0 00-.45.45v9.1a.45.45 0 00.45.45h1a.45.45 0 00.45-.45v-9.1zM22.05 2.4a.45.45 0 00-.45-.45h-1a.45.45 0 00-.45.45v19.1a.45.45 0 00.45.45h1a.45.45 0 00.45-.45V2.4zM17.25 2.4a.45.45 0 00-.45-.45h-1a.45.45 0 00-.45.45v14.1a.45.45 0 00.45.45h1a.45.45 0 00.45-.45V2.4zM2.4 12.44a.45.45 0 00-.45-.44v-1a.45.45 0 00.45-.45h9.1a.45.45 0 00.45.45v1a.45.45 0 00-.45.45h-9.1zM2.4 22.05a.45.45 0 00-.45-.45v-1a.45.45 0 00.45-.45h19.1a.45.45 0 00.45.45v1a.45.45 0 00-.45.45H2.4zM2.4 17.25a.45.45 0 00-.45-.45v-1a.45.45 0 00.45-.45h14.1a.45.45 0 00.45.45v1a.45.45 0 00-.45.45H2.4z"/>
-                                    {% when "intel" %}
-                                        <title>Intel</title><path d="M22.53 5.62c-.44 0-.8.36-.8.8v11.16c0 .44.36.8.8.8s.8-.36.8-.8V6.42c0-.44-.36-.8-.8-.8zM12.41 0C5.55 0 0 5.55 0 12.41s5.55 12.41 12.41 12.41 12.41-5.55 12.41-12.41S19.27 0 12.41 0zm-1.83 5.62c-.44 0-.8.36-.8.8v11.16c0 .44.36.8.8.8s.8-.36.8-.8V6.42c0-.44-.36-.8-.8-.8z"/>
-                                    {% when "nvidia" %}
-                                        <title>Nvidia</title><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm-3.1-6.86l-2.7-4.9v4.9H2V6.86h4.2v4.9l2.7-4.9H12v10.28h-3.1V17.14zm9.3-1.28v-2.3h-4.2v-1.3h4.2V9.96h-4.2V6.86h7.3v10.28h-3.1z"/>
-                                    {% when "stanford" %}
-                                        <p class="text-xl font-bold text-gray-500 hover:text-white transition-colors">Stanford</p>
-                                    {% when "mit" %}
-                                        <p class="text-xl font-bold text-gray-500 hover:text-white transition-colors">MIT</p>
-                                    {% when "usp" %}
-                                        <p class="text-xl font-bold text-gray-500 hover:text-white transition-colors">USP</p>
-                                    {% when "ufmg" %}
-                                        <p class="text-xl font-bold text-gray-500 hover:text-white transition-colors">UFMG</p>
-                                {% endcase %}
-                                </svg>
+                                <img src="{{ '/assets/logos/' | append: logo_name | append: '.svg' | relative_url }}" alt="{{ logo_name | capitalize }} logo">
                             </div>
                         {% endfor %}
                     {% endfor %}
