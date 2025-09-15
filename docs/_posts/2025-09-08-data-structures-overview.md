@@ -14,7 +14,7 @@ image: "https://placehold.co/600x400/D1FAE5/047857?text=Estruturas+de+Dados"
     %}
 
     {% include image.html
-        src="../assets/images/data-structures-overview.jpg"
+        src="/assets/images/data-structures-overview.jpg"
         alt="Diagrama visualizando diferentes estruturas de dados como Listas Ligadas (sequência de nós), Tabela Hash (rede de nós), Fila (empilhamento de camadas) e Arrays (sequência de cubos)."
         caption="Visualização de Estruturas de Dados, ilustrando a organização e o fluxo de dados em Listas Ligadas, Tabelas Hash e Filas."
     %}
