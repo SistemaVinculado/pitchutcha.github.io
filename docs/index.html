@@ -38,7 +38,7 @@ layout: null
         .logo-carousel-track {
             display: flex;
             width: max-content;
-            animation: scroll-left 60s linear infinite; /* Aumentei o tempo para acomodar mais logos */
+            animation: scroll-left 60s linear infinite;
         }
         
         .logo-carousel-track:hover {
@@ -47,22 +47,24 @@ layout: null
 
         .logo-carousel-item {
             flex-shrink: 0;
-            width: 180px;
+            width: auto; /* Largura automática para acomodar diferentes logos */
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0 2rem;
+            padding: 0 1.5rem; /* Espaçamento diminuído */
         }
         
         .logo-carousel-item img {
-            height: 32px;
+            height: 40px; /* Tamanho aumentado */
             width: auto;
-            filter: grayscale(1) opacity(0.6);
+            /* Transforma qualquer logo em branco e depois aplica opacidade para o tom de cinza */
+            filter: brightness(0) invert(1) opacity(0.6);
             transition: all 0.2s ease-in-out;
         }
 
         .logo-carousel-item img:hover {
-            filter: grayscale(0) opacity(1);
+            /* No hover, o logo fica totalmente branco e opaco */
+            filter: brightness(0) invert(1) opacity(1);
         }
 
         @keyframes scroll-left {
