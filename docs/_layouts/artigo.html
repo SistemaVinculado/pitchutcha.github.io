@@ -65,7 +65,9 @@
                 <div class="mt-8 flex justify-end">
                     <p class="text-sm text-[var(--text-secondary)]">Última atualização: {{ page.date | date: "%-d de %B de %Y" }}</p>
                 </div>
-                <footer class="mt-12 border-t border-[var(--secondary-color)] pt-8 text-center text-sm text-[var(--text-secondary)]"> © 2025 Pitchutcha. Todos os direitos reservados.</footer>
+                
+                {% include footer.html %}
+
             </div>
         </main>
     </div>
