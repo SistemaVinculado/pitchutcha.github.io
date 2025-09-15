@@ -21,8 +21,8 @@ jobs:
         with:
           repository: "pyodide/pyodide"
           tag: "0.25.1"
-          # CORREÇÃO FINAL: Usando o nome de arquivo exato do release
-          fileName: "pyodide-src-0.25.1.tar.bz2"
+          # CORREÇÃO FINAL: Nome exato do arquivo de 'build'
+          fileName: "pyodide-build-0.25.1.tar.bz2"
           extract: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -32,9 +32,10 @@ jobs:
           echo "--- Verificando a estrutura de pastas extraída ---"
           ls -R
           
-          echo "--- Movendo os arquivos da pasta 'dist' para o destino ---"
-          # A pasta extraída terá o mesmo nome do arquivo, com '-src-'
-          cp -r pyodide-src-0.25.1/dist/* docs/js/vendor/pyodide/
+          echo "--- Movendo os arquivos para o destino ---"
+          # A pasta extraída terá o nome do arquivo, que é 'pyodide-build-0.25.1'
+          # e o conteúdo dela já é o que precisamos (pyodide.js, etc)
+          cp -r pyodide-build-0.25.1/* docs/js/vendor/pyodide/
 
       - name: Commit Pyodide files
         uses: stefanzweifel/git-auto-commit-action@v5
