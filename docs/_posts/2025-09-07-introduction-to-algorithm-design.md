@@ -8,15 +8,17 @@ image: "https://placehold.co/600x400/D1E7FC/2563EB?text=Design+de+Algoritmos"
 ---
 
 <article>
-    <h1 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl">Introdução ao Design de Algoritmos</h1>
-    <p class="mt-6 text-lg text-[var(--text-secondary)]">
-        Algoritmos são o coração da ciência da computação, fornecendo instruções passo a passo para resolver problemas. Este artigo introduz conceitos fundamentais no design de algoritmos, incluindo a análise de eficiência usando a notação Big O e os paradigmas de design mais comuns.
-    </p>
-    <section class="pt-10" id="algorithm-analysis">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Análise de Algoritmos e Notação Big O</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">
-            Compreender a eficiência de um algoritmo é crucial. A notação Big O descreve o comportamento do tempo de execução ou do espaço de memória de um algoritmo à medida que o tamanho da entrada cresce. Classes de complexidade comuns incluem O(1) (constante), O(log n) (logarítmico), O(n) (linear), O(n log n) (linearítmico) e O(n²) (quadrático), O(2ⁿ) (exponencial).
-        </p>
+    {% include article-header.html 
+        title="Introdução ao Design de Algoritmos"
+        intro="Algoritmos são o coração da ciência da computação, fornecendo instruções passo a passo para resolver problemas. Este artigo introduz conceitos fundamentais no design de algoritmos, incluindo a análise de eficiência usando a notação Big O e os paradigmas de design mais comuns." 
+    %}
+
+    {% include section-header.html 
+        id="algorithm-analysis"
+        title="Análise de Algoritmos e Notação Big O"
+        text="Compreender a eficiência de um algoritmo é crucial. A notação Big O descreve o comportamento do tempo de execução ou do espaço de memória de um algoritmo à medida que o tamanho da entrada cresce. Classes de complexidade comuns incluem O(1) (constante), O(log n) (logarítmico), O(n) (linear), O(n log n) (linearítmico) e O(n²) (quadrático), O(2ⁿ) (exponencial)."
+    %}
+
 {% highlight python %}
 # Exemplo de um algoritmo de tempo linear O(n)
 # O tempo de execução cresce na proporção direta do número de itens.
@@ -27,12 +29,13 @@ def encontrar_maximo(lista):
             max_valor = item
     return max_valor
 {% endhighlight %}
-    </section>
-    <section class="pt-10" id="divide-and-conquer">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Dividir para Conquistar</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">
-            Este paradigma quebra um problema em subproblemas menores e independentes, resolve-os recursivamente e depois combina as suas soluções. Um exemplo clássico é o algoritmo de ordenação Merge Sort.
-        </p>
+
+    {% include section-header.html 
+        id="divide-and-conquer"
+        title="Dividir para Conquistar"
+        text="Este paradigma quebra um problema em subproblemas menores e independentes, resolve-os recursivamente e depois combina as suas soluções. Um exemplo clássico é o algoritmo de ordenação Merge Sort."
+    %}
+
 {% highlight python %}
 # Exemplo de Merge Sort
 def merge_sort(arr):
@@ -64,10 +67,13 @@ def merge_sort(arr):
             j += 1
             k += 1
 {% endhighlight %}
-    </section>
-    <section class="pt-10" id="dynamic-programming">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Programação Dinâmica</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">A programação dinâmica resolve problemas quebrando-os em subproblemas sobrepostos. Ela armazena (memoiza) os resultados dos subproblemas para evitar recálculos, melhorando drasticamente a eficiência. Um exemplo clássico é o cálculo da sequência de Fibonacci.</p>
+
+    {% include section-header.html 
+        id="dynamic-programming"
+        title="Programação Dinâmica"
+        text="A programação dinâmica resolve problemas quebrando-os em subproblemas sobrepostos. Ela armazena (memoiza) os resultados dos subproblemas para evitar recálculos, melhorando drasticamente a eficiência. Um exemplo clássico é o cálculo da sequência de Fibonacci."
+    %}
+
 {% highlight python %}
 # Fibonacci com memoização (Top-Down)
 def fibonacci(n, memo={}):
@@ -78,10 +84,13 @@ def fibonacci(n, memo={}):
     memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo)
     return memo[n]
 {% endhighlight %}
-    </section>
-    <section class="pt-10" id="greedy-algorithms">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Algoritmos Gulosos</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">Algoritmos gulosos (greedy) fazem a escolha que parece ser a melhor no momento, na esperança de encontrar uma solução globalmente ótima. Um exemplo clássico é o problema de seleção de atividades, onde o objetivo é selecionar o número máximo de atividades não sobrepostas.</p>
+
+    {% include section-header.html 
+        id="greedy-algorithms"
+        title="Algoritmos Gulosos"
+        text="Algoritmos gulosos (greedy) fazem a escolha que parece ser a melhor no momento, na esperança de encontrar uma solução globalmente ótima. Um exemplo clássico é o problema de seleção de atividades, onde o objetivo é selecionar o número máximo de atividades não sobrepostas."
+    %}
+
 {% highlight python %}
 # Problema da Seleção de Atividades
 def activity_selection(atividades):
@@ -105,5 +114,4 @@ def activity_selection(atividades):
             
     return selecionadas
 {% endhighlight %}
-    </section>
 </article>
