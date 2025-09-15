@@ -1,6 +1,7 @@
 ---
 layout: artigo
 title: "Visão Geral de Estruturas de Dados"
+date: 2025-09-08
 category: Estruturas de Dados
 icon: account_tree
 excerpt: "Explore estruturas de dados comuns como arrays, listas ligadas, pilhas, filas e árvores, e entenda sua importância na resolução eficiente de problemas."
