@@ -21,7 +21,7 @@ export async function getPyodideInstance(statusCallback) {
     if (!pyodideInstance && !isLoading) {
         await load(statusCallback);
     }
-    // O resto do arquivo permanece o mesmo...
+    
     return {
         run: async (code) => {
             if (!pyodideInstance) return "Pyodide não carregado.";
