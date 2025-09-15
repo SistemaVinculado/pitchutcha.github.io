@@ -1,29 +1,46 @@
+# Nome do Workflow: Baixar e Atualizar Fontes Locais
 name: Baixar e Atualizar Fontes Locais
 
+# Define o gatilho para execução manual através da interface do GitHub
 on:
-  workflow_dispatch: # Permite iniciar manualmente
+  workflow_dispatch:
 
+# Define os jobs que serão executados
 jobs:
+  # Nome do job
   download-fonts:
+    # O tipo de máquina virtual para rodar o job
     runs-on: ubuntu-latest
+    
+    # Define as permissões necessárias para o token do GitHub Actions
     permissions:
+      # Permissão de escrita no repositório para fazer o commit das fontes
       contents: write
+      
+    # Define a sequência de passos a serem executados no job
     steps:
+      # 1. Faz o checkout do código do repositório para a máquina virtual
       - name: Check out repo
         uses: actions/checkout@v4
 
+      # 2. Baixa as fontes do Google Fonts usando a action correta
       - name: Baixar Google Fonts (Inter, Noto Sans, JetBrains Mono)
-        # CORREÇÃO: O nome correto do repositório da ação é "google-fonts-actions"
-        uses: google-fonts-actions/google-fonts@v2
+        # CORREÇÃO: O caminho correto da action é 'fontsource/google-fonts-action'
+        uses: fontsource/google-fonts-action@v1
         with:
+          # Lista de fontes e pesos a serem baixados
           fonts: |
             Inter:wght@400;500;600;700
             Noto Sans:wght@400;500;600;700
             JetBrains Mono:wght@400;500
+          # Diretório de destino para os arquivos das fontes
           output_dir: docs/fonts
           
+      # 3. Faz o commit e push automático dos arquivos de fontes baixados
       - name: Commit and push font files
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
+          # Mensagem do commit
           commit_message: "feat: Update local fonts and add JetBrains Mono"
+          # Padrão de arquivos para incluir no commit
           file_pattern: "docs/fonts"
