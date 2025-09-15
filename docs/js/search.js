@@ -1,7 +1,163 @@
-document.addEventListener("DOMContentLoaded",()=>{const e=document.querySelector('meta[name="base-url"]')?.content||"",t=document.getElementById("search-input"),n=document.getElementById("results-container"),o=document.getElementById("results-count"),c=document.getElementById("autocomplete-suggestions"),s=document.querySelectorAll('input[data-filter="category"]');let a,r=[];const l={keys:["title","excerpt"],includeMatches:!0,minMatchCharLength:2,threshold:.4,ignoreLocation:!0,useExtendedSearch:!0};async function i(){try{const t=await fetch(`${e}search.json?cache_bust=`+Date.now());if(!t.ok)throw new Error("Falha ao carregar search.json");r=await t.json(),a=new Fuse(r,l);const i=new URLSearchParams(window.location.search).get("q");i&&(t.value=i),d()}catch(t){console.error(t),o.textContent="Erro ao carregar artigos."}}function u(e,t,o){let c=[],s=0;const a=t.filter(e=>e.key===o);return a.forEach(t=>{t.indices.forEach(t=>{const o=t[0],a=t[1]+1;o>s&&c.push(e.substring(s,o)),c.push(`<mark>${e.substring(o,a)}</mark>`),s=a})}),s<e.length&&c.push(e.substring(s)),c.join("")}function d(){if(!a)return;const e=t.value.trim(),i=Array.from(s).filter(e=>e.checked).map(e=>e.value.trim());let d=[];e.length<l.minMatchCharLength?d=r.filter(e=>0===i.length||e.category&&i.includes(e.category.trim())).map(e=>({item:e,matches:[]})):(d=a.search(e),i.length>0&&(d=d.filter(({item:e})=>e.category&&i.includes(e.category.trim())))),(e=>{n.innerHTML="",0===e.length?o.textContent="Nenhum resultado encontrado.":(o.textContent=`Mostrando ${e.length} resultados.`,e.forEach(({item:e,matches:t})=>{const o=document.createElement("div");o.className="bg-[var(--background-primary)] p-6 rounded-md shadow-sm border border-[var(--secondary-color)] hover:shadow-md transition-shadow",o.innerHTML=`
-                    <a class="block" href="${e.url}">
-                        <h3 class="text-lg font-semibold text-[var(--text-primary)] hover:text-[var(--primary-color)]">${u(e.title,t,"title")}</h3>
-                        <p class="text-sm text-[var(--text-secondary)] mt-1">Categoria: <span class="font-medium text-[var(--text-primary)]">${e.category}</span></p>
-                        <p class="text-[var(--text-secondary)] mt-2 text-sm">${u(e.excerpt,t,"excerpt")}</p>
-                    </a>
-                `,n.appendChild(o)}))})(d),e?(e=>{c.innerHTML="",0!==e.length?(c.style.display="block",(()=>{const t=e.slice(0,5),o=document.createElement("ul");o.className="absolute w-full bg-[var(--background-primary)] border border-[var(--secondary-color)] rounded-md mt-1 shadow-lg z-10",t.forEach(({item:e,matches:t})=>{const c=document.createElement("li"),n=document.createElement("a");n.href=e.url,n.className="block p-3 hover:bg-[var(--background-secondary)]",n.innerHTML=`<span class="font-semibold">${u(e.title,t,"title")}</span><br><span class="text-sm text-[var(--text-secondary)]">${u(e.excerpt,t,"excerpt")}</span>`,c.appendChild(n),o.appendChild(c)}),c.appendChild(o)})()):c.style.display="none"})(d):(c.innerHTML="",c.style.display="none")}t&&(t.addEventListener("input",d),s.forEach(e=>{e.addEventListener("change",d)}),document.addEventListener("click",e=>{t.contains(e.target)||(c.style.display="none")}),i())});
+document.addEventListener("DOMContentLoaded", () => {
+    const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
+    const searchInput = document.getElementById("search-input");
+    const resultsContainer = document.getElementById("results-container");
+    const resultsCount = document.getElementById("results-count");
+    const autocompleteSuggestions = document.getElementById("autocomplete-suggestions");
+    const categoryFilters = document.querySelectorAll('input[data-filter="category"]');
+
+    let fuse;
+    let searchData = [];
+
+    const fuseOptions = {
+        keys: ["title", "excerpt"],
+        includeMatches: true,
+        minMatchCharLength: 2,
+        threshold: 0.4,
+        ignoreLocation: true,
+        useExtendedSearch: true,
+    };
+
+    async function initializeSearch() {
+        try {
+            const response = await fetch(`${baseUrl}search.json?cache_bust=` + Date.now());
+            if (!response.ok) {
+                throw new Error("Falha ao carregar search.json");
+            }
+            searchData = await response.json();
+            fuse = new Fuse(searchData, fuseOptions);
+
+            const urlQuery = new URLSearchParams(window.location.search).get("q");
+            if (urlQuery) {
+                searchInput.value = urlQuery;
+            }
+            performSearch();
+        } catch (error) {
+            console.error(error);
+            resultsCount.textContent = "Erro ao carregar artigos.";
+        }
+    }
+
+    function highlight(text, matches, key) {
+        let result = [];
+        let lastIndex = 0;
+        const keyMatches = matches.filter(match => match.key === key);
+
+        keyMatches.forEach(match => {
+            match.indices.forEach(([start, end]) => {
+                const actualEnd = end + 1;
+                if (start > lastIndex) {
+                    result.push(text.substring(lastIndex, start));
+                }
+                result.push(`<mark>${text.substring(start, actualEnd)}</mark>`);
+                lastIndex = actualEnd;
+            });
+        });
+
+        if (lastIndex < text.length) {
+            result.push(text.substring(lastIndex));
+        }
+        return result.join('');
+    }
+
+    function displayResults(results) {
+        resultsContainer.innerHTML = "";
+        if (results.length === 0) {
+            resultsCount.textContent = "Nenhum resultado encontrado.";
+            return;
+        }
+
+        resultsCount.textContent = `Mostrando ${results.length} resultados.`;
+        results.forEach(({ item, matches }) => {
+            const resultElement = document.createElement("div");
+            resultElement.className = "bg-[var(--background-primary)] p-6 rounded-md shadow-sm border border-[var(--secondary-color)] hover:shadow-md transition-shadow";
+            
+            // --- MELHORIA DA EXPERIÊNCIA DE BUSCA ---
+            // Adiciona a categoria como uma tag visual para dar contexto ao resultado.
+            const categoryTag = item.category 
+                ? `<div class="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--primary-color)]">${item.category}</div>` 
+                : '';
+
+            resultElement.innerHTML = `
+                <a class="block" href="${item.url}">
+                    ${categoryTag}
+                    <h3 class="text-lg font-semibold text-[var(--text-primary)] hover:text-[var(--primary-color)]">${highlight(item.title, matches, "title")}</h3>
+                    <p class="text-[var(--text-secondary)] mt-2 text-sm">${highlight(item.excerpt, matches, "excerpt")}</p>
+                </a>
+            `;
+            resultsContainer.appendChild(resultElement);
+        });
+    }
+    
+    function displayAutocomplete(results) {
+        autocompleteSuggestions.innerHTML = "";
+        if (results.length === 0) {
+            autocompleteSuggestions.style.display = 'none';
+            return;
+        }
+        
+        autocompleteSuggestions.style.display = 'block';
+        const suggestionsList = document.createElement("ul");
+        suggestionsList.className = "absolute w-full bg-[var(--background-primary)] border border-[var(--secondary-color)] rounded-md mt-1 shadow-lg z-10";
+        
+        results.slice(0, 5).forEach(({ item, matches }) => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = item.url;
+            link.className = "block p-3 hover:bg-[var(--background-secondary)]";
+            link.innerHTML = `<span class="font-semibold">${highlight(item.title, matches, "title")}</span><br><span class="text-sm text-[var(--text-secondary)]">${highlight(item.excerpt, matches, "excerpt")}</span>`;
+            listItem.appendChild(link);
+            suggestionsList.appendChild(listItem);
+        });
+        
+        autocompleteSuggestions.appendChild(suggestionsList);
+    }
+
+
+    function performSearch() {
+        if (!fuse) return;
+
+        const query = searchInput.value.trim();
+        const activeCategories = Array.from(categoryFilters)
+            .filter(input => input.checked)
+            .map(input => input.value.trim());
+
+        let filteredResults = [];
+
+        if (query.length < fuseOptions.minMatchCharLength) {
+            filteredResults = searchData.map(item => ({ item, matches: [] }));
+        } else {
+            filteredResults = fuse.search(query);
+        }
+
+        if (activeCategories.length > 0) {
+            filteredResults = filteredResults.filter(({ item }) =>
+                item.category && activeCategories.includes(item.category.trim())
+            );
+        }
+
+        displayResults(filteredResults);
+        
+        if (query) {
+            displayAutocomplete(filteredResults);
+        } else {
+            autocompleteSuggestions.innerHTML = "";
+            autocompleteSuggestions.style.display = 'none';
+        }
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener("input", performSearch);
+        categoryFilters.forEach(filter => {
+            filter.addEventListener("change", performSearch);
+        });
+        
+        document.addEventListener("click", (event) => {
+            if (!searchInput.contains(event.target)) {
+                autocompleteSuggestions.style.display = 'none';
+            }
+        });
+
+        initializeSearch();
+    }
+});
