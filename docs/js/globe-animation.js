@@ -12,7 +12,7 @@ const CONFIG = {
     lineOpacity: 0.1,
     starCount: 10000,
     starSize: 0.8,
-    cometInterval: 2, // segundos
+    cometInterval: 3, // segundos
     cometSpeed: 0.01,
     rotationSpeed: 0.001,
     pulseInterval: 5, // A cada quantos segundos um novo pulso aleatório é criado
@@ -26,6 +26,7 @@ const cometMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
 let pointsGeometry; // Geometria dos pontos do globo, acessível globalmente
 
+// --- Inicialização da Cena ---
 function init() {
     const container = document.getElementById('globe-container');
     if (!container) {
@@ -53,16 +54,23 @@ function init() {
     animate();
 }
 
+// --- Funções de Criação de Objetos ---
+
 function createStars() {
     const starGeometry = new THREE.BufferGeometry();
     const starVertices = [];
+    const starVector = new THREE.Vector3();
+
     for (let i = 0; i < CONFIG.starCount; i++) {
-        const x = (Math.random() - 0.5) * 2000;
-        const y = (Math.random() - 0.5) * 2000;
-        const z = (Math.random() - 0.5) * 2000;
-        if (Math.sqrt(x*x + y*y + z*z) > 100) {
-             starVertices.push(x, y, z);
-        }
+        // OTIMIZAÇÃO: Gera o ponto diretamente em uma posição esférica.
+        // É mais eficiente que gerar em um cubo e calcular a distância.
+        starVector.set(
+            Math.random() * 2 - 1,
+            Math.random() * 2 - 1,
+            Math.random() * 2 - 1
+        ).normalize().multiplyScalar((Math.random() * 500) + 100); // Raio entre 100 e 600
+
+        starVertices.push(starVector.x, starVector.y, starVector.z);
     }
     starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
     const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: CONFIG.starSize, transparent: true, opacity: 0.7 });
@@ -81,17 +89,17 @@ function createGlobePoints() {
         const x = Math.cos(theta) * radius;
         const z = Math.sin(theta) * radius;
         vertices.push(x * CONFIG.globeRadius, y * CONFIG.globeRadius, z * CONFIG.globeRadius);
-        colors.push(CONFIG.basePointColor.r, CONFIG.basePointColor.g, CONFIG.basePointColor.b);
+        CONFIG.basePointColor.toArray(colors, i * 3); // Define a cor base inicial
     }
     pointsGeometry = new THREE.BufferGeometry();
     pointsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     pointsGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    
-    const pointsMaterial = new THREE.PointsMaterial({ 
-        size: CONFIG.pointSize, 
-        transparent: true, 
+
+    const pointsMaterial = new THREE.PointsMaterial({
+        size: CONFIG.pointSize,
+        transparent: true,
         opacity: 0.8,
-        vertexColors: true 
+        vertexColors: true
     });
     const points = new THREE.Points(pointsGeometry, pointsMaterial);
     globeGroup.add(points);
@@ -128,13 +136,14 @@ function createComet() {
 }
 
 function createPulse(elapsedTime, origin, color) {
-     pulses.push({
+    pulses.push({
         origin: origin || getRandomPointOnSphere(CONFIG.globeRadius),
         startTime: elapsedTime,
         color: color || new THREE.Color(`hsl(${Math.random() * 360}, 70%, 60%)`)
-     });
+    });
 }
 
+// --- Funções Auxiliares ---
 function getRandomPointOnSphere(r) {
     const u = Math.random();
     const v = Math.random();
@@ -155,42 +164,50 @@ function onWindowResize() {
     renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
+// --- Loop de Animação ---
 const clock = new THREE.Clock();
 let lastCometTime = 0;
 let lastPulseTime = 0;
+
+// OTIMIZAÇÃO: Crie objetos reutilizáveis fora do loop para evitar alocação de memória a cada quadro.
+const pointPosition = new THREE.Vector3();
+const finalColor = new THREE.Color();
 
 function animate() {
     requestAnimationFrame(animate);
 
     const elapsedTime = clock.getElapsedTime();
-    
     globeGroup.rotation.y += CONFIG.rotationSpeed;
 
+    // --- Lógica dos Cometas ---
     if (elapsedTime - lastCometTime > CONFIG.cometInterval) {
         createComet();
         lastCometTime = elapsedTime;
     }
-    
+
     for (let i = comets.length - 1; i >= 0; i--) {
         const c = comets[i];
         c.progress += CONFIG.cometSpeed;
-        
+
         const currentPosition = c.curve.getPoint(Math.min(c.progress, 1));
         c.mesh.position.copy(currentPosition);
 
+        // Fade in e fade out
         if (c.progress < 0.2) c.mesh.material.opacity = c.progress / 0.2;
         else if (c.progress > 0.8) c.mesh.material.opacity = 1.0 - (c.progress - 0.8) / 0.2;
         else c.mesh.material.opacity = 1.0;
-        
+
         if (c.progress >= 1) {
             createPulse(elapsedTime, c.mesh.position, new THREE.Color(0xffffff));
-            globeGroup.remove(c.mesh); 
-            c.mesh.geometry.dispose(); 
-            c.mesh.material.dispose(); 
+            globeGroup.remove(c.mesh);
+            // CORREÇÃO: Não dê dispose na geometria, pois ela é compartilhada!
+            // c.mesh.geometry.dispose(); 
+            c.mesh.material.dispose(); // O material foi clonado, então o dispose aqui está correto.
             comets.splice(i, 1);
         }
     }
 
+    // --- Lógica dos Pulsos (ALTAMENTE OTIMIZADA) ---
     if (elapsedTime - lastPulseTime > CONFIG.pulseInterval) {
         createPulse(elapsedTime);
         lastPulseTime = elapsedTime;
@@ -198,43 +215,43 @@ function animate() {
 
     const positions = pointsGeometry.attributes.position.array;
     const colors = pointsGeometry.attributes.color.array;
-    const pointPosition = new THREE.Vector3();
-    
-    // Reset colors to base
-    for (let i = 0; i < CONFIG.pointCount; i++) {
-         CONFIG.basePointColor.toArray(colors, i * 3);
-    }
 
-    // Apply pulse colors
+    // 1. Remove pulsos expirados
     for (let i = pulses.length - 1; i >= 0; i--) {
-        const pulse = pulses[i];
-        const pulseAge = elapsedTime - pulse.startTime;
-        if (pulseAge > CONFIG.pulseDuration) {
+        if (elapsedTime - pulses[i].startTime > CONFIG.pulseDuration) {
             pulses.splice(i, 1);
-            continue;
         }
-        
-        const currentRadius = (pulseAge / CONFIG.pulseDuration) * CONFIG.pulseMaxRadius;
-        const falloff = 0.3; 
+    }
+    
+    // 2. Itera por cada PONTO uma única vez
+    for (let i = 0; i < CONFIG.pointCount; i++) {
+        pointPosition.fromArray(positions, i * 3);
+        finalColor.copy(CONFIG.basePointColor); // Começa com a cor base
 
-        for (let j = 0; j < CONFIG.pointCount; j++) {
-            pointPosition.set(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]);
+        // 3. Verifica a influência de cada PULSO sobre o ponto atual
+        for (let j = 0; j < pulses.length; j++) {
+            const pulse = pulses[j];
+            const pulseAge = elapsedTime - pulse.startTime;
+            const currentRadius = (pulseAge / CONFIG.pulseDuration) * CONFIG.pulseMaxRadius;
+            const falloff = 0.3;
+
             const distance = pointPosition.distanceTo(pulse.origin);
-            
+
             if (distance <= currentRadius && distance >= currentRadius - falloff) {
                 const intensity = 1 - (currentRadius - distance) / falloff;
-                const targetColor = new THREE.Color().fromArray(colors, j * 3);
-                targetColor.lerp(pulse.color, intensity);
-                targetColor.toArray(colors, j * 3);
+                // Mistura a cor final com a cor do pulso, em vez de resetar
+                finalColor.lerp(pulse.color, intensity);
             }
         }
+        
+        // 4. Escreve a cor final no buffer
+        finalColor.toArray(colors, i * 3);
     }
+
     pointsGeometry.attributes.color.needsUpdate = true;
-    
+
     renderer.render(scene, camera);
 }
 
 // Garante que o script só roda depois que o HTML estiver pronto
-document.addEventListener('DOMContentLoaded', () => {
-    init();
-});
+document.addEventListener('DOMContentLoaded', init);
