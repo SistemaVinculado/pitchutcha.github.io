@@ -14,7 +14,7 @@ image: "https://placehold.co/600x400/f3e8ff/8b5cf6?text=Busca+Linear+vs+Binária
     %}
 
     {% include image.html
-        src="../assets/images/search-algorithms-linear-vs-binary.jpg"
+        src="/assets/images/search-algorithms-linear-vs-binary.jpg"
         alt="Diagrama comparando a Busca Linear, que avança sequencialmente por um array, com a Busca Binária, que repetidamente foca no elemento central para descartar metade do campo de busca."
         caption="Comparativo visual entre a Busca Linear, que verifica item por item ($O(n)$), e a Busca Binária, que divide o conjunto de dados a cada passo ($O(\log n)$)."
     %}
