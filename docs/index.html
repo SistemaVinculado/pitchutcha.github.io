@@ -30,21 +30,31 @@ layout: null
         body {
              background-color: #0d1117;
              overflow-x: hidden;
+             position: relative; /* Necessário para o z-index do pseudo-elemento */
         }
-        /* FAZ O GLOBO SER O FUNDO DE TODA A PÁGINA */
-        #globe-container {
+
+        /* NOVO: Fundo de Estrelas animado com CSS */
+        body::after {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Coloca no fundo de tudo */
+            width: 200vw;
+            height: 200vh;
+            background-image: 
+                radial-gradient(ellipse at center, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 60%),
+                radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 40%);
+            background-size: 1px 1px, 2px 2px;
+            background-position: 50% 50%;
+            animation: animate-stars 200s linear infinite;
+            z-index: -1;
         }
-        /* Garante que o conteúdo principal fique sobre o globo */
-        main, header, footer {
-            position: relative;
-            z-index: 1;
+
+        @keyframes animate-stars {
+            from { transform: translate(-50%, -50%); }
+            to { transform: translate(0, 0); }
         }
+        
         #globe-container::after {
             content: '';
             position: absolute;
@@ -59,9 +69,7 @@ layout: null
 </head>
 <body class="text-white">
 
-    <div id="globe-container"></div>
-
-    <header class="p-4 md:px-8 lg:px-12 flex justify-between items-center">
+    <header class="p-4 md:px-8 lg:px-12 flex justify-between items-center z-30 relative">
         <div class="flex items-center space-x-4">
             <svg height="32" aria-hidden="true" viewBox="0 0 32 32" version="1.1" width="32" class="fill-current text-white">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4zM0 16C0 7.16 7.16 0 16 0s16 7.16 16 16-7.16 16-16 16S0 24.84 0 16z"/>
@@ -92,6 +100,9 @@ layout: null
 
     <main>
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[75vh] md:min-h-[80vh] px-4 overflow-hidden">
+            
+            <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
+
             <div class="relative z-10">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">Vamos construir a partir daqui</h1>
                 <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-400">O seu guia completo de Ciência da Computação para construir, escalar e otimizar software com conhecimento sólido.</p>
