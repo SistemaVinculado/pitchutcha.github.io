@@ -35,10 +35,10 @@ layout: null
             width: 100%;
             height: 40%;
             background: linear-gradient(to top, #0d1117, transparent);
-            z-index: 2;
+            z-index: 2; /* Fica acima do canvas, mas abaixo do texto */
         }
         body {
-             background-color: #0d1117;
+             background-color: #0d1117; /* Garante fundo escuro consistente */
         }
     </style>
 </head>
@@ -75,20 +75,24 @@ layout: null
 
     <main>
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[75vh] md:min-h-[80vh] px-4 overflow-hidden">
+            
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
+
             <div class="relative z-10">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">Vamos construir a partir daqui</h1>
                 <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-400">O seu guia completo de Ciência da Computação para construir, escalar e otimizar software com conhecimento sólido.</p>
+                
                 <form action="search.html" method="get" class="main-search-form mt-8 flex justify-center w-full max-w-2xl mx-auto">
                     <input type="search" name="q" placeholder="Pesquisar por 'Busca Binária', 'Listas Ligadas'..." class="w-full bg-[#0d1117] border border-gray-600 rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
                     <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-r-md px-6 py-2.5">Pesquisar</button>
                 </form>
             </div>
         </div>
-        
+
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Produtividade Desencadeada</h2>
             <p class="mt-4 text-center text-gray-400 max-w-3xl mx-auto">Acelere a inovação em qualquer escala com a plataforma de desenvolvimento mais completa do mundo.</p>
+
             <div class="mt-12 grid md:grid-cols-2 gap-8">
                 <div class="p-8 rounded-lg feature-card">
                     <h3 class="text-2xl font-semibold">Artigos Aprofundados</h3>
@@ -108,6 +112,7 @@ layout: null
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Conhecimento é Segurança</h2>
             <p class="mt-4 text-center text-gray-400 max-w-3xl mx-auto">Incorpore as melhores práticas no seu fluxo de trabalho de desenvolvimento com funcionalidades que o ajudam a encontrar vulnerabilidades e a otimizar seu código.</p>
+
             <div class="mt-12 grid md:grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="p-6 rounded-lg feature-card">
                     <h3 class="text-xl font-semibold">Análise de Complexidade</h3>
@@ -135,7 +140,7 @@ layout: null
 
     </main>
     
-    <footer class="mt-20 pt-16 pb-8 px-4 md:px-8 lg:px-12 border-t border-gray-800 bg-black">
+    <footer class="mt-20 pt-16 pb-8 px-4 md:px-8 lg:px-12 border-t border-gray-800">
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
             <div class="col-span-2 lg:col-span-1">
                 <h4 class="font-semibold text-white">Pitchutcha</h4>
@@ -169,6 +174,6 @@ layout: null
     <script src="js/script.js" defer></script>
     <script src="js/dev-panel.js" defer></script>
     <script type="module" src="js/globe-animation.js" defer></script>
-
+    
 </body>
 </html>
