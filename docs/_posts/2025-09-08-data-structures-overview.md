@@ -8,15 +8,17 @@ image: "https://placehold.co/600x400/D1FAE5/047857?text=Estruturas+de+Dados"
 ---
 
 <article>
-    <h1 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-5xl">Visão Geral de Estruturas de Dados</h1>
-    <p class="mt-6 text-lg text-[var(--text-secondary)]">
-        Estruturas de dados são um conceito fundamental na ciência da computação, fornecendo uma maneira de organizar, gerenciar e armazenar dados de forma eficaz. A escolha da estrutura de dados correta é crucial para o desenvolvimento de algoritmos eficientes e aplicações de alto desempenho. Esta visão geral apresenta algumas das estruturas de dados mais comuns.
-    </p>
-    <section class="pt-10" id="arrays">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Arrays</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">
-            Um array (ou vetor) é uma coleção de itens armazenados em locais de memória contíguos. É a estrutura de dados mais simples, onde cada elemento pode ser acessado aleatoriamente usando seu número de índice. Em Python, a estrutura de dados mais comum para simular um array é a lista.
-        </p>
+    {% include article-header.html 
+        title="Visão Geral de Estruturas de Dados"
+        intro="Estruturas de dados são um conceito fundamental na ciência da computação, fornecendo uma maneira de organizar, gerenciar e armazenar dados de forma eficaz. A escolha da estrutura de dados correta é crucial para o desenvolvimento de algoritmos eficientes e aplicações de alto desempenho. Esta visão geral apresenta algumas das estruturas de dados mais comuns."
+    %}
+
+    {% include section-header.html 
+        id="arrays"
+        title="Arrays"
+        text="Um array (ou vetor) é uma coleção de itens armazenados em locais de memória contíguos. É a estrutura de dados mais simples, onde cada elemento pode ser acessado aleatoriamente usando seu número de índice. Em Python, a estrutura de dados mais comum para simular um array é a lista."
+    %}
+
 {% highlight python %}
 # Exemplo de um array (usando uma lista em Python)
 numeros = [10, 20, 30, 40, 50]
@@ -30,12 +32,13 @@ numeros.append(60)
 print(numeros)
 # Saída: [10, 20, 30, 40, 50, 60]
 {% endhighlight %}
-    </section>
-    <section class="pt-10" id="linked-lists">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Listas Ligadas</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">
-            Uma lista ligada (ou encadeada) é uma estrutura de dados linear onde os elementos não são armazenados em locais de memória contíguos. Os elementos (nós) são conectados usando ponteiros. Elas são eficientes para inserções e exclusões no início da lista, mas mais lentas para buscas.
-        </p>
+
+    {% include section-header.html 
+        id="linked-lists"
+        title="Listas Ligadas"
+        text="Uma lista ligada (ou encadeada) é uma estrutura de dados linear onde os elementos não são armazenados em locais de memória contíguos. Os elementos (nós) são conectados usando ponteiros. Elas são eficientes para inserções e exclusões no início da lista, mas mais lentas para buscas."
+    %}
+
 {% highlight python %}
 # Definição de um Nó para a Lista Ligada
 class Node:
@@ -51,12 +54,13 @@ terceiro_no = Node(3)
 head.next = segundo_no       # O nó 'head' aponta para o segundo nó
 segundo_no.next = terceiro_no # O segundo nó aponta para o terceiro
 {% endhighlight %}
-    </section>
-    <section class="pt-10" id="stacks-and-queues">
-        <h2 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Pilhas e Filas</h2>
-        <p class="mt-4 mb-6 text-lg text-[var(--text-secondary)]">
-            Pilhas (stacks) e filas (queues) são tipos abstratos de dados. Uma pilha segue o princípio LIFO (Last-In, First-Out), enquanto uma fila segue o FIFO (First-In, First-Out). Ambas podem ser implementadas usando arrays/listas. Veja abaixo um exemplo de uma Pilha:
-        </p>
+
+    {% include section-header.html 
+        id="stacks-and-queues"
+        title="Pilhas e Filas"
+        text="Pilhas (stacks) e filas (queues) são tipos abstratos de dados. Uma pilha segue o princípio LIFO (Last-In, First-Out), enquanto uma fila segue o FIFO (First-In, First-Out). Ambas podem ser implementadas usando arrays/listas. Veja abaixo um exemplo de uma Pilha:"
+    %}
+
 {% highlight python %}
 # Exemplo de uma Pilha em Python (usando uma lista)
 pilha = []
@@ -85,5 +89,4 @@ pilha.push('item3');
 let itemRemovido = pilha.pop(); // Retorna 'item3'
 // Pilha agora é: ['item1', 'item2']
 {% endhighlight %}
-    </section>
 </article>
