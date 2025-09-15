@@ -7,3 +7,9 @@ description: Uma enciclopédia de documentação sobre Ciência da Computação.
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+
+# ADICIONE ESTA NOVA SEÇÃO
+collections:
+  articles:
+    output: true
+    permalink: /:collection/:name
