@@ -1,7 +1,4 @@
 /* Fontes (Inter e JetBrains Mono) */
-/* Assegure-se de que estes arquivos .woff2 estejam na pasta '../fonts/' */
-
-/* inter-regular - latin */
 @font-face {
   font-display: swap;
   font-family: 'Inter';
@@ -9,7 +6,6 @@
   font-weight: 400;
   src: url('../fonts/inter-v13-latin-regular.woff2') format('woff2');
 }
-/* inter-500 - latin */
 @font-face {
   font-display: swap;
   font-family: 'Inter';
@@ -17,7 +13,6 @@
   font-weight: 500;
   src: url('../fonts/inter-v13-latin-500.woff2') format('woff2');
 }
-/* inter-600 - latin */
 @font-face {
   font-display: swap;
   font-family: 'Inter';
@@ -25,7 +20,6 @@
   font-weight: 600;
   src: url('../fonts/inter-v13-latin-600.woff2') format('woff2');
 }
-/* inter-700 - latin */
 @font-face {
   font-display: swap;
   font-family: 'Inter';
@@ -33,7 +27,6 @@
   font-weight: 700;
   src: url('../fonts/inter-v13-latin-700.woff2') format('woff2');
 }
-/* jetbrains-mono-regular - latin */
 @font-face {
   font-display: swap;
   font-family: 'JetBrains Mono';
@@ -41,7 +34,6 @@
   font-weight: 400;
   src: url('../fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2');
 }
-/* jetbrains-mono-500 - latin */
 @font-face {
   font-display: swap;
   font-family: 'JetBrains Mono';
@@ -61,6 +53,7 @@
     --tab-size-preference: 4;
     --font-sans: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+    --line-height-body: 1.65; /* RECOMENDAÇÃO: Altura de linha para leitura */
 }
 
 body {
@@ -73,7 +66,16 @@ pre, code {
     -moz-tab-size: var(--tab-size-preference);
 }
 
-/* (O restante do seu CSS continua aqui, sem alterações) */
+/* RECOMENDAÇÃO: Melhora a experiência de leitura nos artigos */
+article p, article li {
+    line-height: var(--line-height-body);
+}
+
+/* RECOMENDAÇÃO: Adiciona feedback visual suave para elementos interativos */
+a, button {
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
 .global-banner { background-color: var(--primary-color); color: white; padding: 0.75rem 1rem; display: flex; justify-content: center; align-items: center; position: relative; font-size: 0.9rem; }
 .global-banner-content { flex-grow: 1; text-align: center; }
 .global-banner-close { background: none; border: none; color: white; cursor: pointer; padding: 0.5rem; position: absolute; right: 1rem; line-height: 1; }
@@ -126,7 +128,6 @@ body { overflow-x: hidden; }
 }
 
 /* Classe de utilidade para acessibilidade */
-/* Esconde visualmente mas mantém acessível para leitores de tela */
 .sr-only {
     position: absolute;
     width: 1px;
