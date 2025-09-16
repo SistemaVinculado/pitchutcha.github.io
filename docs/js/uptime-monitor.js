@@ -1,24 +1,18 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",()=>{
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
-
-    // --- Seletores de Elementos do DOM ---
+    const uptimeContainer = document.getElementById("uptime-history-container");
     const incidentsContainer = document.getElementById("incidents-history-container");
-    const overallStatusIndicator = document.getElementById("overall-status-indicator");
-    const overallStatusText = document.getElementById("overall-status-text");
+    const latencyMetric = document.getElementById("metric-api-latency");
+    const inferenceMetric = document.getElementById("metric-inference-time");
+    const errorMetric = document.getElementById("metric-error-rate");
 
-    // Se os elementos não existirem na página, interrompe o script
-    if (!incidentsContainer || !overallStatusIndicator || !overallStatusText) {
-        return;
-    }
+    if (uptimeContainer && incidentsContainer) {
+        const formatDate = (timestamp) => {
+            if (!timestamp) return "N/A";
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+        };
 
-    // --- Funções de Formatação ---
-    const formatFullDate = (date) => date.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    const formatTime = (timestamp) => new Date(timestamp * 1000).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' });
-
-    /**
-     * Constrói a linha do tempo de incidentes a partir dos logs.
-     */
-    function buildIncidentTimeline(logs) {
         const getLogDetails = (log) => {
             const reason = log.reason ? `(Motivo: ${log.reason.detail || 'N/A'})` : '';
             switch (log.type) {
@@ -30,69 +24,71 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        let incidentsHTML = '<div class="space-y-6">';
-        if (logs && logs.length > 0) {
-            const logsByDay = logs.reduce((acc, log) => {
-                const day = formatFullDate(new Date(log.datetime * 1000));
-                if (!acc[day]) acc[day] = [];
-                acc[day].push(log);
-                return acc;
-            }, {});
+        fetch(`${baseUrl}uptime-data.json?cache_bust=` + Date.now())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Não foi possível carregar os dados de uptime.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.stat !== 'ok' || !data.monitors || data.monitors.length === 0) {
+                    throw new Error("Os dados de uptime retornaram um erro: " + (data.error?.message || "Formato inválido"));
+                }
+                const monitor = data.monitors[0];
 
-            for (const day in logsByDay) {
-                const dayLogs = logsByDay[day];
-                const hasOutage = dayLogs.some(log => log.type === 1);
-                const dayStatus = hasOutage ? { text: "Indisponibilidade Parcial", color: "text-red-500" } : { text: "Todos os sistemas operacionais", color: "text-green-400" };
+                if (latencyMetric && inferenceMetric && errorMetric && data.metrics) {
+                    latencyMetric.textContent = data.metrics.api_latency || "--ms";
+                    inferenceMetric.textContent = data.metrics.inference_time || "--ms";
+                    errorMetric.textContent = data.metrics.error_rate || "--%";
+                }
 
-                incidentsHTML += `<div><div class="flex justify-between items-center pb-2 border-b border-[var(--borders)]"><h4 class="font-semibold text-[var(--text-primary)]">${day}</h4><span class="text-sm font-medium ${dayStatus.color}">${dayStatus.text}</span></div><ul class="mt-4 space-y-4">`;
-                dayLogs.forEach(log => {
-                    const details = getLogDetails(log);
-                    incidentsHTML += `<li class="flex items-start gap-3 pl-4 border-l border-[var(--borders)]"><span class="material-symbols-outlined ${details.color} mt-1">${details.icon}</span><div class="flex-1"><p class="font-medium ${details.color}">${details.text}</p><p class="text-xs text-[var(--text-secondary)]">${details.description}</p><p class="text-xs text-gray-500 mt-1">${formatTime(log.datetime)} (Duração: ${log.duration}s)</p></div></li>`;
-                });
-                incidentsHTML += `</ul></div>`;
-            }
-        } else {
-            incidentsHTML += '<p class="text-[var(--text-secondary)]">Nenhum incidente registrado recentemente.</p>';
-        }
-        incidentsHTML += "</div>";
-        incidentsContainer.innerHTML = incidentsHTML;
-    }
-
-    /**
-     * Função principal que busca os dados e inicializa.
-     */
-    async function initialize() {
-        try {
-            const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=${Date.now()}`);
-            if (!response.ok) throw new Error("Falha ao carregar uptime-data.json");
-            
-            const data = await response.json();
-            const monitor = data?.monitors?.[0];
-
-            // Verificação de segurança
-            if (data.stat === 'fail' || !monitor) {
-                 const errorMessage = data.error?.message || "Dados do monitor não encontrados.";
-                 throw new Error(errorMessage);
-            }
-
-            // Atualiza o indicador de saúde geral
-            const isUp = monitor.status === 2;
-            overallStatusIndicator.innerHTML = `
-                <span class="ping-pulse ${isUp ? 'ping-green' : 'ping-red'}"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 ${isUp ? 'bg-green-500' : 'bg-red-500'}"></span>
+                const uptimeRatios = monitor.custom_uptime_ratios.split("-");
+                const uptimeHTML = `
+                <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
+                    <h3 class="font-semibold text-[var(--text-primary)]">Uptime Histórico</h3>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <p class="text-3xl font-bold text-green-400">${uptimeRatios[0]}%</p>
+                            <p class="text-sm text-[var(--text-secondary)]">Últimas 24 horas</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-3xl font-bold text-green-400">${uptimeRatios[1]}%</p>
+                            <p class="text-sm text-[var(--text-secondary)]">Últimos 7 dias</p>
+                        </div>
+                    </div>
+                </div>
             `;
-            overallStatusText.textContent = isUp ? "Todos os sistemas operacionais" : "Indisponibilidade detectada";
+                uptimeContainer.innerHTML = uptimeHTML;
 
-            // Renderiza a linha do tempo de incidentes
-            buildIncidentTimeline(monitor.logs);
+                let incidentsHTML = `
+                 <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
+                    <h3 class="font-semibold text-[var(--text-primary)] mb-4">Histórico de Incidentes Recentes</h3>
+                    <ul class="space-y-4">
+            `;
+                if (monitor.logs && monitor.logs.length > 0) {
+                    monitor.logs.forEach(log => {
+                        const details = getLogDetails(log);
+                        incidentsHTML += `
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined ${details.color}">${details.icon}</span>
+                            <div>
+                                <p class="font-medium ${details.color}">${details.text}</p>
+                                <p class="text-sm text-gray-500">${formatDate(log.datetime)} (Duração: ${log.duration}s)</p>
+                            </div>
+                        </li>
+                    `;
+                    });
+                } else {
+                    incidentsHTML += '<li><p class="text-[var(--text-secondary)]">Nenhum incidente registrado recentemente.</p></li>';
+                }
+                incidentsHTML += "</ul></div>";
+                incidentsContainer.innerHTML = incidentsHTML;
 
-        } catch (error) {
-            console.error("Erro ao inicializar o monitor de uptime:", error);
-            incidentsContainer.innerHTML = `<p class="text-center text-red-500 p-4"><b>Não foi possível carregar o histórico de incidentes:</b><br>${error.message}</p>`;
-            overallStatusText.textContent = "Erro na verificação";
-            overallStatusIndicator.innerHTML = `<span class="relative inline-flex rounded-full h-3 w-3 bg-gray-500"></span>`;
-        }
+            }).catch(error => {
+                console.error("Erro ao processar dados de uptime:", error);
+                uptimeContainer.innerHTML = '<p class="text-red-500">Erro ao carregar dados de Uptime.</p>';
+                incidentsContainer.innerHTML = '<p class="text-red-500">Erro ao carregar histórico de incidentes.</p>';
+            });
     }
-
-    initialize();
 });
