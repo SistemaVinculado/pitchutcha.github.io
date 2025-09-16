@@ -26,6 +26,7 @@ layout: null
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     
     <style>
@@ -58,7 +59,7 @@ layout: null
             overflow-x: hidden;
         }
 
-        /* --- INÍCIO: NOVOS ESTILOS (Banner, Progresso, Tabs de Código AI Studio) --- */
+        /* --- INÍCIO: ESTILOS ATUALIZADOS (Banner, Progresso, Tabs de Código AI Studio) --- */
 
         /* 1. Barra de Progresso de Leitura */
         #progress-bar-container {
@@ -158,7 +159,7 @@ layout: null
             gap: 8px;
             margin-right: 30px;
             max-width: 240px;
-            flex-shrink: 0; /* Impede que o lado esquerdo encolha */
+            flex-shrink: 0;
         }
         @media screen and (max-width: 768px) {
             .code-block-left-side {
@@ -188,14 +189,13 @@ layout: null
             font-size: 0.9rem;
             margin-top: 8px;
         }
-        /* Alinha o ícone do material symbols verticalmente */
         .code-block-time-estimate .material-symbols-outlined {
             font-size: 1.2rem;
             vertical-align: middle;
         }
 
         .code-block-button-container {
-            margin-top: auto; /* Empurra o botão para baixo */
+            margin-top: auto;
             padding-top: 16px;
         }
 
@@ -237,43 +237,60 @@ layout: null
         }
         
         .code-block-tab-content {
+            /* O wrapper de conteúdo da aba agora define a altura e o scroll */
+            height: 350px;
+            overflow: auto; 
+            background: #282c34; /* Fundo do tema Atom One Dark */
+            padding: 1.25rem;
             border-top: 1px solid #2a2a2a;
-            display: flex;
-            height: 350px; /* Altura fixa */
-            overflow: auto; /* Scroll */
-            background: #1f1f1f;
             border-radius: 0 0 0.5rem 0.5rem;
-        }
-        
-        .line-numbers {
-            display: flex;
-            flex-direction: column;
             font-family: 'Courier New', Courier, monospace;
-            left: 0;
-            padding: 1.25rem 12px 1.25rem 1.25rem; /* Ajustado para padding do pre */
-            position: sticky; /* GRUDA na esquerda */
-            z-index: 1;
-            color: #8c8c8c;
-            font-size: 0.875rem;
-            line-height: 1.5rem;
-            text-align: right;
-            background: #1f1f1f; /* Fundo idêntico para o sticky funcionar */
         }
 
+        /* O <pre> dentro do wrapper não precisa de fundo ou padding */
         .code-block-tab-content pre {
-            padding: 1.25rem 1.25rem 1.25rem 12px;
-            margin: 0;
-            border: none;
-            border-radius: 0;
-            height: min-content;
-            background: transparent;
-            font-family: 'Courier New', Courier, monospace;
+             padding: 0 !important;
+             margin: 0 !important;
+             background: transparent !important; /* Sobrescreve o tema do HLJS */
+             overflow: visible; /* O wrapper pai controla o scroll */
         }
-        .code-block-tab-content code {
+
+        /* CSS para o Plugin de Números de Linha (HLJS) */
+        .hljs-ln { /* A tabela gerada pelo plugin */
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .hljs-ln td {
+            padding: 0;
+            vertical-align: top;
+        }
+        /* Célula dos Números de Linha (para imitar o AI Studio) */
+        .hljs-ln-numbers {
+            position: -webkit-sticky;
+            position: sticky;
+            left: 0;
+            width: 40px; 
+            padding-right: 12px;
+            color: #8c8c8c;
+            text-align: right;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 0.875rem;
-            line-height: 1.5rem;
-            white-space: pre;
-            display: block;
+            line-height: 1.5rem; /* TEM QUE SER IGUAL ao line-height do código */
+            background: #282c34; /* Fundo do tema Atom One Dark (para o sticky) */
+            -webkit-user-select: none;
+            user-select: none;
+            z-index: 1;
+        }
+        /* Célula do Código */
+        .hljs-ln-code {
+            padding-left: 12px;
+        }
+
+        /* Força o código a ter a fonte mono e o line-height corretos */
+        .code-block-tab-content code.hljs {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            line-height: 1.5rem; /* TEM QUE SER IGUAL ao line-height dos números */
         }
         
         /* 5. Link "Pular para Conteúdo" (Acessibilidade) */
@@ -476,8 +493,7 @@ layout: null
                         
                         <div id="panel-python" class="code-tab-panel active">
                             <div class="code-block-tab-content">
-                                <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18</div>
-<pre><code>
+<pre><code class="language-python">
 # Exemplo de Busca Binária em Python
 
 def binary_search(arr, target):
@@ -506,8 +522,7 @@ print(binary_search(my_list, 7))
                         
                         <div id="panel-javascript" class="code-tab-panel">
                              <div class="code-block-tab-content">
-                                <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20</div>
-<pre><code>
+<pre><code class="language-javascript">
 // Exemplo de Busca Binária em JavaScript
 
 function binarySearch(arr, target) {
@@ -539,8 +554,7 @@ console.log(binarySearch(myList, 7));
                         
                         <div id="panel-pseudo" class="code-tab-panel">
                             <div class="code-block-tab-content">
-                                <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15</div>
-<pre><code>
+<pre><code class="language-plaintext">
 FUNÇÃO BuscaBinaria(lista, item)
     baixo = 0
     alto = tamanho(lista) - 1
@@ -592,6 +606,10 @@ FIM_FUNÇÃO
     
     {% include scripts.html %}
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
@@ -615,12 +633,34 @@ FIM_FUNÇÃO
                 });
             }
 
-            // --- 3. Lógica das Abas (Tabs) de Código (Simples, estilo AI Studio) ---
+            // --- 3. Lógica das Abas de Código + Highlight.js (Atualizado) ---
             const tabsContainer = document.getElementById('code-tabs-container');
             if (tabsContainer) {
+                
+                // Primeiro, aplica o highlight em TODOS os blocos de código
+                // A biblioteca encontrará todos os blocos <pre><code> e aplicará as cores
+                hljs.highlightAll();
+
                 const tabButtons = tabsContainer.querySelectorAll('.tab-button');
                 const tabPanels = tabsContainer.querySelectorAll('.code-tab-panel');
 
+                // Função para aplicar números de linha (plugin hljs-line-numbers)
+                function applyLineNumbers(panel) {
+                    const codeBlock = panel.querySelector('pre code');
+                    if (codeBlock && !panel.hasAttribute('data-line-numbers-applied')) {
+                        // O plugin funciona no elemento <pre> pai
+                        hljs.lineNumbersBlock(codeBlock.parentElement);
+                        panel.setAttribute('data-line-numbers-applied', 'true'); // Marca como processado
+                    }
+                }
+
+                // Aplica números de linha SOMENTE no painel ativo inicial
+                const defaultActivePanel = tabsContainer.querySelector('.code-tab-panel.active');
+                if (defaultActivePanel) {
+                    applyLineNumbers(defaultActivePanel);
+                }
+
+                // Adiciona listeners para os cliques nas abas
                 tabButtons.forEach(button => {
                     button.addEventListener('click', () => {
                         const targetTab = button.getAttribute('data-tab');
@@ -632,8 +672,11 @@ FIM_FUNÇÃO
                         // Ativa o alvo
                         button.classList.add('active');
                         const activePanel = document.getElementById(`panel-${targetTab}`);
+                        
                         if (activePanel) {
                             activePanel.classList.add('active');
+                            // Aplica os números de linha QUANDO a aba se torna visível (se ainda não tiver sido aplicado)
+                            applyLineNumbers(activePanel);
                         }
                     });
                 });
