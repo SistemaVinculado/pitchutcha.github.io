@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.4.0"; // Versão com testes aprimorados
+    const DEV_PANEL_VERSION = "1.5.0"; // Versão com testes aprimorados e acessibilidade corrigida
     let capturedErrors = []; // Armazena erros de JS
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
@@ -179,20 +179,23 @@ document.addEventListener("DOMContentLoaded", () => {
         panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
     }
     
+    // Aba de Acessibilidade (aponta para a nova lógica)
     function renderAcessibilidadeTab() {
-        panelContent.innerHTML = '<div class="p-4"><button id="run-axe" class="dev-button">Rodar Análise de Acessibilidade</button><div id="axe-results" class="mt-4"></div></div>';
-        const runAxeButton = document.getElementById("run-axe");
-        if(runAxeButton) {
-            runAxeButton.addEventListener("click", runAxeAudit);
-        }
+        panelContent.innerHTML = `
+            <div class="p-4">
+                <button id="run-accessibility-check" class="dev-button w-full mb-4">Verificar Acessibilidade da Página Atual</button>
+                <div id="accessibility-results" class="space-y-4"></div>
+            </div>`;
+        document.getElementById("run-accessibility-check").addEventListener("click", runAxeAudit);
     }
     
+    // Aba de Testes (aponta para a nova lógica)
     function renderTestesTab() {
-        panelContent.innerHTML = `<div class="p-4 w-full"><button id="run-diagnostics" class="dev-button">Rodar Diagnóstico Avançado</button><div id="test-results" class="mt-4"></div></div>`;
-        const runDiagnosticsButton = document.getElementById("run-diagnostics");
-        if(runDiagnosticsButton) {
-            runDiagnosticsButton.addEventListener("click", runComprehensiveDiagnostics);
-        }
+        panelContent.innerHTML = `
+            <div id="diagnostics-results" class="p-4 space-y-6">
+                 <p class="text-center text-[var(--text-secondary)]">Clique na aba para carregar o relatório de diagnóstico...</p>
+            </div>`;
+        // A lógica de carregamento foi movida para o evento de clique da aba para otimização
     }
 
     function renderInfoTab() {
@@ -375,6 +378,9 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             document.removeEventListener('mouseover', highlightOnPage);
             document.removeEventListener('click', selectElementOnPage, { capture: true });
+            if (lastInspectedElement) {
+                lastInspectedElement.style.outline = '';
+            }
         }
     }
     
@@ -391,153 +397,148 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleInspector();
     }
 
+    // --- NOVA LÓGICA DA ABA DE ACESSIBILIDADE ---
+    const createAxeResultBlock = (item, type) => {
+        const colors = {
+            violation: 'border-red-500 bg-red-900/20',
+            incomplete: 'border-yellow-500 bg-yellow-900/20',
+            pass: 'border-green-500 bg-green-900/20'
+        };
+        const impactColors = {
+            critical: 'text-red-400',
+            serious: 'text-orange-400',
+            moderate: 'text-yellow-400',
+            minor: 'text-blue-400',
+            info: 'text-gray-400'
+        };
+
+        const impact = item.impact || 'info';
+        const impactText = impact.charAt(0).toUpperCase() + impact.slice(1);
+
+        return `
+            <div class="p-2 my-1 rounded-md ${colors[type]} border-l-4">
+                <div class="flex justify-between items-center mb-1">
+                    <p class="font-semibold text-sm">${item.help}</p>
+                    <span class="text-xs font-bold uppercase px-2 py-1 rounded ${impactColors[impact]}">${impactText}</span>
+                </div>
+                <p class="text-xs text-gray-400 mb-2">${item.description}</p>
+                <a href="${item.helpUrl}" target="_blank" rel="noopener noreferrer" class="text-xs text-sky-400 hover:underline">Saiba mais</a>
+            </div>
+        `;
+    };
+
     async function runAxeAudit() {
-        const resultsContainer = document.getElementById("axe-results");
+        const resultsContainer = document.getElementById("accessibility-results");
         if(!resultsContainer) return;
-        resultsContainer.innerHTML = "Analisando...";
+        resultsContainer.innerHTML = "<p>Analisando...</p>";
         try {
-            const results = await axe.run({ exclude: [['#dev-panel']] });
-            resultsContainer.innerHTML = '';
-            const { violations, incomplete, passes } = results;
-            resultsContainer.insertAdjacentHTML("beforeend", `<h3 class="text-xl font-bold">Resultados (${violations.length} violações, ${incomplete.length} revisões, ${passes.length} passaram)</h3>`);
-            if (violations.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-red-400 mt-4 mb-2">Violações Críticas/Sérias</h4>');
-                violations.forEach(v => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-red-900 border border-red-700"><p class="font-bold">${v.help} (${v.impact})</p><p class="text-gray-400">${v.description}</p><a href="${v.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
+            if (typeof axe === 'undefined') {
+                throw new Error("Biblioteca Axe não carregou. Verifique o console para erros de rede.");
             }
-            if (incomplete.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
-                incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
-            }
-            
-            // Lógica corrigida para sempre exibir a seção de "Passes"
-            let passesHtml;
-            if (passes.length > 0) {
-                passesHtml = `
-                    <details class="mt-4">
-                        <summary class="text-lg font-bold text-green-400 cursor-pointer hover:opacity-80">
-                            Testes Aprovados (${passes.length})
-                        </summary>
-                        <ul class="mt-2 pl-5 list-disc text-gray-400 text-xs space-y-1">`;
-                
-                passes.forEach(p => {
-                    passesHtml += `<li>${p.help}</li>`;
-                });
+            const results = await axe.run({ exclude: [['#dev-panel', '#dev-tools-trigger']] });
+            resultsContainer.innerHTML = ''; 
 
-                passesHtml += `</ul></details>`;
-            } else {
-                passesHtml = `<h4 class="text-lg font-bold text-gray-500 mt-4 mb-2">Testes Aprovados (0)</h4>`;
-            }
-            resultsContainer.insertAdjacentHTML("beforeend", passesHtml);
+            let html = `
+                <div class="p-1 mb-3 bg-gray-800 rounded-md text-center text-xs">
+                    Resultados para ${results.violations.length} violações, ${results.incomplete.length} revisões, ${results.passes.length} aprovações.
+                </div>
+            `;
 
-            if (violations.length === 0 && incomplete.length === 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
+            if (results.violations.length > 0) {
+                html += '<h4 class="text-base font-bold text-red-400 mb-2">Violações Críticas/Sérias</h4>';
+                html += results.violations.map(v => createAxeResultBlock(v, 'violation')).join('');
             }
+            if (results.incomplete.length > 0) {
+                html += '<h4 class="text-base font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>';
+                html += results.incomplete.map(i => createAxeResultBlock(i, 'incomplete')).join('');
+            }
+            // CORREÇÃO: Bloco "Testes Aprovados" agora é renderizado
+            if (results.passes.length > 0) {
+                html += '<h4 class="text-base font-bold text-green-400 mt-4 mb-2">Testes Aprovados</h4>';
+                html += results.passes.map(p => createAxeResultBlock(p, 'pass')).join('');
+            }
+            if (results.violations.length === 0 && results.incomplete.length === 0) {
+                 resultsContainer.insertAdjacentHTML("afterbegin", '<p class="text-green-400 font-bold text-center mb-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
+            }
+
+            resultsContainer.innerHTML = html;
         } catch (err) {
             resultsContainer.innerHTML = `<p class="text-red-500">${err.message}</p>`;
         }
     }
 
-    async function runComprehensiveDiagnostics() {
-        const resultsContainer = document.getElementById("test-results");
-        if (!resultsContainer) return;
-
-        resultsContainer.innerHTML = `
-            <div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4">
-                <p class="font-bold">Nota do Desenvolvedor:</p>
-                <p class="text-xs text-sky-400">Estes testes são baseados em heurísticas e melhores práticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção.</p>
-            </div>
-            <table class="w-full text-left text-xs">
-                <thead>
-                    <tr class="border-b border-gray-700">
-                        <th class="p-2 w-1/3">Teste de Diagnóstico</th>
-                        <th class="p-2 w-1/6">Resultado</th>
-                        <th class="p-2">Detalhes e Sugestões</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>`;
-        const tbody = resultsContainer.querySelector("tbody");
-
-        const addResult = (test, status, details, suggestion = null) => {
-            const isPass = status === "PASS";
-            const statusColor = isPass ? 'text-green-400' : (status === "FAIL" ? 'text-red-400' : 'text-yellow-400');
-            const statusIcon = isPass ? 'check_circle' : (status === "FAIL" ? 'error' : 'warning');
-            const row = `
-                <tr class="border-b border-gray-800">
-                    <td class="p-2 align-top">${test}</td>
-                    <td class="p-2 align-top font-bold ${statusColor}"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">${statusIcon}</span> ${status}</span></td>
-                    <td class="p-2 align-top text-gray-400">
-                        <p>${details}</p>
-                        ${suggestion ? `<p class="mt-1 text-sky-400 text-xs"><span class="font-bold">Sugestão:</span> ${suggestion}</p>` : ''}
-                    </td>
-                </tr>`;
-            tbody.insertAdjacentHTML('beforeend', row);
+    // --- NOVA LÓGICA DA ABA DE TESTES ---
+    const renderDiagnosticItem = (item, isGlobal = false) => {
+        const severityMap = {
+            critical: { color: 'red', icon: 'error' },
+            serious: { color: 'orange', icon: 'warning' },
+            moderate: { color: 'yellow', icon: 'priority_high' },
+            review: { color: 'sky', icon: 'help' },
+            disponibilidade: { color: 'red', icon: 'cloud_off'}
         };
+        const sev = item.severity.toLowerCase();
+        const type = item.type.toLowerCase();
+        const currentSeverity = severityMap[sev] || severityMap[type] || { color: 'gray', icon: 'info' };
+
+        return `
+            <div class="border-l-4 border-${currentSeverity.color}-500 bg-${currentSeverity.color}-900/20 p-3 rounded-r-md mb-2">
+                <div class="flex justify-between items-center mb-1">
+                    <p class="font-semibold text-sm text-${currentSeverity.color}-300 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">${currentSeverity.icon}</span>
+                        ${item.type} (${sev})
+                    </p>
+                    ${isGlobal ? `<p class="text-xs font-mono bg-gray-800 px-2 py-1 rounded">${item.page}</p>` : ''}
+                </div>
+                <p class="text-xs text-gray-300 mb-2">${item.description}</p>
+                <p class="text-xs font-mono text-gray-500 truncate" title="${item.selector || 'N/A'}">Seletor: ${item.selector || 'N/A'}</p>
+            </div>
+        `;
+    };
+    
+    async function loadAndRenderDiagnostics() {
+        const diagnosticsContainer = document.getElementById('diagnostics-results');
+        if (!diagnosticsContainer || diagnosticsContainer.dataset.loaded) return;
+
+        diagnosticsContainer.dataset.loaded = 'true';
+        diagnosticsContainer.innerHTML = '<p class="text-center text-gray-400">Carregando relatório de diagnóstico...</p>';
         
-        // --- NOVO: Teste de Interatividade das Abas (index.html) ---
-        async function checkIndexPageTabs() {
-            const path = window.location.pathname;
-            if (path.endsWith('/') || path.endsWith('index.html') || path.split('/').pop() === '') {
-                const tabs = document.querySelectorAll('.hero-tab-button');
-                const panels = document.querySelectorAll('.hero-tab-panel');
-                if (tabs.length < 2 || panels.length < 2) {
-                    addResult("Interatividade: Abas da Página Inicial", "FAIL", "Não foi possível encontrar os botões de aba ou painéis.", "Verifique a estrutura HTML da seção de herói no `index.html`.");
-                    return;
-                }
-                tabs[1].click();
-                await new Promise(resolve => setTimeout(resolve, 100));
-
-                const isSecondTabActive = tabs[1].classList.contains('active');
-                const isSecondPanelVisible = panels[1].classList.contains('active');
-                
-                tabs[0].click(); // Reset state
-                if (isSecondTabActive && isSecondPanelVisible) {
-                    addResult("Interatividade: Abas da Página Inicial", "PASS", "A funcionalidade de abas está operando corretamente.", null);
-                } else {
-                    addResult("Interatividade: Abas da Página Inicial", "FAIL", "Clicar em uma aba não ativa o painel correspondente.", "Verifique o script no `index.html` para garantir que a classe `.active` é adicionada ao painel e ao botão.");
-                }
-            }
-        }
-        await checkIndexPageTabs();
-
-        // --- NOVO: Teste de Erros no Console ---
-        if (capturedErrors.length > 0) {
-            const errorDetails = capturedErrors.map(e => `<li>- ${e}</li>`).join('');
-            addResult("Qualidade do Código: Erros de JavaScript", "FAIL", `Encontrados ${capturedErrors.length} erro(s) no console: <ul>${errorDetails}</ul>`, "Abra o console do navegador para depurar os erros listados, que podem quebrar funcionalidades da página.");
-        } else {
-            addResult("Qualidade do Código: Erros de JavaScript", "PASS", "Nenhum erro de JavaScript foi capturado durante o carregamento da página.", null);
-        }
-
-        // Testes de Validação de JSON (já existentes)
         try {
-            const response = await fetch(`${baseUrl}search.json?cache_bust=` + Date.now());
-            if (response.ok) {
-                const data = await response.json();
-                addResult("Validação de `search.json`", data.length > 0 ? "PASS" : "FAIL", data.length > 0 ? "Arquivo encontrado e contém dados." : "Arquivo encontrado, mas está vazio.", "Verifique o processo de build do Jekyll.");
+            const response = await fetch(`${baseUrl}diagnostics.json?cache_bust=${Date.now()}`);
+            if (!response.ok) throw new Error(`Não foi possível carregar o relatório (Status: ${response.status}).`);
+            
+            const allDiagnostics = await response.json();
+            const currentPagePath = window.location.pathname.replace(baseUrl, '') || '/';
+            
+            const currentPageIssues = allDiagnostics.filter(item => item.page === currentPagePath);
+            const globalIssues = allDiagnostics.filter(item => item.page !== currentPagePath);
+
+            let html = '';
+
+            // Renderiza problemas da página atual
+            html += '<div><h3 class="font-bold mb-3 text-lg text-sky-400">Página Atual</h3>';
+            if (currentPageIssues.length > 0) {
+                html += currentPageIssues.map(item => renderDiagnosticItem(item, false)).join('');
             } else {
-                addResult("Validação de `search.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}).`, "Execute o build do Jekyll ou verifique o caminho do arquivo.");
+                html += '<p class="text-sm text-green-400 p-3 bg-green-900/20 rounded-md">Nenhum problema específico encontrado nesta página.</p>';
             }
-        } catch (e) {
-            addResult("Validação de `search.json`", "FAIL", "O arquivo não é um JSON válido.", "Inspecione `search.json` para corrigir erros de sintaxe.");
+            html += '</div>';
+
+            // Renderiza problemas do site global
+            html += '<div class="mt-6"><h3 class="font-bold mb-3 text-lg text-sky-400">Site Global</h3>';
+            if (globalIssues.length > 0) {
+                html += globalIssues.map(item => renderDiagnosticItem(item, true)).join('');
+            } else {
+                html += '<p class="text-sm text-green-400 p-3 bg-green-900/20 rounded-md">Nenhum problema encontrado nas outras páginas do site.</p>';
+            }
+            html += '</div>';
+            
+            diagnosticsContainer.innerHTML = html;
+
+        } catch (err) {
+            diagnosticsContainer.innerHTML = `<p class="text-red-400 p-3 bg-red-900/20 rounded-md">Ocorreu um erro ao carregar o relatório de diagnóstico: ${err.message}</p>`;
         }
-
-        // --- NOVO: Teste de Otimização de Imagens ---
-        document.querySelectorAll('img').forEach(img => {
-            if (img.complete && img.naturalWidth > 0) {
-                const displayedWidth = img.clientWidth;
-                if (displayedWidth > 0 && (img.naturalWidth > displayedWidth * 1.5)) {
-                    addResult(
-                        `Performance: Imagem ${img.src.split('/').pop()}`, 
-                        "RECOMENDAÇÃO", 
-                        `A imagem tem ${img.naturalWidth}px de largura mas é exibida com ${displayedWidth}px.`, 
-                        "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento."
-                    );
-                }
-            }
-        });
-
-        // Testes de Qualidade e SEO (já existentes)
-        addResult("SEO: Título da Página", !!document.querySelector('title') ? "PASS" : "FAIL", "A tag `<title>` está presente.", "Adicione uma tag `<title>` única e descritiva.");
-        addResult("Acessibilidade: Imagens sem `alt`", document.querySelectorAll('img:not([alt])').length === 0 ? "PASS" : "FAIL", "Todas as imagens possuem o atributo `alt`.", "Adicione o atributo `alt` a todas as imagens. Use `alt=\"\"` para imagens decorativas.");
     }
+    
+    // Função original runComprehensiveDiagnostics removida, pois a nova lógica a substitui.
+
 });
