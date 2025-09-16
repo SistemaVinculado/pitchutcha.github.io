@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>Pitchutcha - Status do Sistema</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="base-url" content="{{ '/' | relative_url }}">
     <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
@@ -55,36 +56,29 @@
                     </div>
                 </div>
 
-                <div id="uptime-panel" class="mb-8 p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
-                    <div class="flex justify-between items-center mb-1">
-                        <div class="flex items-center gap-2">
-                           <h2 id="uptime-panel-title" class="text-lg font-semibold text-[var(--text-primary)]">Histórico de Uptime</h2>
-                           <div class="relative" id="legend-help-container">
-                               <button id="legend-help-button" class="legend-help-button">?</button>
-                           </div>
+                <div class="mb-8 p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
+                    <h2 class="text-xl font-semibold text-[var(--text-primary)] mb-4">Histórico de Uptime (Últimos 90 dias)</h2>
+                    <div id="uptime-chart-container" class="relative w-full h-24 bg-[var(--background-primary)] rounded p-2 flex items-end justify-end space-x-px">
                         </div>
-                        <div id="overall-uptime-status" class="text-right"></div>
-                    </div>
-                    
-                    <div class="relative">
-                        <div id="uptime-chart-container" class="uptime-graph-container"></div>
-                        <div id="uptime-tooltip" class="uptime-tooltip">
-                            <div id="tooltip-content"></div>
-                            <div id="tooltip-arrow" class="tooltip-arrow"></div>
+                    <div id="uptime-tooltip" class="absolute hidden opacity-0 bg-[var(--cards-elements)] border border-[var(--borders)] rounded-lg shadow-lg p-3 text-xs z-10 pointer-events-none transition-opacity duration-200">
+                        <p id="tooltip-date" class="font-bold mb-1"></p>
+                        <div class="flex items-center">
+                            <span id="tooltip-status-indicator" class="w-2 h-2 rounded-full mr-2"></span>
+                            <p id="tooltip-status-text"></p>
                         </div>
+                        <p id="tooltip-details" class="mt-1 text-[var(--text-secondary)]"></p>
                     </div>
-                    
-                    <div class="flex justify-between items-center text-xs text-[var(--text-secondary)] mt-2">
+                    <div class="flex justify-between text-xs text-[var(--text-secondary)] mt-2 px-1">
                         <span id="chart-start-date"></span>
-                        <div id="status-legend" class="flex items-center gap-4"></div>
                         <span id="chart-end-date"></span>
                     </div>
                 </div>
 
-                <div id="pagespeed-report-container" class="mb-8">
-                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Relatório PageSpeed Insights</h2>
-                    <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
-                        <p class="text-[var(--text-secondary)]">Carregando relatório...</p>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Histórico de Uptime e Incidentes</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div id="uptime-history-container"><p class="text-[var(--text-secondary)]">Carregando dados de uptime...</p></div>
+                        <div id="incidents-history-container"><p class="text-[var(--text-secondary)]">Carregando histórico de incidentes...</p></div>
                     </div>
                 </div>
                 
@@ -93,70 +87,6 @@
                     <div id="detailed-status-container" class="overflow-hidden">
                         <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
                             <p class="text-[var(--text-secondary)]">Verificando componentes...</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Linha do Tempo de Incidentes</h2>
-                    <div id="incidents-history-container">
-                        <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
-                           <p class="text-center text-[var(--text-secondary)]">Buscando dados de incidentes em tempo real...</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
-                        <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Latência da API</p>
-                            <span class="material-symbols-outlined text-gray-500">speed</span>
-                        </div>
-                        <div class="flex items-baseline gap-2">
-                            <p id="metric-api-latency" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
-                        <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência do Modelo</p>
-                            <span class="material-symbols-outlined text-gray-500">model_training</span>
-                        </div>
-                        <div class="flex items-baseline gap-2">
-                            <p id="metric-inference-time" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
-                        <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Taxa de Erros</p>
-                            <span class="material-symbols-outlined text-gray-500">error_outline</span>
-                        </div>
-                        <div class="flex items-baseline gap-2">
-                            <p id="metric-error-rate" class="text-[var(--text-primary)] text-3xl font-bold">--%</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Desempenho dos Modelos</h2>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="flex flex-col gap-4 rounded-lg border border-[var(--borders)] p-6 bg-[var(--background-secondary)]">
-                            <p class="text-[var(--text-secondary)] font-medium">Latência da API (Últimas 24h)</p>
-                            <p id="chart-avg-latency" class="text-[var(--text-primary)] text-3xl font-bold truncate">Média: --ms</p>
-                            <div class="flex-1 flex flex-col justify-center">
-                                <svg id="latency-chart-svg" fill="none" height="150" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_area" x1="236" x2="236" y1="0" y2="150">
-                                            <stop stop-color="var(--primary-color)" stop-opacity="0.3"></stop>
-                                            <stop offset="1" stop-color="var(--primary-color)" stop-opacity="0"></stop>
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-4 rounded-lg border border-[var(--borders)] p-6 bg-[var(--background-secondary)]">
-                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência por Modelo</p>
-                            <p id="chart-avg-inference" class="text-[var(--text-primary)] text-3xl font-bold truncate">Média: --ms</p>
-                            <div id="inference-chart-container" class="grid grid-cols-5 gap-4 items-end flex-1 pt-6 px-3"></div>
                         </div>
                     </div>
                 </div>
