@@ -60,12 +60,30 @@ layout: null
             overflow-x: hidden;
         }
 
-        /* --- INÍCIO: ESTILOS ATUALIZADOS (Banner, Progresso, Tabs de Código AI Studio) --- */
+        /* --- INÍCIO: ESTILOS ATUALIZADOS --- */
 
-        /* 1. Barra de Progresso de Leitura */
+        /* INÍCIO: CSS Adicionado para o novo SVG de fundo da seção final */
+        .final-cta-container {
+            position: relative;
+            overflow: hidden;
+        }
+        #final-cta-svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: auto;
+            min-width: 1200px;
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+        }
+        /* FIM: CSS Adicionado */
+
         #progress-bar-container {
             position: fixed;
-            top: 4rem; /* Altura do header h-16 */
+            top: 4rem;
             left: 0;
             width: 100%;
             height: 4px;
@@ -79,235 +97,43 @@ layout: null
             transition: width 0.1s linear;
         }
 
-        /* 2. Banner Global de Anúncios */
-        .global-banner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1.5rem;
-            background-color: var(--cards-elements);
-            border-bottom: 1px solid var(--borders);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            width: 100%;
-            z-index: 10;
-        }
-        .global-banner-content strong {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        .global-banner-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 0.25rem;
-            line-height: 1;
-        }
-        .global-banner-close:hover {
-            color: var(--text-primary);
-        }
-        .banner-hidden {
-            display: none;
-        }
+        .global-banner { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background-color: var(--cards-elements); border-bottom: 1px solid var(--borders); color: var(--text-secondary); font-size: 0.9rem; width: 100%; z-index: 10; }
+        .global-banner-content strong { color: var(--primary-color); font-weight: 600; }
+        .global-banner-close { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.25rem; line-height: 1; }
+        .global-banner-close:hover { color: var(--text-primary); }
+        .banner-hidden { display: none; }
 
-        /* 3. Abas de Código (Estilo AI Studio) */
-        .code-tabs-buttons {
-            display: flex;
-            border-bottom: 1px solid #2a2a2a;
-        }
-        .tab-button {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: #8c8c8c;
-            font-weight: 500;
-            margin-bottom: -1px;
-            transition: color 0.2s, border-color 0.2s;
-        }
-        .tab-button:hover {
-            color: #d4d4d4;
-        }
-        .tab-button.active {
-            color: #d4d4d4;
-            border-bottom-color: #d4d4d4;
-        }
+        .code-tabs-buttons { display: flex; border-bottom: 1px solid #2a2a2a; }
+        .tab-button { padding: 0.75rem 1rem; cursor: pointer; background-color: transparent; border: none; border-bottom: 3px solid transparent; color: #8c8c8c; font-weight: 500; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; }
+        .tab-button:hover { color: #d4d4d4; }
+        .tab-button.active { color: #d4d4d4; border-bottom-color: #d4d4d4; }
         .code-tab-panel { display: none; }
         .code-tab-panel.active { display: block; }
         
-        /* 4. Layout do Card (de yep.html) */
-        .code-block-card {
-            background: #1f1f1f;
-            border: 1px solid #2a2a2a;
-            display: flex;
-            margin-bottom: 70px;
-            padding: 16px;
-            width: 100%;
-        }
-        @media screen and (max-width: 768px) {
-            .code-block-card {
-                flex-direction: column;
-                gap: 20px;
-            }
-        }
-
-        .code-block-left-side {
-            color: #d4d4d4;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-right: 30px;
-            max-width: 240px;
-            flex-shrink: 0;
-        }
-        @media screen and (max-width: 768px) {
-            .code-block-left-side {
-                margin-right: 0;
-                max-width: unset;
-            }
-        }
-
-        .code-block-title {
-            color: #d4d4d4;
-            font-size: 1.5rem;
-            font-weight: 300;
-            margin-bottom: 8px;
-        }
+        .code-block-card { background: #1f1f1f; border: 1px solid #2a2a2a; display: flex; margin-bottom: 70px; padding: 16px; width: 100%; }
+        @media screen and (max-width: 768px) { .code-block-card { flex-direction: column; gap: 20px; } }
+        .code-block-left-side { color: #d4d4d4; display: flex; flex-direction: column; gap: 8px; margin-right: 30px; max-width: 240px; flex-shrink: 0; }
+        @media screen and (max-width: 768px) { .code-block-left-side { margin-right: 0; max-width: unset; } }
+        .code-block-title { color: #d4d4d4; font-size: 1.5rem; font-weight: 300; margin-bottom: 8px; }
+        .code-block-description { color: #8c8c8c; font-size: 0.9rem; line-height: 1.4; }
+        .code-block-time-estimate { align-items: center; display: flex; gap: 4px; color: #8c8c8c; font-size: 0.9rem; margin-top: 8px; }
+        .code-block-time-estimate .material-symbols-outlined { font-size: 1.2rem; vertical-align: middle; }
+        .code-block-button-container { margin-top: auto; padding-top: 16px; }
+        .custom-button-small { align-items: center; background: #323232; border: 1px solid #3e3e3e; border-radius: 12px; color: #d4d4d4; cursor: pointer; display: inline-flex; gap: 8px; height: 36px; opacity: .9; padding: 8px 12px; text-decoration: none; transition: background-color .2s ease-in-out,opacity .2s ease-in-out; font-size: 0.875rem; font-weight: 500; }
+        .custom-button-small:hover { background: #3c3c3c; border-color: #3e3e3e; opacity: 1; }
+        .custom-button-small .material-symbols-outlined { font-size: 1.1rem; vertical-align: middle; }
+        .code-block-right-side { display: flex; min-width: 0; width: 100%; }
+        #code-tabs-container { width: 100%; }
+        .code-block-tab-content { height: 350px; overflow: auto; background: #1f1f1f; padding: 1.25rem; border-top: 1px solid #2a2a2a; border-radius: 0 0 0.5rem 0.5rem; }
+        .code-block-tab-content pre { padding: 0 !important; margin: 0 !important; background: transparent !important; overflow: visible; }
+        .code-block-tab-content code.hljs, .hljs-ln-numbers { font-family: 'Courier New', Courier, monospace !important; font-size: 0.875rem !important; line-height: 1.5rem !important; }
+        .hljs-ln { border-collapse: collapse; width: 100%; }
+        .hljs-ln td { padding: 0; vertical-align: top; }
+        .hljs-ln-numbers { position: -webkit-sticky; position: sticky; left: 0; width: 40px; padding-right: 12px; color: #8c8c8c; text-align: right; background: #1f1f1f; -webkit-user-select: none; user-select: none; z-index: 1; }
+        .hljs-ln-code { padding-left: 12px; }
         
-        .code-block-description {
-             color: #8c8c8c;
-             font-size: 0.9rem;
-             line-height: 1.4;
-        }
-
-        .code-block-time-estimate {
-            align-items: center;
-            display: flex;
-            gap: 4px;
-            color: #8c8c8c;
-            font-size: 0.9rem;
-            margin-top: 8px;
-        }
-        .code-block-time-estimate .material-symbols-outlined {
-            font-size: 1.2rem;
-            vertical-align: middle;
-        }
-
-        .code-block-button-container {
-            margin-top: auto;
-            padding-top: 16px;
-        }
-
-        .custom-button-small {
-            align-items: center;
-            background: #323232;
-            border: 1px solid #3e3e3e;
-            border-radius: 12px;
-            color: #d4d4d4;
-            cursor: pointer;
-            display: inline-flex;
-            gap: 8px;
-            height: 36px;
-            opacity: .9;
-            padding: 8px 12px;
-            text-decoration: none;
-            transition: background-color .2s ease-in-out,opacity .2s ease-in-out;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        .custom-button-small:hover {
-            background: #3c3c3c;
-            border-color: #3e3e3e;
-            opacity: 1;
-        }
-         .custom-button-small .material-symbols-outlined {
-            font-size: 1.1rem;
-            vertical-align: middle;
-         }
-
-        .code-block-right-side {
-            display: flex;
-            min-width: 0;
-            width: 100%;
-        }
-        
-        #code-tabs-container {
-            width: 100%;
-        }
-        
-        .code-block-tab-content {
-            height: 350px;
-            overflow: auto; 
-            background: #1f1f1f;
-            padding: 1.25rem;
-            border-top: 1px solid #2a2a2a;
-            border-radius: 0 0 0.5rem 0.5rem;
-        }
-        
-        .code-block-tab-content pre {
-             padding: 0 !important;
-             margin: 0 !important;
-             background: transparent !important;
-             overflow: visible;
-        }
-        
-        .code-block-tab-content code.hljs,
-        .hljs-ln-numbers {
-            font-family: 'Courier New', Courier, monospace !important;
-            font-size: 0.875rem !important;
-            line-height: 1.5rem !important;
-        }
-
-        .hljs-ln {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .hljs-ln td {
-            padding: 0;
-            vertical-align: top;
-        }
-        .hljs-ln-numbers {
-            position: -webkit-sticky;
-            position: sticky;
-            left: 0;
-            width: 40px; 
-            padding-right: 12px;
-            color: #8c8c8c;
-            text-align: right;
-            background: #1f1f1f;
-            -webkit-user-select: none;
-            user-select: none;
-            z-index: 1;
-        }
-        .hljs-ln-code {
-            padding-left: 12px;
-        }
-        
-        .skip-to-content {
-            position: absolute;
-            left: -10000px;
-            top: auto;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-        }
-        .skip-to-content:focus {
-            left: 50%;
-            transform: translateX(-50%);
-            top: 1rem;
-            width: auto;
-            height: auto;
-            padding: 0.75rem 1.25rem;
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 700;
-            border-radius: 0.5rem;
-            z-index: 100;
-            text-decoration: none;
-            overflow: visible;
-        }
+        .skip-to-content { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+        .skip-to-content:focus { left: 50%; transform: translateX(-50%); top: 1rem; width: auto; height: auto; padding: 0.75rem 1.25rem; background-color: var(--primary-color); color: white; font-weight: 700; border-radius: 0.5rem; z-index: 100; text-decoration: none; overflow: visible; }
     </style>
 </head>
 <body class="text-[var(--text-primary)]">
@@ -583,13 +409,17 @@ FIM_FUNÇÃO
             </div>
             <hr class="max-w-7xl mx-auto border-[var(--borders)]">
         </div>
-
-        <div class="text-center px-4 flex flex-col items-center mb-20 md:mb-32">
-            <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Construído para a Comunidade</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.</p>
-            <div class="mt-10"><a href="{{ '/docs.html' | relative_url }}" class="bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">Explorar a Documentação</a></div>
+        
+        <div class="final-cta-container">
+            <img id="final-cta-svg" src="{{ '/assets/images/community-background.svg' | relative_url }}" alt="Fundo decorativo abstrato">
+            
+            <div class="relative z-10 text-center px-4 flex flex-col items-center mb-20 md:mb-32">
+                <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Construído para a Comunidade</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.</p>
+                <div class="mt-10"><a href="{{ '/docs.html' | relative_url }}" class="bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">Explorar a Documentação</a></div>
+            </div>
         </div>
-    </main>
+        </main>
     
     {% include footer.html %}
     
