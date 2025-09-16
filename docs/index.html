@@ -51,41 +51,25 @@ layout: null
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, #0d1117, transparent); z-index: 2; }
-        body { background-color: var(--background-primary); }
-
-        /* --- Fundo Difuso (Adicionado Anteriormente) --- */
-        body {
-            position: relative; 
-            overflow-x: hidden;
+        
+        /* CSS Original do Body */
+        body { 
+            background-color: var(--background-primary); 
+            position: relative; /* Mantido para elementos absolutos */
+            overflow-x: hidden; /* Mantido para evitar scroll horizontal */
         }
-
-        .diffuse-background-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -10; overflow: hidden;
-        }
-        .diffuse-background-circle {
-            background: #0d1a3a; 
-            filter: blur(150px); -webkit-filter: blur(150px);
-            position: absolute; z-index: -1; border-radius: 50%;
-        }
-        .diffuse-background-circle.circle-1 { height: 1000px; width: 1000px; left: -150px; top: 0px; }
-        .diffuse-background-circle.circle-2 { height: 600px; width: 600px; right: -100px; top: 200px; }
-        .diffuse-background-circle.circle-3 { height: 800px; width: 800px; left: -100px; top: 1800px; }
-        .diffuse-background-circle.circle-4 { height: 700px; width: 700px; right: -150px; top: 2500px; }
-
 
         /* --- INÍCIO: NOVOS ESTILOS (Banner, Progresso, Tabs de Código) --- */
 
         /* 1. Barra de Progresso de Leitura */
         #progress-bar-container {
             position: fixed;
-            /* h-16 = 4rem (altura do header). A barra fica logo abaixo. */
-            top: 4rem; 
+            top: 4rem; /* Altura do header */
             left: 0;
             width: 100%;
             height: 4px;
             background-color: transparent;
-            z-index: 19; /* Abaixo do header (z-20) mas acima do resto */
+            z-index: 19; 
         }
         #progress-bar {
             height: 4px;
@@ -130,7 +114,7 @@ layout: null
         .code-tabs-buttons {
             display: flex;
             border-bottom: 2px solid var(--borders);
-            margin-bottom: -2px; /* Sobrepõe a borda da div preta */
+            margin-bottom: -2px; 
             z-index: 2;
             position: relative;
         }
@@ -142,7 +126,7 @@ layout: null
             border-bottom: 2px solid transparent;
             color: var(--text-secondary);
             font-weight: 500;
-            margin-bottom: -2px; /* Alinha com a borda do container */
+            margin-bottom: -2px; 
             transition: color 0.2s, border-color 0.2s;
         }
         .tab-button.active {
@@ -158,10 +142,10 @@ layout: null
         
         /* 4. Animação de Digitação */
         .code-block-wrapper pre {
-            background-color: #0d1117; /* Cor de fundo escura, similar ao seu tema */
+            background-color: #0d1117; 
             padding: 1.5rem;
             border-radius: 0.5rem;
-            border-top-left-radius: 0; /* Para alinhar com a aba */
+            border-top-left-radius: 0;
             border: 1px solid var(--borders);
             overflow: hidden;
             font-family: 'Courier New', Courier, monospace;
@@ -171,38 +155,34 @@ layout: null
         
         .typing-animation code {
             display: inline-block;
-            white-space: pre; /* Mantém a formatação do <pre> */
+            white-space: pre;
             overflow: hidden;
-            width: 0; /* Começa sem largura */
-            border-right: 3px solid orange; /* Cursor piscando */
-            /* steps() é o número de caracteres. JS irá definir isso. */
+            width: 0;
+            border-right: 3px solid orange; /* Cursor */
             animation: typing 2s steps(var(--char-count, 20)) forwards, 
                        blink-caret .75s step-end infinite;
         }
         
-        /* Animação CSS para o código sendo "digitado" */
         @keyframes typing {
             from { width: 0 }
-            to { width: 100% } /* Expande para mostrar todo o texto */
+            to { width: 100% }
         }
 
-        /* Animação CSS para o cursor piscando */
         @keyframes blink-caret {
             from, to { border-color: transparent }
             50% { border-color: orange }
         }
 
-        /* Classe para parar o pisca-pisca quando a digitação termina */
         .typing-animation code.typing-done {
-            animation: none; /* Remove a animação de digitação */
-            border-right: 3px solid transparent; /* Esconde o cursor */
-            width: 100%; /* Garante que todo o código está visível */
+            animation: none;
+            border-right: 3px solid transparent;
+            width: 100%;
         }
         
         /* 5. Link "Pular para Conteúdo" (Acessibilidade) */
         .skip-to-content {
             position: absolute;
-            left: -10000px; /* Esconde fora da tela */
+            left: -10000px;
             top: auto;
             width: 1px;
             height: 1px;
@@ -219,7 +199,7 @@ layout: null
             color: white;
             font-weight: 700;
             border-radius: 0.5rem;
-            z-index: 100; /* Acima de tudo */
+            z-index: 100;
             text-decoration: none;
             overflow: visible;
         }
@@ -233,13 +213,6 @@ layout: null
         <div id="progress-bar"></div>
     </div>
     <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
-    <div class="diffuse-background-container">
-        <div class="diffuse-background-circle circle-1"></div>
-        <div class="diffuse-background-circle circle-2"></div>
-        <div class="diffuse-background-circle circle-3"></div>
-        <div class="diffuse-background-circle circle-4"></div>
-    </div>
-
     <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
             <div class="flex items-center gap-8">
@@ -263,7 +236,7 @@ layout: null
 
     <div id="global-banner" class="global-banner">
         <div class="global-banner-content">
-            <strong>🚀 Novidade:</strong> Agora o site conta com um tema de alto contraste e barra de progresso para navegação!
+            <strong>🚀 Novidade:</strong> Veja nossos novos exemplos de código interativos abaixo!
         </div>
         <button id="global-banner-close" class="global-banner-close" aria-label="Fechar banner">
             <span class="material-symbols-outlined" style="font-size: 1.25rem;">close</span>
@@ -487,67 +460,11 @@ FIM_FUNÇÃO
         </div>
     </main>
     
-    <footer class="text-[var(--text-secondary)] border-t border-[var(--borders)]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                
-                <div class="col-span-2 lg:col-span-1 mb-8 md:mb-0">
-                    <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
-                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
-                        <h1 class="text-xl font-bold">Pitchutcha</h1>
-                    </a>
-                    <p class="mt-4 text-sm">Construindo a base para a próxima geração de desenvolvedores.</p>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-semibold text-[var(--text-primary)] tracking-wider uppercase">Algoritmos</h3>
-                    <ul class="mt-4 space-y-4">
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Busca</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Ordenação</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Grafos</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Recursão</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-semibold text-[var(--text-primary)] tracking-wider uppercase">Estruturas</h3>
-                    <ul class="mt-4 space-y-4">
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Arrays</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Listas Ligadas</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Tabelas Hash</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Árvores</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Filas e Pilhas</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-semibold text-[var(--text-primary)] tracking-wider uppercase">Conceitos</h3>
-                    <ul class="mt-4 space-y-4">
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Análise Big O</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Programação Dinâmica</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Algoritmos Gulosos</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-semibold text-[var(--text-primary)] tracking-wider uppercase">Comunidade</h3>
-                    <ul class="mt-4 space-y-4">
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Sobre</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">GitHub</a></li>
-                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Contribuir</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-16 pt-8 border-t border-[var(--borders)] text-sm text-center">
-                <p>&copy; {{ site.time | date: "%Y" }} Pitchutcha. Todos os direitos reservados.</p>
-            </div>
-        </div>
-    </footer>
+    {% include footer.html %}
+    
     {% include scripts.html %}
 
     <script>
-        // Espera o DOM estar totalmente carregado para adicionar os listeners
         document.addEventListener('DOMContentLoaded', () => {
 
             // --- 1. Lógica da Barra de Progresso de Leitura ---
@@ -565,6 +482,9 @@ FIM_FUNÇÃO
             const banner = document.getElementById('global-banner');
             const closeButton = document.getElementById('global-banner-close');
             if (banner && closeButton) {
+                // Opcional: Descomente a linha abaixo se quiser que o banner apareça por padrão
+                // banner.style.display = 'flex'; 
+                
                 closeButton.addEventListener('click', () => {
                     banner.classList.add('banner-hidden');
                 });
@@ -575,52 +495,47 @@ FIM_FUNÇÃO
             if (tabsContainer) {
                 const tabButtons = tabsContainer.querySelectorAll('.tab-button');
                 const tabPanels = tabsContainer.querySelectorAll('.code-tab-panel');
+                let typingTimer; // Guarda a referência do timer para limpar
 
-                // Função para ativar a animação de digitação
                 function triggerTypingAnimation(panel) {
                     const codeElement = panel.querySelector('code');
                     if (!codeElement) return;
 
-                    // Remove classes antigas para reiniciar a animação
+                    // Limpa qualquer animação anterior
+                    clearTimeout(typingTimer);
                     codeElement.classList.remove('typing-animation', 'typing-done');
                     
-                    // Força o "reflow" do DOM. Isso é essencial para reiniciar a animação CSS.
-                    void codeElement.offsetWidth; 
+                    void codeElement.offsetWidth; // Força reflow
 
-                    // Define o número de caracteres para a animação steps()
                     const charCount = parseInt(codeElement.getAttribute('data-char-count') || codeElement.textContent.length, 10);
                     codeElement.style.setProperty('--char-count', charCount);
 
-                    // Adiciona a classe de animação
                     codeElement.classList.add('typing-animation');
 
-                    // Após o término da animação (2s, definido no CSS), limpa as classes
-                    setTimeout(() => {
+                    // Após o término da animação (2s), para o cursor piscando
+                    typingTimer = setTimeout(() => {
                         codeElement.classList.remove('typing-animation');
                         codeElement.classList.add('typing-done');
-                    }, 2000); // Deve corresponder à duração da animação no CSS
+                    }, 2000); // Duração da animação "typing"
                 }
 
                 tabButtons.forEach(button => {
                     button.addEventListener('click', () => {
                         const targetTab = button.getAttribute('data-tab');
                         
-                        // Desativa todos os botões e painéis
                         tabButtons.forEach(btn => btn.classList.remove('active'));
                         tabPanels.forEach(panel => panel.classList.remove('active'));
 
-                        // Ativa o botão clicado e o painel correspondente
                         button.classList.add('active');
                         const activePanel = document.getElementById(`panel-${targetTab}`);
                         if (activePanel) {
                             activePanel.classList.add('active');
-                            // Aciona a animação de digitação no painel que acabou de ficar ativo
                             triggerTypingAnimation(activePanel);
                         }
                     });
                 });
 
-                // Aciona a animação para a aba ativa padrão (Python) no carregamento da página
+                // Aciona a animação para a aba ativa padrão no carregamento
                 const defaultActivePanel = document.querySelector('.code-tab-panel.active');
                 if (defaultActivePanel) {
                     triggerTypingAnimation(defaultActivePanel);
@@ -630,4 +545,4 @@ FIM_FUNÇÃO
         });
     </script>
     </body>
-                                </html>
+</html>
