@@ -1,0 +1,65 @@
+# Nome do Workflow: Construir e Implantar Site Jekyll no GitHub Pages
+name: Deploy Jekyll to GitHub Pages
+
+on:
+  # Roda em pushes para a branch 'main'
+  push:
+    branches: ["main"]
+  # Permite que você inicie manualmente pela aba "Actions" do GitHub
+  workflow_dispatch:
+
+# --- CORREÇÃO ---
+# Define as permissões do GITHUB_TOKEN para permitir o deploy no GitHub Pages.
+# id-token: write -> Essencial para a autenticação segura com o serviço do Pages.
+# pages: write -> Permite que a Action escreva no ambiente de deploy do Pages.
+# contents: read -> Permite que a Action faça o checkout do seu repositório.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permite apenas uma implantação simultânea e cancela execuções em fila.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Job de construção (Build)
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Ruby e Jekyll
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1' # Use a versão Ruby do seu projeto
+          bundler-cache: true # Executa 'bundle install' e armazena o cache
+          working-directory: './docs' # Especifica que o Gemfile está na pasta docs
+
+      - name: Construir o site Jekyll
+        # O prefixo `JEKYLL_ENV=production` garante que plugins como o jekyll-minifier rodem.
+        run: cd ./docs && bundle exec jekyll build
+
+      - name: Upload do artefato
+        # Carrega o diretório _site gerado para que o job de deploy possa usá-lo.
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Pasta a ser carregada (o resultado da construção do Jekyll)
+          path: './docs/_site'
+
+  # Job de implantação (Deploy)
+  deploy:
+    # O deploy precisa que o job de 'build' seja concluído com sucesso.
+    needs: build
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Implantar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
