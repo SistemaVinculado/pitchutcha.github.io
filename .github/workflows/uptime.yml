@@ -14,17 +14,48 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
 
-      - name: Generate Simulated Metrics
+      - name: Generate Simulated Metrics and Graph Data
         run: |
           set -e
-          LATENCY=$((RANDOM % 40 + 20)); INFERENCE=$((RANDOM % 150 + 100)); ERROR_RATE=$(printf "0.0%d" $((RANDOM % 5 + 1)))
+          # Gera métricas simples
+          LATENCY=$((RANDOM % 40 + 20))
+          INFERENCE=$((RANDOM % 150 + 100))
+          ERROR_RATE=$(printf "0.0%d" $((RANDOM % 5 + 1)))
+
+          # Gera um array de 12 pontos de dados para o gráfico de linha de latência
+          LATENCY_HISTORY=$(echo $(for i in {1..12}; do echo $((RANDOM % 60 + 10)); done) | sed 's/ /,/g')
+
+          # Gera um array de objetos para o gráfico de barras de tempo de inferência
+          BAR_CHART_DATA=$(jq -n '[
+            {"model": "GPT-4", "time": '$((RANDOM % 100 + 150))'},
+            {"model": "GPT-3.5", "time": '$((RANDOM % 80 + 80))'},
+            {"model": "DALL-E", "time": '$((RANDOM % 120 + 200))'},
+            {"model": "Whisper", "time": '$((RANDOM % 50 + 50))'},
+            {"model": "Embeds", "time": '$((RANDOM % 30 + 20))'}
+          ]')
+
+          # Cria o arquivo JSON temporário com todos os dados
           jq -n \
-            --arg latency "${LATENCY}ms" --arg inference "${INFERENCE}ms" --arg error_rate "${ERROR_RATE}%" \
-            '{"metrics": {"api_latency": $latency, "inference_time": $inference, "error_rate": $error_rate}}' > metrics.json
+            --arg latency "${LATENCY}ms" \
+            --arg inference "${INFERENCE}ms" \
+            --arg error_rate "${ERROR_RATE}%" \
+            --argjson latency_history "[$LATENCY_HISTORY]" \
+            --argjson inference_by_model "$BAR_CHART_DATA" \
+            '{
+              "metrics": {
+                "api_latency": $latency,
+                "inference_time": $inference,
+                "error_rate": $error_rate
+              },
+              "graphs": {
+                "latency_history": $latency_history,
+                "inference_by_model": $inference_by_model
+              }
+            }' > metrics.json
 
       - name: Fetch UptimeRobot data
         run: |
-          # Tenta buscar os dados do UptimeRobot. Se falhar, cria um arquivo JSON vazio para não quebrar o workflow.
+          # Tenta buscar os dados do UptimeRobot. Se falhar, cria um arquivo JSON vazio.
           curl --request POST 'https://api.uptimerobot.com/v2/getMonitors' \
           --header 'Content-Type: application/x-www-form-urlencoded' \
           --data-urlencode "api_key=${{ secrets.UPTIMEROBOT_API_KEY }}" \
@@ -41,7 +72,7 @@ jobs:
       - name: Combine Metrics and Uptime data
         run: |
           # Cria um JSON base com estrutura garantida
-          echo '{"monitors": [], "metrics": {"api_latency": "--ms", "inference_time": "--ms", "error_rate": "--%"}}' > base.json
+          echo '{"monitors": [], "metrics": {}, "graphs": {}}' > base.json
           
           # Mescla os arquivos de forma segura. Dados reais sobrescrevem a base.
           jq -s '.[0] * .[1] * .[2]' base.json metrics.json uptime.json > docs/uptime-data.json
