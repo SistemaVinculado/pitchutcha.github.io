@@ -9,8 +9,6 @@
       "keyword_type": 0,
       "keyword_case_type": 0,
       "keyword_value": "",
-      "http_username": "",
-      "http_password": "",
       "port": "",
       "interval": 300,
       "timeout": 30,
@@ -31,51 +29,51 @@
       "custom_uptime_ratio": "100.000-99.845-99.964",
       "custom_down_durations": "0-938-938",
       "response_times": [],
-      "average_response_time": "56.844",
+      "average_response_time": "55.922",
       "responsetime_length": 90,
       "lastLogTypeBeforeStartDate": {}
     }
   ],
   "metrics": {
-    "api_latency": "44ms",
-    "inference_time": "135ms",
-    "error_rate": "0.03%"
+    "api_latency": "23ms",
+    "inference_time": "203ms",
+    "error_rate": "0.04%"
   },
   "graphs": {
     "latency_history": [
-      42,
-      44,
-      58,
-      52,
-      16,
-      36,
-      46,
-      35,
-      28,
+      29,
+      10,
+      38,
+      31,
       50,
-      65,
-      16
+      57,
+      12,
+      19,
+      58,
+      51,
+      29,
+      22
     ],
     "inference_by_model": [
       {
         "model": "GPT-4",
-        "time": 170
+        "time": 179
       },
       {
         "model": "GPT-3.5",
-        "time": 107
+        "time": 116
       },
       {
         "model": "DALL-E",
-        "time": 305
+        "time": 301
       },
       {
         "model": "Whisper",
-        "time": 89
+        "time": 52
       },
       {
         "model": "Embeds",
-        "time": 40
+        "time": 37
       }
     ]
   },
