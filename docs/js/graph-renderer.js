@@ -8,8 +8,13 @@ document.addEventListener("DOMContentLoaded",()=>{
     if (latencyChartSVG && inferenceChartContainer) {
         
         const renderCharts = (data) => {
-            if (!data.graphs || !data.graphs.latency_history || !data.graphs.inference_by_model) {
-                console.error("Dados do gráfico não encontrados no arquivo JSON.");
+            // VERIFICAÇÃO DE SEGURANÇA ADICIONADA
+            if (!data || !data.graphs || !data.graphs.latency_history || !data.graphs.inference_by_model) {
+                console.error("Dados do gráfico (graphs) não encontrados no arquivo JSON.");
+                if(avgLatencyEl) avgLatencyEl.textContent = "Média: --ms";
+                if(avgInferenceEl) avgInferenceEl.textContent = "Média: --ms";
+                latencyChartSVG.innerHTML = '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9CA3AF" font-size="14">Dados indisponíveis</text>';
+                inferenceChartContainer.innerHTML = '<p class="text-gray-400 text-center col-span-5">Dados indisponíveis</p>';
                 return;
             }
             
@@ -35,7 +40,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 const areaPathData = `${pathData} V 150 H 0 Z`;
 
                 linePath.setAttribute("d", pathData);
-                linePath.setAttribute("stroke", "#4a90e2");
+                linePath.setAttribute("stroke", "var(--primary-color)");
                 linePath.setAttribute("stroke-width", "2");
                 linePath.setAttribute("fill", "none");
                 linePath.setAttribute("stroke-linecap", "round");
@@ -43,7 +48,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 areaPath.setAttribute("d", areaPathData);
                 areaPath.setAttribute("fill", "url(#paint0_linear_area)");
 
-                latencyChartSVG.querySelectorAll("path").forEach(p => p.remove());
+                latencyChartSVG.querySelectorAll("path, text").forEach(p => p.remove());
                 latencyChartSVG.appendChild(areaPath);
                 latencyChartSVG.appendChild(linePath);
 
@@ -65,11 +70,11 @@ document.addEventListener("DOMContentLoaded",()=>{
                 inferenceData.forEach(item => {
                     const barHeight = (item.time / maxTime) * 100;
                     const barHTML = `
-              <div class="flex flex-col items-center gap-2">
-                  <div class="w-full bg-[#30363d] rounded-t-sm" style="height: 100%;">
-                      <div class="h-full w-full bg-[#4a90e2] rounded-t-sm" style="height: ${barHeight}%;"></div>
+              <div class="flex flex-col items-center gap-2 h-full">
+                  <div class="w-full bg-[#30363d] rounded-t-sm flex-grow flex items-end">
+                      <div class="w-full bg-[var(--primary-color)] rounded-t-sm" style="height: ${barHeight}%;"></div>
                   </div>
-                  <p class="text-gray-400 text-xs text-center">${item.model}</p>
+                  <p class="text-[var(--text-secondary)] text-xs text-center">${item.model}</p>
               </div>
             `;
                     inferenceChartContainer.insertAdjacentHTML("beforeend", barHTML);
@@ -81,8 +86,11 @@ document.addEventListener("DOMContentLoaded",()=>{
         };
 
         fetch(`${baseUrl}uptime-data.json?cache_bust=` + Date.now())
-            .then(response => response.ok ? response.json() : Promise.reject("Falha ao carregar dados de uptime."))
+            .then(response => response.ok ? response.json() : Promise.reject("Falha ao carregar dados de uptime para os gráficos."))
             .then(data => renderCharts(data))
-            .catch(error => console.error("Erro ao renderizar gráficos:", error));
+            .catch(error => {
+                console.error("Erro ao renderizar gráficos:", error);
+                renderCharts(null); // Chama renderCharts com null para mostrar o estado de erro
+            });
     }
 });
