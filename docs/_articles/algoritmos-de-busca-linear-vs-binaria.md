@@ -5,7 +5,7 @@ date: 2025-09-10
 category: Algoritmos
 icon: search
 excerpt: "Uma análise comparativa entre a busca linear e a busca binária, dois algoritmos fundamentais para encontrar elementos em uma coleção de dados. Entenda quando e porquê usar cada um."
-image: "https://placehold.co/600x400/f3e8ff/8b5cf6?text=Busca+Linear+vs+Binária"
+image: "https://placehold.co/400x300/f3e8ff/8b5cf6?text=Busca+Linear+vs+Binária"
 ---
 
 <article>
