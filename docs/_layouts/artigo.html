@@ -52,7 +52,7 @@
                         <ol class="flex items-center space-x-1 text-sm text-[var(--text-secondary)] flex-wrap">
                             <li><a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Início</a></li>
                             <li><span class="material-symbols-outlined text-base mx-1">chevron_right</span></li>
-                            <li><a href="/{{ page.category | slugify }}.html" class="hover:text-[var(--primary-color)]">{{ page.category }}</a></li>
+                            <li><a href="{{ page.category | slugify | prepend: '/' | append: '.html' | relative_url }}" class="hover:text-[var(--primary-color)]">{{ page.category }}</a></li>
                         </ol>
                     </nav>
 
@@ -72,25 +72,45 @@
                     {% assign collection = site.articles | sort: 'date' %}
                     {% for article in collection %}
                         {% if article.url == page.url %}
-                            {% assign prev_article = forloop.previous %}
-                            {% assign next_article = forloop.next %}
+                            {% assign current_index = forloop.index0 %}
                         {% endif %}
                     {% endfor %}
+                    
+                    {% assign prev_index = current_index | minus: 1 %}
+                    {% if current_index > 0 %}
+                        {% assign prev_article = collection[prev_index] %}
+                    {% endif %}
+                    
+                    {% assign next_index = current_index | plus: 1 %}
+                    {% if next_index < collection.size %}
+                        {% assign next_article = collection[next_index] %}
+                    {% endif %}
 
                     {% if prev_article or next_article %}
                     <hr class="my-12 border-[var(--borders)]"/>
-                    <div class="mt-12 flex justify-between">
+                    <div class="mt-12 flex flex-col md:flex-row justify-between gap-4">
                         {% if prev_article %}
-                        <a class="inline-flex items-center gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ prev_article.url | relative_url }}">
-                            <span class="material-symbols-outlined w-4 h-4">arrow_back</span>
-                            <span>Anterior: {{ prev_article.title }}</span>
+                        <a class="flex-1 text-left inline-flex items-center gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] p-4 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ prev_article.url | relative_url }}">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            <div>
+                                <span class="text-xs text-[var(--text-secondary)]">Anterior</span>
+                                <span class="block font-semibold">{{ prev_article.title }}</span>
+                            </div>
                         </a>
+                        {% else %}
+                        <div class="flex-1"></div>
                         {% endif %}
+                        
                         {% if next_article %}
-                        <a class="inline-flex items-center gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] ml-auto" href="{{ next_article.url | relative_url }}">
-                            <span>Próximo: {{ next_article.title }}</span>
-                            <span class="material-symbols-outlined w-4 h-4">arrow_forward</span>
+                        <a class="flex-1 text-right inline-flex items-center justify-end gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] p-4 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ next_article.url | relative_url }}">
+                            <div>
+                                <span class="text-xs text-[var(--text-secondary)]">Próximo</span>
+                                <span class="block font-semibold">{{ next_article.title }}</span>
+                            </div>
+                            <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
+                        {% else %}
+                        <div class="flex-1"></div>
                         {% endif %}
                     </div>
                     {% endif %}
