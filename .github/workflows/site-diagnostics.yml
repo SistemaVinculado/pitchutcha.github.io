@@ -21,88 +21,11 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Instalar dependências (puppeteer e axe-core)
-        run: npm install puppeteer axe-core
-
-      - name: Criar script de diagnóstico
-        run: |
-          cat << 'EOF' > run-diagnostics.mjs
-          import puppeteer from 'puppeteer';
-          import axe from 'axe-core';
-          import fs from 'fs/promises';
-
-          const siteUrl = 'https://sistemavinculado.github.io/pitchutcha.github.io';
-          const pagesToTest = [
-            '/',
-            '/docs.html',
-            '/algoritmos.html',
-            '/estruturas-de-dados.html',
-            '/search.html',
-            '/status.html',
-            '/articles/introduction-to-algorithm-design',
-            '/articles/data-structures-overview',
-            '/articles/algoritmos-de-busca-linear-vs-binaria'
-          ];
-
-          const allDiagnostics = [];
-
-          async function run() {
-            const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-            const page = await browser.newPage();
-            const axeScript = await fs.readFile('./node_modules/axe-core/axe.min.js', 'utf-8');
-
-            for (const path of pagesToTest) {
-              const url = `${siteUrl}${path}`;
-              try {
-                await page.goto(url, { waitUntil: 'networkidle0' });
-                await page.evaluate(axeScript);
-                
-                const axeResults = await page.evaluate(() => axe.run({ resultTypes: ['violations', 'incomplete'] }));
-
-                // Adiciona violações de acessibilidade
-                axeResults.violations.forEach(v => {
-                  allDiagnostics.push({
-                    page: path,
-                    type: 'Acessibilidade',
-                    severity: v.impact,
-                    description: v.help,
-                    selector: v.nodes.map(n => n.target.join(', ')).join('; ')
-                  });
-                });
-
-                // Adiciona itens para revisão manual
-                axeResults.incomplete.forEach(i => {
-                  allDiagnostics.push({
-                    page: path,
-                    type: 'Acessibilidade',
-                    severity: 'review',
-                    description: i.help,
-                    selector: i.nodes.map(n => n.target.join(', ')).join('; ')
-                  });
-                });
-
-              } catch (e) {
-                console.error(`Erro ao testar ${url}:`, e.message);
-                allDiagnostics.push({
-                    page: path,
-                    type: 'Disponibilidade',
-                    severity: 'critical',
-                    description: `Não foi possível carregar ou testar a página. Erro: ${e.message}`,
-                    selector: 'N/A'
-                });
-              }
-            }
-
-            await browser.close();
-            await fs.writeFile('docs/diagnostics.json', JSON.stringify(allDiagnostics, null, 2));
-            console.log('Arquivo docs/diagnostics.json gerado com sucesso.');
-          }
-
-          run();
-          EOF
+      - name: Instalar dependências (puppeteer)
+        run: npm install puppeteer
 
       - name: Executar script de diagnóstico
-        run: node run-diagnostics.mjs
+        run: node scripts/run-diagnostics.mjs
 
       - name: Fazer commit do relatório de diagnóstico
         uses: stefanzweifel/git-auto-commit-action@v5
