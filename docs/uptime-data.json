@@ -28,52 +28,57 @@
       "userId": 3102890,
       "custom_uptime_ratio": "100.000-99.845-99.964",
       "custom_down_durations": "0-938-938",
-      "response_times": [],
-      "average_response_time": "56.022",
-      "responsetime_length": 90,
+      "response_times": [
+        {
+          "datetime": 1757967600,
+          "value": 55
+        }
+      ],
+      "average_response_time": "57.083",
+      "responsetime_length": 24,
       "lastLogTypeBeforeStartDate": {}
     }
   ],
   "metrics": {
-    "api_latency": "50ms",
-    "inference_time": "213ms",
-    "error_rate": "0.03%"
+    "api_latency": "56ms",
+    "inference_time": "120ms",
+    "error_rate": "0.05%"
   },
   "graphs": {
     "latency_history": [
-      61,
-      67,
-      33,
-      19,
-      48,
+      26,
+      50,
+      32,
+      56,
+      65,
+      65,
+      10,
       57,
-      34,
-      24,
       15,
+      41,
       49,
-      40,
-      60
+      39
     ],
     "inference_by_model": [
       {
         "model": "GPT-4",
-        "time": 190
+        "time": 172
       },
       {
         "model": "GPT-3.5",
-        "time": 133
+        "time": 120
       },
       {
         "model": "DALL-E",
-        "time": 282
+        "time": 263
       },
       {
         "model": "Whisper",
-        "time": 78
+        "time": 71
       },
       {
         "model": "Embeds",
-        "time": 44
+        "time": 21
       }
     ]
   },
