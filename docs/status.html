@@ -11,8 +11,8 @@
     <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
     <meta name="description" content="Acompanhe em tempo real o status e a performance dos serviços do Pitchutcha.">
     
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 </head>
@@ -45,6 +45,7 @@
                     <h1 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Status do Sistema</h1>
                     <p class="mt-1 text-[var(--text-secondary)]">Visão geral da saúde dos serviços do Pitchutcha em tempo real.</p>
                 </div>
+                
                 <div class="mb-8 p-4 rounded-lg bg-[var(--background-secondary)] border border-[var(--borders)]">
                     <div class="flex items-center justify-between">
                         <h2 class="text-xl font-semibold text-[var(--text-primary)]">Saúde Geral do Site</h2>
@@ -54,12 +55,41 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="mb-8 p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                        <div>
+                            <h2 class="text-xl font-semibold text-[var(--text-primary)]">Histórico de Uptime</h2>
+                            <p class="text-sm text-[var(--text-secondary)]">Últimos 90 dias de disponibilidade do serviço.</p>
+                        </div>
+                        <div id="status-legend" class="flex items-center space-x-4 mt-3 sm:mt-0 text-xs">
+                            </div>
+                    </div>
+
+                    <div id="uptime-chart-container" class="relative w-full h-24 bg-[var(--background-primary)] rounded p-2 flex items-end justify-end space-x-px">
+                        </div>
+
+                    <div id="uptime-tooltip" class="absolute hidden bg-[var(--cards-elements)] border border-[var(--borders)] rounded-lg shadow-lg p-3 text-xs z-10 pointer-events-none transition-opacity duration-200">
+                        <p id="tooltip-date" class="font-bold mb-1"></p>
+                        <div class="flex items-center">
+                            <span id="tooltip-status-indicator" class="w-2 h-2 rounded-full mr-2"></span>
+                            <p id="tooltip-status-text"></p>
+                        </div>
+                        <p id="tooltip-details" class="mt-1 text-[var(--text-secondary)]"></p>
+                    </div>
+
+                    <div class="flex justify-between text-xs text-[var(--text-secondary)] mt-2 px-1">
+                        <span id="chart-start-date">90 dias atrás</span>
+                        <span id="chart-end-date">Hoje</span>
+                    </div>
+                </div>
                 <div id="pagespeed-report-container" class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Relatório PageSpeed Insights</h2>
                     <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
                         <p class="text-[var(--text-secondary)]">Carregando relatório...</p>
                     </div>
                 </div>
+                
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Verificação de Componentes do Site</h2>
                     <div id="detailed-status-container" class="overflow-hidden">
@@ -68,10 +98,12 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Tempo de Resposta das Páginas</h2>
                     <div id="performance-monitor-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
                 </div>
+                
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Histórico de Uptime e Incidentes</h2>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -79,6 +111,7 @@
                         <div id="incidents-history-container"><p class="text-[var(--text-secondary)]">Carregando histórico de incidentes...</p></div>
                     </div>
                 </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
                         <div class="flex items-center justify-between">
@@ -108,6 +141,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Desempenho dos Modelos</h2>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
