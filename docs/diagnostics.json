@@ -349,14 +349,5 @@
     "description": "A imagem '8b5cf6?text=Busca+Linear+vs+Bin%C3%A1ria' (400px de largura) está sendo exibida em um contêiner de 211px.",
     "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
     "selector": "img[src=\"https://placehold.co/400x300/f3e8ff/8b5cf6?text=Busca+Linear+vs+Bin%C3%A1ria\"]"
-  },
-  {
-    "page": "/articles/data-structures-overview",
-    "type": "Qualidade de Código",
-    "severity": "serious",
-    "title": "Erros de JavaScript no Console",
-    "description": "Foram encontrados 1 erro(s): Failed to execute 'insertBefore' on 'Node': parameter 1 is not of type 'Node'.",
-    "suggestion": "Abra o console do navegador nesta página para depurar os erros listados.",
-    "selector": "N/A"
   }
 ]
