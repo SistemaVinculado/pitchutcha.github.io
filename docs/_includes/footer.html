@@ -60,5 +60,15 @@
                 </a>
             </div>
         </div>
+        
+        <div class="mt-8 pt-8 border-t border-[var(--borders)] flex justify-center">
+            <a href="{{ '/status.html' | relative_url }}" class="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--primary-color)]">
+                <div id="global-status-indicator" class="relative flex h-3 w-3">
+                    <span class="ping-pulse ping-gray"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-gray-400"></span>
+                </div>
+                <span id="global-status-text">Verificando status do sistema...</span>
+            </a>
+        </div>
     </div>
 </footer>
