@@ -40,51 +40,19 @@ layout: null
 
         #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, var(--background-primary), transparent); z-index: 2; }
         body { background-color: var(--background-primary); }
-
-        /* Estilos para o novo Header */
-        .header-menu { display: none; }
-        .details-overlay[open] .header-menu { display: flex; }
-        @media (min-width: 1012px) { .header-menu { display: flex !important; } }
-        .details-overlay summary { list-style: none; } /* Remove marker default */
-        .details-overlay summary::-webkit-details-marker { display: none; } /* Remove marker for Chrome */
     </style>
 </head>
 <body class="text-[var(--text-primary)]">
 
-    <header class="HeaderMktg header-logged-out js-details-container Details f4 py-3" role="banner">
-        <div class="d-flex flex-column flex-lg-row flex-items-center px-3 px-md-4 px-lg-5 height-full position-relative z-1">
-            <div class="d-flex flex-justify-between flex-items-center width-full width-lg-auto">
-                <a class="mr-lg-3 color-fg-inherit flex-order-2" href="{{ '/' | relative_url }}" aria-label="Homepage">
-                    <svg height="32" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="32" class="octicon octicon-mark-github"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                </a>
-                <div class="flex-1">
-                    <details class="d-lg-none details-overlay">
-                        <summary class="HeaderMenu-toggle-bar btn-link" aria-label="Toggle navigation">
-                             <span class="material-symbols-outlined">menu</span>
-                        </summary>
-                        <div class="header-menu position-absolute right-0 top-0 m-2 p-2 rounded-2" style="background-color: var(--background-secondary);">
-                            <nav class="HeaderMenu-nav" aria-label="Global">
-                               <ul class="d-lg-flex list-style-none">
-                                    <li class="HeaderMenu-item"><a class="HeaderMenu-link" href="{{ '/docs.html' | relative_url }}">Documentação</a></li>
-                                    <li class="HeaderMenu-item"><a class="HeaderMenu-link" href="{{ '/status.html' | relative_url }}">Status</a></li>
-                                    <li class="HeaderMenu-item"><a class="HeaderMenu-link" target="_blank" href="https://github.com/SistemaVinculado/pitchutcha.github.io">Open Source</a></li>
-                               </ul>
-                            </nav>
-                        </div>
-                    </details>
-                </div>
-            </div>
-            <div class="HeaderMenu js-header-menu d-lg-flex flex-column flex-auto">
-                <nav class="HeaderMenu-nav mt-3 mt-lg-0" aria-label="Global">
-                    <ul class="d-lg-flex list-style-none">
-                        <li class="HeaderMenu-item"><a class="HeaderMenu-link" href="{{ '/docs.html' | relative_url }}">Documentação</a></li>
-                        <li class="HeaderMenu-item"><a class="HeaderMenu-link" href="{{ '/status.html' | relative_url }}">Status</a></li>
-                        <li class="HeaderMenu-item"><a class="HeaderMenu-link" target="_blank" href="https://github.com/SistemaVinculado/pitchutcha.github.io">Open Source</a></li>
-                    </ul>
-                </nav>
-            </div>
+    <header class="p-4 md:px-8 lg:px-12 flex justify-between items-center z-30 relative">
+        <div class="flex items-center space-x-4">
+            <svg height="32" aria-hidden="true" viewBox="0 0 32 32" version="1.1" width="32" class="fill-current text-[var(--text-primary)]"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4zM0 16C0 7.16 7.16 0 16 0s16 7.16 16 16-7.16 16-16 16S0 24.84 0 16z"/></svg>
+            <nav class="hidden md:flex items-center space-x-4 text-[var(--text-secondary)]"><a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Documentação</a><a href="{{ '/status.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Status</a><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="hover:text-[var(--primary-color)]">Open Source</a></nav>
         </div>
+        <div class="flex items-center space-x-4"><form action="{{ '/search.html' | relative_url }}" method="get" class="hidden lg:block"><input type="search" name="q" placeholder="Pesquisar na Pitchutcha" class="bg-[var(--background-primary)] border border-[var(--borders)] rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"></form><button id="menu-btn" class="md:hidden" aria-controls="mobile-menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg></button></div>
     </header>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-[var(--background-primary)] absolute top-16 left-0 w-full z-40"><a href="{{ '/docs.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Documentação</a><a href="{{ '/status.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Status</a><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="block px-8 py-3 hover:bg-gray-800">Open Source</a></div>
 
     <main>
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
