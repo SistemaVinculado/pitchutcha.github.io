@@ -408,8 +408,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 resultsContainer.insertAdjacentHTML("beforeend", '<h4 class="text-lg font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>');
                 incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
             }
+            
+            // Lógica corrigida para sempre exibir a seção de "Passes"
+            let passesHtml;
             if (passes.length > 0) {
-                let passesHtml = `
+                passesHtml = `
                     <details class="mt-4">
                         <summary class="text-lg font-bold text-green-400 cursor-pointer hover:opacity-80">
                             Testes Aprovados (${passes.length})
@@ -421,8 +424,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 passesHtml += `</ul></details>`;
-                resultsContainer.insertAdjacentHTML("beforeend", passesHtml);
+            } else {
+                passesHtml = `<h4 class="text-lg font-bold text-gray-500 mt-4 mb-2">Testes Aprovados (0)</h4>`;
             }
+            resultsContainer.insertAdjacentHTML("beforeend", passesHtml);
+
             if (violations.length === 0 && incomplete.length === 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
             }
