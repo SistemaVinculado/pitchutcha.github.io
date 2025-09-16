@@ -1,20 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
-
-    // --- Seletores de Elementos do DOM ---
     const overallStatusIndicator = document.getElementById("overall-status-indicator");
     const overallStatusText = document.getElementById("overall-status-text");
     const detailedContainer = document.getElementById("detailed-status-container");
-    const latencyMetric = document.getElementById("metric-api-latency");
-    const inferenceMetric = document.getElementById("metric-inference-time");
-    const errorMetric = document.getElementById("metric-error-rate");
-    
-    // Se os elementos principais não estiverem na página, interrompe
-    if (!detailedContainer || !overallStatusIndicator || !overallStatusText) {
+    const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
+
+    if (!overallStatusIndicator || !overallStatusText || !detailedContainer) {
+        console.error("Elementos essenciais da página de status não foram encontrados.");
         return;
     }
 
-    // --- ESTILOS PARA O ACORDEÃO (INJETADOS VIA JS) ---
     const accordionStyles = `
         .component-details { border-radius: 0.5rem; overflow: hidden; border: 1px solid var(--borders); background-color: var(--background-secondary); margin-bottom: 0.5rem; }
         .component-summary { display: flex; align-items: center; justify-content: space-between; padding: 1rem; cursor: pointer; list-style: none; }
@@ -28,25 +22,22 @@ document.addEventListener("DOMContentLoaded", () => {
         .details-list li:last-child { border-bottom: none; }
         .details-list .label { color: var(--text-secondary); }
         .details-list .value { font-weight: 600; color: var(--text-primary); }
-        .details-list .value.na { color: var(--text-secondary); font-style: italic; }
     `;
     const styleSheet = document.createElement("style");
     styleSheet.innerText = accordionStyles;
     document.head.appendChild(styleSheet);
 
-    // --- LISTA DE COMPONENTES A SEREM VERIFICADOS ---
+
     const components = [
         { name: "Página Principal", url: "index.html" },
-        { name: "Páginas de Conteúdo", url: "algoritmos.html" },
+        { name: "Página de Algoritmos", url: "algoritmos.html" },
+        { name: "Página de Estrutura de Dados", url: "estruturas-de-dados.html" },
         { name: "Página de Busca", url: "search.html" },
         { name: "API de Busca (JSON)", url: "search.json", checkIntegrity: true },
-        { name: "Assets (CSS)", url: "css/style.css" },
-        { name: "Assets (JS Principal)", url: "js/script.js" },
+        { name: "CSS Principal", url: "css/style.css" },
+        { name: "JS Principal", url: "js/script.js" }
     ];
 
-    /**
-     * Atualiza a UI para um componente individual.
-     */
     const updateComponentStatus = (name, status, metrics) => {
         const statusMap = {
             operational: { text: "Operacional", pulse: "ping-green", dot: "bg-green-500", textClass: "text-green-400" },
@@ -75,13 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <li><span class="label">Tamanho do Arquivo</span><span class="value">${metrics.fileSize !== null ? (metrics.fileSize / 1024).toFixed(2) + ' KB' : 'N/A'}</span></li>
                     </ul>
                 </div>
-            </details>`;
+            </details>
+        `;
         detailedContainer.insertAdjacentHTML("beforeend", componentHTML);
     };
 
-    /**
-     * Atualiza o indicador de saúde geral do site.
-     */
     const updateOverallStatus = (status) => {
         const statusMap = {
             operational: { pulse: "ping-green", dot: "bg-green-500", text: "Todos os sistemas operacionais" },
@@ -89,13 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
             outage: { pulse: "ping-red", dot: "bg-red-500", text: "Falha crítica no sistema" }
         };
         const currentStatus = statusMap[status] || statusMap.outage;
+        
         overallStatusIndicator.innerHTML = `<span class="ping-pulse ${currentStatus.pulse}"></span><span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.dot}"></span>`;
         overallStatusText.textContent = currentStatus.text;
     };
 
-    /**
-     * Executa a verificação de todos os componentes e atualiza a UI.
-     */
     const runChecks = async () => {
         let finalStatus = "operational";
         detailedContainer.innerHTML = ''; 
@@ -133,25 +120,5 @@ document.addEventListener("DOMContentLoaded", () => {
         updateOverallStatus(finalStatus);
     };
 
-    /**
-     * Popula os cards de métricas (Latência, Inferência, Erros).
-     */
-    async function populateMetrics() {
-        try {
-            const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=${Date.now()}`);
-            if (!response.ok) throw new Error("Falha ao buscar dados de métricas.");
-            const data = await response.json();
-            if (data.metrics) {
-                if (latencyMetric) latencyMetric.textContent = data.metrics.api_latency || '--ms';
-                if (inferenceMetric) inferenceMetric.textContent = data.metrics.inference_time || '--ms';
-                if (errorMetric) errorMetric.textContent = data.metrics.error_rate || '--%';
-            }
-        } catch (error) {
-            console.error("Erro ao popular métricas:", error);
-        }
-    }
-
-    // --- Inicialização ---
     runChecks();
-    populateMetrics();
 });
