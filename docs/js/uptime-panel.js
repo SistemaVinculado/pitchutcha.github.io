@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Seletores de Elementos do DOM ---
     const panel = document.getElementById("uptime-panel");
-    // Se o painel principal não existe, a página não é a de status. Interrompe o script.
-    if (!panel) return; 
+    if (!panel) return; // Se o painel principal não existe, interrompe o script.
 
     const chartContainer = panel.querySelector("#uptime-chart-container");
     const tooltip = panel.querySelector("#uptime-tooltip");
@@ -174,11 +173,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const monitor = data?.monitors?.[0];
             if (!monitor) throw new Error("Monitor não encontrado nos dados da API.");
 
-            // CORREÇÃO: Verifica se os elementos existem antes de manipulá-los
+            // CORRIGIDO: Verifica se os elementos existem e CRIA os filhos se necessário
             if (overallStatusIndicator && overallStatusText) {
                 const isUp = monitor.status === 2;
-                overallStatusIndicator.querySelector(".ping-pulse").className = `ping-pulse ${isUp ? 'ping-green' : 'ping-red'}`;
-                overallStatusIndicator.querySelector(".relative").className = `relative inline-flex rounded-full h-3 w-3 ${isUp ? 'bg-green-500' : 'bg-red-500'}`;
+                overallStatusIndicator.innerHTML = `
+                    <span class="ping-pulse ${isUp ? 'ping-green' : 'ping-red'}"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 ${isUp ? 'bg-green-500' : 'bg-red-500'}"></span>
+                `;
                 overallStatusText.textContent = isUp ? "Todos os sistemas operacionais" : "Indisponibilidade detectada";
             }
 
