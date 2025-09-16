@@ -1,0 +1,53 @@
+name: Verificador de Componentes do Site
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *' # Executa a cada hora
+
+jobs:
+  check-components:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Verificar Saúde dos Componentes
+        id: component_check
+        run: |
+          STATUS="operational"
+          COMPONENTS=(
+            "https://sistemavinculado.github.io/pitchutcha.github.io/index.html"
+            "https://sistemavinculado.github.io/pitchutcha.github.io/css/style.css"
+            "https://sistemavinculado.github.io/pitchutcha.github.io/js/script.js"
+            "https://sistemavinculado.github.io/pitchutcha.github.io/search.json"
+          )
+          
+          for URL in "${COMPONENTS[@]}"; do
+            # Usamos -L para seguir redirecionamentos e --connect-timeout para evitar esperas longas
+            HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" -L --connect-timeout 10 "$URL")
+            if [ "$HTTP_STATUS" -ne 200 ]; then
+              echo "Componente $URL falhou com status $HTTP_STATUS"
+              STATUS="outage" # "outage" é mais descritivo para uma falha de componente
+              break 
+            fi
+          done
+          
+          echo "STATUS=$STATUS" >> $GITHUB_OUTPUT
+
+      - name: Criar arquivo de status dos componentes
+        run: |
+          echo '{
+            "status": "${{ steps.component_check.outputs.STATUS }}"
+          }' > docs/component-status.json
+
+      - name: Fazer commit do arquivo de status
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Atualiza o status de saúde dos componentes"
+          file_pattern: "docs/component-status.json"
+          commit_user_name: "GitHub Actions Bot"
+          commit_user_email: "github-actions@github.com"
