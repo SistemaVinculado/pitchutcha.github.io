@@ -12,6 +12,16 @@ layout: null
     <meta name="base-url" content="{{ '/' | relative_url }}">
     <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
     
+    <meta property="og:title" content="Pitchutcha: Domine os Fundamentos da Computação">
+    <meta property="og:description" content="Guias, artigos e exemplos de código sobre Algoritmos, Estruturas de Dados e Análise de Complexidade.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://seusite.com">
+    <meta property="og:image" content="https://seusite.com/assets/images/social-preview.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pitchutcha: Domine os Fundamentos da Computação">
+    <meta name="twitter:description" content="Guias, artigos e exemplos de código sobre Algoritmos, Estruturas de Dados e Análise de Complexidade.">
+    <meta name="twitter:image" content="https://seusite.com/assets/images/social-preview.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
@@ -43,81 +53,193 @@ layout: null
         #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, #0d1117, transparent); z-index: 2; }
         body { background-color: var(--background-primary); }
 
-        /* --- Início: Estilos para Fundo Difuso (Adaptado de yep.html) --- */
+        /* --- Fundo Difuso (Adicionado Anteriormente) --- */
         body {
-            /* Garante que o body seja o container para o posicionamento absoluto */
             position: relative; 
-            /* Previne scroll horizontal causado pelos círculos grandes */
             overflow-x: hidden;
         }
 
         .diffuse-background-container {
-            /* Este container fixa os círculos no fundo */
-            position: absolute;
-            top: 0;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -10; overflow: hidden;
+        }
+        .diffuse-background-circle {
+            background: #0d1a3a; 
+            filter: blur(150px); -webkit-filter: blur(150px);
+            position: absolute; z-index: -1; border-radius: 50%;
+        }
+        .diffuse-background-circle.circle-1 { height: 1000px; width: 1000px; left: -150px; top: 0px; }
+        .diffuse-background-circle.circle-2 { height: 600px; width: 600px; right: -100px; top: 200px; }
+        .diffuse-background-circle.circle-3 { height: 800px; width: 800px; left: -100px; top: 1800px; }
+        .diffuse-background-circle.circle-4 { height: 700px; width: 700px; right: -150px; top: 2500px; }
+
+
+        /* --- INÍCIO: NOVOS ESTILOS (Banner, Progresso, Tabs de Código) --- */
+
+        /* 1. Barra de Progresso de Leitura */
+        #progress-bar-container {
+            position: fixed;
+            /* h-16 = 4rem (altura do header). A barra fica logo abaixo. */
+            top: 4rem; 
             left: 0;
             width: 100%;
-            height: 100%;
-            /* Z-index muito baixo para ficar atrás de tudo (header, main, footer) */
-            z-index: -10; 
+            height: 4px;
+            background-color: transparent;
+            z-index: 19; /* Abaixo do header (z-20) mas acima do resto */
+        }
+        #progress-bar {
+            height: 4px;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* 2. Banner Global de Anúncios */
+        .global-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--cards-elements);
+            border-bottom: 1px solid var(--borders);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            width: 100%;
+            z-index: 10;
+        }
+        .global-banner-content strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .global-banner-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+        .global-banner-close:hover {
+            color: var(--text-primary);
+        }
+        .banner-hidden {
+            display: none;
+        }
+
+        /* 3. Abas (Tabs) para Exemplos de Código */
+        .code-tabs-buttons {
+            display: flex;
+            border-bottom: 2px solid var(--borders);
+            margin-bottom: -2px; /* Sobrepõe a borda da div preta */
+            z-index: 2;
+            position: relative;
+        }
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: -2px; /* Alinha com a borda do container */
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .tab-button.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--primary-color);
+        }
+        .code-tab-panel {
+            display: none;
+        }
+        .code-tab-panel.active {
+            display: block;
+        }
+        
+        /* 4. Animação de Digitação */
+        .code-block-wrapper pre {
+            background-color: #0d1117; /* Cor de fundo escura, similar ao seu tema */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border-top-left-radius: 0; /* Para alinhar com a aba */
+            border: 1px solid var(--borders);
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .typing-animation code {
+            display: inline-block;
+            white-space: pre; /* Mantém a formatação do <pre> */
+            overflow: hidden;
+            width: 0; /* Começa sem largura */
+            border-right: 3px solid orange; /* Cursor piscando */
+            /* steps() é o número de caracteres. JS irá definir isso. */
+            animation: typing 2s steps(var(--char-count, 20)) forwards, 
+                       blink-caret .75s step-end infinite;
+        }
+        
+        /* Animação CSS para o código sendo "digitado" */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% } /* Expande para mostrar todo o texto */
+        }
+
+        /* Animação CSS para o cursor piscando */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: orange }
+        }
+
+        /* Classe para parar o pisca-pisca quando a digitação termina */
+        .typing-animation code.typing-done {
+            animation: none; /* Remove a animação de digitação */
+            border-right: 3px solid transparent; /* Esconde o cursor */
+            width: 100%; /* Garante que todo o código está visível */
+        }
+        
+        /* 5. Link "Pular para Conteúdo" (Acessibilidade) */
+        .skip-to-content {
+            position: absolute;
+            left: -10000px; /* Esconde fora da tela */
+            top: auto;
+            width: 1px;
+            height: 1px;
             overflow: hidden;
         }
-
-        .diffuse-background-circle {
-            /* Cor adaptada para o tema do Pitchutcha (azul escuro) */
-            /* A cor original do yep.html era #0a0a0a (cinza escuro) */
-            background: #0d1a3a; 
-            
-            /* O filtro de blur é o segredo do efeito */
-            filter: blur(150px);
-            -webkit-filter: blur(150px);
-            
-            position: absolute;
-            z-index: -1; /* Atrás do conteúdo, mas dentro do container */
-            border-radius: 50%;
+        .skip-to-content:focus {
+            left: 50%;
+            transform: translateX(-50%);
+            top: 1rem;
+            width: auto;
+            height: auto;
+            padding: 0.75rem 1.25rem;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            z-index: 100; /* Acima de tudo */
+            text-decoration: none;
+            overflow: visible;
         }
 
-        /* Posições e tamanhos adaptados do 'yep.html' para o layout do 'index.html' */
-        .diffuse-background-circle.circle-1 {
-            height: 1000px;
-            width: 1000px;
-            left: -150px;
-            top: 0px;
-        }
-
-        .diffuse-background-circle.circle-2 {
-            height: 600px;
-            width: 600px;
-            right: -100px;
-            top: 200px;
-        }
-
-        .diffuse-background-circle.circle-3 {
-            height: 800px;
-            width: 800px;
-            left: -100px;
-            /* Posicionado mais abaixo para preencher a página longa */
-            top: 1800px; 
-        }
-
-        .diffuse-background-circle.circle-4 {
-            height: 700px;
-            width: 700px;
-            right: -150px;
-            /* Posicionado mais abaixo para preencher a página longa */
-            top: 2500px; 
-        }
-        /* --- Fim: Estilos para Fundo Difuso --- */
+        /* --- FIM: NOVOS ESTILOS --- */
     </style>
 </head>
 <body class="text-[var(--text-primary)]">
 
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+    <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
     <div class="diffuse-background-container">
         <div class="diffuse-background-circle circle-1"></div>
         <div class="diffuse-background-circle circle-2"></div>
         <div class="diffuse-background-circle circle-3"></div>
         <div class="diffuse-background-circle circle-4"></div>
     </div>
+
     <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
             <div class="flex items-center gap-8">
@@ -138,8 +260,16 @@ layout: null
             </div>
         </div>
     </header>
-    
-    <main>
+
+    <div id="global-banner" class="global-banner">
+        <div class="global-banner-content">
+            <strong>🚀 Novidade:</strong> Agora o site conta com um tema de alto contraste e barra de progresso para navegação!
+        </div>
+        <button id="global-banner-close" class="global-banner-close" aria-label="Fechar banner">
+            <span class="material-symbols-outlined" style="font-size: 1.25rem;">close</span>
+        </button>
+    </div>
+    <main id="main-content">
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
 
@@ -165,7 +295,7 @@ layout: null
                         <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Organize e gerencie dados de forma eficaz com Arrays, Listas Ligadas, Pilhas, Filas e Tabelas Hash para aplicações de alta performance.</p>
                         <a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="mt-6 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-6 py-3 text-lg transition-transform hover:scale-105 inline-block">Explorar Estruturas &rarr;</a>
                     </div>
-                    <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Visualização de Estruturas de Dados."></div>
+                    <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Visualização de Estruturas de Dados." loading="lazy"></div>
                 </div>
                 
                 <div id="tab-panel-complexidade" role="tabpanel" aria-labelledby="tab-btn-complexidade" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
@@ -174,7 +304,7 @@ layout: null
                         <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Entenda a Notação Big O e compare algoritmos como Busca Linear ($O(n)$) e Binária ($O(\log n)$) para escrever um código mais rápido.</p>
                         <a href="{{ '/articles/algoritmos-de-busca-linear-vs-binaria' | relative_url }}" class="mt-6 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-6 py-3 text-lg transition-transform hover:scale-105 inline-block">Entender Big O &rarr;</a>
                     </div>
-                    <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Comparativo de Busca Linear e Binária."></div>
+                    <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Comparativo de Busca Linear e Binária." loading="lazy"></div>
                 </div>
             </div>
         </div>
@@ -184,7 +314,7 @@ layout: null
             <div class="logo-carousel-container">
                 <div class="logo-carousel-track">
                     {% assign logos = "google,asus,apple,meta,bmw,porsche,intel,nvidia,openai,3m,fifa,themoviedatabase,csswizardry,walmart,blender,spotify,amd" | split: "," %}
-                    {% for i in (1..2) %}{% for logo_name in logos %}<div class="logo-carousel-item"><img src="{{ '/assets/logos/' | append: logo_name | append: '.svg' | relative_url }}" alt="{{ logo_name | capitalize }} logo"></div>{% endfor %}{% endfor %}
+                    {% for i in (1..2) %}{% for logo_name in logos %}<div class="logo-carousel-item"><img src="{{ '/assets/logos/' | append: logo_name | append: '.svg' | relative_url }}" alt="{{ logo_name | capitalize }} logo" loading="lazy"></div>{% endfor %}{% endfor %}
                 </div>
             </div>
         </div>
@@ -238,11 +368,102 @@ layout: null
                     </details>
                 </div>
                 <div class="accordion-image-container h-80 md:h-96">
-                    <img id="accordion-image-display" src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="accordion-image rounded-lg w-full h-full object-cover shadow-2xl" alt="Visualização do paradigma de algoritmo selecionado.">
+                    <img id="accordion-image-display" src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="accordion-image rounded-lg w-full h-full object-cover shadow-2xl" alt="Visualização do paradigma de algoritmo selecionado." loading="lazy">
                 </div>
             </div>
         </div>
 
+        <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32 max-w-7xl mx-auto">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Exemplos Práticos</h2>
+            <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto">Veja como os conceitos ganham vida com exemplos de código claros e comentados.</p>
+            
+            <div id="code-tabs-container" class="mt-12">
+                <div class="code-tabs-buttons">
+                    <button class="tab-button active" data-tab="python">Python</button>
+                    <button class="tab-button" data-tab="javascript">JavaScript</button>
+                    <button class="tab-button" data-tab="pseudo">Pseudocódigo</button>
+                </div>
+
+                <div class="code-block-wrapper">
+                    <div id="panel-python" class="code-tab-panel active">
+<pre><code class="language-python" data-char-count="370">
+# Exemplo de Busca Binária em Python
+
+def binary_search(arr, target):
+    low = 0
+    high = len(arr) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+        guess = arr[mid]
+
+        if guess == target:
+            return mid  # Encontrado!
+        elif guess > target:
+            high = mid - 1
+        else:
+            low = mid + 1
+            
+    return None # Não encontrado
+
+# Teste:
+my_list = [1, 3, 5, 7, 9, 11]
+print(binary_search(my_list, 7))  # Saída: 3
+</code></pre>
+                    </div>
+                    <div id="panel-javascript" class="code-tab-panel">
+<pre><code class="language-javascript" data-char-count="399">
+// Exemplo de Busca Binária em JavaScript
+
+function binarySearch(arr, target) {
+    let low = 0;
+    let high = arr.length - 1;
+
+    while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        const guess = arr[mid];
+
+        if (guess === target) {
+            return mid; // Encontrado!
+        } else if (guess > target) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
+    }
+    
+    return null; // Não encontrado
+}
+
+// Teste:
+const myList = [1, 3, 5, 7, 9, 11];
+console.log(binarySearch(myList, 7)); // Saída: 3
+</code></pre>
+                    </div>
+                    <div id="panel-pseudo" class="code-tab-panel">
+<pre><code class="language-text" data-char-count="276">
+FUNÇÃO BuscaBinaria(lista, item)
+    baixo = 0
+    alto = tamanho(lista) - 1
+
+    ENQUANTO baixo <= alto
+        meio = (baixo + alto) / 2
+        chute = lista[meio]
+
+        SE chute == item
+            RETORNE meio
+        SENÃO SE chute > item
+            alto = meio - 1
+        SENÃO
+            baixo = meio + 1
+            
+    RETORNE nulo
+FIM_FUNÇÃO
+</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <figure class="max-w-4xl mx-auto text-center">
                 <blockquote class="text-2xl md:text-3xl font-medium text-white"><p>“O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online.”</p></blockquote>
@@ -266,9 +487,147 @@ layout: null
         </div>
     </main>
     
-    {% include footer.html %}
-    
+    <footer class="text-[var(--text-secondary)] border-t border-[var(--borders)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                
+                <div class="col-span-2 lg:col-span-1 mb-8 md:mb-0">
+                    <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
+                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
+                        <h1 class="text-xl font-bold">Pitchutcha</h1>
+                    </a>
+                    <p class="mt-4 text-sm">Construindo a base para a próxima geração de desenvolvedores.</p>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-semibold text-[var(--text-primary)] tracking-wider uppercase">Algoritmos</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Busca</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Ordenação</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Grafos</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Recursão</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-semibold text-[var(--text-primary)] tracking-wider uppercase">Estruturas</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Arrays</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Listas Ligadas</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Tabelas Hash</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Árvores</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Filas e Pilhas</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-semibold text-[var(--text-primary)] tracking-wider uppercase">Conceitos</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Análise Big O</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Programação Dinâmica</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Algoritmos Gulosos</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-semibold text-[var(--text-primary)] tracking-wider uppercase">Comunidade</h3>
+                    <ul class="mt-4 space-y-4">
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Sobre</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">GitHub</a></li>
+                        <li><a href="#" class="text-sm hover:text-[var(--text-primary)] transition-colors">Contribuir</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-16 pt-8 border-t border-[var(--borders)] text-sm text-center">
+                <p>&copy; {{ site.time | date: "%Y" }} Pitchutcha. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
     {% include scripts.html %}
-    
-</body>
-</html>
+
+    <script>
+        // Espera o DOM estar totalmente carregado para adicionar os listeners
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. Lógica da Barra de Progresso de Leitura ---
+            const progressBar = document.getElementById('progress-bar');
+            if (progressBar) {
+                window.addEventListener('scroll', () => {
+                    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    const scrollPercentage = (scrollTop / scrollHeight) * 100;
+                    progressBar.style.width = scrollPercentage + '%';
+                });
+            }
+
+            // --- 2. Lógica do Banner Global de Anúncios ---
+            const banner = document.getElementById('global-banner');
+            const closeButton = document.getElementById('global-banner-close');
+            if (banner && closeButton) {
+                closeButton.addEventListener('click', () => {
+                    banner.classList.add('banner-hidden');
+                });
+            }
+
+            // --- 3. Lógica das Abas (Tabs) de Código (com animação de digitação) ---
+            const tabsContainer = document.getElementById('code-tabs-container');
+            if (tabsContainer) {
+                const tabButtons = tabsContainer.querySelectorAll('.tab-button');
+                const tabPanels = tabsContainer.querySelectorAll('.code-tab-panel');
+
+                // Função para ativar a animação de digitação
+                function triggerTypingAnimation(panel) {
+                    const codeElement = panel.querySelector('code');
+                    if (!codeElement) return;
+
+                    // Remove classes antigas para reiniciar a animação
+                    codeElement.classList.remove('typing-animation', 'typing-done');
+                    
+                    // Força o "reflow" do DOM. Isso é essencial para reiniciar a animação CSS.
+                    void codeElement.offsetWidth; 
+
+                    // Define o número de caracteres para a animação steps()
+                    const charCount = parseInt(codeElement.getAttribute('data-char-count') || codeElement.textContent.length, 10);
+                    codeElement.style.setProperty('--char-count', charCount);
+
+                    // Adiciona a classe de animação
+                    codeElement.classList.add('typing-animation');
+
+                    // Após o término da animação (2s, definido no CSS), limpa as classes
+                    setTimeout(() => {
+                        codeElement.classList.remove('typing-animation');
+                        codeElement.classList.add('typing-done');
+                    }, 2000); // Deve corresponder à duração da animação no CSS
+                }
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const targetTab = button.getAttribute('data-tab');
+                        
+                        // Desativa todos os botões e painéis
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        tabPanels.forEach(panel => panel.classList.remove('active'));
+
+                        // Ativa o botão clicado e o painel correspondente
+                        button.classList.add('active');
+                        const activePanel = document.getElementById(`panel-${targetTab}`);
+                        if (activePanel) {
+                            activePanel.classList.add('active');
+                            // Aciona a animação de digitação no painel que acabou de ficar ativo
+                            triggerTypingAnimation(activePanel);
+                        }
+                    });
+                });
+
+                // Aciona a animação para a aba ativa padrão (Python) no carregamento da página
+                const defaultActivePanel = document.querySelector('.code-tab-panel.active');
+                if (defaultActivePanel) {
+                    triggerTypingAnimation(defaultActivePanel);
+                }
+            }
+
+        });
+    </script>
+    </body>
+                                </html>
