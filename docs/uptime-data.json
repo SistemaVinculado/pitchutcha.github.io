@@ -3,11 +3,11 @@
     {
       "id": 801334653,
       "friendly_name": "sistemavinculado.github.io/pitchutcha.github.io/",
-      "url": "https://sistemavinculado.github.io/pitchutcha.github.io",
+      "url": "https://sistemavinculado.github.io/pitchutcha.github.io/",
       "type": 1,
       "sub_type": "",
-      "keyword_type": 0,
-      "keyword_case_type": 0,
+      "keyword_type": null,
+      "keyword_case_type": null,
       "keyword_value": "",
       "port": "",
       "interval": 300,
@@ -29,51 +29,51 @@
       "custom_uptime_ratio": "100.000-99.845-99.964",
       "custom_down_durations": "0-938-938",
       "response_times": [],
-      "average_response_time": "55.922",
+      "average_response_time": "56.022",
       "responsetime_length": 90,
       "lastLogTypeBeforeStartDate": {}
     }
   ],
   "metrics": {
-    "api_latency": "23ms",
-    "inference_time": "203ms",
-    "error_rate": "0.04%"
+    "api_latency": "50ms",
+    "inference_time": "213ms",
+    "error_rate": "0.03%"
   },
   "graphs": {
     "latency_history": [
-      29,
-      10,
-      38,
-      31,
-      50,
-      57,
-      12,
+      61,
+      67,
+      33,
       19,
-      58,
-      51,
-      29,
-      22
+      48,
+      57,
+      34,
+      24,
+      15,
+      49,
+      40,
+      60
     ],
     "inference_by_model": [
       {
         "model": "GPT-4",
-        "time": 179
+        "time": 190
       },
       {
         "model": "GPT-3.5",
-        "time": 116
+        "time": 133
       },
       {
         "model": "DALL-E",
-        "time": 301
+        "time": 282
       },
       {
         "model": "Whisper",
-        "time": 52
+        "time": 78
       },
       {
         "model": "Embeds",
-        "time": 37
+        "time": 44
       }
     ]
   },
