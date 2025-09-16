@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="utf-8"/>
+    <title>Pitchutcha - {{ page.title | default: site.title }}</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-url" content="{{ '/' | relative_url }}">
+    <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+    
+    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
+
+    {% if page.url == '/index.html' or page.url == '/' %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r167/three.min.js" defer></script>
+    {% endif %}
+
+    {% if page.url == '/index.html' or page.url == '/' %}
+    <style>
+        .hero-tab-panel { display: none; }
+        .hero-tab-panel.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
+        .hero-tab-button.active { color: var(--text-primary); border-bottom-color: var(--primary-color); }
+        .accordion-item summary::-webkit-details-marker { display: none; }
+        .accordion-item summary { list-style: none; cursor: pointer; }
+        .accordion-item[open] summary { color: var(--primary-color); }
+        .accordion-item[open] summary .accordion-icon { transform: rotate(45deg); }
+        .accordion-image { transition: opacity 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .logo-carousel-container { overflow: hidden; width: 100%; -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); }
+        .logo-carousel-track { display: flex; width: max-content; animation: scroll-left 60s linear infinite; }
+        .logo-carousel-track:hover { animation-play-state: paused; }
+        .logo-carousel-item { flex-shrink: 0; width: auto; display: flex; justify-content: center; align-items: center; padding: 0 1.5rem; }
+        .logo-carousel-item img { height: 48px; width: auto; filter: brightness(0) invert(1) opacity(0.6); transition: all 0.2s ease-in-out; }
+        .logo-carousel-item img:hover { filter: brightness(0) invert(1) opacity(1); }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, var(--background-primary), transparent); z-index: 2; }
+    </style>
+    {% endif %}
+</head>
+<body class="bg-[var(--background-primary)] text-[var(--text-primary)]">
+    <div id="aria-live-region" class="sr-only" aria-live="polite"></div>
+    <div id="toast-notification" class="toast-notification"></div>
+
+    <div class="flex min-h-screen flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'>
+        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+                <div class="flex items-center gap-8">
+                    <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/index.html' | relative_url }}">
+                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
+                        <h1 class="text-xl font-bold">Pitchutcha</h1>
+                    </a>
+                    <nav class="hidden items-center gap-6 md:flex">
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a>
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a>
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/status.html' | relative_url }}">Status</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <form id="header-search-form" class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
+                        <input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        {{ content }}
+        
+        {% include footer.html %}
+    </div>
+
+    {% include scripts.html %}
+</body>
+</html>
