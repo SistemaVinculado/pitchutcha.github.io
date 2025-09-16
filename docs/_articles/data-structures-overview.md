@@ -5,7 +5,7 @@ date: 2025-09-08
 category: Estruturas de Dados
 icon: account_tree
 excerpt: "Explore estruturas de dados comuns como arrays, listas ligadas, pilhas, filas e árvores, e entenda sua importância na resolução eficiente de problemas."
-image: "https://placehold.co/600x400/D1FAE5/047857?text=Estruturas+de+Dados"
+image: "https://placehold.co/400x300/D1FAE5/047857?text=Estruturas+de+Dados"
 ---
 
 <article>
