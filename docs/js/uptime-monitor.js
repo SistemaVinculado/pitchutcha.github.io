@@ -68,7 +68,12 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const data = await response.json();
             const monitor = data?.monitors?.[0];
-            if (!monitor) throw new Error("Monitor não encontrado nos dados da API.");
+
+            // Verificação de segurança
+            if (data.stat === 'fail' || !monitor) {
+                 const errorMessage = data.error?.message || "Dados do monitor não encontrados.";
+                 throw new Error(errorMessage);
+            }
 
             // Atualiza o indicador de saúde geral
             const isUp = monitor.status === 2;
@@ -83,8 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             console.error("Erro ao inicializar o monitor de uptime:", error);
-            incidentsContainer.innerHTML = `<p class="text-center text-red-500">Não foi possível carregar o histórico de incidentes.</p>`;
-            overallStatusText.textContent = "Erro ao verificar";
+            incidentsContainer.innerHTML = `<p class="text-center text-red-500 p-4"><b>Não foi possível carregar o histórico de incidentes:</b><br>${error.message}</p>`;
+            overallStatusText.textContent = "Erro na verificação";
+            overallStatusIndicator.innerHTML = `<span class="relative inline-flex rounded-full h-3 w-3 bg-gray-500"></span>`;
         }
     }
 
