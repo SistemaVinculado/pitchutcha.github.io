@@ -1,120 +1,136 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // --- ELEMENTOS DO DOM ---
+    const chartContainer = document.getElementById("uptime-chart-container");
+    const tooltip = document.getElementById("uptime-tooltip");
+    const legendContainer = document.getElementById("status-legend");
+    const chartStartDate = document.getElementById("chart-start-date");
+    const chartEndDate = document.getElementById("chart-end-date");
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
 
-    const panel = document.getElementById("uptime-panel");
-    if (!panel) return;
+    // Se o contêiner do gráfico não for encontrado, interrompe o script
+    if (!chartContainer) {
+        return;
+    }
 
-    const chartContainer = panel.querySelector("#uptime-chart-container");
-    const tooltip = panel.querySelector("#uptime-tooltip");
-    const legendContainer = panel.querySelector("#status-legend");
-    const legendHelpButton = panel.querySelector("#legend-help-button");
-    const chartStartDateElem = panel.querySelector("#chart-start-date");
-    const chartEndDateElem = panel.querySelector("#chart-end-date");
-    const overallUptimeStatusElem = panel.querySelector("#overall-uptime-status");
-
-    const totalBars = 90;
+    // --- CONFIGURAÇÕES ---
+    const totalDays = 90;
     const statusTypes = {
-        OPERATIONAL: { label: "Operacional", colorClass: "status-operational", description: "Todos os sistemas funcionando normalmente." },
-        DEGRADED: { label: "Performance Degradada", colorClass: "status-degraded", description: "O site pode apresentar lentidão ou pequenos erros." },
-        OUTAGE: { label: "Indisponibilidade", colorClass: "status-outage", description: "O site ou parte dele está fora do ar." },
-        NO_DATA: { label: "Sem Dados", colorClass: "status-no-data", description: "Não há dados de monitoramento para este período." },
+        OPERATIONAL: { label: "Operacional", colorClass: "status-operational" },
+        DEGRADED: { label: "Performance Degradada", colorClass: "status-degraded" },
+        OUTAGE: { label: "Indisponibilidade", colorClass: "status-outage" },
+        NO_DATA: { label: "Sem Dados", colorClass: "status-no-data" },
     };
 
-    const formatDate = (date) => date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
-    const formatFullDate = (date) => date.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    /**
+     * Processa os dados reais da API do UptimeRobot.
+     */
+    function processRealData(responseTimes) {
+        let processedData = responseTimes.map(item => {
+            const responseTime = parseInt(item.value, 10);
+            let statusKey, details;
 
-    function showTooltip(targetElement, content) {
+            if (responseTime === 0) {
+                statusKey = "OUTAGE";
+                details = "O monitor esteve indisponível (0ms) neste dia.";
+            } else if (responseTime > 1500) {
+                statusKey = "DEGRADED";
+                details = `Performance degradada. Resposta: ${responseTime}ms.`;
+            } else {
+                statusKey = "OPERATIONAL";
+                details = `Tempo médio de resposta: ${responseTime}ms.`;
+            }
+            return { date: new Date(item.datetime * 1000), status: statusKey, details: details };
+        }).reverse();
+
+        const daysMissing = totalDays - processedData.length;
+        if (daysMissing > 0) {
+            const firstDate = processedData.length > 0 ? processedData[0].date : new Date();
+            const padding = Array.from({ length: daysMissing }).map((_, i) => {
+                const date = new Date(firstDate);
+                date.setDate(firstDate.getDate() - (daysMissing - i));
+                return { date, status: "NO_DATA", details: "Não há dados de monitoramento para este dia." };
+            });
+            processedData = [...padding, ...processedData];
+        }
+        return processedData.slice(-totalDays);
+    }
+    
+    /**
+     * Formata uma data para exibição no formato "dd de mmm".
+     */
+    function formatDate(date) {
+        return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
+    }
+
+    /**
+     * Mostra o tooltip com informações do dia selecionado.
+     */
+    function showTooltip(event, dayData) {
         if (!tooltip) return;
-        tooltip.querySelector("#tooltip-content").innerHTML = content;
-        tooltip.classList.add("visible");
-        const targetRect = targetElement.getBoundingClientRect(), panelRect = panel.getBoundingClientRect(), tooltipRect = tooltip.getBoundingClientRect();
-        let top = targetRect.top - panelRect.top - tooltipRect.height - 12;
-        let left = targetRect.left - panelRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+        const statusInfo = statusTypes[dayData.status];
+        
+        document.getElementById("tooltip-date").textContent = dayData.date.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById("tooltip-status-indicator").className = `w-2 h-2 rounded-full mr-2 ${statusInfo.colorClass}`;
+        document.getElementById("tooltip-status-text").textContent = statusInfo.label;
+        document.getElementById("tooltip-details").textContent = dayData.details;
+
+        tooltip.classList.remove("hidden", "opacity-0");
+        const rect = chartContainer.getBoundingClientRect();
+        let left = event.clientX - rect.left - (tooltip.offsetWidth / 2);
+        let top = event.clientY - rect.top - tooltip.offsetHeight - 10;
         if (left < 0) left = 5;
-        if (left + tooltipRect.width > panelRect.width) left = panelRect.width - tooltipRect.width - 5;
-        if (top < 0) top = targetRect.bottom - panelRect.top + 12;
+        if (left + tooltip.offsetWidth > rect.width) left = rect.width - tooltip.offsetWidth - 5;
+        if (top < 0) top = event.clientY - rect.top + 15;
         tooltip.style.transform = `translate(${left}px, ${top}px)`;
     }
 
-    function hideTooltip() { if (tooltip) tooltip.classList.remove("visible"); }
+    /**
+     * Esconde o tooltip.
+     */
+    function hideTooltip() {
+        if (tooltip) tooltip.classList.add("hidden", "opacity-0");
+    }
 
+    /**
+     * Constrói e renderiza as barras do gráfico de uptime.
+     */
     function buildChart(data) {
-        if (!chartContainer) return;
         chartContainer.innerHTML = '';
-        data.forEach((dayData, index) => {
+        data.forEach(dayData => {
             const bar = document.createElement("div");
-            bar.className = `uptime-bar ${statusTypes[dayData.status].colorClass}`;
-            if (index === data.length - 1 && dayData.status !== 'NO_DATA') bar.classList.add('ping-pulse-bar');
-            const tooltipContent = `<div class="font-bold text-white">${formatFullDate(dayData.date)}</div><div class="flex items-center mt-1"><div class="w-2 h-2 rounded-full ${statusTypes[dayData.status].colorClass} mr-2"></div><div>${statusTypes[dayData.status].label}</div></div><div class="text-xs text-[var(--text-secondary)] mt-1">${dayData.details}</div>`;
-            bar.addEventListener("mouseenter", (e) => showTooltip(e.currentTarget, tooltipContent));
+            bar.className = `uptime-bar h-full ${statusTypes[dayData.status].colorClass}`;
+            bar.addEventListener("mousemove", (event) => showTooltip(event, dayData));
             bar.addEventListener("mouseleave", hideTooltip);
             chartContainer.appendChild(bar);
         });
-    }
-    
-    function populateLegend() {
-        if (!legendContainer || !legendHelpButton) return;
-        legendContainer.innerHTML = `<span>Menos</span><div class="legend-gradient"></div><span>Mais</span>`;
-        const helpTooltipContent = `<div class="space-y-2 text-left text-xs w-60">${Object.values(statusTypes).map(s => `<div class="flex items-start"><div class="w-3 h-3 rounded-sm ${s.colorClass} mr-2 mt-0.5 flex-shrink-0"></div><div><span class="font-bold text-white">${s.label}</span><span class="text-[var(--text-secondary)] block">${s.description}</span></div></div>`).join('')}</div>`;
-        legendHelpButton.addEventListener('mouseenter', (e) => showTooltip(e.currentTarget, helpTooltipContent));
-        legendHelpButton.addEventListener('mouseleave', hideTooltip);
+        
+        if (data.length > 0) {
+            if (chartStartDate) chartStartDate.textContent = formatDate(data[0].date);
+            if (chartEndDate) chartEndDate.textContent = formatDate(data[data.length - 1].date);
+        }
     }
 
+    /**
+     * Função principal que busca os dados e inicializa o gráfico.
+     */
     async function initializeGraph() {
         try {
             const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=${Date.now()}`);
-            if (!response.ok) throw new Error("Falha na rede ao buscar uptime-data.json para o gráfico.");
+            if (!response.ok) throw new Error("Falha ao carregar uptime-data.json");
             
             const data = await response.json();
             const monitor = data?.monitors?.[0];
-            
-            if (data.stat === 'fail' || !monitor || !monitor.custom_uptime_ratios) {
-                const errorMessage = data.error?.message || "Dados do monitor incompletos. Execute o workflow novamente.";
-                throw new Error(errorMessage);
-            }
+            const responseTimes = monitor?.response_times;
 
-            if (overallUptimeStatusElem) {
-                const uptimeRatio = monitor.custom_uptime_ratios.split('-')[1] || "100.00";
-                overallUptimeStatusElem.innerHTML = `<span class="text-sm text-[var(--text-secondary)]">Uptime de 30 dias</span> <span class="font-semibold text-lg text-[var(--success)]">${uptimeRatio}%</span>`;
+            if (responseTimes) {
+                const realData = processRealData(responseTimes);
+                buildChart(realData);
+            } else {
+                 throw new Error("Dados de 'response_times' não encontrados.");
             }
-            
-            let chartData = [];
-            if (monitor.response_times && monitor.response_times.length > 0) {
-                 chartData = monitor.response_times.map(item => {
-                    const rt = parseInt(item.value, 10);
-                    let status = "OPERATIONAL", details = `Tempo médio de resposta: ${rt}ms.`;
-                    if (rt === 0) { status = "OUTAGE"; details = "O monitor esteve indisponível (0ms)."; }
-                    else if (rt > 1500) { status = "DEGRADED"; details = `Performance degradada. Resposta: ${rt}ms.`; }
-                    return { date: new Date(item.datetime * 1000), status, details };
-                }).reverse();
-            }
-            
-            const daysMissing = totalBars - chartData.length;
-            if (daysMissing > 0) {
-                const firstDate = chartData.length > 0 ? chartData[0].date : new Date();
-                const padding = Array.from({ length: daysMissing }).map((_, i) => {
-                    const date = new Date(firstDate);
-                    date.setDate(firstDate.getDate() - (daysMissing - i));
-                    return { date, status: "NO_DATA", details: "Não há dados para este dia." };
-                });
-                chartData = [...padding, ...chartData];
-            }
-            
-            buildChart(chartData.slice(-totalBars));
-            populateLegend();
-            
-            if (chartStartDateElem && chartEndDateElem) {
-                chartStartDateElem.textContent = formatDate(chartData[0].date);
-                chartEndDateElem.textContent = "Hoje";
-            }
-
         } catch (error) {
             console.error("Erro ao inicializar o gráfico de uptime:", error);
-            if (panel) {
-                const titleElem = panel.querySelector("#uptime-panel-title");
-                if(titleElem) titleElem.textContent = "Erro ao carregar dados";
-                panel.querySelector("#uptime-chart-container").innerHTML = `<p class="text-center text-xs text-red-500 w-full p-4">${error.message}</p>`;
-            }
+            if (chartContainer) chartContainer.innerHTML = `<p class="text-red-500 text-xs w-full text-center">${error.message}</p>`;
         }
     }
 
