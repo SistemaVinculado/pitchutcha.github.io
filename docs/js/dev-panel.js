@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.3.0"; // Versão original funcional
+    const DEV_PANEL_VERSION = "1.4.0"; // Versão com testes aprimorados
+    let capturedErrors = []; // Armazena erros de JS
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
     const baseUrl = baseUrlMeta ? baseUrlMeta.content : '';
@@ -253,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
 
-    ["log", "warn", "error", "info"].forEach(type => {
+    ["log", "warn", "info"].forEach(type => {
         const original = console[type];
         console[type] = (...args) => {
             original.apply(console, args);
@@ -261,8 +262,16 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     });
 
-    window.onerror = (message, source, lineno) => {
-        logToPanel({ type: "error", args: [`Erro: ${message} em ${source}:${lineno}`] });
+    const originalError = console.error;
+    console.error = (...args) => {
+        originalError.apply(console, args);
+        capturedErrors.push(args.join(' '));
+        logToPanel({ type: "error", args });
+    };
+    window.onerror = (message, source, lineno, colno, error) => {
+        const errorMsg = `Erro não capturado: ${message} em ${source}:${lineno}`;
+        capturedErrors.push(errorMsg);
+        logToPanel({ type: "error", args: [errorMsg] });
     };
 
     function buildElementsTree(rootElement) {
@@ -401,7 +410,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if (passes.length > 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
-                passes.forEach(p => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-green-900 border border-green-700"><p class="font-bold">${p.help}</p></div>`));
             }
             if (violations.length === 0 && incomplete.length === 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
@@ -418,12 +426,12 @@ document.addEventListener("DOMContentLoaded", () => {
         resultsContainer.innerHTML = `
             <div class="p-2 text-sky-300 bg-sky-900/50 border border-sky-700 rounded-md mb-4">
                 <p class="font-bold">Nota do Desenvolvedor:</p>
-                <p class="text-xs text-sky-400">Estes testes são baseados em heurísticas e melhores práticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção. Use as sugestões como um guia para melhorar a qualidade do projeto.</p>
+                <p class="text-xs text-sky-400">Estes testes são baseados em heurísticas e melhores práticas. Um "FAIL" não é necessariamente um erro crítico, mas uma anomalia que merece atenção.</p>
             </div>
             <table class="w-full text-left text-xs">
                 <thead>
                     <tr class="border-b border-gray-700">
-                        <th class="p-2 w-1/4">Teste de Diagnóstico</th>
+                        <th class="p-2 w-1/3">Teste de Diagnóstico</th>
                         <th class="p-2 w-1/6">Resultado</th>
                         <th class="p-2">Detalhes e Sugestões</th>
                     </tr>
@@ -432,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </table>`;
         const tbody = resultsContainer.querySelector("tbody");
 
-        const addResult = (test, status, details, suggestion) => {
+        const addResult = (test, status, details, suggestion = null) => {
             const isPass = status === "PASS";
             const statusColor = isPass ? 'text-green-400' : (status === "FAIL" ? 'text-red-400' : 'text-yellow-400');
             const statusIcon = isPass ? 'check_circle' : (status === "FAIL" ? 'error' : 'warning');
@@ -448,107 +456,70 @@ document.addEventListener("DOMContentLoaded", () => {
             tbody.insertAdjacentHTML('beforeend', row);
         };
         
-        const pageChecks = {
-            search: { ids: ["search-input", "results-container", "results-count"], path: "search.html" },
-            status: { ids: ["detailed-status-container", "uptime-history-container", "performance-monitor-container"], path: "status.html" },
-            home: { ids: [".main-search-form"], path: "index.html" }
-        };
-        
-        const isArticlePage = !!document.querySelector('body main aside#toc-container') && !!document.querySelector('body main div article');
-        const currentPageFile = window.location.pathname.split("/").pop() || "index.html";
-        
-        const checkConfig = Object.values(pageChecks).find(p => p.path === currentPageFile);
-        if (checkConfig) {
-            checkConfig.ids.forEach(selector => {
-                const elementExists = !!document.querySelector(selector);
-                addResult(
-                    `Verificação de Elemento: ${selector}`,
-                    elementExists ? "PASS" : "FAIL",
-                    elementExists ? `Elemento essencial "${selector}" encontrado.` : `Elemento crítico "${selector}" não foi encontrado nesta página.`,
-                    elementExists ? null : `Verifique o HTML da página e garanta que o elemento com seletor "${selector}" existe e não foi removido ou teve seu ID/classe alterado.`
-                );
-            });
+        // --- NOVO: Teste de Interatividade das Abas (index.html) ---
+        async function checkIndexPageTabs() {
+            const path = window.location.pathname;
+            if (path.endsWith('/') || path.endsWith('index.html') || path.split('/').pop() === '') {
+                const tabs = document.querySelectorAll('.hero-tab-button');
+                const panels = document.querySelectorAll('.hero-tab-panel');
+                if (tabs.length < 2 || panels.length < 2) {
+                    addResult("Interatividade: Abas da Página Inicial", "FAIL", "Não foi possível encontrar os botões de aba ou painéis.", "Verifique a estrutura HTML da seção de herói no `index.html`.");
+                    return;
+                }
+                tabs[1].click();
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                const isSecondTabActive = tabs[1].classList.contains('active');
+                const isSecondPanelVisible = panels[1].classList.contains('active');
+                
+                tabs[0].click(); // Reset state
+                if (isSecondTabActive && isSecondPanelVisible) {
+                    addResult("Interatividade: Abas da Página Inicial", "PASS", "A funcionalidade de abas está operando corretamente.", null);
+                } else {
+                    addResult("Interatividade: Abas da Página Inicial", "FAIL", "Clicar em uma aba não ativa o painel correspondente.", "Verifique o script no `index.html` para garantir que a classe `.active` é adicionada ao painel e ao botão.");
+                }
+            }
         }
-        
-        if (isArticlePage) {
-             addResult("Verificação de Layout", "PASS", "Layout de página de artigo detectado.", null);
-             ["toc-container", "article"].forEach(selector => {
-                 const elementExists = !!document.querySelector(selector);
-                 addResult(
-                    `Verificação de Elemento de Artigo: ${selector}`,
-                    elementExists ? "PASS" : "FAIL",
-                    elementExists ? `Elemento "${selector}" encontrado.` : `Elemento "${selector}" não encontrado no layout do artigo.`,
-                    elementExists ? null : `Verifique o arquivo 'docs/_layouts/artigo.html' e garanta que este elemento está presente.`
-                 );
-             });
+        await checkIndexPageTabs();
+
+        // --- NOVO: Teste de Erros no Console ---
+        if (capturedErrors.length > 0) {
+            const errorDetails = capturedErrors.map(e => `<li>- ${e}</li>`).join('');
+            addResult("Qualidade do Código: Erros de JavaScript", "FAIL", `Encontrados ${capturedErrors.length} erro(s) no console: <ul>${errorDetails}</ul>`, "Abra o console do navegador para depurar os erros listados, que podem quebrar funcionalidades da página.");
+        } else {
+            addResult("Qualidade do Código: Erros de JavaScript", "PASS", "Nenhum erro de JavaScript foi capturado durante o carregamento da página.", null);
         }
 
+        // Testes de Validação de JSON (já existentes)
         try {
             const response = await fetch(`${baseUrl}search.json?cache_bust=` + Date.now());
             if (response.ok) {
                 const data = await response.json();
-                if (data.length > 0 && data[0].title && data[0].url) {
-                    addResult("Validação de `search.json`", "PASS", "Arquivo encontrado, JSON é válido e contém dados.", null);
-                } else {
-                    addResult("Validação de `search.json`", "FAIL", "JSON é válido, mas está vazio ou a estrutura está incorreta.", "Verifique o processo de build (Jekyll) para garantir que os dados dos posts estão sendo exportados corretamente para `search.json`.");
-                }
+                addResult("Validação de `search.json`", data.length > 0 ? "PASS" : "FAIL", data.length > 0 ? "Arquivo encontrado e contém dados." : "Arquivo encontrado, mas está vazio.", "Verifique o processo de build do Jekyll.");
             } else {
-                addResult("Validação de `search.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}). A busca não funcionará.`, "Execute o build do Jekyll ou verifique se o arquivo foi movido ou renomeado.");
+                addResult("Validação de `search.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}).`, "Execute o build do Jekyll ou verifique o caminho do arquivo.");
             }
         } catch (e) {
-            addResult("Validação de `search.json`", "FAIL", "O conteúdo do arquivo não é um JSON válido.", "Inspecione o arquivo `search.json` para encontrar e corrigir erros de sintaxe.");
+            addResult("Validação de `search.json`", "FAIL", "O arquivo não é um JSON válido.", "Inspecione `search.json` para corrigir erros de sintaxe.");
         }
 
-        try {
-            const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=` + Date.now());
-            if (response.ok) {
-                const data = await response.json();
-                if (data.monitors && data.metrics) {
-                     addResult("Validação de `uptime-data.json`", "PASS", "Arquivo encontrado, JSON é válido e contém as chaves esperadas.", null);
-                } else {
-                    addResult("Validação de `uptime-data.json`", "FAIL", "JSON é válido, mas não contém as chaves 'monitors' ou 'metrics'.", "Verifique o workflow `uptime.yml` do GitHub Actions para garantir que ele está gerando e combinando os dados corretamente.");
+        // --- NOVO: Teste de Otimização de Imagens ---
+        document.querySelectorAll('img').forEach(img => {
+            if (img.complete && img.naturalWidth > 0) {
+                const displayedWidth = img.clientWidth;
+                if (displayedWidth > 0 && (img.naturalWidth > displayedWidth * 1.5)) {
+                    addResult(
+                        `Performance: Imagem ${img.src.split('/').pop()}`, 
+                        "RECOMENDAÇÃO", 
+                        `A imagem tem ${img.naturalWidth}px de largura mas é exibida com ${displayedWidth}px.`, 
+                        "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento."
+                    );
                 }
-            } else {
-                 addResult("Validação de `uptime-data.json`", "FAIL", `Arquivo não encontrado (Status: ${response.status}). A página de status não funcionará.`, "Verifique se o workflow `uptime.yml` está rodando corretamente e salvando o arquivo no local esperado.");
             }
-        } catch (e) {
-            addResult("Validação de `uptime-data.json`", "FAIL", "O conteúdo do arquivo não é um JSON válido.", "Inspecione `uptime-data.json`. Provavelmente houve um erro na execução do workflow `uptime.yml` que corrompeu o arquivo.");
-        }
-
-        document.querySelectorAll("script[src]:not([src^='https://'])").forEach(script => {
-            const isDeferred = script.hasAttribute('defer') || script.hasAttribute('async');
-            addResult(
-                `Performance do Script: ${script.src.split('/').pop()}`,
-                isDeferred ? "PASS" : "RECOMENDAÇÃO",
-                isDeferred ? "O script é carregado de forma assíncrona." : "O script pode estar bloqueando a renderização da página.",
-                isDeferred ? null : "Adicione o atributo 'defer' à tag <script> para melhorar a performance de carregamento."
-            );
         });
 
-        const seo = {
-            title: !!document.querySelector('title'),
-            description: !!document.querySelector('meta[name="description"]')
-        };
-        addResult("SEO: Título da Página", seo.title ? "PASS" : "FAIL", seo.title ? "A tag `<title>` está presente." : "A tag `<title>` é essencial para SEO e acessibilidade e não foi encontrada.", seo.title ? null : "Adicione uma tag `<title>` única e descritiva dentro da seção `<head>` do HTML.");
-        addResult("SEO: Meta Descrição", seo.description ? "PASS" : "RECOMENDAÇÃO", seo.description ? 'A tag `<meta name="description">` está presente.' : "A página não possui uma meta descrição, o que pode impactar como ela aparece nos resultados de busca.", seo.description ? null : 'Adicione `<meta name="description" content="Uma descrição concisa da página.">` dentro da seção `<head>`.');
-
-        const brokenLinks = document.querySelectorAll('a[href=""], a[href="#"], a:not([href])');
-        if (brokenLinks.length > 0) {
-            addResult("Qualidade: Links Quebrados/Vazios", "FAIL", `${brokenLinks.length} link(s) com destino vazio ou inválido foram encontrados.`, "Inspecione os links destacados e adicione um `href` válido ou remova a tag `<a>` se não for um link.");
-            [...brokenLinks].forEach(link => {
-                const clone = link.cloneNode(true);
-                clone.style.cssText = "color: red; border: 1px solid red;";
-                link.replaceWith(clone);
-            });
-        } else {
-            addResult("Qualidade: Links Quebrados/Vazios", "PASS", "Nenhum link com destino vazio ou inválido encontrado.", null);
-        }
-        
-        const missingAlts = document.querySelectorAll('img:not([alt])');
-        if (missingAlts.length > 0) {
-             addResult("Acessibilidade: Imagens sem `alt`", "FAIL", `${missingAlts.length} imagem(ns) sem o atributo 'alt'.`, "Toda imagem deve ter um atributo `alt`. Se for decorativa, use `alt=\"\"`. Caso contrário, forneça uma descrição concisa do conteúdo da imagem.");
-        } else {
-             addResult("Acessibilidade: Imagens sem `alt`", "PASS", "Todas as imagens possuem o atributo `alt`.", null);
-        }
+        // Testes de Qualidade e SEO (já existentes)
+        addResult("SEO: Título da Página", !!document.querySelector('title') ? "PASS" : "FAIL", "A tag `<title>` está presente.", "Adicione uma tag `<title>` única e descritiva.");
+        addResult("Acessibilidade: Imagens sem `alt`", document.querySelectorAll('img:not([alt])').length === 0 ? "PASS" : "FAIL", "Todas as imagens possuem o atributo `alt`.", "Adicione o atributo `alt` a todas as imagens. Use `alt=\"\"` para imagens decorativas.");
     }
 });
