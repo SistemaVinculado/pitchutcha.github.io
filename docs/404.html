@@ -8,7 +8,6 @@ permalink: /404.html
     <meta charset="utf-8"/>
     <title>Pitchutcha - Página Não Encontrada</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
@@ -32,7 +31,7 @@ permalink: /404.html
             
             <div class="mt-10 max-w-md mx-auto">
                 <form action="{{ '/search.html' | relative_url }}" method="get" class="main-search-form flex">
-                    <input type="search" name="q" placeholder="Pesquisar nos artigos..." class="w-full bg-[#0d1117] border border-[var(--secondary-color)] rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] text-lg">
+                    <input type="search" name="q" placeholder="Pesquisar nos artigos..." class="w-full bg-[#0d1117] border border-[var(--borders)] rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] text-lg">
                     <button type="submit" class="bg-[var(--primary-color)] hover:opacity-90 text-white font-semibold rounded-r-md px-6 py-2.5">
                         <span class="material-symbols-outlined">search</span>
                     </button>
