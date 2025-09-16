@@ -409,7 +409,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 incomplete.forEach(i => resultsContainer.insertAdjacentHTML("beforeend", `<div class="p-2 my-1 rounded-md bg-yellow-900 border border-yellow-700"><p class="font-bold">${i.help} (${i.impact})</p><p class="text-gray-400">${i.description}</p><a href="${i.helpUrl}" target="_blank" class="text-sky-400 hover:underline">Saiba mais</a></div>`));
             }
             if (passes.length > 0) {
-                resultsContainer.insertAdjacentHTML("beforeend", `<h4 class="text-lg font-bold text-green-400 mt-4 mb-2">Testes Aprovados (${passes.length})</h4>`);
+                let passesHtml = `
+                    <details class="mt-4">
+                        <summary class="text-lg font-bold text-green-400 cursor-pointer hover:opacity-80">
+                            Testes Aprovados (${passes.length})
+                        </summary>
+                        <ul class="mt-2 pl-5 list-disc text-gray-400 text-xs space-y-1">`;
+                
+                passes.forEach(p => {
+                    passesHtml += `<li>${p.help}</li>`;
+                });
+
+                passesHtml += `</ul></details>`;
+                resultsContainer.insertAdjacentHTML("beforeend", passesHtml);
             }
             if (violations.length === 0 && incomplete.length === 0) {
                 resultsContainer.insertAdjacentHTML("beforeend", '<p class="text-green-400 font-bold text-center mt-4">Parabéns! Nenhum problema de acessibilidade encontrado.</p>');
