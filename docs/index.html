@@ -9,8 +9,9 @@ layout: null
     <title>Pitchutcha: Domine os Fundamentos da Computação</title>
 
     <meta name="description" content="Guias aprofundados, artigos e exemplos de código sobre Algoritmos e Estruturas de Dados para construir software de alta performance.">
+    <meta name="base-url" content="{{ '/' | relative_url }}">
     <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
-
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
@@ -44,6 +45,26 @@ layout: null
     </style>
 </head>
 <body class="text-[var(--text-primary)]">
+    <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+            <div class="flex items-center gap-8">
+                <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
+                    <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
+                    <h1 class="text-xl font-bold">Pitchutcha</h1>
+                </a>
+                <nav class="hidden items-center gap-6 md:flex">
+                    <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a>
+                    <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4">
+                <form id="header-search-form" class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
+                    <input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/>
+                </form>
+            </div>
+        </div>
+    </header>
     
     <main>
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
