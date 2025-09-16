@@ -1,123 +1,81 @@
-<!DOCTYPE html>
-<html lang="pt-BR" class="dark">
-<head>
-    <meta charset="utf-8"/>
-    <title>Pitchutcha - {{ page.title | default: "Artigo" }}</title>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="base-url" content="{{ '/' | relative_url }}">
-    <meta name="description" content="{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}">
-    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
-    
-    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
-</head>
-<body class="bg-[var(--background-primary)] text-[var(--text-primary)]">
-    <div id="aria-live-region" class="sr-only" aria-live="polite"></div>
-    <div id="toast-notification" class="toast-notification"></div>
+---
+layout: default
+title: {{ page.title | default: "Artigo" }}
+---
 
-    <div class="flex min-h-screen flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'>
-        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-                <div class="flex items-center gap-8">
-                    <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
-                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
-                        <h1 class="text-xl font-bold">Pitchutcha</h1>
-                    </a>
-                    <nav class="hidden items-center gap-6 md:flex">
-                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a>
-                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a>
-                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/status.html' | relative_url }}">Status</a>
-                    </nav>
-                </div>
-                <div class="flex items-center gap-4">
-                    <form id="header-search-form" class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
-                        <input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/>
-                    </form>
-                </div>
+<main class="flex-1 p-8 md:p-12">
+    <div class="max-w-4xl mx-auto">
+        <nav aria-label="Breadcrumb" class="mb-6">
+            <ol class="flex items-center space-x-1 text-sm text-[var(--text-secondary)] flex-wrap">
+                <li><a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Início</a></li>
+                <li><span class="material-symbols-outlined text-base mx-1">chevron_right</span></li>
+                <li><a href="{{ page.category | slugify | prepend: '/' | append: '.html' | relative_url }}" class="hover:text-[var(--primary-color)]">{{ page.category }}</a></li>
+            </ol>
+        </nav>
+
+        <div class="mb-8 flex justify-end text-sm text-[var(--text-secondary)]">
+            <div>
+                {% assign words = page.content | number_of_words %}
+                {% if words < 360 %}
+                    Leitura de 1 min
+                {% else %}
+                    Leitura de {{ words | divided_by: 180 }} min
+                {% endif %}
             </div>
-        </header>
+        </div>
 
-        <main class="flex-1 p-8 md:p-12">
-            <div class="max-w-4xl mx-auto">
-                <nav aria-label="Breadcrumb" class="mb-6">
-                    <ol class="flex items-center space-x-1 text-sm text-[var(--text-secondary)] flex-wrap">
-                        <li><a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Início</a></li>
-                        <li><span class="material-symbols-outlined text-base mx-1">chevron_right</span></li>
-                        <li><a href="{{ page.category | slugify | prepend: '/' | append: '.html' | relative_url }}" class="hover:text-[var(--primary-color)]">{{ page.category }}</a></li>
-                    </ol>
-                </nav>
+        <article>
+            {{ content }}
+        </article>
 
-                <div class="mb-8 flex justify-end text-sm text-[var(--text-secondary)]">
-                    <div>
-                        {% assign words = page.content | number_of_words %}
-                        {% if words < 360 %}
-                            Leitura de 1 min
-                        {% else %}
-                            Leitura de {{ words | divided_by: 180 }} min
-                        {% endif %}
-                    </div>
-                </div>
-
-                {{ content }}
-
-                {% assign collection = site.articles | sort: 'date' %}
-                {% for article in collection %}
-                    {% if article.url == page.url %}
-                        {% assign current_index = forloop.index0 %}
-                    {% endif %}
-                {% endfor %}
-                
-                {% assign prev_index = current_index | minus: 1 %}
-                {% if current_index > 0 %}
-                    {% assign prev_article = collection[prev_index] %}
-                {% endif %}
-                
-                {% assign next_index = current_index | plus: 1 %}
-                {% if next_index < collection.size %}
-                    {% assign next_article = collection[next_index] %}
-                {% endif %}
-
-                {% if prev_article or next_article %}
-                <hr class="my-12 border-[var(--borders)]"/>
-                <div class="mt-12 flex flex-col md:flex-row justify-between gap-4">
-                    {% if prev_article %}
-                    <a class="flex-1 text-left inline-flex items-center gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] p-4 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ prev_article.url | relative_url }}">
-                        <span class="material-symbols-outlined">arrow_back</span>
-                        <div>
-                            <span class="text-xs text-[var(--text-secondary)]">Anterior</span>
-                            <span class="block font-semibold">{{ prev_article.title }}</span>
-                        </div>
-                    </a>
-                    {% else %}
-                    <div class="flex-1"></div>
-                    {% endif %}
-                    
-                    {% if next_article %}
-                    <a class="flex-1 text-right inline-flex items-center justify-end gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] p-4 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ next_article.url | relative_url }}">
-                        <div>
-                            <span class="text-xs text-[var(--text-secondary)]">Próximo</span>
-                            <span class="block font-semibold">{{ next_article.title }}</span>
-                        </div>
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                    </a>
-                    {% else %}
-                    <div class="flex-1"></div>
-                    {% endif %}
-                </div>
-                {% endif %}
-                
-                <div class="mt-8 flex justify-end">
-                    <p class="text-sm text-[var(--text-secondary)]">Última atualização: {{ "now" | date: "%-d de %B de %Y" }}</p>
-                </div>
-            </div>
-        </main>
+        {% assign collection = site.articles | sort: 'date' %}
+        {% for article in collection %}
+            {% if article.url == page.url %}
+                {% assign current_index = forloop.index0 %}
+            {% endif %}
+        {% endfor %}
         
-        {% include footer.html %}
-    </div>
+        {% assign prev_index = current_index | minus: 1 %}
+        {% if current_index > 0 %}
+            {% assign prev_article = collection[prev_index] %}
+        {% endif %}
+        
+        {% assign next_index = current_index | plus: 1 %}
+        {% if next_index < collection.size %}
+            {% assign next_article = collection[next_index] %}
+        {% endif %}
 
-    {% include scripts.html %}
-</body>
-</html>
+        {% if prev_article or next_article %}
+        <hr class="my-12 border-[var(--borders)]"/>
+        <div class="mt-12 flex flex-col md:flex-row justify-between gap-4">
+            {% if prev_article %}
+            <a class="flex-1 text-left inline-flex items-center gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] p-4 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ prev_article.url | relative_url }}">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <div>
+                    <span class="text-xs text-[var(--text-secondary)]">Anterior</span>
+                    <span class="block font-semibold">{{ prev_article.title }}</span>
+                </div>
+            </a>
+            {% else %}
+            <div class="flex-1"></div>
+            {% endif %}
+            
+            {% if next_article %}
+            <a class="flex-1 text-right inline-flex items-center justify-end gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] p-4 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ next_article.url | relative_url }}">
+                <div>
+                    <span class="text-xs text-[var(--text-secondary)]">Próximo</span>
+                    <span class="block font-semibold">{{ next_article.title }}</span>
+                </div>
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+            {% else %}
+            <div class="flex-1"></div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="mt-8 flex justify-end">
+            <p class="text-sm text-[var(--text-secondary)]">Última atualização: {{ "now" | date: "%-d de %B de %Y" }}</p>
+        </div>
+    </div>
+</main>
