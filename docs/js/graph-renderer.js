@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if (latencyChartSVG && inferenceChartContainer) {
         
         const renderCharts = (data) => {
-            // VERIFICAÇÃO DE SEGURANÇA ADICIONADA
+            // VERIFICAÇÃO DE SEGURANÇA: Garante que o objeto 'graphs' e suas chaves existem.
             if (!data || !data.graphs || !data.graphs.latency_history || !data.graphs.inference_by_model) {
                 console.error("Dados do gráfico (graphs) não encontrados no arquivo JSON.");
                 if(avgLatencyEl) avgLatencyEl.textContent = "Média: --ms";
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 return;
             }
             
-            // Render Latency Chart
+            // Renderiza Gráfico de Latência
             const latencyData = data.graphs.latency_history;
             if (latencyData && latencyData.length > 0) {
                 const avg = latencyData.reduce((a, b) => a + b, 0) / latencyData.length;
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 areaPath.setAttribute("d", areaPathData);
                 areaPath.setAttribute("fill", "url(#paint0_linear_area)");
 
-                latencyChartSVG.querySelectorAll("path, text").forEach(p => p.remove());
+                latencyChartSVG.innerHTML = ''; // Limpa antes de adicionar
                 latencyChartSVG.appendChild(areaPath);
                 latencyChartSVG.appendChild(linePath);
 
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                 latencyChartSVG.innerHTML = '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9CA3AF" font-size="14">Sem dados disponíveis</text>';
             }
 
-            // Render Inference Chart
+            // Renderiza Gráfico de Inferência
             const inferenceData = data.graphs.inference_by_model;
             if (inferenceData && inferenceData.length > 0) {
                 const total = inferenceData.reduce((sum, item) => sum + item.time, 0);
