@@ -3,7 +3,7 @@ name: Fetch UptimeRobot Stats & Metrics
 on:
   workflow_dispatch: # Permite iniciar manualmente
   schedule:
-    - cron: '0 */6 * * *' # Executa a cada 6 horas
+    - cron: '0 */1 * * *' # ATUALIZADO: Roda a cada hora para dados mais frescos
 
 jobs:
   fetch-data:
@@ -55,17 +55,17 @@ jobs:
 
       - name: Fetch UptimeRobot data
         run: |
-          # Busca os dados do UptimeRobot, incluindo o histórico diário de tempo de resposta
+          # Busca os dados do UptimeRobot, incluindo o histórico horário de tempo de resposta
           curl --request POST 'https://api.uptimerobot.com/v2/getMonitors' \
           --header 'Content-Type: application/x-www-form-urlencoded' \
           --data-urlencode "api_key=${{ secrets.UPTIMEROBOT_API_KEY }}" \
           --data-urlencode "monitors=801334653" \
-          --data-urlencode "custom_uptime_ratios=7-30" \
+          --data-urlencode "custom_uptime_ratios=1-7-30" \
           --data-urlencode "logs=1" \
           --data-urlencode "logs_limit=50" \
           --data-urlencode "response_times=1" \
-          --data-urlencode "response_times_limit=90" \
-          --data-urlencode "response_times_average=1440" \
+          --data-urlencode "response_times_limit=24" \
+          --data-urlencode "response_times_average=60" \
           --data-urlencode "format=json" \
           -o uptime.json
 
@@ -77,5 +77,5 @@ jobs:
       - name: Commit and push if it changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: Update UptimeRobot data and metrics"
+          commit_message: "chore: Update UptimeRobot data and metrics (24-hour view)"
           file_pattern: "docs/uptime-data.json"
