@@ -10,18 +10,68 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const accordionStyles = `
-        .component-details { border-radius: 0.5rem; overflow: hidden; border: 1px solid var(--borders); background-color: var(--background-secondary); margin-bottom: 0.5rem; }
-        .component-summary { display: flex; align-items: center; justify-content: space-between; padding: 1rem; cursor: pointer; list-style: none; }
-        .component-summary::-webkit-details-marker { display: none; }
-        .component-details-content { padding: 1rem; padding-top: 0; border-top: 1px solid var(--borders); }
-        .component-details[open] .component-details-content { padding-top: 1rem; }
-        .component-details .icon-toggle::before { content: 'expand_more'; font-family: 'Material Symbols Outlined'; font-size: 24px; display: inline-block; transition: transform 0.2s; }
-        .component-details[open] .icon-toggle::before { transform: rotate(180deg); }
-        .details-list { list-style-type: none; padding: 0; margin: 0; font-size: 0.8rem; }
-        .details-list li { display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid var(--borders); }
-        .details-list li:last-child { border-bottom: none; }
-        .details-list .label { color: var(--text-secondary); }
-        .details-list .value { font-weight: 600; color: var(--text-primary); }
+        .component-details {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid var(--secondary-color);
+            background-color: var(--background-secondary);
+            margin-bottom: 0.5rem;
+        }
+        .component-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            cursor: pointer;
+            list-style: none;
+        }
+        .component-summary::-webkit-details-marker {
+            display: none;
+        }
+        .component-details-content {
+            padding: 1rem;
+            padding-top: 0;
+            border-top: 1px solid var(--secondary-color);
+        }
+        .component-details[open] .component-details-content {
+            padding-top: 1rem;
+        }
+        .component-details .icon-toggle::before {
+            content: 'expand_more';
+            font-family: 'Material Symbols Outlined';
+            font-size: 24px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .component-details[open] .icon-toggle::before {
+            transform: rotate(180deg);
+        }
+        .details-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+        .details-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+        .details-list li:last-child {
+            border-bottom: none;
+        }
+        .details-list .label {
+            color: var(--text-secondary);
+        }
+        .details-list .value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .details-list .value.na {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
     `;
     const styleSheet = document.createElement("style");
     styleSheet.innerText = accordionStyles;
@@ -33,16 +83,18 @@ document.addEventListener("DOMContentLoaded", () => {
         { name: "Página de Algoritmos", url: "algoritmos.html" },
         { name: "Página de Estrutura de Dados", url: "estruturas-de-dados.html" },
         { name: "Página de Busca", url: "search.html" },
-        { name: "API de Busca (JSON)", url: "search.json", checkIntegrity: true },
+        { name: "Página de Status", url: "status.html" },
         { name: "CSS Principal", url: "css/style.css" },
-        { name: "JS Principal", url: "js/script.js" }
+        { name: "JS Principal", url: "js/script.js" },
+        { name: "JS Painel de Dev", url: "js/dev-panel.js" },
+        { name: "Banco de Dados da Busca", url: "search.json", checkIntegrity: true }
     ];
 
     const updateComponentStatus = (name, status, metrics) => {
         const statusMap = {
-            operational: { text: "Operacional", pulse: "ping-green", dot: "bg-green-500", textClass: "text-green-400" },
-            degraded: { text: "Lento", pulse: "ping-yellow", dot: "bg-yellow-500", textClass: "text-yellow-400" },
-            outage: { text: "Falha", pulse: "ping-red", dot: "bg-red-500", textClass: "text-red-500" }
+            operational: { text: "Operacional", pulse: "ping-green", dot: "bg-green-500", textClass: "text-green-600", icon: "check_circle" },
+            degraded: { text: "Lento", pulse: "ping-yellow", dot: "bg-yellow-500", textClass: "text-yellow-600", icon: "warning" },
+            outage: { text: "Falha", pulse: "ping-red", dot: "bg-red-500", textClass: "text-red-500", icon: "error" }
         };
         const currentStatus = statusMap[status] || statusMap.outage;
         
@@ -50,7 +102,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <details class="component-details">
                 <summary class="component-summary">
                     <div class="flex items-center gap-4">
-                        <span class="relative flex h-3 w-3"><span class="ping-pulse ${currentStatus.pulse}"></span><span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.dot}"></span></span>
+                        <span class="relative flex h-3 w-3">
+                            <span class="ping-pulse ${currentStatus.pulse}"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.dot}"></span>
+                        </span>
                         <p class="text-[var(--text-primary)] font-semibold">${name}</p>
                     </div>
                     <div class="flex items-center gap-3">
@@ -64,6 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         <li><span class="label">Detalhes</span><span class="value">${metrics.details}</span></li>
                         <li><span class="label">Tempo de Carregamento</span><span class="value">${metrics.loadTime !== null ? metrics.loadTime + 'ms' : 'N/A'}</span></li>
                         <li><span class="label">Tamanho do Arquivo</span><span class="value">${metrics.fileSize !== null ? (metrics.fileSize / 1024).toFixed(2) + ' KB' : 'N/A'}</span></li>
+                        <li><span class="label">Tempo até Interatividade (TTI)</span><span class="value na">Ver Relatório PageSpeed</span></li>
+                        <li><span class="label">Performance de Renderização</span><span class="value na">Ver Relatório PageSpeed</span></li>
+                        <li><span class="label">Responsividade</span><span class="value na">Use o Modo de Dispositivo</span></li>
                     </ul>
                 </div>
             </details>
@@ -79,7 +137,9 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         const currentStatus = statusMap[status] || statusMap.outage;
         
-        overallStatusIndicator.innerHTML = `<span class="ping-pulse ${currentStatus.pulse}"></span><span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.dot}"></span>`;
+        const indicatorHTML = `<span class="ping-pulse ${currentStatus.pulse}"></span><span class="relative inline-flex rounded-full h-3 w-3 ${currentStatus.dot}"></span>`;
+        
+        overallStatusIndicator.innerHTML = indicatorHTML;
         overallStatusText.textContent = currentStatus.text;
     };
 
@@ -87,36 +147,53 @@ document.addEventListener("DOMContentLoaded", () => {
         let finalStatus = "operational";
         detailedContainer.innerHTML = ''; 
 
+        if (performance.clearResourceTimings) {
+            performance.clearResourceTimings();
+        }
+
         for (const component of components) {
-            let status = "outage", details = "", metrics = { details: "Falha no teste", loadTime: null, fileSize: null };
+            let status = "outage";
+            let details = "";
+            let metrics = { details: "Falha no teste", loadTime: null, fileSize: null };
             const startTime = performance.now();
+
             try {
-                const response = await fetch(`${baseUrl}${component.url}`, { cache: "no-store" });
+                const resourceUrl = baseUrl + component.url;
+                const response = await fetch(resourceUrl, { cache: "no-store" });
                 const duration = (performance.now() - startTime);
+
                 if (response.ok) {
                     const blob = await response.clone().blob();
                     metrics.fileSize = blob.size;
                     metrics.loadTime = duration.toFixed(0);
+
                     status = duration > 1500 ? "degraded" : "operational";
-                    details = "Componente operacional.";
+                    details = `Componente operacional.`;
+
                     if (component.checkIntegrity) {
                         const text = await response.text();
                         JSON.parse(text); 
-                        if (text.trim() === "[]" || text.trim() === "") {
-                           status = "outage"; details = "Falha: Arquivo de dados está vazio.";
+                        if (text.trim() === "[]" || text.trim() === "" || text.trim() === "{}") {
+                           status = "outage";
+                           details = "Falha: Arquivo de dados está vazio.";
                         }
                     }
                 } else {
-                    status = "outage"; details = `Falha: Recurso não encontrado (Erro ${response.status}).`;
+                    status = "outage";
+                    details = `Falha: Recurso não encontrado (Erro ${response.status}).`;
                 }
             } catch (err) {
-                status = "outage"; details = `Falha Crítica: ${err.message}.`;
+                status = "outage";
+                details = `Falha Crítica: ${err.message}.`;
             }
+            
             metrics.details = details;
             if (status === 'outage') finalStatus = 'outage';
             if (status === 'degraded' && finalStatus !== 'outage') finalStatus = 'degraded';
+            
             updateComponentStatus(component.name, status, metrics);
         }
+        
         updateOverallStatus(finalStatus);
     };
 
