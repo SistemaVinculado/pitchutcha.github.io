@@ -1,0 +1,70 @@
+{
+  "components": [
+    {
+      "id": "api",
+      "name": "API Principal",
+      "description": "Responsável pelo envio e recebimento de dados e operações gerais.",
+      "status": "operational",
+      "showUptime": true
+    },
+    {
+      "id": "database",
+      "name": "Banco de Dados",
+      "description": "Armazenamento e consulta de dados.",
+      "status": "operational",
+      "showUptime": true
+    },
+    {
+      "id": "realtime-updates",
+      "name": "Atualizações em Tempo Real",
+      "description": "Serviço de WebSocket para atualizações ao vivo.",
+      "status": "degraded",
+      "showUptime": true
+    },
+    {
+      "id": "file-storage",
+      "name": "Armazenamento de Arquivos",
+      "description": "Upload e download de arquivos e mídias.",
+      "status": "operational",
+      "showUptime": true
+    },
+    {
+      "id": "auth",
+      "name": "Serviços de Autenticação",
+      "isGroup": true,
+      "children": [
+        {
+          "id": "auth-login",
+          "name": "Login e Cadastro",
+          "description": "Sistemas de entrada e registro de usuários.",
+          "status": "operational"
+        },
+        {
+          "id": "auth-sessions",
+          "name": "Gerenciamento de Sessões",
+          "description": "Controle de sessões de usuários ativos.",
+          "status": "operational"
+        }
+      ]
+    },
+    {
+      "id": "client-apps",
+      "name": "Aplicações Cliente",
+      "isGroup": true,
+      "children": [
+        {
+          "id": "client-web",
+          "name": "Aplicação Web",
+          "description": "Interface principal no navegador.",
+          "status": "partial_outage"
+        },
+        {
+          "id": "client-docs",
+          "name": "Página de Documentação",
+          "description": "Serviço que entrega a documentação.",
+          "status": "major_outage"
+        }
+      ]
+    }
+  ]
+}
