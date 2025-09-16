@@ -57,32 +57,39 @@
                 </div>
 
                 <div class="mb-8 p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                        <div>
-                            <h2 class="text-xl font-semibold text-[var(--text-primary)]">Histórico de Uptime</h2>
-                            <p class="text-sm text-[var(--text-secondary)]">Últimos 90 dias de disponibilidade do serviço.</p>
+                    <div class="flex justify-between items-center mb-1">
+                        <h2 class="text-lg font-semibold text-[var(--text-primary)]">Histórico de Uptime</h2>
+                        <div id="overall-uptime-status" class="text-right">
+                            </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <div id="uptime-chart-container" class="uptime-graph-container">
+                            </div>
+
+                        <div id="uptime-tooltip" class="uptime-tooltip">
+                            <div id="tooltip-content"></div>
+                            <div id="tooltip-arrow" class="tooltip-arrow"></div>
                         </div>
                     </div>
-
-                    <div id="uptime-chart-container" class="relative w-full h-24 bg-[var(--background-primary)] rounded p-2 flex items-end justify-end space-x-px">
-                        </div>
-
-                    <div id="uptime-tooltip" class="absolute hidden bg-[var(--cards-elements)] border border-[var(--borders)] rounded-lg shadow-lg p-3 text-xs z-10 pointer-events-none transition-opacity duration-200">
-                        <p id="tooltip-date" class="font-bold mb-1"></p>
-                        <div class="flex items-center">
-                            <span id="tooltip-status-indicator" class="w-2 h-2 rounded-full mr-2"></span>
-                            <p id="tooltip-status-text"></p>
-                        </div>
-                        <p id="tooltip-details" class="mt-1 text-[var(--text-secondary)]"></p>
-                    </div>
-
-                    <div class="flex justify-between text-xs text-[var(--text-secondary)] mt-2 px-1">
+                    
+                    <div class="flex justify-between items-center text-xs text-[var(--text-secondary)] mt-2">
                         <span id="chart-start-date">90 dias atrás</span>
+                        
+                        <div class="flex items-center gap-4">
+                            <div id="status-legend" class="flex items-center gap-2">
+                                <span>Menos</span>
+                                <div class="legend-gradient"></div>
+                                <span>Mais</span>
+                            </div>
+                            
+                            <div class="relative" id="legend-help-container">
+                                <button id="legend-help-button" class="legend-help-button">?</button>
+                            </div>
+                        </div>
+                        
                         <span id="chart-end-date">Hoje</span>
                     </div>
-
-                    <div id="status-legend" class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 pt-4 mt-4 border-t border-[var(--borders)] text-xs">
-                        </div>
                 </div>
                 <div id="pagespeed-report-container" class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Relatório PageSpeed Insights</h2>
@@ -108,7 +115,7 @@
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Histórico de Uptime e Incidentes</h2>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div id="uptime-history-container"><p class="text-[var(--text-secondary)]">Carregando dados de uptime...</p></div>
+                        <div id="uptime-history-container" style="display: none;"></div>
                         <div id="incidents-history-container"><p class="text-[var(--text-secondary)]">Carregando histórico de incidentes...</p></div>
                     </div>
                 </div>
