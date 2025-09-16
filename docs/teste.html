@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painéis de Status - Estilo Discord</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+      /*=============== FONTES PROXIMA NOVA (DO ARQUIVO ORIGINAL) ===============*/
+      @font-face {
+        font-family: 'proxima-nova';
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaLight-f0b2f7c12b6b87c65c02d3c1738047ea67a7607fd767056d8a2964cc6a2393f7.eot?host=discordstatus.com');
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaLight-f0b2f7c12b6b87c65c02d3c1738047ea67a7607fd767056d8a2964cc6a2393f7.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaLight-e642ffe82005c6208632538a557e7f5dccb835c0303b06f17f55ccf567907241.woff?host=discordstatus.com') format('woff'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaLight-0f094da9b301d03292f97db5544142a16f9f2ddf50af91d44753d9310c194c5f.ttf?host=discordstatus.com') format('truetype');
+        font-weight:300;
+        font-style:normal;
+      }
+      @font-face {
+        font-family: 'proxima-nova';
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-366d17769d864aa72f27defaddf591e460a1de4984bb24dacea57a9fc1d14878.eot?host=discordstatus.com');
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-366d17769d864aa72f27defaddf591e460a1de4984bb24dacea57a9fc1d14878.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-2ee4c449a9ed716f1d88207bd1094e21b69e2818b5cd36b28ad809dc1924ec54.woff?host=discordstatus.com') format('woff'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-a40a469edbd27b65b845b8000d47445a17def8ba677f4eb836ad1808f7495173.ttf?host=discordstatus.com') format('truetype');
+        font-weight:400;
+        font-style:normal;
+      }
+      @font-face {
+        font-family: 'proxima-nova';
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-09566917307251d22021a3f91fc646f3e45f8d095209bcd2cded8a1979f06e54.eot?host=discordstatus.com');
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-09566917307251d22021a3f91fc646f3e45f8d095209bcd2cded8a1979f06e54.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-86724fb2152613d735ba47c3f47a9ad2424b898bea4bece213dacee40344f966.woff?host=discordstatus.com') format('woff'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-cf3e4eb7fbdf6fb83e526cc2a0141e55b01097e6e1abfd4cbdc3eda75d183f74.ttf?host=discordstatus.com') format('truetype');
+        font-weight:500;
+        font-style:normal;
+      }
+       @font-face {
+        font-family: 'proxima-nova';
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaBold-622ea489d20e12e691663f83217105e957e2d3d09703707d40155a29c06cc9d9.eot?host=discordstatus.com');
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaBold-622ea489d20e12e691663f83217105e957e2d3d09703707d40155a29c06cc9d9.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaBold-c8dc577ff7f76d2fc199843e38c04bb2e9fd15889421358d966a9f846c2ed1cd.woff?host=discordstatus.com') format('woff'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaBold-27177fe9242acbe089276ee587feef781446667ffe9b6fdc5b7fe21ad73e12f3.ttf?host=discordstatus.com') format('truetype');
+        font-weight:700;
+        font-style:normal;
+      }
+
+      /*=============== ESTILOS GLOBAIS E DE CORES (DO ARQUIVO ORIGINAL) ===============*/
+      :root {
+        --font-regular: 16px;
+        --font-large: 18px;
+        --font-small: 14px;
+      }
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: 'proxima-nova', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: var(--font-regular);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color:#FFFFFF;
+        color:#2E3338;
+      }
+      .font-regular { font-size: var(--font-regular); }
+      .font-large { font-size: var(--font-large); }
+      .font-small { font-size: var(--font-small); }
+
+      small, .color-secondary { color:#72767D; }
+      .border-color { border-color:#E0E0E0 !important; }
+      a, a:hover { color:#5865F2; text-decoration: none; }
+
+      /* CORES DE STATUS */
+      .status-red .icon-indicator, .components-container .component-inner-container.status-red .component-status { color:#ED4245; }
+      .status-orange .icon-indicator, .components-container .component-inner-container.status-orange .component-status { color:#F26522; }
+      .status-yellow .icon-indicator, .components-container .component-inner-container.status-yellow .component-status { color:#CB8615; }
+      .status-blue .icon-indicator, .components-container .component-inner-container.status-blue .component-status { color:#3498DB; }
+      .status-green .icon-indicator, .components-container .component-inner-container.status-green .component-status { color:#3BA55C; }
+
+      /*=============== ESTILOS DOS PAINÉIS (RECRIAÇÃO FIEL) ===============*/
+      .components-section {
+        margin: 0 auto;
+        max-width: 1024px;
+        padding: 40px 20px;
+      }
+      .components-uptime-link {
+        color: #72767d;
+        font-size: var(--font-small);
+        margin-bottom: 20px;
+        display: block;
+      }
+      .components-container {
+        border: 1px solid #E0E0E0;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .component-container {
+        background-color: #FFFFFF;
+        border-bottom: 1px solid #E0E0E0;
+      }
+      .component-container:last-child {
+        border-bottom: none;
+      }
+      .component-inner-container {
+        padding: 18px 20px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 16px;
+      }
+      .component-inner-container > .name {
+        grid-column: 1;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(46,51,56,.8);
+      }
+      .component-inner-container > .component-status {
+        grid-column: 2;
+        font-weight: 500;
+        justify-self: end;
+      }
+      .component-inner-container > .icon-indicator {
+        display: none; /* Oculto no layout mobile, status já informa */
+      }
+       .component-inner-container .name .group-parent-indicator {
+        cursor: pointer;
+        font-size: 14px;
+       }
+      
+      .shared-partial.uptime-90-days-wrapper {
+        display: none; /* Escondido em telas menores por padrão */
+        grid-column: 2;
+        min-width: 0;
+      }
+      .availability-time-line-graphic {
+          width: 100%;
+          height: 34px;
+      }
+
+      /* Layout para telas maiores (desktop) */
+      @media (min-width: 1024px) {
+        .component-inner-container.showcased {
+          grid-template-columns: 250px 1fr auto auto;
+        }
+        .component-inner-container.showcased > .name { grid-column: 1; }
+        .component-inner-container.showcased > .shared-partial { grid-column: 2; display: block; }
+        .component-inner-container.showcased > .component-status { grid-column: 3; }
+        .component-inner-container.showcased > .icon-indicator { grid-column: 4; display: block; }
+        
+        .component-inner-container:not(.showcased) {
+           grid-template-columns: 1fr auto auto;
+        }
+        .component-inner-container:not(.showcased) > .name { grid-column: 1; }
+        .component-inner-container:not(.showcased) > .component-status { grid-column: 2; }
+        .component-inner-container:not(.showcased) > .icon-indicator { grid-column: 3; display: block; }
+      }
+
+      /* Legenda da barra de status (visível apenas em desktop) */
+      .uptime-90-days-wrapper .legend {
+          display: none;
+          justify-content: space-between;
+          font-size: 12px;
+          margin-top: 5px;
+          color: #72767d;
+      }
+      @media (min-width: 1024px) {
+        .uptime-90-days-wrapper .legend {
+            display: flex;
+        }
+      }
+      .legend .spacer {
+        flex-grow: 1;
+        height: 1px;
+        background: #72767d;
+        opacity: 0.5;
+        margin: auto 8px;
+      }
+      
+      /* Componentes agrupados (filhos) */
+      .child-components-container {
+        display: none;
+        padding-left: 10px;
+        background-color: #fff;
+      }
+      .component-container.open > .child-components-container {
+         display: block;
+      }
+      .child-components-container .component-inner-container {
+        padding: 12px 20px 12px 48px;
+        border-top: 1px solid #E0E0E0;
+      }
+       
+      /* Tooltip */
+      .tooltip-base {
+          position: relative;
+          display: inline-block;
+          cursor: help;
+          color: #aaa;
+          border: 1px solid #aaa;
+          border-radius: 50%;
+          width: 16px;
+          height: 16px;
+          line-height: 14px;
+          text-align: center;
+          font-size: 12px;
+          font-weight: 400;
+      }
+      .tooltip-base .tooltip-text {
+          visibility: hidden;
+          width: 250px;
+          background-color: #2E3338;
+          color: #fff;
+          text-align: center;
+          border-radius: 3px;
+          padding: 8px;
+          position: absolute;
+          z-index: 1;
+          bottom: 150%;
+          left: 50%;
+          margin-left: -125px;
+          opacity: 0;
+          transition: opacity 0.2s;
+          font-size: 13px;
+          font-weight: 400;
+      }
+      .tooltip-base .tooltip-text::after {
+          content: "";
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          margin-left: -5px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: #2E3338 transparent transparent transparent;
+      }
+      .tooltip-base:hover .tooltip-text {
+          visibility: visible;
+          opacity: 1;
+      }
+
+      /* Legenda inferior */
+      .component-statuses-legend {
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: center;
+         gap: 15px 25px;
+         margin-top: 30px;
+         font-size: var(--font-small);
+         color: #72767D;
+      }
+      .legend-item {
+         display: flex;
+         align-items: center;
+         gap: 8px;
+      }
+    </style>
+</head>
+<body>
+
+    <div class="components-section">
+        <div class="components-uptime-link">Uptime over the past 90 days. <a href="#">View historical uptime.</a></div>
+
+        <div class="components-container">
+            
+            <div class="component-container border-color">
+                <div class="component-inner-container status-green showcased">
+                    <span class="name"> API <span class="tooltip-base">?<span class="tooltip-text">A API é responsável pelo envio e recebimento de mensagens e pelas operações gerais na plataforma.</span></span> </span>
+                    <div class="shared-partial uptime-90-days-wrapper">
+                        <svg class="availability-time-line-graphic" preserveAspectRatio="none" viewBox="0 0 448 34">
+                           <rect height="34" width="3" x="0" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="5" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="10" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="15" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="20" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="25" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="30" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="35" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="40" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="45" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="50" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="55" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="60" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="65" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="70" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="75" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="80" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="85" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="90" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="95" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="100" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="105" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="110" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="115" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="120" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="125" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="130" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="135" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="140" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="145" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="150" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="155" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="160" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="165" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="170" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="175" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="180" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="185" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="190" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="195" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="200" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="205" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="210" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="215" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="220" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="225" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="230" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="235" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="240" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="245" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="250" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="255" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="260" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="265" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="270" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="275" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="280" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="285" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="290" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="295" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="300" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="305" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="310" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="315" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="320" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="325" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="330" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="335" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="340" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="345" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="350" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="355" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="360" y="0" fill="#d67d19"></rect><rect height="34" width="3" x="365" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="370" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="375" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="380" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="385" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="390" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="395" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="400" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="405" y="0" fill="#b08c22"></rect><rect height="34" width="3" x="410" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="415" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="420" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="425" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="430" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="435" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="440" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="445" y="0" fill="#3ba55c"></rect>
+                        </svg>
+                        <div class="legend">
+                          <div class="legend-item light">90 days ago</div>
+                          <div class="spacer"></div>
+                          <div class="legend-item">99.97 % uptime</div>
+                          <div class="spacer"></div>
+                          <div class="legend-item light">Today</div>
+                        </div>
+                    </div>
+                    <span class="component-status"> Operational </span>
+                    <span class="tool icon-indicator fa fa-check"></span>
+                </div>
+            </div>
+
+            <div class="component-container border-color">
+                <div class="component-inner-container status-green showcased">
+                    <span class="name"> Media Proxy <span class="tooltip-base">?<span class="tooltip-text">Serviço responsável por redimensionar imagens para exibição de miniaturas.</span></span> </span>
+                    <div class="shared-partial uptime-90-days-wrapper">
+                         <svg class="availability-time-line-graphic" preserveAspectRatio="none" viewBox="0 0 448 34">
+                            <rect height="34" width="3" x="0" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="5" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="10" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="15" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="20" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="25" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="30" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="35" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="40" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="45" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="50" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="55" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="60" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="65" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="70" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="75" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="80" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="85" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="90" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="95" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="100" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="105" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="110" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="115" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="120" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="125" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="130" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="135" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="140" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="145" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="150" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="155" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="160" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="165" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="170" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="175" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="180" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="185" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="190" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="195" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="200" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="205" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="210" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="215" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="220" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="225" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="230" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="235" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="240" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="245" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="250" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="255" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="260" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="265" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="270" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="275" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="280" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="285" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="290" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="295" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="300" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="305" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="310" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="315" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="320" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="325" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="330" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="335" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="340" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="345" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="350" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="355" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="360" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="365" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="370" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="375" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="380" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="385" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="390" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="395" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="400" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="405" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="410" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="415" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="420" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="425" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="430" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="435" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="440" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="445" y="0" fill="#3ba55c"></rect>
+                        </svg>
+                        <div class="legend">
+                          <div class="legend-item light">90 days ago</div>
+                          <div class="spacer"></div>
+                          <div class="legend-item">100 % uptime</div>
+                          <div class="spacer"></div>
+                          <div class="legend-item light">Today</div>
+                        </div>
+                    </div>
+                    <span class="component-status"> Operational </span>
+                    <span class="tool icon-indicator fa fa-check"></span>
+                </div>
+            </div>
+
+            <div class="component-container border-color is-group">
+                <div class="component-inner-container status-green" data-js-hook="component-group-opener">
+                    <span class="name">
+                        <span class="fa group-parent-indicator color-secondary fa-plus-square-o" role="button" aria-expanded="false" aria-label="Toggle Voice" tabindex="0"></span>
+                        <span> Voice </span>
+                    </span>
+                    <span class="component-status"> Operational </span>
+                    <span class="tool icon-indicator fa fa-check"></span>
+                </div>
+                <div class="child-components-container">
+                    <div class="component-inner-container status-green"><span class="name"> Atlanta </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> Brazil </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> Hong Kong </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> US Central </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> US West </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
+                </div>
+            </div>
+            
+             <div class="component-container border-color is-group">
+                <div class="component-inner-container status-green showcased" data-js-hook="component-group-opener">
+                    <span class="name">
+                        <span class="fa group-parent-indicator color-secondary fa-plus-square-o" role="button" aria-expanded="false" aria-label="Toggle Client" tabindex="0"></span>
+                        <span> Client </span>
+                    </span>
+                     <div class="shared-partial uptime-90-days-wrapper">
+                         <svg class="availability-time-line-graphic" preserveAspectRatio="none" viewBox="0 0 448 34">
+                            <rect height="34" width="3" x="0" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="5" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="10" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="15" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="20" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="25" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="30" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="35" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="40" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="45" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="50" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="55" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="60" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="65" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="70" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="75" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="80" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="85" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="90" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="95" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="100" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="105" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="110" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="115" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="120" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="125" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="130" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="135" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="140" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="145" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="150" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="155" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="160" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="165" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="170" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="175" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="180" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="185" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="190" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="195" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="200" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="205" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="210" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="215" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="220" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="225" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="230" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="235" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="240" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="245" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="250" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="255" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="260" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="265" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="270" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="275" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="280" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="285" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="290" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="295" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="300" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="305" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="310" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="315" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="320" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="325" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="330" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="335" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="340" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="345" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="350" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="355" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="360" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="365" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="370" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="375" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="380" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="385" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="390" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="395" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="400" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="405" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="410" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="415" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="420" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="425" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="430" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="435" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="440" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="445" y="0" fill="#3ba55c"></rect>
+                        </svg>
+                        <div class="legend">
+                          <div class="legend-item light">90 days ago</div>
+                          <div class="spacer"></div>
+                          <div class="legend-item">100 % uptime</div>
+                          <div class="spacer"></div>
+                          <div class="legend-item light">Today</div>
+                        </div>
+                    </div>
+                    <span class="component-status"> Operational </span>
+                    <span class="tool icon-indicator fa fa-check"></span>
+                </div>
+                <div class="child-components-container">
+                    <div class="component-inner-container status-green"><span class="name"> Desktop <span class="tooltip-base">?<span class="tooltip-text">O cliente para desktop (Windows/Mac/Linux)</span></span></span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
+                    <div class="component-inner-container status-yellow"><span class="name"> iOS <span class="tooltip-base">?<span class="tooltip-text">O cliente nativo para iOS</span></span></span><span class="component-status"> Degraded Performance </span><span class="tool icon-indicator fa fa-minus-square"></span></div>
+                    <div class="component-inner-container status-orange"><span class="name"> Android <span class="tooltip-base">?<span class="tooltip-text">O cliente nativo para Android</span></span></span><span class="component-status"> Partial Outage </span><span class="tool icon-indicator fa fa-exclamation-triangle"></span></div>
+                    <div class="component-inner-container status-red"><span class="name"> Web <span class="tooltip-base">?<span class="tooltip-text">O cliente web (no navegador)</span></span></span><span class="component-status"> Major Outage </span><span class="tool icon-indicator fa fa-times"></span></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="component-statuses-legend font-small">
+            <div class="legend-item"><span class="icon-indicator status-green fa fa-check"></span> Operational</div>
+            <div class="legend-item"><span class="icon-indicator status-yellow fa fa-minus-square"></span> Degraded Performance</div>
+            <div class="legend-item"><span class="icon-indicator status-orange fa fa-exclamation-triangle"></span> Partial Outage</div>
+            <div class="legend-item"><span class="icon-indicator status-red fa fa-times"></span> Major Outage</div>
+            <div class="legend-item"><span class="icon-indicator status-blue fa fa-wrench"></span> Maintenance</div>
+        </div>
+    </div>
+
+    <script>
+      // Script para alternar a visibilidade dos grupos de componentes
+      document.addEventListener('DOMContentLoaded', function() {
+        const groupOpeners = document.querySelectorAll('[data-js-hook="component-group-opener"]');
+        
+        groupOpeners.forEach(opener => {
+          opener.addEventListener('click', () => {
+            const parentContainer = opener.closest('.component-container');
+            parentContainer.classList.toggle('open');
+
+            const indicator = opener.querySelector('.group-parent-indicator');
+            const isExpanded = parentContainer.classList.contains('open');
+
+            indicator.classList.toggle('fa-plus-square-o', !isExpanded);
+            indicator.classList.toggle('fa-minus-square-o', isExpanded);
+            indicator.setAttribute('aria-expanded', isExpanded);
+          });
+        });
+      });
+    </script>
+
+</body>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       </html>
