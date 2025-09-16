@@ -1,131 +1,250 @@
 ---
-layout: default
-title: Domine os Fundamentos da Computação
+layout: null
 ---
+<!DOCTYPE html>
+<html lang="pt" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pitchutcha: Domine os Fundamentos da Computação</title>
 
-<main>
-    <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
-        <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
-
-        <div class="relative z-10 w-full max-w-5xl mx-auto">
-            <nav class="flex justify-center border-b border-[var(--borders)] mb-8" role="tablist" aria-label="Tópicos Principais">
-                <button id="tab-btn-algoritmos" role="tab" aria-selected="true" aria-controls="tab-panel-algoritmos" class="hero-tab-button active text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors">Algoritmos</button>
-                <button id="tab-btn-estruturas" role="tab" aria-selected="false" aria-controls="tab-panel-estruturas" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors" tabindex="-1">Estruturas de Dados</button>
-                <button id="tab-btn-complexidade" role="tab" aria-selected="false" aria-controls="tab-panel-complexidade" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors" tabindex="-1">Análise de Complexidade</button>
-            </nav>
-
-            <div id="tab-panel-algoritmos" role="tabpanel" aria-labelledby="tab-btn-algoritmos" aria-hidden="false" class="hero-tab-panel active items-center text-left gap-8">
-                <div class="w-full md:w-1/2">
-                    <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Design de Algoritmos</h1>
-                    <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Aprenda a criar soluções eficientes com paradigmas como Dividir para Conquistar, Programação Dinâmica e Algoritmos Gulosos.</p>
-                    <a href="{{ '/algoritmos.html' | relative_url }}" class="mt-6 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-6 py-3 text-lg transition-transform hover:scale-105 inline-block">Explorar Algoritmos &rarr;</a>
-                </div>
-                <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Visualização de Design de Algoritmos."></div>
-            </div>
-
-            <div id="tab-panel-estruturas" role="tabpanel" aria-labelledby="tab-btn-estruturas" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
-                <div class="w-full md:w-1/2">
-                    <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Estruturas de Dados</h1>
-                    <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Organize e gerencie dados de forma eficaz com Arrays, Listas Ligadas, Pilhas, Filas e Tabelas Hash para aplicações de alta performance.</p>
-                    <a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="mt-6 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-6 py-3 text-lg transition-transform hover:scale-105 inline-block">Explorar Estruturas &rarr;</a>
-                </div>
-                <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Visualização de Estruturas de Dados."></div>
-            </div>
-            
-            <div id="tab-panel-complexidade" role="tabpanel" aria-labelledby="tab-btn-complexidade" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
-                <div class="w-full md:w-1/2">
-                    <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Análise de Complexidade</h1>
-                    <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Entenda a Notação Big O e compare algoritmos como Busca Linear ($O(n)$) e Binária ($O(\log n)$) para escrever um código mais rápido.</p>
-                    <a href="{{ '/articles/algoritmos-de-busca-linear-vs-binaria' | relative_url }}" class="mt-6 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-6 py-3 text-lg transition-transform hover:scale-105 inline-block">Entender Big O &rarr;</a>
-                </div>
-                <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Comparativo de Busca Linear e Binária."></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="py-12 md:py-20">
-        <h3 class="text-center text-lg text-[var(--text-secondary)] mb-8">Com a confiança de profissionais e estudantes de:</h3>
-        <div class="logo-carousel-container">
-            <div class="logo-carousel-track">
-                {% assign logos = "google,asus,apple,meta,bmw,porsche,intel,nvidia,openai,3m,fifa,themoviedatabase,csswizardry,walmart,blender,spotify,amd" | split: "," %}
-                {% for i in (1..2) %}{% for logo_name in logos %}<div class="logo-carousel-item"><img src="{{ '/assets/logos/' | append: logo_name | append: '.svg' | relative_url }}" alt="{{ logo_name | capitalize }} logo"></div>{% endfor %}{% endfor %}
-            </div>
-        </div>
-    </div>
+    <meta name="description" content="Guias aprofundados, artigos e exemplos de código sobre Algoritmos e Estruturas de Dados para construir software de alta performance.">
     
-    <hr class="max-w-7xl mx-auto border-[var(--borders)]">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 
-    <div class="px-4 md:px-8 lg:px-12 pt-16 md:pt-24 text-center">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Pilares do Conhecimento</h2>
-        <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Estruturas e conceitos fundamentais para o desenvolvimento de software robusto e eficiente.</p>
-        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
-                <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">speed</span></div>
-                <h3 class="text-2xl font-semibold">Análise de Complexidade</h3>
-                <p class="mt-2 text-[var(--text-secondary)] flex-grow">Entenda a Notação Big O para prever a escalabilidade e a eficiência do seu código.</p>
-                <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">Até 1000x</p>
-                <p class="text-sm text-gray-500">mais rápido ao otimizar um algoritmo.</p>
-            </div>
-            <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
-                <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">account_tree</span></div>
-                <h3 class="text-2xl font-semibold">Design de Algoritmos</h3>
-                <p class="mt-2 text-[var(--text-secondary)] flex-grow">Aprenda paradigmas como Dividir para Conquistar para resolver problemas complexos de forma elegante.</p>
-                <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">50%</p>
-                <p class="text-sm text-gray-500">menos código em soluções recursivas.</p>
-            </div>
-            <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
-                <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">query_stats</span></div>
-                <h3 class="text-2xl font-semibold">Estruturas de Dados</h3>
-                <p class="mt-2 text-[var(--text-secondary)] flex-grow">Escolha a estrutura certa (Arrays, Listas, Hashes) para otimizar o acesso e a manipulação de dados.</p>
-                <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">O(1)</span>
-                <p class="text-sm text-gray-500">tempo de acesso com a estrutura ideal.</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    
+    <style>
+        /* Estilos para os novos componentes */
+        .hero-tab-panel { display: none; }
+        .hero-tab-panel.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
+        .hero-tab-button.active { color: var(--text-primary); border-bottom-color: var(--primary-color); }
+
+        .accordion-item summary::-webkit-details-marker { display: none; }
+        .accordion-item summary { list-style: none; cursor: pointer; }
+        .accordion-item[open] summary { color: var(--primary-color); }
+        .accordion-item[open] summary .accordion-icon { transform: rotate(45deg); }
+        .accordion-image { transition: opacity 0.3s ease-in-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Estilos do Carrossel de Logos */
+        .logo-carousel-container { overflow: hidden; width: 100%; -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); }
+        .logo-carousel-track { display: flex; width: max-content; animation: scroll-left 60s linear infinite; }
+        .logo-carousel-track:hover { animation-play-state: paused; }
+        .logo-carousel-item { flex-shrink: 0; width: auto; display: flex; justify-content: center; align-items: center; padding: 0 1.5rem; }
+        .logo-carousel-item img { height: 48px; width: auto; filter: brightness(0) invert(1) opacity(0.6); transition: all 0.2s ease-in-out; }
+        .logo-carousel-item img:hover { filter: brightness(0) invert(1) opacity(1); }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, #0d1117, transparent); z-index: 2; }
+        body { background-color: var(--background-primary); }
+    </style>
+</head>
+<body class="text-[var(--text-primary)]">
+
+    <header class="p-4 md:px-8 lg:px-12 flex justify-between items-center z-30 relative">
+        <div class="flex items-center space-x-4">
+            <svg height="32" aria-hidden="true" viewBox="0 0 32 32" version="1.1" width="32" class="fill-current text-[var(--text-primary)]"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4zM0 16C0 7.16 7.16 0 16 0s16 7.16 16 16-7.16 16-16 16S0 24.84 0 16z"/></svg>
+            <nav class="hidden md:flex items-center space-x-4 text-[var(--text-secondary)]"><a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Documentação</a><a href="{{ '/status.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Status</a><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="hover:text-[var(--primary-color)]">Open Source</a></nav>
+        </div>
+        <div class="flex items-center space-x-4"><form action="{{ '/search.html' | relative_url }}" method="get" class="hidden lg:block"><input type="search" name="q" placeholder="Pesquisar na Pitchutcha" class="bg-[var(--background-primary)] border border-[var(--borders)] rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"></form><button id="menu-btn" class="md:hidden" aria-controls="mobile-menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg></button></div>
+    </header>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-[#0d1117] absolute top-16 left-0 w-full z-40"><a href="{{ '/docs.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Documentação</a><a href="{{ '/status.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Status</a><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="block px-8 py-3 hover:bg-gray-800">Open Source</a></div>
+
+    <main>
+        <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
+            <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
+
+            <div class="relative z-10 w-full max-w-5xl mx-auto">
+                <nav class="flex justify-center border-b border-[var(--borders)] mb-8" role="tablist" aria-label="Tópicos Principais">
+                    <button id="tab-btn-algoritmos" role="tab" aria-selected="true" aria-controls="tab-panel-algoritmos" class="hero-tab-button active text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors">Algoritmos</button>
+                    <button id="tab-btn-estruturas" role="tab" aria-selected="false" aria-controls="tab-panel-estruturas" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors" tabindex="-1">Estruturas de Dados</button>
+                    <button id="tab-btn-complexidade" role="tab" aria-selected="false" aria-controls="tab-panel-complexidade" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors" tabindex="-1">Análise de Complexidade</button>
+                </nav>
+
+                <div id="tab-panel-algoritmos" role="tabpanel" aria-labelledby="tab-btn-algoritmos" aria-hidden="false" class="hero-tab-panel active items-center text-left gap-8">
+                    <div class="w-full md:w-1/2">
+                        <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Design de Algoritmos</h1>
+                        <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Aprenda a criar soluções eficientes com paradigmas como Dividir para Conquistar, Programação Dinâmica e Algoritmos Gulosos.</p>
+                        <a href="{{ '/algoritmos.html' | relative_url }}" class="mt-6 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-6 py-3 text-lg transition-transform hover:scale-105 inline-block">Explorar Algoritmos &rarr;</a>
+                    </div>
+                    <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Visualização de Design de Algoritmos."></div>
+                </div>
+
+                <div id="tab-panel-estruturas" role="tabpanel" aria-labelledby="tab-btn-estruturas" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
+                    <div class="w-full md:w-1/2">
+                        <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Estruturas de Dados</h1>
+                        <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Organize e gerencie dados de forma eficaz com Arrays, Listas Ligadas, Pilhas, Filas e Tabelas Hash para aplicações de alta performance.</p>
+                        <a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="mt-6 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-6 py-3 text-lg transition-transform hover:scale-105 inline-block">Explorar Estruturas &rarr;</a>
+                    </div>
+                    <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Visualização de Estruturas de Dados."></div>
+                </div>
+                
+                <div id="tab-panel-complexidade" role="tabpanel" aria-labelledby="tab-btn-complexidade" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
+                    <div class="w-full md:w-1/2">
+                        <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Análise de Complexidade</h1>
+                        <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Entenda a Notação Big O e compare algoritmos como Busca Linear ($O(n)$) e Binária ($O(\log n)$) para escrever um código mais rápido.</p>
+                        <a href="{{ '/articles/algoritmos-de-busca-linear-vs-binaria' | relative_url }}" class="mt-6 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-6 py-3 text-lg transition-transform hover:scale-105 inline-block">Entender Big O &rarr;</a>
+                    </div>
+                    <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Comparativo de Busca Linear e Binária."></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Paradigmas Essenciais</h2>
-        <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto">Explore diferentes abordagens para resolver problemas e veja como elas funcionam na prática com exemplos visuais.</p>
-        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div class="accordion-container space-y-4">
-                <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" open data-image="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}">
-                    <summary class="flex justify-between items-center text-xl font-semibold">Dividir para Conquistar<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
-                    <p class="mt-4 text-[var(--text-secondary)]">Quebre um problema grande em subproblemas menores, resolva-os independentemente e combine as soluções. O Merge Sort é um exemplo clássico desta técnica poderosa.</p>
-                </details>
-                <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" data-image="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}">
-                    <summary class="flex justify-between items-center text-xl font-semibold">Programação Dinâmica<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
-                    <p class="mt-4 text-[var(--text-secondary)]">Evite recálculos armazenando os resultados de subproblemas (memoização). Ideal para problemas de otimização, como o cálculo da sequência de Fibonacci.</p>
-                </details>
-                <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" data-image="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}">
-                    <summary class="flex justify-between items-center text-xl font-semibold">Algoritmos Gulosos (Greedy)<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
-                    <p class="mt-4 text-[var(--text-secondary)]">Faça a escolha localmente ótima em cada etapa, na esperança de encontrar uma solução globalmente ótima. Eficiente para problemas como o da seleção de atividades.</p>
-                </details>
-            </div>
-            <div class="accordion-image-container h-80 md:h-96">
-                <img id="accordion-image-display" src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="accordion-image rounded-lg w-full h-full object-cover shadow-2xl" alt="Visualização do paradigma de algoritmo selecionado.">
+        <div class="py-12 md:py-20">
+            <h3 class="text-center text-lg text-[var(--text-secondary)] mb-8">Com a confiança de profissionais e estudantes de:</h3>
+            <div class="logo-carousel-container">
+                <div class="logo-carousel-track">
+                    {% assign logos = "google,asus,apple,meta,bmw,porsche,intel,nvidia,openai,3m,fifa,themoviedatabase,csswizardry,walmart,blender,spotify,amd" | split: "," %}
+                    {% for i in (1..2) %}{% for logo_name in logos %}<div class="logo-carousel-item"><img src="{{ '/assets/logos/' | append: logo_name | append: '.svg' | relative_url }}" alt="{{ logo_name | capitalize }} logo"></div>{% endfor %}{% endfor %}
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
-        <figure class="max-w-4xl mx-auto text-center">
-            <blockquote class="text-2xl md:text-3xl font-medium text-white"><p>“O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online.”</p></blockquote>
-            <figcaption class="mt-6"><div class="text-lg font-semibold text-white">Engenheiro de Software Sênior</div><div class="text-base text-[var(--text-secondary)]">Google</div></figcaption>
-        </figure>
-    </div>
-
-    <div class="my-20 md:my-32">
+        
         <hr class="max-w-7xl mx-auto border-[var(--borders)]">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
-            <div><p class="text-6xl font-bold text-[var(--primary-color)]">7x</p><p class="mt-2 text-lg text-[var(--text-secondary)]">mais rápido na correção de vulnerabilidades em comparação com a média da indústria.</p></div>
-            <div><p class="text-6xl font-bold text-[var(--primary-color)]">55%</p><p class="mt-2 text-lg text-[var(--text-secondary)]">é o ganho de produtividade de desenvolvedores que utilizam ferramentas de IA.</p></div>
-        </div>
-        <hr class="max-w-7xl mx-auto border-[var(--borders)]">
-    </div>
 
-    <div class="text-center px-4 flex flex-col items-center mb-20 md:mb-32">
-        <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Construído para a Comunidade</h2>
-        <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.</p>
-        <div class="mt-10"><a href="{{ '/docs.html' | relative_url }}" class="bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">Explorar a Documentação</a></div>
-    </div>
-</main>
+        <div class="px-4 md:px-8 lg:px-12 pt-16 md:pt-24 text-center">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Pilares do Conhecimento</h2>
+            <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Estruturas e conceitos fundamentais para o desenvolvimento de software robusto e eficiente.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
+                    <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">speed</span></div>
+                    <h3 class="text-2xl font-semibold">Análise de Complexidade</h3>
+                    <p class="mt-2 text-[var(--text-secondary)] flex-grow">Entenda a Notação Big O para prever a escalabilidade e a eficiência do seu código.</p>
+                    <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">Até 1000x</p>
+                    <p class="text-sm text-gray-500">mais rápido ao otimizar um algoritmo.</p>
+                </div>
+                <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
+                    <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">account_tree</span></div>
+                    <h3 class="text-2xl font-semibold">Design de Algoritmos</h3>
+                    <p class="mt-2 text-[var(--text-secondary)] flex-grow">Aprenda paradigmas como Dividir para Conquistar para resolver problemas complexos de forma elegante.</p>
+                    <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">50%</p>
+                    <p class="text-sm text-gray-500">menos código em soluções recursivas.</p>
+                </div>
+                <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
+                    <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">query_stats</span></div>
+                    <h3 class="text-2xl font-semibold">Estruturas de Dados</h3>
+                    <p class="mt-2 text-[var(--text-secondary)] flex-grow">Escolha a estrutura certa (Arrays, Listas, Hashes) para otimizar o acesso e a manipulação de dados.</p>
+                    <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">O(1)</span>
+                    <p class="text-sm text-gray-500">tempo de acesso com a estrutura ideal.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Paradigmas Essenciais</h2>
+            <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto">Explore diferentes abordagens para resolver problemas e veja como elas funcionam na prática com exemplos visuais.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="accordion-container space-y-4">
+                    <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" open data-image="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}">
+                        <summary class="flex justify-between items-center text-xl font-semibold">Dividir para Conquistar<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
+                        <p class="mt-4 text-[var(--text-secondary)]">Quebre um problema grande em subproblemas menores, resolva-os independentemente e combine as soluções. O Merge Sort é um exemplo clássico desta técnica poderosa.</p>
+                    </details>
+                    <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" data-image="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}">
+                        <summary class="flex justify-between items-center text-xl font-semibold">Programação Dinâmica<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
+                        <p class="mt-4 text-[var(--text-secondary)]">Evite recálculos armazenando os resultados de subproblemas (memoização). Ideal para problemas de otimização, como o cálculo da sequência de Fibonacci.</p>
+                    </details>
+                    <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" data-image="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}">
+                        <summary class="flex justify-between items-center text-xl font-semibold">Algoritmos Gulosos (Greedy)<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
+                        <p class="mt-4 text-[var(--text-secondary)]">Faça a escolha localmente ótima em cada etapa, na esperança de encontrar uma solução globalmente ótima. Eficiente para problemas como o da seleção de atividades.</p>
+                    </details>
+                </div>
+                <div class="accordion-image-container h-80 md:h-96">
+                    <img id="accordion-image-display" src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="accordion-image rounded-lg w-full h-full object-cover shadow-2xl" alt="Visualização do paradigma de algoritmo selecionado.">
+                </div>
+            </div>
+        </div>
+
+        <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
+            <figure class="max-w-4xl mx-auto text-center">
+                <blockquote class="text-2xl md:text-3xl font-medium text-white"><p>“O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online.”</p></blockquote>
+                <figcaption class="mt-6"><div class="text-lg font-semibold text-white">Engenheiro de Software Sênior</div><div class="text-base text-[var(--text-secondary)]">Google</div></figcaption>
+            </figure>
+        </div>
+
+        <div class="my-20 md:my-32">
+            <hr class="max-w-7xl mx-auto border-[var(--borders)]">
+            <div class="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+                <div><p class="text-6xl font-bold text-[var(--primary-color)]">7x</p><p class="mt-2 text-lg text-[var(--text-secondary)]">mais rápido na correção de vulnerabilidades em comparação com a média da indústria.</p></div>
+                <div><p class="text-6xl font-bold text-[var(--primary-color)]">55%</p><p class="mt-2 text-lg text-[var(--text-secondary)]">é o ganho de produtividade de desenvolvedores que utilizam ferramentas de IA.</p></div>
+            </div>
+            <hr class="max-w-7xl mx-auto border-[var(--borders)]">
+        </div>
+
+        <div class="text-center px-4 flex flex-col items-center mb-20 md:mb-32">
+            <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Construído para a Comunidade</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.</p>
+            <div class="mt-10"><a href="{{ '/docs.html' | relative_url }}" class="bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">Explorar a Documentação</a></div>
+        </div>
+    </main>
+    
+    {% include footer.html %}
+
+    <script src="{{ '/js/script.js' | relative_url }}" defer></script>
+    <script src="{{ '/js/dev-panel.js' | relative_url }}" defer></script>
+    <script type="module" src="{{ '/js/globe-animation.js' | relative_url }}" defer></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lógica para o Hero Section com Abas
+            const tabs = document.querySelectorAll('[role="tab"]');
+            
+            function activateTab(tab) {
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                    t.setAttribute('tabindex', '-1');
+                    const panel = document.getElementById(t.getAttribute('aria-controls'));
+                    if (panel) {
+                        panel.classList.remove('active');
+                        panel.setAttribute('aria-hidden', 'true');
+                    }
+                });
+
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                tab.setAttribute('tabindex', '0');
+                const activePanel = document.getElementById(tab.getAttribute('aria-controls'));
+                if (activePanel) {
+                    activePanel.classList.add('active');
+                    activePanel.setAttribute('aria-hidden', 'false');
+                }
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => { 
+                    e.preventDefault(); 
+                    activateTab(e.currentTarget); 
+                });
+            });
+
+            // Lógica para o Acordeão Interativo
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            const accordionImage = document.getElementById('accordion-image-display');
+            accordionItems.forEach(item => {
+                item.addEventListener('toggle', () => {
+                    if (item.open) {
+                        accordionItems.forEach(otherItem => { 
+                            if (otherItem !== item) { otherItem.removeAttribute('open'); } 
+                        });
+                        const newImageSrc = item.getAttribute('data-image');
+                        if (newImageSrc && accordionImage) {
+                            accordionImage.style.opacity = 0;
+                            setTimeout(() => { 
+                                accordionImage.src = newImageSrc; 
+                                accordionImage.style.opacity = 1; 
+                            }, 300);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    
+</body>
+</html>
