@@ -12,166 +12,34 @@
     <meta name="description" content="Acompanhe em tempo real o status e a performance dos serviços do Pitchutcha.">
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
-
-    <style>
-      /*=============== FONTES PROXIMA NOVA (DO ARQUIVO ORIGINAL) ===============*/
-      @font-face {
-        font-family: 'proxima-nova';
-        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-366d17769d864aa72f27defaddf591e460a1de4984bb24dacea57a9fc1d14878.eot?host=discordstatus.com');
-        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-366d17769d864aa72f27defaddf591e460a1de4984bb24dacea57a9fc1d14878.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
-             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-2ee4c449a9ed716f1d88207bd1094e21b69e2818b5cd36b28ad809dc1924ec54.woff?host=discordstatus.com') format('woff');
-        font-weight:400;
-        font-style:normal;
-      }
-      @font-face {
-        font-family: 'proxima-nova';
-        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-09566917307251d22021a3f91fc646f3e45f8d095209bcd2cded8a1979f06e54.eot?host=discordstatus.com');
-        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-09566917307251d22021a3f91fc646f3e45f8d095209bcd2cded8a1979f06e54.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
-             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-86724fb2152613d735ba47c3f47a9ad2424b898bea4bece213dacee40344f966.woff?host=discordstatus.com') format('woff');
-        font-weight:500;
-        font-style:normal;
-      }
-
-      /*=============== ESTILOS DOS PAINÉIS (RECRIAÇÃO FIEL) ===============*/
-      .discord-status-panel {
-        font-family: 'proxima-nova', sans-serif;
-        color: #2E3338;
-      }
-      .discord-status-panel .components-uptime-link {
-        color: #72767d;
-        font-size: 14px;
-        margin-bottom: 20px;
-        display: block;
-      }
-      .discord-status-panel .components-container {
-        border: 1px solid #E0E0E0;
-        border-radius: 3px;
-        overflow: hidden;
-      }
-      .discord-status-panel .component-container {
-        background-color: #FFFFFF;
-        border-bottom: 1px solid #E0E0E0;
-      }
-      .discord-status-panel .component-container:last-child {
-        border-bottom: none;
-      }
-      .discord-status-panel .component-inner-container {
-        padding: 18px 20px;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      .discord-status-panel .component-inner-container > .name,
-      .discord-status-panel .component-inner-container > .tooltip-base {
-        font-weight: 500;
-        color: rgba(46,51,56,.8);
-      }
-      .discord-status-panel .component-inner-container > .name {
-         margin-right: 8px;
-      }
-      .discord-status-panel .component-inner-container > .name .group-parent-indicator {
-        cursor: pointer;
-        font-size: 14px;
-        color: #72767D;
-        margin-right: 8px;
-      }
-      .discord-status-panel .component-inner-container > .component-status {
-        margin-left: auto;
-        padding-left: 16px;
-        font-weight: 500;
-      }
-      .discord-status-panel .component-inner-container > .icon-indicator {
-        padding-left: 16px;
-        font-size: 18px;
-      }
-      .discord-status-panel .shared-partial.uptime-90-days-wrapper {
-        display: none;
-      }
-      .discord-status-panel .availability-time-line-graphic {
-          width: 100%;
-          height: 34px;
-      }
-
-      @media (min-width: 768px) {
-        .discord-status-panel .component-inner-container {
-          display: grid;
-          grid-template-areas: "name status icon" "uptime uptime uptime";
-          grid-template-columns: 1fr auto auto;
-          gap: 8px 16px;
-        }
-        .discord-status-panel .component-inner-container.showcased {
-          grid-template-areas: "name uptime status icon";
-          grid-template-columns: 250px 1fr auto auto;
-        }
-        .discord-status-panel .component-inner-container > .name { grid-area: name; margin-right: 0; }
-        .discord-status-panel .component-inner-container > .tooltip-base { display: none; }
-        .discord-status-panel .component-inner-container > .component-status { grid-area: status; padding-left: 0; }
-        .discord-status-panel .component-inner-container > .icon-indicator { grid-area: icon; padding-left: 0; }
-        .discord-status-panel .shared-partial.uptime-90-days-wrapper {
-          grid-area: uptime;
-          display: block;
-          min-width: 0;
-        }
-      }
-
-      .discord-status-panel .uptime-90-days-wrapper .legend { display: none; }
-      @media (min-width: 768px) {
-        .discord-status-panel .uptime-90-days-wrapper .legend {
-            display: flex; justify-content: space-between; font-size: 12px;
-            margin-top: 5px; color: #72767d;
-        }
-      }
-      .discord-status-panel .legend .spacer {
-        flex: 1 1 0%; height: 1px; background: #e0e0e0; margin: auto 8px;
-      }
-      
-      .discord-status-panel .child-components-container {
-        display: none; background-color: #fff;
-      }
-      .discord-status-panel .component-container.open > .child-components-container { display: block; }
-      .discord-status-panel .child-components-container .component-inner-container {
-        padding-left: 48px; border-top: 1px solid #f0f0f0;
-      }
-      
-      .discord-status-panel .tooltip-base {
-          position: relative; display: inline-block; cursor: help; color: #aaa;
-          border: 1px solid #aaa; border-radius: 50%; width: 16px; height: 16px;
-          line-height: 14px; text-align: center; font-size: 12px; font-weight: 400;
-      }
-      .discord-status-panel .tooltip-base .tooltip-text {
-          visibility: hidden; width: 250px; background-color: #2E3338; color: #fff;
-          text-align: center; border-radius: 3px; padding: 8px; position: absolute;
-          z-index: 10; bottom: 150%; left: 50%; margin-left: -125px; opacity: 0;
-          transition: opacity 0.2s; font-size: 13px; font-weight: 400;
-      }
-      .discord-status-panel .tooltip-base .tooltip-text::after {
-          content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
-          border-width: 5px; border-style: solid; border-color: #2E3338 transparent transparent transparent;
-      }
-      .discord-status-panel .tooltip-base:hover .tooltip-text { visibility: visible; opacity: 1; }
-
-      .discord-status-panel .component-statuses-legend {
-         display: flex; flex-wrap: wrap; justify-content: center;
-         gap: 15px 25px; margin-top: 30px; font-size: 14px; color: #72767D;
-      }
-      .discord-status-panel .legend-item { display: flex; align-items: center; gap: 8px; }
-      
-      /* CORES DE STATUS */
-      .discord-status-panel .status-red, .discord-status-panel .icon-indicator.status-red { color:#ED4245; }
-      .discord-status-panel .status-orange, .discord-status-panel .icon-indicator.status-orange { color:#F26522; }
-      .discord-status-panel .status-yellow, .discord-status-panel .icon-indicator.status-yellow { color:#CB8615; }
-      .discord-status-panel .status-blue, .discord-status-panel .icon-indicator.status-blue { color:#3498DB; }
-      .discord-status-panel .status-green, .discord-status-panel .icon-indicator.status-green { color:#3BA55C; }
-
-    </style>
 </head>
 <body class="bg-[var(--background-primary)] text-[var(--text-primary)]" style='font-family: Inter, "Noto Sans", sans-serif;'>
     <div class="flex min-h-screen flex-col">
-        {% include header.html %}
+        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+                <div class="flex items-center gap-8">
+                    <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
+                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
+                        <h1 class="text-xl font-bold">Pitchutcha</h1>
+                    </a>
+                    <nav class="hidden items-center gap-6 md:flex">
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a>
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a>
+                        <a class="text-sm font-medium text-[var(--primary-color)]" href="{{ '/status.html' | relative_url }}">Status</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <form class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
+                        <input class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/>
+                    </form>
+                </div>
+            </div>
+        </header>
         <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8">
             <div class="mx-auto max-w-7xl">
                 <div class="mb-8">
@@ -195,8 +63,11 @@
                 </div>
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Status Detalhado dos Componentes</h2>
-                    <div id="discord-status-panel-container" class="discord-status-panel">
+                    <div id="discord-status-panel-container">
+                        <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
+                            <p class="text-[var(--text-secondary)]">Carregando status dos componentes...</p>
                         </div>
+                    </div>
                 </div>
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Tempo de Resposta das Páginas</h2>
@@ -269,162 +140,5 @@
     </div>
 
     {% include scripts.html %}
-
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const panelContainer = document.getElementById("discord-status-panel-container");
-        const overallStatusIndicator = document.getElementById("overall-status-indicator");
-        const overallStatusText = document.getElementById("overall-status-text");
-
-        if (!panelContainer || !overallStatusIndicator || !overallStatusText) return;
-
-        const statuses = {
-            operational: { text: "Operational", colorClass: "status-green", icon: "fa-check" },
-            degraded: { text: "Degraded Performance", colorClass: "status-yellow", icon: "fa-minus-square" },
-            partial_outage: { text: "Partial Outage", colorClass: "status-orange", icon: "fa-exclamation-triangle" },
-            major_outage: { text: "Major Outage", colorClass: "status-red", icon: "fa-times" },
-        };
-
-        const components = [
-            { id: 'api', name: 'API', description: 'Responsável pelo envio e recebimento de dados.', showUptime: true, children: [] },
-            { id: 'media-proxy', name: 'Media Proxy', description: 'Serviço para processamento de mídias.', showUptime: true, children: [] },
-            { id: 'voice', name: 'Voice', isGroup: true, children: [
-                { id: 'voice-br', name: 'Brazil', description: 'Servidores de voz no Brasil.' },
-                { id: 'voice-us-east', name: 'US East', description: 'Servidores de voz na Costa Leste dos EUA.' },
-                { id: 'voice-eu', name: 'Europe', description: 'Servidores de voz na Europa.' }
-            ]},
-            { id: 'client', name: 'Client', isGroup: true, children: [
-                { id: 'client-desktop', name: 'Desktop', description: 'Aplicação para Desktop (Windows, Mac, Linux).' },
-                { id: 'client-web', name: 'Web App', description: 'Aplicação Web (no navegador).' },
-                { id: 'client-mobile', name: 'Mobile', description: 'Aplicativos para iOS e Android.' }
-            ]}
-        ];
-
-        function getRandomStatus(isCritical = false) {
-            const rand = Math.random();
-            if (isCritical && rand > 0.95) return 'major_outage';
-            if (rand > 0.9) return 'partial_outage';
-            if (rand > 0.8) return 'degraded';
-            return 'operational';
-        }
-
-        function generateUptimeSVG() {
-            let svg = `<svg class="availability-time-line-graphic" preserveAspectRatio="none" viewBox="0 0 448 34">`;
-            const colors = ['#3ba55c', '#d67d19', '#b08c22', '#ed4245'];
-            for (let i = 0; i < 90; i++) {
-                const rand = Math.random();
-                let color = colors[0];
-                if (rand > 0.98) color = colors[3];
-                else if (rand > 0.95) color = colors[1];
-                else if (rand > 0.92) color = colors[2];
-                svg += `<rect height="34" width="3" x="${i * 5}" y="0" fill="${color}"></rect>`;
-            }
-            svg += `</svg>`;
-            return svg;
-        }
-
-        function render() {
-            let overallSystemStatus = 'operational';
-            
-            const mainPanelHTML = components.map(component => {
-                if (component.isGroup) {
-                    let groupStatus = 'operational';
-                    const childrenHTML = component.children.map(child => {
-                        child.status = getRandomStatus();
-                        if (statuses[child.status].colorClass === 'status-red') groupStatus = 'major_outage';
-                        else if (statuses[child.status].colorClass === 'status-orange' && groupStatus !== 'major_outage') groupStatus = 'partial_outage';
-                        else if (statuses[child.status].colorClass === 'status-yellow' && !['major_outage', 'partial_outage'].includes(groupStatus)) groupStatus = 'degraded';
-                        
-                        const statusInfo = statuses[child.status];
-                        return `
-                            <div class="component-inner-container ${statusInfo.colorClass}">
-                                <span class="name">${child.name}<span class="tooltip-base">?<span class="tooltip-text">${child.description}</span></span></span>
-                                <span class="component-status">${statusInfo.text}</span>
-                                <span class="tool icon-indicator fa ${statusInfo.icon} ${statusInfo.colorClass}"></span>
-                            </div>
-                        `;
-                    }).join('');
-                    
-                    if (groupStatus === 'major_outage') overallSystemStatus = 'outage';
-                    else if (groupStatus === 'partial_outage' && overallSystemStatus !== 'outage') overallSystemStatus = 'outage';
-                    else if (groupStatus === 'degraded' && overallSystemStatus === 'operational') overallSystemStatus = 'degraded';
-                    
-                    const groupStatusInfo = statuses[groupStatus] || statuses.operational;
-
-                    return `
-                        <div class="component-container border-color is-group">
-                            <div class="component-inner-container ${groupStatusInfo.colorClass}" data-js-hook="component-group-opener">
-                                <span class="name"><span class="fa group-parent-indicator fa-plus-square-o" role="button"></span> ${component.name}</span>
-                                <span class="component-status">${groupStatusInfo.text}</span>
-                                <span class="tool icon-indicator fa ${groupStatusInfo.icon} ${groupStatusInfo.colorClass}"></span>
-                            </div>
-                            <div class="child-components-container">${childrenHTML}</div>
-                        </div>
-                    `;
-                } else {
-                    component.status = getRandomStatus(true);
-                    if (component.status === 'major_outage') overallSystemStatus = 'outage';
-                    else if (component.status === 'partial_outage' && overallSystemStatus !== 'outage') overallSystemStatus = 'outage';
-                    else if (component.status === 'degraded' && overallSystemStatus === 'operational') overallSystemStatus = 'degraded';
-
-                    const statusInfo = statuses[component.status];
-                    return `
-                        <div class="component-container border-color">
-                            <div class="component-inner-container ${statusInfo.colorClass} showcased">
-                                <span class="name">${component.name}<span class="tooltip-base">?<span class="tooltip-text">${component.description}</span></span></span>
-                                <span class="component-status">${statusInfo.text}</span>
-                                <span class="tool icon-indicator fa ${statusInfo.icon} ${statusInfo.colorClass}"></span>
-                                <div class="shared-partial uptime-90-days-wrapper">
-                                    ${generateUptimeSVG()}
-                                    <div class="legend">
-                                        <div class="legend-item light">90 days ago</div><div class="spacer"></div>
-                                        <div class="legend-item">100 % uptime</div><div class="spacer"></div>
-                                        <div class="legend-item light">Today</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-            }).join('');
-            
-            const legendHTML = `
-                <div class="component-statuses-legend">
-                    <div class="legend-item"><span class="icon-indicator status-green fa fa-check"></span> Operational</div>
-                    <div class="legend-item"><span class="icon-indicator status-yellow fa fa-minus-square"></span> Degraded Performance</div>
-                    <div class="legend-item"><span class="icon-indicator status-orange fa fa-exclamation-triangle"></span> Partial Outage</div>
-                    <div class="legend-item"><span class="icon-indicator status-red fa fa-times"></span> Major Outage</div>
-                </div>
-            `;
-
-            panelContainer.innerHTML = `<div class="components-container">${mainPanelHTML}</div>${legendHTML}`;
-
-            // Atualiza Saúde Geral
-            const overallStatusMap = {
-                operational: { pulse: "ping-green", dot: "bg-green-500", text: "Todos os sistemas operacionais" },
-                degraded: { pulse: "ping-yellow", dot: "bg-yellow-500", text: "Performance degradada" },
-                outage: { pulse: "ping-red", dot: "bg-red-500", text: "Falha crítica no sistema" }
-            };
-            const currentOverallStatus = overallStatusMap[overallSystemStatus];
-            overallStatusIndicator.innerHTML = `<span class="ping-pulse ${currentOverallStatus.pulse}"></span><span class="relative inline-flex rounded-full h-3 w-3 ${currentOverallStatus.dot}"></span>`;
-            overallStatusText.textContent = currentOverallStatus.text;
-
-            // Adiciona funcionalidade de expandir/recolher
-            const groupOpeners = document.querySelectorAll('[data-js-hook="component-group-opener"]');
-            groupOpeners.forEach(opener => {
-                opener.addEventListener('click', () => {
-                    const parentContainer = opener.closest('.component-container');
-                    parentContainer.classList.toggle('open');
-                    const indicator = opener.querySelector('.group-parent-indicator');
-                    indicator.classList.toggle('fa-plus-square-o');
-                    indicator.classList.toggle('fa-minus-square-o');
-                });
-            });
-        }
-
-        render();
-    });
-    </script>
-
 </body>
 </html>
