@@ -1,30 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // --- ELEMENTOS DO DOM ---
     const chartContainer = document.getElementById("uptime-chart-container");
     const tooltip = document.getElementById("uptime-tooltip");
     const legendContainer = document.getElementById("status-legend");
     const chartStartDate = document.getElementById("chart-start-date");
     const chartEndDate = document.getElementById("chart-end-date");
+    // Seleciona o título e subtítulo para atualização dinâmica
     const uptimeTitle = document.querySelector("#uptime-chart-container")?.parentElement?.querySelector("h2");
     const uptimeSubtitle = document.querySelector("#uptime-chart-container")?.parentElement?.querySelector("p");
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
 
     if (!chartContainer || !tooltip || !legendContainer) return;
 
-    const totalBars = 24; // MUDANÇA: Agora são 24 horas
+    const totalBars = 24; // Foco em 24 horas
     const statusTypes = {
         OPERATIONAL: { label: "Operacional", colorClass: "status-operational" },
         DEGRADED: { label: "Performance Degradada", colorClass: "status-degraded" },
         OUTAGE: { label: "Indisponibilidade", colorClass: "status-outage" },
         NO_DATA: { label: "Sem Dados", colorClass: "status-no-data" },
     };
-
-    /**
-     * Gera dados simulados para as últimas 24 horas como fallback.
-     */
-    function generateUptimeData() {
-        // ... (código de simulação pode ser mantido como fallback, mas o foco é nos dados reais)
-        return []; // Retorna vazio para forçar a exibição de "Sem Dados" se a API falhar
-    }
 
     /**
      * Processa os dados horários reais da API do UptimeRobot.
@@ -37,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (responseTime === 0) {
                 statusKey = "OUTAGE";
                 details = "O monitor esteve indisponível (0ms) nesta hora.";
-            } else if (responseTime > 1500) {
+            } else if (responseTime > 1500) { // Limite de 1.5s
                 statusKey = "DEGRADED";
                 details = `Performance degradada. Resposta: ${responseTime}ms.`;
             } else {
@@ -45,47 +39,78 @@ document.addEventListener("DOMContentLoaded", () => {
                 details = `Tempo médio de resposta: ${responseTime}ms.`;
             }
             return { datetime: new Date(item.datetime * 1000), status: statusKey, details: details };
-        }).reverse();
+        }).reverse(); // Inverte para ter o mais antigo primeiro
 
-        // Preenche com "Sem Dados" se o histórico for menor que 24 horas
-        const hoursMissing = totalBars - processedData.length;
-        if (hoursMissing > 0) {
-            const firstDate = processedData.length > 0 ? processedData[0].datetime : new Date();
-            const padding = Array.from({ length: hoursMissing }).map((_, i) => {
+        return padDataWithNoData(processedData);
+    }
+    
+    /**
+     * Preenche os dados com "Sem Dados" se o histórico for menor que o total de barras.
+     */
+    function padDataWithNoData(data) {
+        const barsMissing = totalBars - data.length;
+        if (barsMissing > 0) {
+            const firstDate = data.length > 0 ? data[0].datetime : new Date();
+            const padding = Array.from({ length: barsMissing }).map((_, i) => {
                 const date = new Date(firstDate);
-                date.setHours(firstDate.getHours() - (hoursMissing - i));
+                date.setHours(firstDate.getHours() - (barsMissing - i));
                 return { datetime: date, status: "NO_DATA", details: "Não há dados de monitoramento para esta hora." };
             });
-            processedData = [...padding, ...processedData];
+            return [...padding, ...data];
         }
-        return processedData;
+        return data;
     }
 
-    function populateLegend() { /* Código sem alteração */ }
-    
-    function formatTime(date) {
-        return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    }
-    
-    function formatDateTime(date) {
-        return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    /**
+     * Popula a legenda de status.
+     */
+    function populateLegend() {
+        legendContainer.innerHTML = Object.values(statusTypes).map(status => `
+            <div class="legend-item">
+                <div class="legend-color ${status.colorClass}"></div>
+                <span>${status.label}</span>
+            </div>
+        `).join('');
     }
 
+    /**
+     * Mostra o tooltip interativo.
+     */
     function showTooltip(event, hourData) {
         const statusInfo = statusTypes[hourData.status];
         
-        document.getElementById("tooltip-date").textContent = hourData.datetime.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit' }) + 'h';
+        document.getElementById("tooltip-date").textContent = hourData.datetime.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
         document.getElementById("tooltip-status-indicator").className = `w-2 h-2 rounded-full mr-2 ${statusInfo.colorClass}`;
         document.getElementById("tooltip-status-text").textContent = statusInfo.label;
         document.getElementById("tooltip-details").textContent = hourData.details;
 
         tooltip.classList.remove("hidden");
-        // ... (resto da lógica de posicionamento do tooltip)
+        tooltip.classList.add("opacity-100");
+
+        const rect = chartContainer.getBoundingClientRect();
+        let left = event.clientX - rect.left - (tooltip.offsetWidth / 2);
+        let top = event.clientY - rect.top - tooltip.offsetHeight - 10;
+
+        if (left < 0) left = 5;
+        if (left + tooltip.offsetWidth > rect.width) left = rect.width - tooltip.offsetWidth - 5;
+        if (top < 0) top = event.clientY - rect.top + 15;
+
+        tooltip.style.transform = `translate(${left}px, ${top}px)`;
     }
 
-    function hideTooltip() { /* Código sem alteração */ }
+    /**
+     * Esconde o tooltip.
+     */
+    function hideTooltip() {
+        tooltip.classList.add("hidden");
+        tooltip.classList.remove("opacity-100");
+    }
     
+    /**
+     * Constrói e renderiza as barras do gráfico.
+     */
     function buildChart(data) {
+        // ATUALIZA OS TEXTOS DA PÁGINA
         if (uptimeTitle) uptimeTitle.textContent = "Histórico de Uptime (Últimas 24 Horas)";
         if (uptimeSubtitle) uptimeSubtitle.textContent = "Disponibilidade do serviço a cada hora.";
         
@@ -105,7 +130,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- INICIALIZAÇÃO ATUALIZADA ---
+    /**
+     * Função principal que inicializa o gráfico.
+     */
     async function initializeChart() {
         populateLegend();
         try {
@@ -119,34 +146,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const realData = processRealData(responseTimes);
                 buildChart(realData);
             } else {
-                buildChart(padDataWithNoData([])); // Mostra "Sem Dados" se não houver histórico
+                // Se não houver dados, exibe um gráfico de "Sem Dados"
+                buildChart(padDataWithNoData([])); 
             }
         } catch (error) {
             console.error("Erro ao carregar dados de uptime:", error);
+            // Em caso de erro, também exibe "Sem Dados"
             buildChart(padDataWithNoData([]));
         }
-    }
-    
-    // As funções inalteradas precisam ser mantidas no arquivo real. Para ser breve, estou omitindo-as aqui.
-    // O arquivo completo e funcional é o seguinte:
-
-    populateLegend();
-    function hideTooltip() { tooltip.classList.add("hidden"); tooltip.classList.remove("opacity-100"); }
-    function showTooltip(event, hourData) {
-        const statusInfo = statusTypes[hourData.status];
-        document.getElementById("tooltip-date").textContent = hourData.datetime.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
-        document.getElementById("tooltip-status-indicator").className = `w-2 h-2 rounded-full mr-2 ${statusInfo.colorClass}`;
-        document.getElementById("tooltip-status-text").textContent = statusInfo.label;
-        document.getElementById("tooltip-details").textContent = hourData.details;
-        tooltip.classList.remove("hidden");
-        tooltip.classList.add("opacity-100");
-        const rect = chartContainer.getBoundingClientRect();
-        let left = event.clientX - rect.left - (tooltip.offsetWidth / 2);
-        let top = event.clientY - rect.top - tooltip.offsetHeight - 10;
-        if (left < 0) left = 5;
-        if (left + tooltip.offsetWidth > rect.width) left = rect.width - tooltip.offsetWidth - 5;
-        if (top < 0) top = event.clientY - rect.top + 15;
-        tooltip.style.transform = `translate(${left}px, ${top}px)`;
     }
     
     initializeChart();
