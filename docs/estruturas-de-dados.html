@@ -1,8 +1,90 @@
 ---
 ---
-<!DOCTYPE html><html><head><meta charset="utf-8"/><title>Pitchutcha - Estruturas de Dados</title><meta name="base-url" content="{{ '/' | relative_url }}"><meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}"><meta name="description" content="Explore estruturas de dados comuns como arrays, listas ligadas e árvores para organizar e armazenar dados de forma eficaz para aplicações de alto desempenho."><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}"><link rel="icon" href="data:image/x-icon;base64," type="image/x-icon"></head><body class="bg-[var(--background-primary)] text-[var(--text-primary)]"><div class="flex min-h-screen flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'><header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]"><div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16"><div class="flex items-center gap-8"><a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}"><span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span><h1 class="text-xl font-bold">Pitchutcha</h1></a><nav class="hidden items-center gap-6 md:flex"><a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a><a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a></nav></div><div class="flex items-center gap-4"><form id="header-search-form" class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span><input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/></form></div></div></header><main class="flex-1"><div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"><div class="mb-8"><nav aria-label="Breadcrumb" class="flex"><ol class="inline-flex items-center space-x-1 md:space-x-2"><li class="inline-flex items-center"><a class="inline-flex items-center text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/docs.html' | relative_url }}"> Início </a></li><li><div class="flex items-center"><span class="material-symbols-outlined text-[var(--text-secondary)]"> chevron_right </span><span class="ml-1 text-sm font-medium text-[var(--text-primary)] md:ml-2">Estruturas de Dados</span></div></li></ol></nav></div><div class="mb-10 border-b border-[var(--borders)] pb-8"><h2 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)]">Estruturas de Dados</h2><p class="mt-4 max-w-3xl text-lg text-[var(--text-secondary)]">Explore estruturas de dados comuns como arrays, listas ligadas e árvores para organizar e armazenar dados de forma eficaz para aplicações de alto desempenho.</p></div><div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"> {% assign category_articles = site.articles | where: "category", "Estruturas de Dados" %} {% for article in category_articles %}<div class="group flex flex-col overflow-hidden rounded-lg border border-[var(--borders)] bg-[var(--cards-elements)] shadow-sm transition-all hover:border-[var(--primary-color)] hover:shadow-lg"><div class="flex flex-col p-6"><div class="mb-4 flex items-center gap-4"><div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[var(--background-secondary)] text-[var(--primary-color)]"><span class="material-symbols-outlined"> account_tree </span></div><h4 class="flex-1 text-lg font-semibold text-[var(--text-primary)]"><a href="{{ article.url | relative_url }}" class="hover:text-[var(--primary-color)]">{{ article.title }}</a></h4></div><p class="mb-4 text-sm text-[var(--text-secondary)]">{{ article.excerpt }}</p></div><div class="mt-auto border-t border-[var(--borders)] bg-[var(--background-primary)] px-6 py-3"><a class="flex items-center justify-between text-sm font-medium text-[var(--primary-color)] transition-opacity hover:text-[var(--primary-hover)]" href="{{ article.url | relative_url }}"><span>Ler artigo</span><span class="material-symbols-outlined"> arrow_forward </span></a></div></div> {% endfor %}</div></div></main>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Pitchutcha - Estruturas de Dados</title>
+    <meta name="base-url" content="{{ '/' | relative_url }}">
+    <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
+    <meta name="description" content="Explore estruturas de dados comuns como arrays, listas ligadas e árvores para organizar e armazenar dados de forma eficaz para aplicações de alto desempenho.">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
+</head>
+<body class="bg-[var(--background-primary)] text-[var(--text-primary)]">
+    <div class="flex min-h-screen flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'>
+        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+                <div class="flex items-center gap-8">
+                    <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
+                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
+                        <h1 class="text-xl font-bold">Pitchutcha</h1>
+                    </a>
+                    <nav class="hidden items-center gap-6 md:flex">
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a>
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <form id="header-search-form" class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
+                        <input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/>
+                    </form>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1">
+            <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                <div class="mb-8">
+                    <nav aria-label="Breadcrumb" class="flex">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                            <li class="inline-flex items-center">
+                                <a class="inline-flex items-center text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/docs.html' | relative_url }}"> Início </a>
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <span class="material-symbols-outlined text-[var(--text-secondary)]"> chevron_right </span>
+                                    <span class="ml-1 text-sm font-medium text-[var(--text-primary)] md:ml-2">Estruturas de Dados</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="mb-10 border-b border-[var(--borders)] pb-8">
+                    <h2 class="text-4xl font-extrabold tracking-tight text-[var(--text-primary)]">Estruturas de Dados</h2>
+                    <p class="mt-4 max-w-3xl text-lg text-[var(--text-secondary)]">Explore estruturas de dados comuns como arrays, listas ligadas e árvores para organizar e armazenar dados de forma eficaz para aplicações de alto desempenho.</p>
+                </div>
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"> 
+                    {% assign category_articles = site.articles | where: "category", "Estruturas de Dados" %} 
+                    {% for article in category_articles %}
+                    <div class="group flex flex-col overflow-hidden rounded-lg border border-[var(--borders)] bg-[var(--cards-elements)] shadow-sm transition-all hover:border-[var(--primary-color)] hover:shadow-lg">
+                        <div class="flex flex-col p-6">
+                            <div class="mb-4 flex items-center gap-4">
+                                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[var(--background-secondary)] text-[var(--primary-color)]">
+                                    <span class="material-symbols-outlined"> account_tree </span>
+                                </div>
+                                <h4 class="flex-1 text-lg font-semibold text-[var(--text-primary)]">
+                                    <a href="{{ article.url | relative_url }}" class="hover:text-[var(--primary-color)]">{{ article.title }}</a>
+                                </h4>
+                            </div>
+                            <p class="mb-4 text-sm text-[var(--text-secondary)]">{{ article.excerpt }}</p>
+                        </div>
+                        <div class="mt-auto border-t border-[var(--borders)] bg-[var(--background-primary)] px-6 py-3">
+                            <a class="flex items-center justify-between text-sm font-medium text-[var(--primary-color)] transition-opacity hover:text-[var(--primary-hover)]" href="{{ article.url | relative_url }}">
+                                <span>Ler artigo</span>
+                                <span class="material-symbols-outlined"> arrow_forward </span>
+                            </a>
+                        </div>
+                    </div> 
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
 
-    {% include footer.html %}
+        {% include footer.html %}
 
+    </div>
     {% include scripts.html %}
-</body></html>
+</body>
+</html>
