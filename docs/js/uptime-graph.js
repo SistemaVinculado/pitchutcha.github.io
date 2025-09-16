@@ -5,15 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const legendContainer = document.getElementById("status-legend");
     const chartStartDate = document.getElementById("chart-start-date");
     const chartEndDate = document.getElementById("chart-end-date");
+    // Seleciona o título e subtítulo para atualização dinâmica
+    const uptimeTitle = document.querySelector("#uptime-chart-container")?.parentElement?.querySelector("h2");
+    const uptimeSubtitle = document.querySelector("#uptime-chart-container")?.parentElement?.querySelector("p");
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
 
-    // Se o contêiner do gráfico não for encontrado, interrompe o script
-    if (!chartContainer) {
-        return;
-    }
+    if (!chartContainer || !tooltip || !legendContainer) return;
 
-    // --- CONFIGURAÇÕES ---
-    const totalDays = 90;
+    const totalBars = 24; // Foco em 24 horas
     const statusTypes = {
         OPERATIONAL: { label: "Operacional", colorClass: "status-operational" },
         DEGRADED: { label: "Performance Degradada", colorClass: "status-degraded" },
@@ -22,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     /**
-     * Processa os dados reais da API do UptimeRobot.
+     * Processa os dados horários reais da API do UptimeRobot.
      */
     function processRealData(responseTimes) {
         let processedData = responseTimes.map(item => {
@@ -31,56 +30,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (responseTime === 0) {
                 statusKey = "OUTAGE";
-                details = "O monitor esteve indisponível (0ms) neste dia.";
-            } else if (responseTime > 1500) {
+                details = "O monitor esteve indisponível (0ms) nesta hora.";
+            } else if (responseTime > 1500) { // Limite de 1.5s
                 statusKey = "DEGRADED";
                 details = `Performance degradada. Resposta: ${responseTime}ms.`;
             } else {
                 statusKey = "OPERATIONAL";
                 details = `Tempo médio de resposta: ${responseTime}ms.`;
             }
-            return { date: new Date(item.datetime * 1000), status: statusKey, details: details };
-        }).reverse();
+            return { datetime: new Date(item.datetime * 1000), status: statusKey, details: details };
+        }).reverse(); // Inverte para ter o mais antigo primeiro
 
-        const daysMissing = totalDays - processedData.length;
-        if (daysMissing > 0) {
-            const firstDate = processedData.length > 0 ? processedData[0].date : new Date();
-            const padding = Array.from({ length: daysMissing }).map((_, i) => {
-                const date = new Date(firstDate);
-                date.setDate(firstDate.getDate() - (daysMissing - i));
-                return { date, status: "NO_DATA", details: "Não há dados de monitoramento para este dia." };
-            });
-            processedData = [...padding, ...processedData];
-        }
-        return processedData.slice(-totalDays);
+        return padDataWithNoData(processedData);
     }
     
     /**
-     * Formata uma data para exibição no formato "dd de mmm".
+     * Preenche os dados com "Sem Dados" se o histórico for menor que o total de barras.
      */
-    function formatDate(date) {
-        return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
+    function padDataWithNoData(data) {
+        const barsMissing = totalBars - data.length;
+        if (barsMissing > 0) {
+            const firstDate = data.length > 0 ? data[0].datetime : new Date();
+            const padding = Array.from({ length: barsMissing }).map((_, i) => {
+                const date = new Date(firstDate);
+                date.setHours(firstDate.getHours() - (barsMissing - i));
+                return { datetime: date, status: "NO_DATA", details: "Não há dados de monitoramento para esta hora." };
+            });
+            return [...padding, ...data];
+        }
+        return data;
     }
 
     /**
-     * Mostra o tooltip com informações do dia selecionado.
+     * Popula a legenda de status.
      */
-    function showTooltip(event, dayData) {
-        if (!tooltip) return;
-        const statusInfo = statusTypes[dayData.status];
+    function populateLegend() {
+        legendContainer.innerHTML = Object.values(statusTypes).map(status => `
+            <div class="legend-item">
+                <div class="legend-color ${status.colorClass}"></div>
+                <span>${status.label}</span>
+            </div>
+        `).join('');
+    }
+
+    /**
+     * Mostra o tooltip interativo.
+     */
+    function showTooltip(event, hourData) {
+        const statusInfo = statusTypes[hourData.status];
         
-        document.getElementById("tooltip-date").textContent = dayData.date.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById("tooltip-date").textContent = hourData.datetime.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
         document.getElementById("tooltip-status-indicator").className = `w-2 h-2 rounded-full mr-2 ${statusInfo.colorClass}`;
         document.getElementById("tooltip-status-text").textContent = statusInfo.label;
-        document.getElementById("tooltip-details").textContent = dayData.details;
+        document.getElementById("tooltip-details").textContent = hourData.details;
 
-        tooltip.classList.remove("hidden", "opacity-0");
+        tooltip.classList.remove("hidden");
+        tooltip.classList.add("opacity-100");
+
         const rect = chartContainer.getBoundingClientRect();
         let left = event.clientX - rect.left - (tooltip.offsetWidth / 2);
         let top = event.clientY - rect.top - tooltip.offsetHeight - 10;
+
         if (left < 0) left = 5;
         if (left + tooltip.offsetWidth > rect.width) left = rect.width - tooltip.offsetWidth - 5;
         if (top < 0) top = event.clientY - rect.top + 15;
+
         tooltip.style.transform = `translate(${left}px, ${top}px)`;
     }
 
@@ -88,51 +102,59 @@ document.addEventListener("DOMContentLoaded", () => {
      * Esconde o tooltip.
      */
     function hideTooltip() {
-        if (tooltip) tooltip.classList.add("hidden", "opacity-0");
+        tooltip.classList.add("hidden");
+        tooltip.classList.remove("opacity-100");
     }
-
+    
     /**
-     * Constrói e renderiza as barras do gráfico de uptime.
+     * Constrói e renderiza as barras do gráfico.
      */
     function buildChart(data) {
-        chartContainer.innerHTML = '';
-        data.forEach(dayData => {
+        // ATUALIZA OS TEXTOS DA PÁGINA
+        if (uptimeTitle) uptimeTitle.textContent = "Histórico de Uptime (Últimas 24 Horas)";
+        if (uptimeSubtitle) uptimeSubtitle.textContent = "Disponibilidade do serviço a cada hora.";
+        
+        chartContainer.innerHTML = ''; 
+
+        data.forEach(hourData => {
             const bar = document.createElement("div");
-            bar.className = `uptime-bar h-full ${statusTypes[dayData.status].colorClass}`;
-            bar.addEventListener("mousemove", (event) => showTooltip(event, dayData));
+            bar.className = `uptime-bar h-full ${statusTypes[hourData.status].colorClass}`;
+            bar.addEventListener("mousemove", (event) => showTooltip(event, hourData));
             bar.addEventListener("mouseleave", hideTooltip);
             chartContainer.appendChild(bar);
         });
         
         if (data.length > 0) {
-            if (chartStartDate) chartStartDate.textContent = formatDate(data[0].date);
-            if (chartEndDate) chartEndDate.textContent = formatDate(data[data.length - 1].date);
+            chartStartDate.textContent = "24 horas atrás";
+            chartEndDate.textContent = "Agora";
         }
     }
 
     /**
-     * Função principal que busca os dados e inicializa o gráfico.
+     * Função principal que inicializa o gráfico.
      */
-    async function initializeGraph() {
+    async function initializeChart() {
+        populateLegend();
         try {
             const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=${Date.now()}`);
             if (!response.ok) throw new Error("Falha ao carregar uptime-data.json");
             
             const data = await response.json();
-            const monitor = data?.monitors?.[0];
-            const responseTimes = monitor?.response_times;
+            const responseTimes = data?.monitors?.[0]?.response_times;
 
-            if (responseTimes) {
+            if (responseTimes && responseTimes.length > 0) {
                 const realData = processRealData(responseTimes);
                 buildChart(realData);
             } else {
-                 throw new Error("Dados de 'response_times' não encontrados.");
+                // Se não houver dados, exibe um gráfico de "Sem Dados"
+                buildChart(padDataWithNoData([])); 
             }
         } catch (error) {
-            console.error("Erro ao inicializar o gráfico de uptime:", error);
-            if (chartContainer) chartContainer.innerHTML = `<p class="text-red-500 text-xs w-full text-center">${error.message}</p>`;
+            console.error("Erro ao carregar dados de uptime:", error);
+            // Em caso de erro, também exibe "Sem Dados"
+            buildChart(padDataWithNoData([]));
         }
     }
-
-    initializeGraph();
+    
+    initializeChart();
 });
