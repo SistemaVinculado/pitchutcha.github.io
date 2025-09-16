@@ -42,9 +42,82 @@ layout: null
 
         #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, #0d1117, transparent); z-index: 2; }
         body { background-color: var(--background-primary); }
+
+        /* --- Início: Estilos para Fundo Difuso (Adaptado de yep.html) --- */
+        body {
+            /* Garante que o body seja o container para o posicionamento absoluto */
+            position: relative; 
+            /* Previne scroll horizontal causado pelos círculos grandes */
+            overflow-x: hidden;
+        }
+
+        .diffuse-background-container {
+            /* Este container fixa os círculos no fundo */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Z-index muito baixo para ficar atrás de tudo (header, main, footer) */
+            z-index: -10; 
+            overflow: hidden;
+        }
+
+        .diffuse-background-circle {
+            /* Cor adaptada para o tema do Pitchutcha (azul escuro) */
+            /* A cor original do yep.html era #0a0a0a (cinza escuro) */
+            background: #0d1a3a; 
+            
+            /* O filtro de blur é o segredo do efeito */
+            filter: blur(150px);
+            -webkit-filter: blur(150px);
+            
+            position: absolute;
+            z-index: -1; /* Atrás do conteúdo, mas dentro do container */
+            border-radius: 50%;
+        }
+
+        /* Posições e tamanhos adaptados do 'yep.html' para o layout do 'index.html' */
+        .diffuse-background-circle.circle-1 {
+            height: 1000px;
+            width: 1000px;
+            left: -150px;
+            top: 0px;
+        }
+
+        .diffuse-background-circle.circle-2 {
+            height: 600px;
+            width: 600px;
+            right: -100px;
+            top: 200px;
+        }
+
+        .diffuse-background-circle.circle-3 {
+            height: 800px;
+            width: 800px;
+            left: -100px;
+            /* Posicionado mais abaixo para preencher a página longa */
+            top: 1800px; 
+        }
+
+        .diffuse-background-circle.circle-4 {
+            height: 700px;
+            width: 700px;
+            right: -150px;
+            /* Posicionado mais abaixo para preencher a página longa */
+            top: 2500px; 
+        }
+        /* --- Fim: Estilos para Fundo Difuso --- */
     </style>
 </head>
 <body class="text-[var(--text-primary)]">
+
+    <div class="diffuse-background-container">
+        <div class="diffuse-background-circle circle-1"></div>
+        <div class="diffuse-background-circle circle-2"></div>
+        <div class="diffuse-background-circle circle-3"></div>
+        <div class="diffuse-background-circle circle-4"></div>
+    </div>
     <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
             <div class="flex items-center gap-8">
