@@ -5,7 +5,7 @@ date: 2025-09-07
 category: Algoritmos
 icon: memory
 excerpt: "Aprenda o básico de design e análise de algoritmos, incluindo complexidade, Big O, e paradigmas comuns como dividir para conquistar, programação dinâmica e algoritmos gulosos."
-image: "https://placehold.co/600x400/D1E7FC/2563EB?text=Design+de+Algoritmos"
+image: "https://placehold.co/400x300/D1E7FC/2563EB?text=Design+de+Algoritmos"
 ---
 
 <article>
