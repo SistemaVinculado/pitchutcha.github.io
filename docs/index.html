@@ -18,7 +18,6 @@ layout: null
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     
     <style>
-        /* Estilos para os novos componentes */
         .hero-tab-panel { display: none; }
         .hero-tab-panel.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
         .hero-tab-button.active { color: var(--text-primary); border-bottom-color: var(--primary-color); }
@@ -31,7 +30,6 @@ layout: null
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Estilos do Carrossel de Logos */
         .logo-carousel-container { overflow: hidden; width: 100%; -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); }
         .logo-carousel-track { display: flex; width: max-content; animation: scroll-left 60s linear infinite; }
         .logo-carousel-track:hover { animation-play-state: paused; }
@@ -45,17 +43,7 @@ layout: null
     </style>
 </head>
 <body class="text-[var(--text-primary)]">
-
-    <header class="p-4 md:px-8 lg:px-12 flex justify-between items-center z-30 relative">
-        <div class="flex items-center space-x-4">
-            <svg height="32" aria-hidden="true" viewBox="0 0 32 32" version="1.1" width="32" class="fill-current text-[var(--text-primary)]"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4zM0 16C0 7.16 7.16 0 16 0s16 7.16 16 16-7.16 16-16 16S0 24.84 0 16z"/></svg>
-            <nav class="hidden md:flex items-center space-x-4 text-[var(--text-secondary)]"><a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Documentação</a><a href="{{ '/status.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Status</a><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="hover:text-[var(--primary-color)]">Open Source</a></nav>
-        </div>
-        <div class="flex items-center space-x-4"><form action="{{ '/search.html' | relative_url }}" method="get" class="hidden lg:block"><input type="search" name="q" placeholder="Pesquisar na Pitchutcha" class="bg-[var(--background-primary)] border border-[var(--borders)] rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"></form><button id="menu-btn" class="md:hidden" aria-controls="mobile-menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg></button></div>
-    </header>
-
-    <div id="mobile-menu" class="hidden md:hidden bg-[#0d1117] absolute top-16 left-0 w-full z-40"><a href="{{ '/docs.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Documentação</a><a href="{{ '/status.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Status</a><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="block px-8 py-3 hover:bg-gray-800">Open Source</a></div>
-
+    
     <main>
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
