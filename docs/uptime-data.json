@@ -1,44 +1,44 @@
 {
   "metrics": {
-    "api_latency": "52ms",
-    "inference_time": "121ms",
-    "error_rate": "0.03%"
+    "api_latency": "46ms",
+    "inference_time": "203ms",
+    "error_rate": "0.02%"
   },
   "graphs": {
     "latency_history": [
-      36,
-      50,
-      14,
-      68,
-      12,
-      26,
-      15,
       33,
-      13,
-      32,
-      56,
-      43
+      19,
+      10,
+      65,
+      35,
+      64,
+      49,
+      47,
+      21,
+      30,
+      12,
+      60
     ],
     "inference_by_model": [
       {
         "model": "GPT-4",
-        "time": 162
+        "time": 205
       },
       {
         "model": "GPT-3.5",
-        "time": 120
+        "time": 107
       },
       {
         "model": "DALL-E",
-        "time": 209
+        "time": 286
       },
       {
         "model": "Whisper",
-        "time": 76
+        "time": 70
       },
       {
         "model": "Embeds",
-        "time": 21
+        "time": 20
       }
     ]
   },
@@ -67,17 +67,6 @@
       "create_datetime": 1757459040,
       "logs": [
         {
-          "id": 4217323186,
-          "type": 2,
-          "datetime": 1757621312,
-          "duration": 384186,
-          "reason": {
-            "code": "200",
-            "detail": "OK"
-          }
-        },
-        {
-          "id": 4217303255,
           "type": 1,
           "datetime": 1757620374,
           "duration": 938,
@@ -85,29 +74,10 @@
             "code": "404",
             "detail": "Not Found"
           }
-        },
-        {
-          "id": 4214017620,
-          "type": 2,
-          "datetime": 1757469888,
-          "duration": 150486,
-          "reason": {
-            "code": "200",
-            "detail": "OK"
-          }
-        },
-        {
-          "id": 4214017004,
-          "type": 98,
-          "datetime": 1757469840,
-          "duration": 48,
-          "reason": {
-            "code": "98",
-            "detail": "Monitor started"
-          }
         }
       ],
-      "custom_uptime_ratio": "99.825-99.825",
+      "userId": 3102890,
+      "custom_uptime_ratio": "99.845-99.964",
       "custom_down_durations": "938-938",
       "lastLogTypeBeforeStartDate": {}
     }
