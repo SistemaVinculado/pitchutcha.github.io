@@ -55,7 +55,7 @@ jobs:
 
       - name: Fetch UptimeRobot data
         run: |
-          # Busca os dados do UptimeRobot e salva em outro arquivo temporário
+          # Busca os dados do UptimeRobot, incluindo o histórico diário de tempo de resposta
           curl --request POST 'https://api.uptimerobot.com/v2/getMonitors' \
           --header 'Content-Type: application/x-www-form-urlencoded' \
           --data-urlencode "api_key=${{ secrets.UPTIMEROBOT_API_KEY }}" \
@@ -63,6 +63,9 @@ jobs:
           --data-urlencode "custom_uptime_ratios=7-30" \
           --data-urlencode "logs=1" \
           --data-urlencode "logs_limit=10" \
+          --data-urlencode "response_times=1" \
+          --data-urlencode "response_times_limit=90" \
+          --data-urlencode "response_times_average=1440" \
           --data-urlencode "format=json" \
           -o uptime.json
 
