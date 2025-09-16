@@ -15,7 +15,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate Simulated Metrics and Graph Data
-        # ... (esta seção permanece a mesma)
         run: |
           set -e
           LATENCY=$((RANDOM % 40 + 20)); INFERENCE=$((RANDOM % 150 + 100)); ERROR_RATE=$(printf "0.0%d" $((RANDOM % 5 + 1)))
@@ -33,18 +32,17 @@ jobs:
 
       - name: Fetch UptimeRobot data
         run: |
-          # ATUALIZADO: Força a verificação em /docs.html para diagnóstico
+          # CORRIGIDO: Voltando a usar o ID do monitor para garantir a busca correta dos dados
           curl --request POST 'https://api.uptimerobot.com/v2/getMonitors' \
           --header 'Content-Type: application/x-www-form-urlencoded' \
           --data-urlencode "api_key=${{ secrets.UPTIMEROBOT_API_KEY }}" \
-          --data-urlencode "search=pitchutcha" \
-          --data-urlencode "url=https://sistemavinculado.github.io/pitchutcha.github.io/docs.html" \
+          --data-urlencode "monitors=801334653" \
           --data-urlencode "custom_uptime_ratios=1-7-30" \
           --data-urlencode "logs=1" \
           --data-urlencode "logs_limit=50" \
           --data-urlencode "response_times=1" \
-          --data-urlencode "response_times_limit=24" \
-          --data-urlencode "response_times_average=60" \
+          --data-urlencode "response_times_limit=90" \
+          --data-urlencode "response_times_average=1440" \
           --data-urlencode "format=json" \
           -o uptime.json
 
@@ -55,5 +53,5 @@ jobs:
       - name: Commit and push if it changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: Update UptimeRobot data and metrics (24-hour view)"
+          commit_message: "chore: Update UptimeRobot data and metrics"
           file_pattern: "docs/uptime-data.json"
