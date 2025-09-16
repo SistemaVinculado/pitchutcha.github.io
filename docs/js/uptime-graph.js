@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
-
-    // --- Seletores de Elementos do DOM ---
     const panel = document.getElementById("uptime-panel");
     if (!panel) return;
 
@@ -13,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const chartEndDateElem = panel.querySelector("#chart-end-date");
     const overallUptimeStatusElem = panel.querySelector("#overall-uptime-status");
 
-    // --- Configurações ---
     const totalBars = 90;
     const statusTypes = {
         OPERATIONAL: { label: "Operacional", colorClass: "status-operational", description: "Todos os sistemas funcionando normalmente." },
@@ -22,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
         NO_DATA: { label: "Sem Dados", colorClass: "status-no-data", description: "Não há dados de monitoramento para este período." },
     };
 
-    // --- Funções de Formatação e UI ---
     const formatDate = (date) => date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
     const formatFullDate = (date) => date.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -63,20 +59,17 @@ document.addEventListener("DOMContentLoaded", () => {
         legendHelpButton.addEventListener('mouseleave', hideTooltip);
     }
 
-    /**
-     * Função principal que busca os dados e inicializa o gráfico.
-     */
     async function initializeGraph() {
         try {
             const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=${Date.now()}`);
-            if (!response.ok) throw new Error("Falha na rede ao buscar uptime-data.json para o gráfico.");
+            if (!response.ok) throw new Error("Falha na rede ao buscar uptime-data.json");
             
             const data = await response.json();
             const monitor = data?.monitors?.[0];
             
-            // VERIFICAÇÃO DE SEGURANÇA para evitar o erro 'split' of undefined
-            if (!monitor || !monitor.custom_uptime_ratios) {
-                throw new Error("Dados do monitor incompletos no arquivo JSON. Execute o workflow novamente.");
+            if (data.stat === 'fail' || !monitor || !monitor.custom_uptime_ratios) {
+                const errorMessage = data.error?.message || "Dados do monitor incompletos. Execute o workflow novamente.";
+                throw new Error(errorMessage);
             }
 
             if (overallUptimeStatusElem) {
@@ -117,6 +110,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Erro ao inicializar o gráfico de uptime:", error);
             if (panel) {
+                const titleElem = panel.querySelector("#uptime-panel-title");
+                if(titleElem) titleElem.textContent = "Erro ao carregar dados";
                 panel.querySelector("#uptime-chart-container").innerHTML = `<p class="text-center text-xs text-red-500 w-full p-4">${error.message}</p>`;
             }
         }
