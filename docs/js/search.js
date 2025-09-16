@@ -39,19 +39,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function highlight(text, matches, key) {
+        if (!matches || matches.length === 0) {
+            return text;
+        }
+
+        // 1. Collect all indices for the given key and flatten the array.
+        const allIndices = matches
+            .filter(match => match.key === key)
+            .flatMap(match => match.indices);
+
+        if (allIndices.length === 0) {
+            return text;
+        }
+
+        // 2. Sort indices by their start position.
+        allIndices.sort((a, b) => a[0] - b[0]);
+
+        // 3. Merge overlapping or adjacent indices.
+        const mergedIndices = allIndices.reduce((acc, current) => {
+            if (acc.length === 0) {
+                return [current];
+            }
+            const last = acc[acc.length - 1];
+            // If the current interval starts before or right after the last one ends, merge them.
+            if (current[0] <= last[1] + 1) {
+                last[1] = Math.max(last[1], current[1]); // Extend the end of the last interval
+            } else {
+                acc.push(current); // Otherwise, add it as a new interval
+            }
+            return acc;
+        }, []);
+
+        // 4. Build the highlighted string using the merged indices.
         let result = [];
         let lastIndex = 0;
-        const keyMatches = matches.filter(match => match.key === key);
-
-        keyMatches.forEach(match => {
-            match.indices.forEach(([start, end]) => {
-                const actualEnd = end + 1;
-                if (start > lastIndex) {
-                    result.push(text.substring(lastIndex, start));
-                }
-                result.push(`<mark>${text.substring(start, actualEnd)}</mark>`);
-                lastIndex = actualEnd;
-            });
+        mergedIndices.forEach(([start, end]) => {
+            const actualEnd = end + 1;
+            if (start > lastIndex) {
+                result.push(text.substring(lastIndex, start));
+            }
+            result.push(`<mark>${text.substring(start, actualEnd)}</mark>`);
+            lastIndex = actualEnd;
         });
 
         if (lastIndex < text.length) {
