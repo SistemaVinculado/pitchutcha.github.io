@@ -59,43 +59,75 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /**
-     * Lógica de Status da Homepage
+     * Lógica de Status Global (Rodapé) - ATUALIZADA
      */
-    const homepageStatusIndicator = document.getElementById("homepage-status-indicator");
-    const homepageStatusText = document.getElementById("homepage-status-text");
-    if (homepageStatusIndicator && homepageStatusText) {
+    const globalStatusIndicatorEl = document.getElementById("global-status-indicator");
+    const globalStatusTextEl = document.getElementById("global-status-text");
+
+    if (globalStatusIndicatorEl && globalStatusTextEl) {
         const setStatus = (statusKey) => {
-            const indicatorPulse = homepageStatusIndicator.querySelector(".ping-pulse");
-            const indicatorDot = homepageStatusIndicator.querySelector(".relative.inline-flex");
-            indicatorPulse.className = "ping-pulse";
-            indicatorDot.className = "relative inline-flex rounded-full h-3 w-3";
+            const indicatorPulse = globalStatusIndicatorEl.querySelector(".ping-pulse");
+            const indicatorDot = globalStatusIndicatorEl.querySelector(".relative.inline-flex");
+            indicatorPulse.className = "ping-pulse"; // Reseta classes
+            indicatorDot.className = "relative inline-flex rounded-full h-3 w-3"; // Reseta classes
 
             const statuses = {
-                ok: { pulse: "ping-green", dot: "bg-green-500", text: "Todos os sistemas operacionais" },
+                operational: { pulse: "ping-green", dot: "bg-green-500", text: "Todos os sistemas operacionais" },
+                degraded: { pulse: "ping-yellow", dot: "bg-yellow-500", text: "Performance degradada" },
                 down: { pulse: "ping-red", dot: "bg-red-500", text: "Instabilidade nos sistemas" },
-                error: { pulse: "ping-yellow", dot: "bg-yellow-500", text: "Não foi possível verificar" }
+                error: { pulse: "ping-gray", dot: "bg-gray-500", text: "Não foi possível verificar o status" }
             };
+            
             const currentStatus = statuses[statusKey] || statuses.error;
             indicatorPulse.classList.add(currentStatus.pulse);
             indicatorDot.classList.add(currentStatus.dot);
-            homepageStatusText.textContent = currentStatus.text;
+            globalStatusTextEl.textContent = currentStatus.text;
         };
 
-        fetch(`${baseUrl}uptime-data.json?cache_bust=` + Date.now())
-            .then(response => response.ok ? response.json() : Promise.reject("Network response was not ok"))
-            .then(data => {
-                const monitor = data?.monitors?.[0];
-                if (monitor?.status === 2) {
-                    setStatus("ok");
-                } else if (monitor?.status === 8 || monitor?.status === 9) {
-                    setStatus("down");
-                } else {
-                    setStatus("error");
+        const fetchStatus = async () => {
+            try {
+                // Busca os dois arquivos de status em paralelo
+                const [uptimeResponse, componentsResponse] = await Promise.all([
+                    fetch(`${baseUrl}uptime-data.json?cache_bust=${Date.now()}`),
+                    fetch(`${baseUrl}component-status.json?cache_bust=${Date.now()}`)
+                ]);
+
+                if (!uptimeResponse.ok || !componentsResponse.ok) {
+                    throw new Error("Falha ao carregar arquivos de status");
                 }
-            }).catch(error => {
-                console.error("Falha ao buscar status para a homepage:", error);
-                setStatus("error");
-            });
+
+                const uptimeData = await uptimeResponse.json();
+                const componentsData = await componentsResponse.json();
+
+                // Determina o status de cada fonte
+                const monitor = uptimeData?.monitors?.[0];
+                let uptimeStatus = 'operational';
+                if (monitor?.status === 8 || monitor?.status === 9) {
+                    uptimeStatus = 'down';
+                } else if (monitor?.status !== 2) {
+                    uptimeStatus = 'degraded';
+                }
+                
+                const componentStatus = componentsData?.status || 'operational';
+
+                // Define o status final com base na prioridade (o pior status vence)
+                let finalStatus = 'operational';
+                if (uptimeStatus === 'degraded' || componentStatus === 'degraded') {
+                    finalStatus = 'degraded';
+                }
+                if (uptimeStatus === 'down' || componentStatus === 'outage') {
+                    finalStatus = 'down'; // 'down' é a nossa UI para outage
+                }
+
+                setStatus(finalStatus);
+
+            } catch (error) {
+                console.error("Falha ao buscar status global:", error);
+                setStatus('error');
+            }
+        };
+
+        fetchStatus();
     }
 
     /**
