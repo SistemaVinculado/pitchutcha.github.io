@@ -1,55 +1,83 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Lógica para o Hero Section com Abas (específica do index.html)
-    const tabs = document.querySelectorAll('[role="tab"]');
-    if (tabs.length > 0) {
-        function activateTab(tab) {
-            tabs.forEach(t => {
+
+    // --- Lógica das Abas da Seção HERO ---
+    const heroTabs = document.querySelectorAll('.hero-tab-button');
+    const heroPanels = document.querySelectorAll('.hero-tab-panel');
+
+    heroTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            heroTabs.forEach(t => {
                 t.classList.remove('active');
                 t.setAttribute('aria-selected', 'false');
                 t.setAttribute('tabindex', '-1');
-                const panel = document.getElementById(t.getAttribute('aria-controls'));
-                if (panel) {
+            });
+
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            tab.removeAttribute('tabindex');
+
+            const targetPanelId = tab.getAttribute('aria-controls');
+
+            heroPanels.forEach(panel => {
+                if (panel.id === targetPanelId) {
+                    panel.classList.add('active');
+                    panel.setAttribute('aria-hidden', 'false');
+                } else {
                     panel.classList.remove('active');
                     panel.setAttribute('aria-hidden', 'true');
                 }
             });
-            tab.classList.add('active');
-            tab.setAttribute('aria-selected', 'true');
-            tab.setAttribute('tabindex', '0');
-            const activePanel = document.getElementById(tab.getAttribute('aria-controls'));
-            if (activePanel) {
-                activePanel.classList.add('active');
-                activePanel.setAttribute('aria-hidden', 'false');
-            }
-        }
-        tabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                e.preventDefault();
-                activateTab(e.currentTarget);
+        });
+    });
+
+    // --- Lógica das Abas da Seção "PARADIGMAS ESSENCIAIS" ---
+    const paradigmsContainer = document.getElementById('paradigms-section');
+    if (paradigmsContainer) {
+        const paradigmTabs = paradigmsContainer.querySelectorAll('.paradigm-tab-button');
+        const paradigmPanels = paradigmsContainer.querySelectorAll('.paradigm-tab-panel');
+        const paradigmImages = paradigmsContainer.querySelectorAll('.paradigm-image');
+
+        paradigmTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetParadigm = tab.dataset.paradigm;
+
+                // Atualiza os botões
+                paradigmTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Atualiza os painéis de texto
+                paradigmPanels.forEach(panel => {
+                    panel.classList.toggle('active', panel.dataset.paradigmContent === targetParadigm);
+                });
+
+                // Atualiza as imagens com efeito de fade
+                paradigmImages.forEach(image => {
+                    const isTarget = image.dataset.paradigmImage === targetParadigm;
+                    image.style.opacity = isTarget ? '1' : '0';
+                });
             });
         });
     }
 
-    // Lógica para o Acordeão Interativo (específica do index.html)
-    const accordionItems = document.querySelectorAll('.accordion-item');
-    const accordionImage = document.getElementById('accordion-image-display');
-    if (accordionItems.length > 0 && accordionImage) {
-        accordionItems.forEach(item => {
-            item.addEventListener('toggle', () => {
-                if (item.open) {
-                    accordionItems.forEach(otherItem => {
-                        if (otherItem !== item) { otherItem.removeAttribute('open'); }
-                    });
-                    const newImageSrc = item.getAttribute('data-image');
-                    if (newImageSrc) {
-                        accordionImage.style.opacity = 0;
-                        setTimeout(() => {
-                            accordionImage.src = newImageSrc;
-                            accordionImage.style.opacity = 1;
-                        }, 300);
-                    }
-                }
+
+    // --- Lógica das Abas de Código da Seção "EXEMPLOS PRÁTICOS" ---
+    const codeBlockCard = document.querySelector('.code-block-card');
+    if (codeBlockCard) {
+        const codeTabs = codeBlockCard.querySelectorAll('.tab-button');
+        const codePanels = codeBlockCard.querySelectorAll('.code-tab-panel');
+
+        codeTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+
+                codeTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                codePanels.forEach(panel => {
+                    panel.classList.toggle('active', panel.dataset.tabContent === targetTab);
+                });
             });
         });
     }
+
 });
