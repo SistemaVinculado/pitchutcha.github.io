@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.5.1"; // Versão com botão de recarga de testes
+    const DEV_PANEL_VERSION = "1.6.0"; // Versão com diagnósticos avançados
     let capturedErrors = []; // Armazena erros de JS
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
@@ -95,13 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
             case "network": renderNetworkTab(); break;
             case "recursos": renderRecursosTab(); break;
             case "acessibilidade": renderAcessibilidadeTab(); break;
-            case "testes": renderTestesTab(); break; // Modificado
+            case "testes": renderTestesTab(); break;
             case "info": renderInfoTab(); break;
             default: panelContent.innerHTML = `<div class="p-4">Aba não encontrada: ${tabId}</div>`;
         }
     }
 
-    // ... (todas as outras funções como renderElementsTab, renderConsoleTab, etc. continuam iguais) ...
     function renderElementsTab() {
         panelContent.innerHTML = `
             <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
@@ -189,7 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("run-accessibility-check").addEventListener("click", runAxeAudit);
     }
     
-    // MODIFICADO: Função para renderizar a Aba Testes
     function renderTestesTab() {
         panelContent.innerHTML = `
             <div class="p-4 w-full">
@@ -213,7 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </tbody></table></div>`;
     }
 
-    // ... (funções logToPanel, buildElementsTree e inspetor continuam as mesmas) ...
     function logToPanel(log) {
         const consoleOutput = document.getElementById("console-output");
         if (!consoleOutput) return;
@@ -399,7 +396,6 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleInspector();
     }
 
-    // --- LÓGICA DA ABA DE ACESSIBILIDADE (Mesma lógica da versão anterior) ---
     const createAxeResultBlock = (item, type) => {
         const colors = {
             violation: 'border-red-500 bg-red-900/20',
@@ -468,30 +464,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- LÓGICA DA ABA DE TESTES (Mesma lógica da versão anterior) ---
+    // ATUALIZADO: Lógica da Aba "Testes" com renderização detalhada
     const renderDiagnosticItem = (item, isGlobal = false) => {
         const severityMap = {
             critical: { color: 'red', icon: 'error' },
             serious: { color: 'orange', icon: 'warning' },
             moderate: { color: 'yellow', icon: 'priority_high' },
-            review: { color: 'sky', icon: 'help' },
-            disponibilidade: { color: 'red', icon: 'cloud_off'}
         };
         const sev = item.severity.toLowerCase();
-        const type = item.type.toLowerCase();
-        const currentSeverity = severityMap[sev] || severityMap[type] || { color: 'gray', icon: 'info' };
+        const currentSeverity = severityMap[sev] || { color: 'gray', icon: 'info' };
 
         return `
-            <div class="border-l-4 border-${currentSeverity.color}-500 bg-${currentSeverity.color}-900/20 p-3 rounded-r-md mb-2">
-                <div class="flex justify-between items-center mb-1">
+            <div class="border-l-4 border-${currentSeverity.color}-500 bg-gray-800 p-3 rounded-r-md mb-2">
+                <div class="flex justify-between items-center mb-2">
                     <p class="font-semibold text-sm text-${currentSeverity.color}-300 flex items-center gap-2">
                         <span class="material-symbols-outlined text-base">${currentSeverity.icon}</span>
-                        ${item.type} (${sev})
+                        <span>${item.title} (${item.type})</span>
                     </p>
-                    ${isGlobal ? `<p class="text-xs font-mono bg-gray-800 px-2 py-1 rounded">${item.page}</p>` : ''}
+                    ${isGlobal ? `<p class="text-xs font-mono bg-gray-700 px-2 py-1 rounded">${item.page}</p>` : ''}
                 </div>
                 <p class="text-xs text-gray-300 mb-2">${item.description}</p>
-                <p class="text-xs font-mono text-gray-500 truncate" title="${item.selector || 'N/A'}">Seletor: ${item.selector || 'N/A'}</p>
+                <p class="text-xs text-sky-400 mb-2"><span class="font-bold">Sugestão:</span> ${item.suggestion}</p>
+                <p class="text-xs font-mono text-gray-500 truncate" title="${item.selector || 'N/A'}">Elemento: ${item.selector || 'N/A'}</p>
             </div>
         `;
     };
@@ -514,7 +508,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             let html = '';
 
-            // Renderiza problemas da página atual
             html += '<div><h3 class="font-bold mb-3 text-lg text-sky-400">Página Atual</h3>';
             if (currentPageIssues.length > 0) {
                 html += currentPageIssues.map(item => renderDiagnosticItem(item, false)).join('');
@@ -523,7 +516,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             html += '</div>';
 
-            // Renderiza problemas do site global
             html += '<div class="mt-6"><h3 class="font-bold mb-3 text-lg text-sky-400">Site Global</h3>';
             if (globalIssues.length > 0) {
                 html += globalIssues.map(item => renderDiagnosticItem(item, true)).join('');
