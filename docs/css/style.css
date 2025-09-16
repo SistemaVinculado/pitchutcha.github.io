@@ -156,3 +156,36 @@ div.highlighter-rouge,figure.highlight{position:relative;margin-bottom:1rem;bord
 .dev-button:hover {
     background-color: var(--primary-hover);
 }
+
+/* --- ESTILOS PARA O GRÁFICO DE UPTIME (STATUS PAGE) --- */
+#status-legend .legend-item {
+    display: flex;
+    align-items: center;
+}
+#status-legend .legend-color {
+    width: 0.75rem; /* 12px */
+    height: 0.75rem; /* 12px */
+    border-radius: 2px;
+    margin-right: 0.5rem; /* 8px */
+}
+#uptime-chart-container .uptime-bar {
+    flex-grow: 1;
+    border-radius: 1px;
+    transition: filter 0.2s ease-in-out;
+}
+#uptime-chart-container .uptime-bar:hover {
+    filter: brightness(1.5);
+    cursor: pointer;
+}
+.status-operational {
+    background-color: var(--success); /* Verde */
+}
+.status-degraded {
+    background-color: #eab308; /* Amarelo */
+}
+.status-outage {
+    background-color: var(--danger); /* Vermelho */
+}
+.status-no-data {
+    background-color: var(--borders); /* Cinza para dados ausentes */
+  }
