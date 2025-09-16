@@ -1,0 +1,43 @@
+# Nome do Workflow: Otimizar SVGs
+name: Optimize SVGs
+
+on:
+  # Roda quando há um push para a branch 'main' com SVGs
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/assets/logos/**.svg'
+
+  # Permite o acionamento manual
+  workflow_dispatch:
+
+jobs:
+  optimize-svgs:
+    name: Optimize SVG files with SVGO
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permissão para fazer commit de volta no repositório
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install SVGO (SVG Optimizer)
+        run: npm install -g svgo
+
+      - name: Run SVGO on logos folder
+        run: svgo -f docs/assets/logos/
+
+      - name: Commit and push the optimized files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Optimize SVG logos with SVGO"
+          file_pattern: "docs/assets/logos/*.svg"
+          commit_user_name: "GitHub Actions Bot"
+          commit_user_email: "github-actions@github.com"
