@@ -1,8 +1,81 @@
 ---
 ---
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"/><style>:root{--primary-color:#137fec;--secondary-color:#e7edf3;--text-primary:#0d141b;--text-secondary:#4c739a;--background-primary:#fff;--background-secondary:#f8fafc}.dark{--primary-color:#137fec;--secondary-color:#1f2d37;--text-primary:#fff;--text-secondary:#94a3b8;--background-primary:#0f172a;--background-secondary:#1e293b}</style><title>Pitchutcha - Resultados da Busca</title><meta name="base-url" content="{{ '/' | relative_url }}"><meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}"><meta name="description" content="Encontre artigos e tópicos sobre Ciência da Computação no Pitchutcha."><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}"><link rel="icon" href="data:image/x-icon;base64," type="image/x-icon"></head><body class="bg-[var(--background-primary)] text-[var(--text-primary)]"><div class="flex min-h-screen flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'><header class="sticky top-0 z-20 border-b border-[var(--secondary-color)] bg-[var(--background-primary)]"><div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16"><div class="flex items-center gap-8"><a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}"><span class="material-symbols-outlined text-3xl text-blue-600"> science </span><h1 class="text-xl font-bold">Pitchutcha</h1></a><nav class="hidden items-center gap-6 md:flex"><a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a><a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a></nav></div><div class="flex items-center gap-4"><form id="header-search-form" class="header-search-form relative hidden lg:block"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span><input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--secondary-color)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="Pesquisar" type="search"/></form></div></div></header><main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="grid grid-cols-1 md:grid-cols-4 gap-8"><aside class="md:col-span-1"><h2 class="text-lg font-semibold mb-4 text-[var(--text-primary)]">Filtrar Resultados</h2><div class="space-y-6"><div><h3 class="font-medium mb-2 text-[var(--text-primary)]">Tópico</h3><div class="space-y-2">{% for category in site.categories %}{% assign category_name = category | first %}<label class="flex items-center"><input class="form-checkbox rounded text-[var(--primary-color)] focus:ring-[var(--primary-color)]" type="checkbox" data-filter="category" value="{{ category_name }}"> <span class="ml-2 text-sm text-[var(--text-secondary)]">{{ category_name }}</span></label>{% endfor %}</div></div></div></aside><div class="md:col-span-3"><div class="mb-6"><div class="relative"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</span><input id="search-input" class="w-full rounded-md border-[var(--secondary-color)] bg-[var(--background-primary)] py-3 pl-12 pr-10 text-lg focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)] text-[var(--text-primary)]" type="text" placeholder="Pesquisar artigos..."/></div><div id="autocomplete-suggestions" class="relative"></div></div><div class="flex items-center justify-between border-b border-[var(--secondary-color)] pb-4 mb-6"><p id="results-count" class="text-sm text-[var(--text-secondary)]">Carregando artigos...</p></div><div id="results-container" class="space-y-6"></div></div></div></main>
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="utf-8"/>
+    <title>Pitchutcha - Resultados da Busca</title>
     
-    {% include footer.html %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-url" content="{{ '/' | relative_url }}">
+    <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
+    <meta name="description" content="Encontre artigos e tópicos sobre Ciência da Computação no Pitchutcha.">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
+</head>
+<body class="bg-[var(--background-primary)] text-[var(--text-primary)]">
+    <div class="flex min-h-screen flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'>
+        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+                <div class="flex items-center gap-8">
+                    <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
+                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
+                        <h1 class="text-xl font-bold">Pitchutcha</h1>
+                    </a>
+                    <nav class="hidden items-center gap-6 md:flex">
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a>
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a>
+                    </nav>
+                </div>
+                <div class="flex items-center gap-4">
+                    <form id="header-search-form" class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
+                        <input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/>
+                    </form>
+                </div>
+            </div>
+        </header>
+        <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <aside class="md:col-span-1">
+                    <h2 class="text-lg font-semibold mb-4 text-[var(--text-primary)]">Filtrar Resultados</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="font-medium mb-2 text-[var(--text-primary)]">Tópico</h3>
+                            <div class="space-y-2">
+                                {% assign categories = site.articles | map: "category" | uniq | sort %}
+                                {% for category_name in categories %}
+                                    <label class="flex items-center">
+                                        <input class="form-checkbox rounded text-[var(--primary-color)] bg-[var(--background-secondary)] border-[var(--borders)] focus:ring-[var(--primary-color)]" type="checkbox" data-filter="category" value="{{ category_name }}"> 
+                                        <span class="ml-2 text-sm text-[var(--text-secondary)]">{{ category_name }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                <div class="md:col-span-3">
+                    <div class="mb-6">
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">search</span>
+                            <input id="search-input" class="w-full rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] py-3 pl-12 pr-10 text-lg focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)] text-[var(--text-primary)] transition" type="text" placeholder="Pesquisar artigos..."/>
+                        </div>
+                        <div id="autocomplete-suggestions" class="relative"></div>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-[var(--borders)] pb-4 mb-6">
+                        <p id="results-count" class="text-sm text-[var(--text-secondary)]">Carregando artigos...</p>
+                    </div>
+                    <div id="results-container" class="space-y-6"></div>
+                </div>
+            </div>
+        </main>
+        
+        {% include footer.html %}
+    </div>
 
-    <script src="{{ '/js/script.js' | relative_url }}" defer></script><script src="{{ '/js/dev-panel.js' | relative_url }}" defer></script><script src="{{ '/js/vendor/fuse.min.js' | relative_url }}" defer></script><script src="{{ '/js/search.js' | relative_url }}" defer></script>
-</body></html>
+    {% include scripts.html %}
+</body>
+</html>
