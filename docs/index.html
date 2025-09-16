@@ -62,40 +62,11 @@ layout: null
 
         /* --- INÍCIO: ESTILOS ATUALIZADOS --- */
 
-        /* INÍCIO: CSS Adicionado para o novo SVG de fundo da seção final */
-        .final-cta-container {
-            position: relative;
-            overflow: hidden;
-        }
-        #final-cta-svg {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%; /* Garante que o SVG cubra a largura total */
-            height: 100%; /* Garante que o SVG cubra a altura total */
-            object-fit: cover; /* Faz o SVG se esticar para preencher, cortando se necessário */
-            opacity: 0.25; /* Aumenta a opacidade para maior visibilidade */
-            z-index: 0;
-            pointer-events: none;
-        }
-        /* FIM: CSS Adicionado */
+        .final-cta-container { position: relative; overflow: hidden; }
+        #final-cta-svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; object-fit: cover; opacity: 0.25; z-index: 0; pointer-events: none; }
 
-        #progress-bar-container {
-            position: fixed;
-            top: 4rem;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background-color: transparent;
-            z-index: 19;
-        }
-        #progress-bar {
-            height: 4px;
-            background-color: var(--primary-color);
-            width: 0%;
-            transition: width 0.1s linear;
-        }
+        #progress-bar-container { position: fixed; top: 4rem; left: 0; width: 100%; height: 4px; background-color: transparent; z-index: 19; }
+        #progress-bar { height: 4px; background-color: var(--primary-color); width: 0%; transition: width 0.1s linear; }
 
         .global-banner { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background-color: var(--cards-elements); border-bottom: 1px solid var(--borders); color: var(--text-secondary); font-size: 0.9rem; width: 100%; z-index: 10; }
         .global-banner-content strong { color: var(--primary-color); font-weight: 600; }
@@ -226,30 +197,40 @@ layout: null
         <div class="px-4 md:px-8 lg:px-12 pt-16 md:pt-24 text-center">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Pilares do Conhecimento</h2>
             <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Estruturas e conceitos fundamentais para o desenvolvimento de software robusto e eficiente.</p>
+            
             <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
-                    <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">speed</span></div>
-                    <h3 class="text-2xl font-semibold">Análise de Complexidade</h3>
-                    <p class="mt-2 text-[var(--text-secondary)] flex-grow">Entenda a Notação Big O para prever a escalabilidade e a eficiência do seu código.</p>
-                    <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">Até 1000x</p>
-                    <p class="text-sm text-gray-500">mais rápido ao otimizar um algoritmo.</p>
+                
+                <div class="card-container">
+                    <div class="card-content p-8 flex flex-col items-center text-center">
+                        <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">speed</span></div>
+                        <h3 class="text-2xl font-semibold">Análise de Complexidade</h3>
+                        <p class="mt-2 text-[var(--text-secondary)] flex-grow">Entenda a Notação Big O para prever a escalabilidade e a eficiência do seu código.</p>
+                        <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">Até 1000x</p>
+                        <p class="text-sm text-gray-500">mais rápido ao otimizar um algoritmo.</p>
+                    </div>
                 </div>
-                <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
-                    <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">account_tree</span></div>
-                    <h3 class="text-2xl font-semibold">Design de Algoritmos</h3>
-                    <p class="mt-2 text-[var(--text-secondary)] flex-grow">Aprenda paradigmas como Dividir para Conquistar para resolver problemas complexos de forma elegante.</p>
-                    <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">50%</p>
-                    <p class="text-sm text-gray-500">menos código em soluções recursivas.</p>
+
+                <div class="card-container">
+                    <div class="card-content p-8 flex flex-col items-center text-center">
+                        <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">account_tree</span></div>
+                        <h3 class="text-2xl font-semibold">Design de Algoritmos</h3>
+                        <p class="mt-2 text-[var(--text-secondary)] flex-grow">Aprenda paradigmas como Dividir para Conquistar para resolver problemas complexos de forma elegante.</p>
+                        <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">50%</p>
+                        <p class="text-sm text-gray-500">menos código em soluções recursivas.</p>
+                    </div>
                 </div>
-                <div class="p-8 rounded-lg feature-card text-center items-center flex flex-col">
-                    <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">query_stats</span></div>
-                    <h3 class="text-2xl font-semibold">Estruturas de Dados</h3>
-                    <p class="mt-2 text-[var(--text-secondary)] flex-grow">Escolha a estrutura certa (Arrays, Listas, Hashes) para otimizar o acesso e a manipulação de dados.</p>
-                    <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">O(1)</span>
-                    <p class="text-sm text-gray-500">tempo de acesso com a estrutura ideal.</p>
+
+                <div class="card-container">
+                    <div class="card-content p-8 flex flex-col items-center text-center">
+                        <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">query_stats</span></div>
+                        <h3 class="text-2xl font-semibold">Estruturas de Dados</h3>
+                        <p class="mt-2 text-[var(--text-secondary)] flex-grow">Escolha a estrutura certa (Arrays, Listas, Hashes) para otimizar o acesso e a manipulação de dados.</p>
+                        <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">O(1)</span>
+                        <p class="text-sm text-gray-500">tempo de acesso com a estrutura ideal.</p>
+                    </div>
                 </div>
             </div>
-        </div>
+            </div>
 
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Paradigmas Essenciais</h2>
@@ -419,7 +400,8 @@ FIM_FUNÇÃO
                 <div class="mt-10"><a href="{{ '/docs.html' | relative_url }}" class="bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">Explorar a Documentação</a></div>
             </div>
         </div>
-        </main>
+
+    </main>
     
     {% include footer.html %}
     
