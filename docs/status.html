@@ -54,27 +54,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="mb-8">
-                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Histórico de Uptime (Últimas 24 Horas)</h2>
-                    <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
-                        <div class="flex justify-between items-center text-xs text-[var(--text-secondary)] mb-2">
-                            <span>24 Horas Atrás</span>
-                            <span>Hoje</span>
-                        </div>
-                        <div id="uptime-history-graph" class="uptime-graph-container">
-                            </div>
-                        <div class="flex justify-between items-center mt-2">
-                            <div class="flex items-center gap-4 text-xs text-[var(--text-secondary)]">
-                                <span class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm status-operational"></div>Operacional</span>
-                                <span class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm status-outage"></div>Fora do Ar</span>
-                                <span class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-sm status-nodata"></div>Sem Dados</span>
-                            </div>
-                            <span id="uptime-percentage" class="text-sm text-[var(--text-secondary)]"></span>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="pagespeed-report-container" class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Relatório PageSpeed Insights</h2>
                     <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
@@ -90,10 +69,17 @@
                     </div>
                 </div>
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Histórico de Incidentes</h2>
-                    <div id="incidents-history-container"><p class="text-[var(--text-secondary)]">Carregando histórico de incidentes...</p></div>
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Tempo de Resposta das Páginas</h2>
+                    <div id="performance-monitor-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
                 </div>
-                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Histórico de Uptime e Incidentes</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div id="uptime-history-container"><p class="text-[var(--text-secondary)]">Carregando dados de uptime...</p></div>
+                        <div id="incidents-history-container"><p class="text-[var(--text-secondary)]">Carregando histórico de incidentes...</p></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
                         <div class="flex items-center justify-between">
                             <p class="text-[var(--text-secondary)] font-medium">Latência da API</p>
