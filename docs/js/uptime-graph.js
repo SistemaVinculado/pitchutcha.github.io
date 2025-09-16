@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const baseUrl = document.querySelector('meta[name="base-url"]')?.content || '';
+
     const panel = document.getElementById("uptime-panel");
     if (!panel) return;
 
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function initializeGraph() {
         try {
             const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=${Date.now()}`);
-            if (!response.ok) throw new Error("Falha na rede ao buscar uptime-data.json");
+            if (!response.ok) throw new Error("Falha na rede ao buscar uptime-data.json para o gráfico.");
             
             const data = await response.json();
             const monitor = data?.monitors?.[0];
