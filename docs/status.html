@@ -104,6 +104,61 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Latência da API</p>
+                            <span class="material-symbols-outlined text-gray-500">speed</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <p id="metric-api-latency" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência do Modelo</p>
+                            <span class="material-symbols-outlined text-gray-500">model_training</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <p id="metric-inference-time" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Taxa de Erros</p>
+                            <span class="material-symbols-outlined text-gray-500">error_outline</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <p id="metric-error-rate" class="text-[var(--text-primary)] text-3xl font-bold">--%</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Desempenho dos Modelos</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="flex flex-col gap-4 rounded-lg border border-[var(--borders)] p-6 bg-[var(--background-secondary)]">
+                            <p class="text-[var(--text-secondary)] font-medium">Latência da API (Últimas 24h)</p>
+                            <p id="chart-avg-latency" class="text-[var(--text-primary)] text-3xl font-bold truncate">Média: --ms</p>
+                            <div class="flex-1 flex flex-col justify-center">
+                                <svg id="latency-chart-svg" fill="none" height="150" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_area" x1="236" x2="236" y1="0" y2="150">
+                                            <stop stop-color="var(--primary-color)" stop-opacity="0.3"></stop>
+                                            <stop offset="1" stop-color="var(--primary-color)" stop-opacity="0"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4 rounded-lg border border-[var(--borders)] p-6 bg-[var(--background-secondary)]">
+                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência por Modelo</p>
+                            <p id="chart-avg-inference" class="text-[var(--text-primary)] text-3xl font-bold truncate">Média: --ms</p>
+                            <div id="inference-chart-container" class="grid grid-cols-5 gap-4 items-end flex-1 pt-6 px-3"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
         
