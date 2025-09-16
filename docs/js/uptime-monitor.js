@@ -7,26 +7,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     const errorMetric = document.getElementById("metric-error-rate");
 
     if (uptimeContainer && incidentsContainer) {
-        const formatDate = (timestamp, options = {}) => {
+        const formatDate = (timestamp) => {
             if (!timestamp) return "N/A";
             const date = new Date(timestamp * 1000);
-            return date.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo", ...options });
-        };
-        
-        const formatTime = (timestamp) => {
-             if (!timestamp) return "N/A";
-            const date = new Date(timestamp * 1000);
-            return date.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: '2-digit', minute: '2-digit' });
+            return date.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
         };
 
-        const getLogDetails = (log) => {
-            const reason = log.reason ? `(Motivo: ${log.reason.detail || 'N/A'})` : '';
-            switch (log.type) {
-                case 1: return { text: `Indisponibilidade Detectada ${reason}`, description: "O monitor não conseguiu acessar o site.", color: "text-red-500", icon: "error" };
-                case 2: return { text: `Serviço Restaurado ${reason}`, description: "O site voltou a responder normalmente.", color: "text-green-400", icon: "check_circle" };
-                case 98: return { text: "Monitoramento Iniciado", description: "O serviço de monitoramento começou a operar.", color: "text-sky-400", icon: "play_circle" };
-                case 99: return { text: "Monitoramento Pausado", description: "A verificação de status foi pausada manualmente.", color: "text-yellow-400", icon: "pause_circle" };
-                default: return { text: `Evento (código: ${log.type})`, description: "Um evento não categorizado ocorreu.", color: "text-gray-400", icon: "info" };
+        const getLogDetails = (logType) => {
+            switch (logType) {
+                case 1: return { text: "Pausa", color: "text-yellow-400", icon: "pause_circle" };
+                case 2: return { text: "Iniciado", color: "text-green-400", icon: "check_circle" };
+                case 9: return { text: "Parece estar fora", color: "text-red-500", icon: "error" };
+                case 8: return { text: "Parece estar online", color: "text-green-400", icon: "check_circle" };
+                default: return { text: `Evento (${logType})`, color: "text-gray-400", icon: "info" };
             }
         };
 
@@ -49,56 +42,46 @@ document.addEventListener("DOMContentLoaded",()=>{
                     errorMetric.textContent = data.metrics.error_rate || "--%";
                 }
 
-                // O card de Uptime Histórico (7 e 30 dias) foi removido para dar lugar ao gráfico de 24h
-                uptimeContainer.innerHTML = ''; // Limpa o conteúdo antigo
-                uptimeContainer.style.display = 'none'; // Oculta o container antigo
+                const uptimeRatios = monitor.custom_uptime_ratio.split("-");
+                const uptimeHTML = `
+                <div class="p-6 bg-[var(--background-secondary)] border border-[var(--secondary-color)] rounded-lg">
+                    <h3 class="font-semibold text-[var(--text-primary)]">Uptime Histórico</h3>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <p class="text-3xl font-bold text-green-400">${uptimeRatios[0]}%</p>
+                            <p class="text-sm text-[var(--text-secondary)]">Últimos 7 dias</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-3xl font-bold text-green-400">${uptimeRatios[1]}%</p>
+                            <p class="text-sm text-[var(--text-secondary)]">Últimos 30 dias</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+                uptimeContainer.innerHTML = uptimeHTML;
 
-                // Constrói a Linha do Tempo de Incidentes
-                let incidentsHTML = '<div class="space-y-6">';
+                let incidentsHTML = `
+                 <div class="p-6 bg-[var(--background-secondary)] border border-[var(--secondary-color)] rounded-lg">
+                    <h3 class="font-semibold text-[var(--text-primary)] mb-4">Histórico de Incidentes Recentes</h3>
+                    <ul class="space-y-4">
+            `;
                 if (monitor.logs && monitor.logs.length > 0) {
-                    const logsByDay = monitor.logs.reduce((acc, log) => {
-                        const day = formatDate(log.datetime, { year: 'numeric', month: 'long', day: 'numeric' });
-                        if (!acc[day]) {
-                            acc[day] = [];
-                        }
-                        acc[day].push(log);
-                        return acc;
-                    }, {});
-
-                    for (const day in logsByDay) {
-                        const dayLogs = logsByDay[day];
-                        const hasOutage = dayLogs.some(log => log.type === 1);
-                        const dayStatus = hasOutage 
-                            ? { text: "Indisponibilidade Parcial", color: "text-red-500" }
-                            : { text: "Todos os sistemas operacionais", color: "text-green-400" };
-
+                    monitor.logs.forEach(log => {
+                        const details = getLogDetails(log.type);
                         incidentsHTML += `
-                        <div>
-                            <div class="flex justify-between items-center pb-2 border-b border-[var(--borders)]">
-                                <h4 class="font-semibold text-[var(--text-primary)]">${day}</h4>
-                                <span class="text-sm font-medium ${dayStatus.color}">${dayStatus.text}</span>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined ${details.color}">${details.icon}</span>
+                            <div>
+                                <p class="font-medium ${details.color}">${details.text}</p>
+                                <p class="text-sm text-gray-500">${formatDate(log.datetime)} (Duração: ${log.duration}s)</p>
                             </div>
-                            <ul class="mt-4 space-y-4">`;
-
-                        dayLogs.forEach(log => {
-                            const details = getLogDetails(log);
-                            incidentsHTML += `
-                            <li class="flex items-start gap-3 pl-4 border-l border-[var(--borders)]">
-                                <span class="material-symbols-outlined ${details.color} mt-1">${details.icon}</span>
-                                <div class="flex-1">
-                                    <p class="font-medium ${details.color}">${details.text}</p>
-                                    <p class="text-xs text-[var(--text-secondary)]">${details.description}</p>
-                                    <p class="text-xs text-gray-500 mt-1">${formatTime(log.datetime)} (Duração: ${log.duration}s)</p>
-                                </div>
-                            </li>`;
-                        });
-
-                        incidentsHTML += `</ul></div>`;
-                    }
+                        </li>
+                    `;
+                    });
                 } else {
-                    incidentsHTML += '<p class="text-[var(--text-secondary)]">Nenhum incidente registrado recentemente.</p>';
+                    incidentsHTML += '<li><p class="text-[var(--text-secondary)]">Nenhum incidente registrado recentemente.</p></li>';
                 }
-                incidentsHTML += "</div>";
+                incidentsHTML += "</ul></div>";
                 incidentsContainer.innerHTML = incidentsHTML;
 
             }).catch(error => {
