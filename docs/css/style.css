@@ -1,316 +1,441 @@
-/* Fontes (Inter e JetBrains Mono) */
-@font-face {
-  font-display: swap;
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../fonts/inter-v13-latin-regular.woff2') format('woff2');
-}
-@font-face {
-  font-display: swap;
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  src: url('../fonts/inter-v13-latin-500.woff2') format('woff2');
-}
-@font-face {
-  font-display: swap;
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  src: url('../fonts/inter-v13-latin-600.woff2') format('woff2');
-}
-@font-face {
-  font-display: swap;
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 700;
-  src: url('../fonts/inter-v13-latin-700.woff2') format('woff2');
-}
-@font-face {
-  font-display: swap;
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2');
-}
-@font-face {
-  font-display: swap;
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 500;
-  src: url('../fonts/jetbrains-mono-v23-latin-500.woff2') format('woff2');
-}
+---
+---
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="utf-8"/>
+    <title>Pitchutcha - Status do Sistema</title>
 
-/* --- PALETA DE CORES SEMÂNTICA GLOBAL --- */
-:root {
-    /* Cores Primárias */
-    --primary-color: #3388FF;
-    --primary-hover: #55A2FF;
-
-    /* Cores de Texto */
-    --text-primary: #FFFFFF;
-    --text-secondary: #a0a0a0;
-
-    /* Cores de Fundo */
-    --background-primary: #0a0a0a;
-    --background-secondary: #1c1c1c;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-url" content="{{ '/' | relative_url }}">
+    <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
+    <meta name="description" content="Acompanhe em tempo real o status e a performance dos serviços do Pitchutcha.">
     
-    /* Cores de UI */
-    --cards-elements: #242424;
-    --borders: #333333;
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 
-    /* Cores de Feedback */
-    --success: #28a745;
-    --danger: #dc3545;
+    <style>
+      /*=============== FONTES PROXIMA NOVA (DO ARQUIVO ORIGINAL) ===============*/
+      @font-face {
+        font-family: 'proxima-nova';
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-366d17769d864aa72f27defaddf591e460a1de4984bb24dacea57a9fc1d14878.eot?host=discordstatus.com');
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-366d17769d864aa72f27defaddf591e460a1de4984bb24dacea57a9fc1d14878.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-2ee4c449a9ed716f1d88207bd1094e21b69e2818b5cd36b28ad809dc1924ec54.woff?host=discordstatus.com') format('woff');
+        font-weight:400;
+        font-style:normal;
+      }
+      @font-face {
+        font-family: 'proxima-nova';
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-09566917307251d22021a3f91fc646f3e45f8d095209bcd2cded8a1979f06e54.eot?host=discordstatus.com');
+        src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-09566917307251d22021a3f91fc646f3e45f8d095209bcd2cded8a1979f06e54.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
+             url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-86724fb2152613d735ba47c3f47a9ad2424b898bea4bece213dacee40344f966.woff?host=discordstatus.com') format('woff');
+        font-weight:500;
+        font-style:normal;
+      }
 
-    /* Variáveis de Tipografia e Espaçamento */
-    --tab-size-preference: 4;
-    --font-sans: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --line-height-body: 1.65;
-}
+      /*=============== ESTILOS DOS PAINÉIS (RECRIAÇÃO FIEL) ===============*/
+      #discord-status-panel-container {
+        font-family: 'proxima-nova', sans-serif;
+        color: #2E3338;
+      }
+      #discord-status-panel-container .components-uptime-link {
+        color: #72767d;
+        font-size: 14px;
+        margin-bottom: 20px;
+        display: block;
+      }
+      #discord-status-panel-container .components-container {
+        border: 1px solid #E0E0E0;
+        border-radius: 3px;
+        overflow: hidden;
+        background-color: #FFFFFF; /* Fundo branco para os painéis */
+      }
+      #discord-status-panel-container .component-container {
+        background-color: #FFFFFF;
+        border-bottom: 1px solid #E0E0E0;
+      }
+      #discord-status-panel-container .component-container:last-child {
+        border-bottom: none;
+      }
+      #discord-status-panel-container .component-inner-container {
+        padding: 18px 20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      #discord-status-panel-container .component-inner-container > .name {
+        font-weight: 500;
+        color: rgba(46,51,56,.8);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #discord-status-panel-container .component-inner-container > .name .group-parent-indicator {
+        cursor: pointer;
+        font-size: 14px;
+        color: #72767D;
+      }
+      #discord-status-panel-container .component-inner-container > .component-status {
+        margin-left: auto;
+        padding-left: 16px;
+        font-weight: 500;
+      }
+      #discord-status-panel-container .component-inner-container > .icon-indicator {
+        padding-left: 16px;
+        font-size: 18px;
+      }
 
-body {
-    font-family: var(--font-sans);
-    background-color: var(--background-primary);
-    color: var(--text-primary);
-    overflow-x: hidden;
-}
+      #discord-status-panel-container .shared-partial.uptime-90-days-wrapper {
+        display: none;
+      }
+      #discord-status-panel-container .availability-time-line-graphic {
+          width: 100%;
+          height: 34px;
+      }
 
-pre, code {
-    font-family: var(--font-mono);
-    tab-size: var(--tab-size-preference);
-    -moz-tab-size: var(--tab-size-preference);
-}
+      @media (min-width: 768px) {
+        #discord-status-panel-container .component-inner-container {
+          display: grid;
+          grid-template-areas: "name status icon" "uptime uptime uptime";
+          grid-template-columns: 1fr auto auto;
+          gap: 8px 16px;
+        }
+        #discord-status-panel-container .component-inner-container.showcased {
+          grid-template-areas: "name uptime status icon";
+          grid-template-columns: 250px 1fr auto auto;
+        }
+        #discord-status-panel-container .component-inner-container > .name { grid-area: name; }
+        #discord-status-panel-container .component-inner-container > .component-status { grid-area: status; padding-left: 0; }
+        #discord-status-panel-container .component-inner-container > .icon-indicator { grid-area: icon; padding-left: 0; }
+        #discord-status-panel-container .shared-partial.uptime-90-days-wrapper {
+          grid-area: uptime;
+          display: block;
+          min-width: 0;
+        }
+      }
 
-*:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-    border-radius: 4px;
-}
+      #discord-status-panel-container .uptime-90-days-wrapper .legend { display: none; }
+      @media (min-width: 768px) {
+        #discord-status-panel-container .uptime-90-days-wrapper .legend {
+            display: flex; justify-content: space-between; font-size: 12px;
+            margin-top: 5px; color: #72767d;
+        }
+      }
+      #discord-status-panel-container .legend .spacer {
+        flex: 1 1 0%; height: 1px; background: #e0e0e0; margin: auto 8px;
+      }
+      
+      #discord-status-panel-container .child-components-container {
+        display: none; background-color: #fff;
+      }
+      #discord-status-panel-container .component-container.open > .child-components-container { display: block; }
+      #discord-status-panel-container .child-components-container .component-inner-container {
+        padding-left: 48px; border-top: 1px solid #f0f0f0;
+      }
+       
+      #discord-status-panel-container .tooltip-base {
+          position: relative; display: inline-block; cursor: help; color: #aaa;
+          border: 1px solid #aaa; border-radius: 50%; width: 16px; height: 16px;
+          line-height: 14px; text-align: center; font-size: 12px; font-weight: 400;
+      }
+      #discord-status-panel-container .tooltip-base .tooltip-text {
+          visibility: hidden; width: 250px; background-color: #2E3338; color: #fff;
+          text-align: center; border-radius: 3px; padding: 8px; position: absolute;
+          z-index: 10; bottom: 150%; left: 50%; margin-left: -125px; opacity: 0;
+          transition: opacity 0.2s ease;
+          font-size: 13px; font-weight: 400;
+          pointer-events: none;
+      }
+      #discord-status-panel-container .tooltip-base .tooltip-text::after {
+          content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+          border-width: 5px; border-style: solid; border-color: #2E3338 transparent transparent transparent;
+      }
+      #discord-status-panel-container .tooltip-base:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-/* Escala Tipográfica Formalizada */
-article h1, article h2, article h3, article h4 { color: var(--text-primary); letter-spacing: -0.025em; }
-article h1 { font-size: 2.25rem; font-weight: 800; }
-article h2 { font-size: 1.875rem; font-weight: 700; }
-article h3 { font-size: 1.5rem; font-weight: 600; }
-article h4 { font-size: 1.25rem; font-weight: 600; }
-article p, article li { line-height: var(--line-height-body); color: var(--text-secondary); font-size: 1.125rem; }
-article a { color: var(--primary-color); text-decoration: underline; }
-article a:hover { color: var(--primary-hover); }
-article strong { color: var(--text-primary); }
-article blockquote { margin: 1.5rem 0; padding-left: 1.5rem; border-left: 4px solid var(--borders); color: var(--text-secondary); font-style: italic; }
+      #discord-status-panel-container .component-statuses-legend {
+         display: flex; flex-wrap: wrap; justify-content: center;
+         gap: 15px 25px; margin-top: 30px; font-size: 14px; color: #72767D;
+      }
+      #discord-status-panel-container .legend-item { display: flex; align-items: center; gap: 8px; }
+      
+      /* CORES DE STATUS */
+      #discord-status-panel-container .status-red, #discord-status-panel-container .icon-indicator.status-red { color:#ED4245; }
+      #discord-status-panel-container .status-orange, #discord-status-panel-container .icon-indicator.status-orange { color:#F26522; }
+      #discord-status-panel-container .status-yellow, #discord-status-panel-container .icon-indicator.status-yellow { color:#CB8615; }
+      #discord-status-panel-container .status-blue, #discord-status-panel-container .icon-indicator.status-blue { color:#3498DB; }
+      #discord-status-panel-container .status-green, #discord-status-panel-container .icon-indicator.status-green { color:var(--success); }
+    </style>
+</head>
+<body class="bg-[var(--background-primary)] text-[var(--text-primary)]" style='font-family: Inter, "Noto Sans", sans-serif;'>
+    <div class="flex min-h-screen flex-col">
+        {% include header.html %}
+        <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mx-auto max-w-7xl">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Status do Sistema</h1>
+                    <p class="mt-1 text-[var(--text-secondary)]">Visão geral da saúde dos serviços do Pitchutcha em tempo real.</p>
+                </div>
+                <div class="mb-8 p-4 rounded-lg bg-[var(--background-secondary)] border border-[var(--borders)]">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-[var(--text-primary)]">Saúde Geral do Site</h2>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span id="overall-status-indicator" class="relative flex h-3 w-3"></span>
+                            <span id="overall-status-text">Verificando status...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="pagespeed-report-container" class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Relatório PageSpeed Insights</h2>
+                    <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
+                        <p class="text-[var(--text-secondary)]">Carregando relatório...</p>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Status Detalhado dos Componentes</h2>
+                    <div id="discord-status-panel-container">
+                        <div class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg">
+                            <p class="text-[var(--text-secondary)]">Carregando status dos componentes...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Tempo de Resposta das Páginas</h2>
+                    <div id="performance-monitor-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                </div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Histórico de Uptime e Incidentes</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div id="uptime-history-container"><p class="text-[var(--text-secondary)]">Carregando dados de uptime...</p></div>
+                        <div id="incidents-history-container"><p class="text-[var(--text-secondary)]">Carregando histórico de incidentes...</p></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Latência da API</p>
+                            <span class="material-symbols-outlined text-gray-500">speed</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <p id="metric-api-latency" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência do Modelo</p>
+                            <span class="material-symbols-outlined text-gray-500">model_training</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <p id="metric-inference-time" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Taxa de Erros</p>
+                            <span class="material-symbols-outlined text-gray-500">error_outline</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <p id="metric-error-rate" class="text-[var(--text-primary)] text-3xl font-bold">--%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Desempenho dos Modelos</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="flex flex-col gap-4 rounded-lg border border-[var(--borders)] p-6 bg-[var(--background-secondary)]">
+                            <p class="text-[var(--text-secondary)] font-medium">Latência da API (Últimas 24h)</p>
+                            <p id="chart-avg-latency" class="text-[var(--text-primary)] text-3xl font-bold truncate">Média: --ms</p>
+                            <div class="flex-1 flex flex-col justify-center">
+                                <svg id="latency-chart-svg" fill="none" height="150" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_area" x1="236" x2="236" y1="0" y2="150">
+                                            <stop stop-color="var(--primary-color)" stop-opacity="0.3"></stop>
+                                            <stop offset="1" stop-color="var(--primary-color)" stop-opacity="0"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4 rounded-lg border border-[var(--borders)] p-6 bg-[var(--background-secondary)]">
+                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência por Modelo</p>
+                            <p id="chart-avg-inference" class="text-[var(--text-primary)] text-3xl font-bold truncate">Média: --ms</p>
+                            <div id="inference-chart-container" class="grid grid-cols-5 gap-4 items-end flex-1 pt-6 px-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        {% include footer.html %}
+    </div>
 
-a, button {
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
-}
+    {% include scripts.html %}
 
-.global-banner { background-color: var(--primary-color); color: var(--text-primary); padding: 0.75rem 1rem; display: flex; justify-content: center; align-items: center; position: relative; font-size: 0.9rem; }
-.global-banner-close { background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 0.5rem; position: absolute; right: 1rem; line-height: 1; }
-#nprogress{pointer-events:none}#nprogress .bar{background:var(--primary-color);position:fixed;z-index:1031;top:0;left:0;width:100%;height:3px}#nprogress .peg{display:block;position:absolute;right:0;width:100px;height:100%;box-shadow:0 0 10px var(--primary-color),0 0 5px var(--primary-color);opacity:1;-webkit-transform:rotate(3deg) translate(0,-4px);-ms-transform:rotate(3deg) translate(0,-4px);transform:rotate(3deg) translate(0,-4px)}
-.ping-pulse{position:absolute;display:inline-flex;width:100%;height:100%;border-radius:9999px;background-color:currentColor;opacity:.75;animation:ping 1s cubic-bezier(0,0,.2,1) infinite}@keyframes ping{75%,100%{transform:scale(2);opacity:0}}.ping-green{color:var(--success);}.ping-yellow{color:#eab308;}.ping-red{color:var(--danger);}.ping-gray{color:#9ca3af}
-div.highlighter-rouge,figure.highlight{position:relative;margin-bottom:1rem;border-radius:.5rem;background:#282a36;color:#f8f8f2;font-size:.875rem}figure.highlight pre{padding:1rem;overflow-x:auto}.highlight .c{color:#6272a4}.highlight .err{color:#f8f8f2;background-color:#ff5555}.highlight .k{color:#ff79c6}.highlight .l{color:#bd93f9}.highlight .n{color:#f8f8f2}.highlight .o{color:#ff79c6}.highlight .p{color:#f8f8f2}.highlight .cm{color:#6272a4}.highlight .cp{color:#ff79c6}.highlight .c1{color:#6272a4}.highlight .cs{color:#6272a4}.highlight .gd{color:#ff5555}.highlight .ge{font-style:italic}.highlight .gh{color:#50fa7b}.highlight .gs{font-weight:700}.highlight .gu{color:#ff79c6}.highlight .kc{color:#ff79c6}.highlight .kd{color:#8be9fd;font-style:italic}.highlight .kn{color:#ff79c6}.highlight .kp{color:#ff79c6}.highlight .kr{color:#ff79c6}.highlight .kt{color:#8be9fd}.highlight .ld{color:#f1fa8c}.highlight .m{color:#bd93f9}.highlight .s{color:#f1fa8c}.highlight .na{color:#50fa7b}.highlight .nb{color:#8be9fd;font-style:italic}.highlight .nc{color:#50fa7b}.highlight .no{color:#bd93f9}.highlight .nd{color:#ff79c6}.highlight .ni{color:#f8f8f2}.highlight .ne{color:#50fa7b}.highlight .nf{color:#50fa7b}.highlight .nl{color:#f8f8f2}.highlight .nn{color:#f8f8f2}.highlight .nx{color:#50fa7b}.highlight .py{color:#f8f8f2}.highlight .nt{color:#ff79c6}.highlight .nv{color:#8be9fd;font-style:italic}.highlight .ow{color:#ff79c6}.highlight .w{color:#f8f8f2}.highlight .mb{color:#bd93f9}.highlight .mf{color:#bd93f9}.highlight .mh{color:#bd93f9}.highlight .mi{color:#bd93f9}.highlight .mo{color:#bd93f9}.highlight .sb{color:#f1fa8c}.highlight .sc{color:#f1fa8c}.highlight .sd{color:#f1fa8c}.highlight .s2{color:#f1fa8c}.highlight .se{color:#bd93f9}.highlight .sh{color:#f1fa8c}.highlight .si{color:#f1fa8c}.highlight .sx{color:#f1fa8c}.highlight .sr{color:#f1fa8c}.highlight .s1{color:#f1fa8c}.highlight .ss{color:#f1fa8c}.highlight .bp{color:#f8f8f2}.highlight .vc{color:#8be9fd;font-style:italic}.highlight .vg{color:#8be9fd;font-style:italic}.highlight .vi{color:#8be9fd;font-style:italic}.highlight .il{color:#bd93f9}
-.search-modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding-top:15vh;opacity:0;visibility:hidden;transition:opacity .2s ease, visibility .2s ease}.search-modal-overlay.visible{opacity:1;visibility:visible}.search-modal{width:100%;max-width:640px;display:flex;flex-direction:column;max-height:70vh;transform:scale(.95);transition:transform .2s ease;background-color:var(--background-secondary);border:1px solid var(--borders);box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05);}.visible .search-modal{transform:scale(1)}.search-modal-input-wrapper{border-bottom:1px solid var(--borders);padding:1rem;display:flex;align-items:center;gap:.75rem}.search-modal-input{flex-grow:1;background:0 0;border:none;outline:0;color:var(--text-primary);font-size:1.125rem}.search-modal-results{overflow-y:auto}.search-modal-results a{display:block;padding:1rem;border-bottom:1px solid var(--borders)}.search-modal-results a:hover{background-color:var(--background-primary)}.search-modal-results a:last-child{border-bottom:none}.search-modal-results .title{font-weight:600;color:var(--text-primary)}.search-modal-results .excerpt{font-size:.875rem;color:var(--text-secondary);margin-top:.25rem}.search-modal-results mark{background-color:rgba(51,136,255,0.3);color:var(--text-primary);border-radius:2px}.search-modal-footer{border-top:1px solid var(--borders);padding:.75rem 1rem;font-size:.75rem;color:var(--text-secondary);display:flex;gap:.75rem}.search-modal-footer kbd{background-color:var(--cards-elements);border:1px solid var(--borders);border-radius:4px;padding:.125rem .375rem;font-family:monospace}
-.code-tabs-wrapper{margin-bottom:1rem}.code-tabs-nav{display:flex;border-bottom:1px solid var(--borders);background-color:var(--cards-elements);border-top-left-radius:.5rem;border-top-right-radius:.5rem}.code-tab-button{padding:.5rem 1rem;border:none;background-color:transparent;color:var(--text-secondary);cursor:pointer;font-size:.875rem;border-top-left-radius:.5rem;border-top-right-radius:.5rem}.code-tab-button.active{background-color:#282a36;color:var(--text-primary);font-weight:600}.code-tabs-content .highlighter-rouge,.code-tabs-content .highlight{margin-top:0;border-top-left-radius:0;border-top-right-radius:0}
-.river-section{display:grid;grid-template-columns:repeat(12,1fr);gap:2rem;align-items:center;margin-bottom:4rem}.river-content{grid-column:span 12 / span 12}@media (min-width: 768px){.river-content{grid-column:span 5 / span 5}}.river-visual{grid-column:span 12 / span 12}@media (min-width: 768px){.river-visual{grid-column:span 7 / span 7}}.river-section.align-start .river-content{order:1}@media (min-width: 768px){.river-section.align-start .river-content{grid-column-start:1}}.river-section.align-start .river-visual{order:2}@media (min-width: 768px){.river-section.align-start .river-visual{grid-column-start:6}}.river-section.align-end .river-content{order:2}@media (min-width: 768px){.river-section.align-end .river-content{grid-column-start:8}}.river-section.align-end .river-visual{order:1}@media (min-width: 768px){.river-section.align-end .river-visual{grid-column-start:1}}.river-visual img{width:100%;height:auto;border-radius:.5rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1)}
-.feature-block{background-color:var(--cards-elements);border:1px solid var(--borders);border-left-width:4px;border-left-color:var(--primary-color);border-radius:.5rem;padding:1.5rem;display:flex;align-items:flex-start;gap:1rem}.feature-block-icon{flex-shrink:0;color:var(--primary-color)}.feature-block-content h4{font-size:1.125rem;font-weight:600;color:var(--text-primary);margin-top:0;margin-bottom:.5rem}.feature-block-content p{font-size:.875rem;color:var(--text-secondary);margin:0}
-.hero-glow { background-image: radial-gradient(ellipse 80% 50% at 50% -20%,rgba(51,136,255,0.15),hsla(0,0%,100%,0)); }
-.code-language-tag { position: absolute; top: 0.5rem; left: 0.5rem; padding: 0.15rem 0.5rem; font-family: sans-serif; font-size: 0.75rem; color: #cbd5e1; background-color: #384252; border-radius: 0.375rem; text-transform: uppercase; z-index: 1; }
-.toast-notification { position: fixed; bottom: 2rem; left: 50%; transform: translate(-50%, 150%); background-color: #2d3748; color: #e2e8f0; padding: 0.75rem 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1000; opacity: 0; transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; }
-.toast-notification.show { transform: translate(-50%, 0); opacity: 1; }
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const panelContainer = document.getElementById("discord-status-panel-container");
+        const overallStatusIndicator = document.getElementById("overall-status-indicator");
+        const overallStatusText = document.getElementById("overall-status-text");
 
-/* --- NOVOS ESTILOS PARA O DEV PANEL --- */
-.dev-tab {
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    transition: background-color 0.2s ease-in-out;
-    border: none;
-    background-color: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-}
-.dev-tab:not(:last-child) {
-    margin-right: 0.25rem;
-}
-.dev-tab:hover {
-    background-color: #374151; /* gray-700 */
-}
-.dev-tab.active-tab {
-    background-color: #0ea5e9; /* sky-500 */
-    color: white;
-    font-weight: 600;
-}
-.dev-button {
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    font-weight: 600;
-    transition: background-color 0.2s ease-in-out;
-    border: none;
-    cursor: pointer;
-}
-.dev-button:hover {
-    background-color: var(--primary-hover);
-}
+        if (!panelContainer || !overallStatusIndicator || !overallStatusText) {
+            console.error("Elementos essenciais do painel de status não foram encontrados.");
+            return;
+        }
 
-/* ==========================================================================
-    ESTILOS PARA O NOVO PAINEL DE STATUS (ESTILO DISCORD)
-========================================================================== 
-*/
+        const statuses = {
+            operational: { text: "Operacional", colorClass: "status-green", icon: "fa-check" },
+            degraded: { text: "Performance Degradada", colorClass: "status-yellow", icon: "fa-minus-square" },
+            partial_outage: { text: "Falha Parcial", colorClass: "status-orange", icon: "fa-exclamation-triangle" },
+            major_outage: { text: "Falha Crítica", colorClass: "status-red", icon: "fa-times" },
+        };
 
-/*=============== FONTES PROXIMA NOVA ===============*/
-@font-face {
-  font-family: 'proxima-nova';
-  src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-366d17769d864aa72f27defaddf591e460a1de4984bb24dacea57a9fc1d14878.eot?host=discordstatus.com');
-  src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-366d17769d864aa72f27defaddf591e460a1de4984bb24dacea57a9fc1d14878.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
-        url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaRegular-2ee4c449a9ed716f1d88207bd1094e21b69e2818b5cd36b28ad809dc1924ec54.woff?host=discordstatus.com') format('woff');
-  font-weight:400;
-  font-style:normal;
-}
-@font-face {
-  font-family: 'proxima-nova';
-  src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-09566917307251d22021a3f91fc646f3e45f8d095209bcd2cded8a1979f06e54.eot?host=discordstatus.com');
-  src: url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-09566917307251d22021a3f91fc646f3e45f8d095209bcd2cded8a1979f06e54.eot?host=discordstatus.com#iefix') format('embedded-opentype'),
-        url('https://dka575ofm4ao0.cloudfront.net/assets/ProximaNovaSemibold-86724fb2152613d735ba47c3f47a9ad2424b898bea4bece213dacee40344f966.woff?host=discordstatus.com') format('woff');
-  font-weight:500;
-  font-style:normal;
-}
+        const components = [
+            { id: 'api', name: 'API Principal', description: 'Responsável pelo envio e recebimento de dados e operações gerais.', showUptime: true, children: [] },
+            { id: 'database', name: 'Banco de Dados', description: 'Armazenamento e consulta de dados.', showUptime: true, children: [] },
+            { id: 'realtime-updates', name: 'Atualizações em Tempo Real', description: 'Serviço de WebSocket para atualizações ao vivo.', showUptime: true, children: [] },
+            { id: 'file-storage', name: 'Armazenamento de Arquivos', description: 'Upload e download de arquivos e mídias.', showUptime: true, children: [] },
+            { id: 'auth', name: 'Serviços de Autenticação', isGroup: true, children: [
+                { id: 'auth-login', name: 'Login e Cadastro', description: 'Sistemas de entrada e registro de usuários.' },
+                { id: 'auth-sessions', name: 'Gerenciamento de Sessões', description: 'Controle de sessões de usuários ativos.' },
+            ]},
+            { id: 'client-apps', name: 'Aplicações Cliente', isGroup: true, children: [
+                { id: 'client-web', name: 'Aplicação Web', description: 'Interface principal no navegador.' },
+                { id: 'client-docs', name: 'Página de Documentação', description: 'Serviço que entrega a documentação.' },
+            ]}
+        ];
 
-/*=============== ESTILOS DOS PAINÉIS (RECRIAÇÃO FIEL) ===============*/
-.discord-status-panel {
-  font-family: 'proxima-nova', sans-serif;
-  color: #2E3338;
-}
-.discord-status-panel .components-uptime-link {
-  color: #72767d;
-  font-size: 14px;
-  margin-bottom: 20px;
-  display: block;
-}
-.discord-status-panel .components-container {
-  border: 1px solid #E0E0E0;
-  border-radius: 3px;
-  overflow: hidden;
-  background-color: #FFFFFF; /* Fundo branco para os painéis */
-}
-.discord-status-panel .component-container {
-  background-color: #FFFFFF;
-  border-bottom: 1px solid #E0E0E0;
-}
-.discord-status-panel .component-container:last-child {
-  border-bottom: none;
-}
-.discord-status-panel .component-inner-container {
-  padding: 18px 20px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.discord-status-panel .component-inner-container > .name,
-.discord-status-panel .component-inner-container > .tooltip-base {
-  font-weight: 500;
-  color: rgba(46,51,56,.8);
-}
-.discord-status-panel .component-inner-container > .name {
-    margin-right: 8px;
-}
-.discord-status-panel .component-inner-container > .name .group-parent-indicator {
-  cursor: pointer;
-  font-size: 14px;
-  color: #72767D;
-  margin-right: 8px;
-}
-.discord-status-panel .component-inner-container > .component-status {
-  margin-left: auto;
-  padding-left: 16px;
-  font-weight: 500;
-}
-.discord-status-panel .component-inner-container > .icon-indicator {
-  padding-left: 16px;
-  font-size: 18px;
-}
+        function getRandomStatus(isCritical = false) {
+            const rand = Math.random();
+            if (isCritical && rand > 0.98) return 'major_outage';
+            if (rand > 0.94) return 'partial_outage';
+            if (rand > 0.88) return 'degraded';
+            return 'operational';
+        }
 
-.discord-status-panel .shared-partial.uptime-90-days-wrapper {
-  display: none; /* Escondido por padrão, ativado via media query */
-}
-.discord-status-panel .availability-time-line-graphic {
-    width: 100%;
-    height: 34px;
-}
+        function generateUptimeSVG() {
+            let svg = `<svg class="availability-time-line-graphic" preserveAspectRatio="none" viewBox="0 0 448 34">`;
+            const colors = {
+                operational: '#3BA55C',
+                degraded: '#CB8615',
+                partial_outage: '#F26522',
+                major_outage: '#ED4245'
+            };
+            for (let i = 0; i < 90; i++) {
+                const rand = Math.random();
+                let color = colors.operational;
+                if (rand > 0.98) color = colors.major_outage;
+                else if (rand > 0.95) color = colors.partial_outage;
+                else if (rand > 0.92) color = colors.degraded;
+                svg += `<rect height="34" width="3" x="${i * 5}" y="0" fill="${color}"></rect>`;
+            }
+            svg += `</svg>`;
+            return svg;
+        }
 
-@media (min-width: 768px) {
-  .discord-status-panel .component-inner-container {
-    display: grid;
-    grid-template-areas: "name status icon" "uptime uptime uptime";
-    grid-template-columns: 1fr auto auto;
-    gap: 8px 16px;
-  }
-  .discord-status-panel .component-inner-container.showcased {
-    grid-template-areas: "name uptime status icon";
-    grid-template-columns: 250px 1fr auto auto;
-  }
-  .discord-status-panel .component-inner-container > .name { grid-area: name; margin-right: 0; display: flex; align-items: center; gap: 8px;}
-  .discord-status-panel .component-inner-container > .tooltip-base { display: none; } /* Ocultamos o tooltip separado, pois ele agora está dentro do .name */
-  .discord-status-panel .component-inner-container > .component-status { grid-area: status; padding-left: 0; }
-  .discord-status-panel .component-inner-container > .icon-indicator { grid-area: icon; padding-left: 0; }
-  .discord-status-panel .shared-partial.uptime-90-days-wrapper {
-    grid-area: uptime;
-    display: block;
-    min-width: 0;
-  }
-}
+        function render() {
+            let overallSystemStatus = 'operational';
+            
+            const mainPanelHTML = components.map(component => {
+                if (component.isGroup) {
+                    let groupStatusKey = 'operational';
+                    const childrenHTML = component.children.map(child => {
+                        child.status = getRandomStatus();
+                        
+                        if (child.status === 'major_outage') groupStatusKey = 'major_outage';
+                        else if (child.status === 'partial_outage' && groupStatusKey !== 'major_outage') groupStatusKey = 'partial_outage';
+                        else if (child.status === 'degraded' && groupStatusKey === 'operational') groupStatusKey = 'degraded';
+                        
+                        const statusInfo = statuses[child.status];
+                        return `
+                            <div class="component-inner-container ${statusInfo.colorClass}">
+                                <span class="name">${child.name}<span class="tooltip-base">?<span class="tooltip-text">${child.description}</span></span></span>
+                                <span class="component-status">${statusInfo.text}</span>
+                                <span class="tool icon-indicator fa ${statusInfo.icon} ${statusInfo.colorClass}"></span>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    if (groupStatusKey === 'major_outage' || groupStatusKey === 'partial_outage') overallSystemStatus = 'outage';
+                    else if (groupStatusKey === 'degraded' && overallSystemStatus === 'operational') overallSystemStatus = 'degraded';
+                    
+                    const groupStatusInfo = statuses[groupStatusKey];
 
-.discord-status-panel .uptime-90-days-wrapper .legend { display: none; }
-@media (min-width: 768px) {
-  .discord-status-panel .uptime-90-days-wrapper .legend {
-      display: flex; justify-content: space-between; font-size: 12px;
-      margin-top: 5px; color: #72767d;
-  }
-}
-.discord-status-panel .legend .spacer {
-  flex: 1 1 0%; height: 1px; background: #e0e0e0; margin: auto 8px;
-}
+                    return `
+                        <div class="component-container border-color is-group">
+                            <div class="component-inner-container ${groupStatusInfo.colorClass}" data-js-hook="component-group-opener">
+                                <span class="name"><span class="fa group-parent-indicator fa-plus-square-o" role="button"></span> ${component.name}</span>
+                                <span class="component-status">${groupStatusInfo.text}</span>
+                                <span class="tool icon-indicator fa ${groupStatusInfo.icon} ${groupStatusInfo.colorClass}"></span>
+                            </div>
+                            <div class="child-components-container">${childrenHTML}</div>
+                        </div>
+                    `;
+                } else {
+                    component.status = getRandomStatus(true);
+                    if (component.status === 'major_outage' || component.status === 'partial_outage') overallSystemStatus = 'outage';
+                    else if (component.status === 'degraded' && overallSystemStatus === 'operational') overallSystemStatus = 'degraded';
 
-.discord-status-panel .child-components-container {
-  display: none; background-color: #fff;
-}
-.discord-status-panel .component-container.open > .child-components-container { display: block; }
-.discord-status-panel .child-components-container .component-inner-container {
-  padding-left: 48px; border-top: 1px solid #f0f0f0;
-}
- 
-.discord-status-panel .tooltip-base {
-    position: relative; display: inline-block; cursor: help; color: #aaa;
-    border: 1px solid #aaa; border-radius: 50%; width: 16px; height: 16px;
-    line-height: 14px; text-align: center; font-size: 12px; font-weight: 400;
-}
-.discord-status-panel .tooltip-base .tooltip-text {
-    visibility: hidden; width: 250px; background-color: #2E3338; color: #fff;
-    text-align: center; border-radius: 3px; padding: 8px; position: absolute;
-    z-index: 10; bottom: 150%; left: 50%; margin-left: -125px; opacity: 0;
-    transition: opacity 0.2s ease;
-    font-size: 13px; font-weight: 400;
-    pointer-events: none;
-}
-.discord-status-panel .tooltip-base .tooltip-text::after {
-    content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
-    border-width: 5px; border-style: solid; border-color: #2E3338 transparent transparent transparent;
-}
-.discord-status-panel .tooltip-base:hover .tooltip-text { visibility: visible; opacity: 1; }
+                    const statusInfo = statuses[component.status];
+                    return `
+                        <div class="component-container border-color">
+                            <div class="component-inner-container ${statusInfo.colorClass} showcased">
+                                <span class="name">${component.name}<span class="tooltip-base">?<span class="tooltip-text">${component.description}</span></span></span>
+                                <span class="component-status">${statusInfo.text}</span>
+                                <span class="tool icon-indicator fa ${statusInfo.icon} ${statusInfo.colorClass}"></span>
+                                <div class="shared-partial uptime-90-days-wrapper">
+                                    ${generateUptimeSVG()}
+                                    <div class="legend">
+                                        <div class="legend-item light">90 dias atrás</div><div class="spacer"></div>
+                                        <div class="legend-item">100% uptime</div><div class="spacer"></div>
+                                        <div class="legend-item light">Hoje</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+            
+            const legendHTML = `
+                <div class="component-statuses-legend">
+                    <div class="legend-item"><span class="icon-indicator status-green fa fa-check"></span> Operacional</div>
+                    <div class="legend-item"><span class="icon-indicator status-yellow fa fa-minus-square"></span> Performance Degradada</div>
+                    <div class="legend-item"><span class="icon-indicator status-orange fa fa-exclamation-triangle"></span> Falha Parcial</div>
+                    <div class="legend-item"><span class="icon-indicator status-red fa fa-times"></span> Falha Crítica</div>
+                </div>
+            `;
 
-.discord-status-panel .component-statuses-legend {
-    display: flex; flex-wrap: wrap; justify-content: center;
-    gap: 15px 25px; margin-top: 30px; font-size: 14px; color: #72767D;
-}
-.discord-status-panel .legend-item { display: flex; align-items: center; gap: 8px; }
+            panelContainer.innerHTML = `<div class="components-container">${mainPanelHTML}</div>${legendHTML}`;
 
-/* CORES DE STATUS */
-.discord-status-panel .status-red, .discord-status-panel .icon-indicator.status-red { color:#ED4245; }
-.discord-status-panel .status-orange, .discord-status-panel .icon-indicator.status-orange { color:#F26522; }
-.discord-status-panel .status-yellow, .discord-status-panel .icon-indicator.status-yellow { color:#CB8615; }
-.discord-status-panel .status-blue, .discord-status-panel .icon-indicator.status-blue { color:#3498DB; }
-.discord-status-panel .status-green, .discord-status-panel .icon-indicator.status-green { color:var(--success); }
+            const overallStatusMap = {
+                operational: { pulse: "ping-green", dot: "bg-green-500", text: "Todos os sistemas operacionais" },
+                degraded: { pulse: "ping-yellow", dot: "bg-yellow-500", text: "Performance degradada" },
+                outage: { pulse: "ping-red", dot: "bg-red-500", text: "Falha crítica no sistema" }
+            };
+            const currentOverallStatus = overallStatusMap[overallSystemStatus];
+            overallStatusIndicator.innerHTML = `<span class="relative flex h-3 w-3"><span class="ping-pulse ${currentOverallStatus.pulse}"></span><span class="relative inline-flex rounded-full h-3 w-3 ${currentOverallStatus.dot}"></span></span>`;
+            overallStatusText.textContent = currentOverallStatus.text;
+            
+            // Usar a fonte do painel para o texto de status geral para consistência
+            overallStatusText.style.fontFamily = "'proxima-nova', sans-serif";
+
+            const groupOpeners = document.querySelectorAll('[data-js-hook="component-group-opener"]');
+            groupOpeners.forEach(opener => {
+                opener.addEventListener('click', () => {
+                    const parentContainer = opener.closest('.component-container');
+                    parentContainer.classList.toggle('open');
+                    const indicator = opener.querySelector('.group-parent-indicator');
+                    indicator.classList.toggle('fa-plus-square-o');
+                    indicator.classList.toggle('fa-minus-square-o');
+                });
+            });
+        }
+
+        render();
+    });
+    </script>
+
+</body>
+</html>
