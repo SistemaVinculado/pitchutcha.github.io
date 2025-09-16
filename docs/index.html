@@ -27,20 +27,12 @@ layout: null
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     
     <style>
         /* Estilos Originais */
         .hero-tab-panel { display: none; }
         .hero-tab-panel.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
         .hero-tab-button.active { color: var(--text-primary); border-bottom-color: var(--primary-color); }
-
-        .accordion-item summary::-webkit-details-marker { display: none; }
-        .accordion-item summary { list-style: none; cursor: pointer; }
-        .accordion-item[open] summary { color: var(--primary-color); }
-        .accordion-item[open] summary .accordion-icon { transform: rotate(45deg); }
-        .accordion-image { transition: opacity 0.3s ease-in-out; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -51,8 +43,6 @@ layout: null
         .logo-carousel-item img { height: 48px; width: auto; filter: brightness(0) invert(1) opacity(0.6); transition: all 0.2s ease-in-out; }
         .logo-carousel-item img:hover { filter: brightness(0) invert(1) opacity(1); }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, #0d1117, transparent); z-index: 2; }
         
         body { 
             background-color: var(--background-primary); 
@@ -60,7 +50,7 @@ layout: null
             overflow-x: hidden;
         }
 
-        /* --- INÍCIO: ESTILOS ATUALIZADOS --- */
+        /* --- ESTILOS ATUALIZADOS --- */
 
         .final-cta-container { position: relative; overflow: hidden; }
         #final-cta-svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; object-fit: cover; opacity: 0.25; z-index: 0; pointer-events: none; }
@@ -73,15 +63,8 @@ layout: null
         .global-banner-close { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.25rem; line-height: 1; }
         .global-banner-close:hover { color: var(--text-primary); }
         .banner-hidden { display: none; }
-
-        .code-tabs-buttons { display: flex; border-bottom: 1px solid #2a2a2a; }
-        .tab-button { padding: 0.75rem 1rem; cursor: pointer; background-color: transparent; border: none; border-bottom: 3px solid transparent; color: #8c8c8c; font-weight: 500; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; }
-        .tab-button:hover { color: #d4d4d4; }
-        .tab-button.active { color: #d4d4d4; border-bottom-color: #d4d4d4; }
-        .code-tab-panel { display: none; }
-        .code-tab-panel.active { display: block; }
         
-        .code-block-card { background: #1f1f1f; border: 1px solid #2a2a2a; display: flex; margin-bottom: 70px; padding: 16px; width: 100%; }
+        .code-block-card { background: #1f1f1f; border: 1px solid #2a2a2a; display: flex; margin-bottom: 70px; padding: 16px; width: 100%; border-radius: 12px; }
         @media screen and (max-width: 768px) { .code-block-card { flex-direction: column; gap: 20px; } }
         .code-block-left-side { color: #d4d4d4; display: flex; flex-direction: column; gap: 8px; margin-right: 30px; max-width: 240px; flex-shrink: 0; }
         @media screen and (max-width: 768px) { .code-block-left-side { margin-right: 0; max-width: unset; } }
@@ -93,25 +76,52 @@ layout: null
         .custom-button-small { align-items: center; background: #323232; border: 1px solid #3e3e3e; border-radius: 12px; color: #d4d4d4; cursor: pointer; display: inline-flex; gap: 8px; height: 36px; opacity: .9; padding: 8px 12px; text-decoration: none; transition: background-color .2s ease-in-out,opacity .2s ease-in-out; font-size: 0.875rem; font-weight: 500; }
         .custom-button-small:hover { background: #3c3c3c; border-color: #3e3e3e; opacity: 1; }
         .custom-button-small .material-symbols-outlined { font-size: 1.1rem; vertical-align: middle; }
-        .code-block-right-side { display: flex; min-width: 0; width: 100%; }
-        #code-tabs-container { width: 100%; }
+        .code-block-right-side { display: flex; min-width: 0; width: 100%; flex-direction: column;}
+        .code-tabs-buttons { display: flex; border-bottom: 1px solid #2a2a2a; }
+        .tab-button { padding: 0.75rem 1rem; cursor: pointer; background-color: transparent; border: none; border-bottom: 3px solid transparent; color: #8c8c8c; font-weight: 500; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; }
+        .tab-button:hover { color: #d4d4d4; }
+        .tab-button.active { color: #d4d4d4; border-bottom-color: #d4d4d4; }
+        .code-tab-panel { display: none; }
+        .code-tab-panel.active { display: block; }
         .code-block-tab-content { height: 350px; overflow: auto; background: #1f1f1f; padding: 1.25rem; border-top: 1px solid #2a2a2a; border-radius: 0 0 0.5rem 0.5rem; }
         .code-block-tab-content pre { padding: 0 !important; margin: 0 !important; background: transparent !important; overflow: visible; }
-        .code-block-tab-content code.hljs, .hljs-ln-numbers { font-family: 'Courier New', Courier, monospace !important; font-size: 0.875rem !important; line-height: 1.5rem !important; }
-        .hljs-ln { border-collapse: collapse; width: 100%; }
-        .hljs-ln td { padding: 0; vertical-align: top; }
-        .hljs-ln-numbers { position: -webkit-sticky; position: sticky; left: 0; width: 40px; padding-right: 12px; color: #8c8c8c; text-align: right; background: #1f1f1f; -webkit-user-select: none; user-select: none; z-index: 1; }
-        .hljs-ln-code { padding-left: 12px; }
+        .code-block-tab-content code.hljs, .hljs-ln-numbers { font-family: 'JetBrains Mono', monospace !important; font-size: 0.875rem !important; line-height: 1.5rem !important; }
         
         .skip-to-content { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
         .skip-to-content:focus { left: 50%; transform: translateX(-50%); top: 1rem; width: auto; height: auto; padding: 0.75rem 1.25rem; background-color: var(--primary-color); color: white; font-weight: 700; border-radius: 0.5rem; z-index: 100; text-decoration: none; overflow: visible; }
+        
+        /* INÍCIO: CSS para a nova seção de Paradigmas */
+        .paradigm-tab-button {
+            padding: 1rem 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
+            color: var(--text-secondary);
+        }
+        .paradigm-tab-button.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--primary-color);
+        }
+        .paradigm-tab-panel {
+            display: none;
+        }
+        .paradigm-tab-panel.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .paradigm-image {
+            transition: opacity 0.4s ease-in-out;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        /* FIM: CSS para a nova seção de Paradigmas */
     </style>
 </head>
 <body class="text-[var(--text-primary)]">
 
-    <div id="progress-bar-container">
-        <div id="progress-bar"></div>
-    </div>
+    <div id="progress-bar-container"><div id="progress-bar"></div></div>
     <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
     <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
@@ -145,15 +155,13 @@ layout: null
     <main id="main-content">
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
-
             <div class="relative z-10 w-full max-w-5xl mx-auto">
                 <nav class="flex justify-center border-b border-[var(--borders)] mb-8" role="tablist" aria-label="Tópicos Principais">
                     <button id="tab-btn-algoritmos" role="tab" aria-selected="true" aria-controls="tab-panel-algoritmos" class="hero-tab-button active text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors">Algoritmos</button>
                     <button id="tab-btn-estruturas" role="tab" aria-selected="false" aria-controls="tab-panel-estruturas" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors" tabindex="-1">Estruturas de Dados</button>
                     <button id="tab-btn-complexidade" role="tab" aria-selected="false" aria-controls="tab-panel-complexidade" class="hero-tab-button text-lg font-semibold py-4 px-6 border-b-2 border-transparent text-gray-500 transition-colors" tabindex="-1">Análise de Complexidade</button>
                 </nav>
-
-                <div id="tab-panel-algoritmos" role="tabpanel" aria-labelledby="tab-btn-algoritmos" aria-hidden="false" class="hero-tab-panel active items-center text-left gap-8">
+                <div id="tab-panel-algoritmos" role="tabpanel" class="hero-tab-panel active items-center text-left gap-8">
                     <div class="w-full md:w-1/2">
                         <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Design de Algoritmos</h1>
                         <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Aprenda a criar soluções eficientes com paradigmas como Dividir para Conquistar, Programação Dinâmica e Algoritmos Gulosos.</p>
@@ -161,8 +169,7 @@ layout: null
                     </div>
                     <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Visualização de Design de Algoritmos."></div>
                 </div>
-
-                <div id="tab-panel-estruturas" role="tabpanel" aria-labelledby="tab-btn-estruturas" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
+                <div id="tab-panel-estruturas" role="tabpanel" class="hero-tab-panel items-center text-left gap-8">
                     <div class="w-full md:w-1/2">
                         <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Estruturas de Dados</h1>
                         <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Organize e gerencie dados de forma eficaz com Arrays, Listas Ligadas, Pilhas, Filas e Tabelas Hash para aplicações de alta performance.</p>
@@ -170,8 +177,7 @@ layout: null
                     </div>
                     <div class="hidden md:block md:w-1/2"><img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="rounded-lg shadow-2xl" alt="Visualização de Estruturas de Dados." loading="lazy"></div>
                 </div>
-                
-                <div id="tab-panel-complexidade" role="tabpanel" aria-labelledby="tab-btn-complexidade" aria-hidden="true" class="hero-tab-panel items-center text-left gap-8">
+                <div id="tab-panel-complexidade" role="tabpanel" class="hero-tab-panel items-center text-left gap-8">
                     <div class="w-full md:w-1/2">
                         <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">Análise de Complexidade</h1>
                         <p class="mt-4 text-lg md:text-xl text-[var(--text-secondary)]">Entenda a Notação Big O e compare algoritmos como Busca Linear ($O(n)$) e Binária ($O(\log n)$) para escrever um código mais rápido.</p>
@@ -197,9 +203,7 @@ layout: null
         <div class="px-4 md:px-8 lg:px-12 pt-16 md:pt-24 text-center">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Pilares do Conhecimento</h2>
             <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Estruturas e conceitos fundamentais para o desenvolvimento de software robusto e eficiente.</p>
-            
             <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                
                 <div class="card-container">
                     <div class="card-content p-8 flex flex-col items-center text-center">
                         <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">speed</span></div>
@@ -209,7 +213,6 @@ layout: null
                         <p class="text-sm text-gray-500">mais rápido ao otimizar um algoritmo.</p>
                     </div>
                 </div>
-
                 <div class="card-container">
                     <div class="card-content p-8 flex flex-col items-center text-center">
                         <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">account_tree</span></div>
@@ -219,7 +222,6 @@ layout: null
                         <p class="text-sm text-gray-500">menos código em soluções recursivas.</p>
                     </div>
                 </div>
-
                 <div class="card-container">
                     <div class="card-content p-8 flex flex-col items-center text-center">
                         <div class="bg-[var(--background-secondary)] p-4 rounded-full mb-4"><span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">query_stats</span></div>
@@ -230,128 +232,106 @@ layout: null
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
 
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Paradigmas Essenciais</h2>
             <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto">Explore diferentes abordagens para resolver problemas e veja como elas funcionam na prática com exemplos visuais.</p>
-            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div class="accordion-container space-y-4">
-                    <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" open data-image="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}">
-                        <summary class="flex justify-between items-center text-xl font-semibold">Dividir para Conquistar<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
-                        <p class="mt-4 text-[var(--text-secondary)]">Quebre um problema grande em subproblemas menores, resolva-os independentemente e combine as soluções. O Merge Sort é um exemplo clássico desta técnica poderosa.</p>
-                    </details>
-                    <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" data-image="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}">
-                        <summary class="flex justify-between items-center text-xl font-semibold">Programação Dinâmica<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
-                        <p class="mt-4 text-[var(--text-secondary)]">Evite recálculos armazenando os resultados de subproblemas (memoização). Ideal para problemas de otimização, como o cálculo da sequência de Fibonacci.</p>
-                    </details>
-                    <details class="accordion-item bg-[var(--cards-elements)] border border-[var(--borders)] p-6 rounded-lg" data-image="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}">
-                        <summary class="flex justify-between items-center text-xl font-semibold">Algoritmos Gulosos (Greedy)<span class="material-symbols-outlined accordion-icon text-2xl transition-transform">+</span></summary>
-                        <p class="mt-4 text-[var(--text-secondary)]">Faça a escolha localmente ótima em cada etapa, na esperança de encontrar uma solução globalmente ótima. Eficiente para problemas como o da seleção de atividades.</p>
-                    </details>
+            <div id="paradigms-section" class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+                <div class="flex flex-col gap-4">
+                    <nav class="flex justify-between border-b border-[var(--borders)]" role="tablist">
+                        <button role="tab" class="paradigm-tab-button active" data-paradigm="conquer">Dividir para Conquistar</button>
+                        <button role="tab" class="paradigm-tab-button" data-paradigm="dynamic">Programação Dinâmica</button>
+                        <button role="tab" class="paradigm-tab-button" data-paradigm="greedy">Algoritmos Gulosos</button>
+                    </nav>
+                    <div class="pt-4 min-h-[150px]">
+                        <div role="tabpanel" class="paradigm-tab-panel active" data-paradigm-content="conquer">
+                            <h3 class="text-xl font-semibold text-white mb-2">Dividir para Conquistar</h3>
+                            <p class="text-[var(--text-secondary)]">Quebre um problema grande em subproblemas menores, resolva-os independentemente e combine as soluções. O Merge Sort é um exemplo clássico desta técnica poderosa.</p>
+                        </div>
+                        <div role="tabpanel" class="paradigm-tab-panel" data-paradigm-content="dynamic">
+                            <h3 class="text-xl font-semibold text-white mb-2">Programação Dinâmica</h3>
+                            <p class="text-[var(--text-secondary)]">Evite recálculos armazenando os resultados de subproblemas (memoização). Ideal para problemas de otimização, como o cálculo da sequência de Fibonacci.</p>
+                        </div>
+                        <div role="tabpanel" class="paradigm-tab-panel" data-paradigm-content="greedy">
+                            <h3 class="text-xl font-semibold text-white mb-2">Algoritmos Gulosos (Greedy)</h3>
+                             <p class="text-[var(--text-secondary)]">Faça a escolha localmente ótima em cada etapa, na esperança de encontrar uma solução globalmente ótima. Eficiente para problemas como o da seleção de atividades.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="accordion-image-container h-80 md:h-96">
-                    <img id="accordion-image-display" src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="accordion-image rounded-lg w-full h-full object-cover shadow-2xl" alt="Visualização do paradigma de algoritmo selecionado." loading="lazy">
+                <div class="relative h-80 md:h-96">
+                    <img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="conquer" style="opacity: 1;" alt="Visualização do paradigma Dividir para Conquistar.">
+                    <img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="dynamic" style="opacity: 0;" alt="Visualização do paradigma Programação Dinâmica." loading="lazy">
+                    <img src="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="greedy" style="opacity: 0;" alt="Visualização do paradigma de Algoritmos Gulosos." loading="lazy">
                 </div>
             </div>
         </div>
-
         <div class="px-4 md:px-8 lg:px-12 mt-20 md:mt-32 max-w-7xl mx-auto">
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4">Exemplos Práticos</h2>
-            <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Veja como os conceitos ganham vida com exemplos de código claros e comentados.</p>
-
+            <div class="text-center">
+                 <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Exemplos Práticos</h2>
+                 <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Veja como os conceitos ganham vida com exemplos de código claros e comentados.</p>
+            </div>
             <div class="code-block-card">
                 <div class="code-block-left-side">
-                    <div class="code-block-title">
-                        Busca Binária
-                    </div>
-                    <div class="code-block-description">
-                        Um algoritmo de busca eficiente que encontra a posição de um item em uma lista ordenada. Reduz pela metade o tamanho da busca a cada iteração.
-                    </div>
+                    <h3 class="code-block-title">Busca Binária</h3>
+                    <p class="code-block-description">Um algoritmo de busca eficiente que encontra a posição de um item em uma lista ordenada. Reduz pela metade o tamanho da busca a cada iteração.</p>
                     <div class="code-block-time-estimate">
                         <span class="material-symbols-outlined notranslate">schedule</span>
                         <span>Complexidade: O(log n)</span>
                     </div>
                     <div class="code-block-button-container">
-                        <button type="button" class="custom-button-small">
+                        <a href="{{ '/articles/algoritmos-de-busca-linear-vs-binaria' | relative_url }}" class="custom-button-small">
                             <span class="material-symbols-outlined notranslate">auto_stories</span> Ver o Guia
-                        </button>
+                        </a>
                     </div>
                 </div>
-
                 <div class="code-block-right-side">
-                    <div id="code-tabs-container">
-                        <div class="code-tabs-buttons">
-                            <button class="tab-button active" data-tab="python">Python</button>
-                            <button class="tab-button" data-tab="javascript">JavaScript</button>
-                            <button class="tab-button" data-tab="pseudo">Pseudocódigo</button>
-                        </div>
-                        
-                        <div id="panel-python" class="code-tab-panel active">
-                            <div class="code-block-tab-content">
-                                <pre><code class="language-python">
-# Exemplo de Busca Binária em Python
-
-def binary_search(arr, target):
+                    <div class="code-tabs-buttons">
+                        <button class="tab-button active" data-tab="python">Python</button>
+                        <button class="tab-button" data-tab="javascript">JavaScript</button>
+                        <button class="tab-button" data-tab="pseudo">Pseudocódigo</button>
+                    </div>
+                    <div class="code-tab-panel active" data-tab-content="python">
+                        <div class="code-block-tab-content"><pre><code class="language-python">def binary_search(arr, target):
     low = 0
     high = len(arr) - 1
-
     while low <= high:
         mid = (low + high) // 2
         guess = arr[mid]
-
         if guess == target:
-            return mid  # Encontrado!
+            return mid
         elif guess > target:
             high = mid - 1
         else:
             low = mid + 1
-            
-    return None # Não encontrado
+    return None
 
-# Teste:
 my_list = [1, 3, 5, 7, 9, 11]
-print(binary_search(my_list, 7))
-</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div id="panel-javascript" class="code-tab-panel">
-                             <div class="code-block-tab-content">
-                                <pre><code class="language-javascript">
-// Exemplo de Busca Binária em JavaScript
-
-function binarySearch(arr, target) {
+print(binary_search(my_list, 7))</code></pre></div>
+                    </div>
+                    <div class="code-tab-panel" data-tab-content="javascript">
+                         <div class="code-block-tab-content"><pre><code class="language-javascript">function binarySearch(arr, target) {
     let low = 0;
     let high = arr.length - 1;
-
     while (low <= high) {
         const mid = Math.floor((low + high) / 2);
         const guess = arr[mid];
-
         if (guess === target) {
-            return mid; // Encontrado!
+            return mid;
         } else if (guess > target) {
             high = mid - 1;
         } else {
             low = mid + 1;
         }
     }
-    
-    return null; // Não encontrado
+    return null;
 }
 
-// Teste:
 const myList = [1, 3, 5, 7, 9, 11];
-console.log(binarySearch(myList, 7));
-</code></pre>
-                             </div>
-                        </div>
-                        
-                        <div id="panel-pseudo" class="code-tab-panel">
-                            <div class="code-block-tab-content">
-                                <pre><code class="language-plaintext">
-FUNÇÃO BuscaBinaria(lista, item)
+console.log(binarySearch(myList, 7));</code></pre></div>
+                    </div>
+                    <div class="code-tab-panel" data-tab-content="pseudo">
+                        <div class="code-block-tab-content"><pre><code class="language-plaintext">FUNÇÃO BuscaBinaria(lista, item)
     baixo = 0
     alto = tamanho(lista) - 1
 
@@ -367,10 +347,7 @@ FUNÇÃO BuscaBinaria(lista, item)
             baixo = meio + 1
             
     RETORNE nulo
-FIM_FUNÇÃO
-</code></pre>
-                            </div>
-                        </div>
+FIM_FUNÇÃO</code></pre></div>
                     </div>
                 </div>
             </div>
@@ -393,88 +370,21 @@ FIM_FUNÇÃO
         
         <div class="final-cta-container">
             <img id="final-cta-svg" src="{{ '/assets/images/community-background.svg' | relative_url }}" alt="Fundo decorativo abstrato">
-            
             <div class="relative z-10 text-center px-4 flex flex-col items-center mb-20 md:mb-32">
                 <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Construído para a Comunidade</h2>
                 <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.</p>
                 <div class="mt-10"><a href="{{ '/docs.html' | relative_url }}" class="bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">Explorar a Documentação</a></div>
             </div>
         </div>
-
     </main>
     
     {% include footer.html %}
-    
     {% include scripts.html %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            // --- 1. Lógica da Barra de Progresso de Leitura ---
-            const progressBar = document.getElementById('progress-bar');
-            if (progressBar) {
-                window.addEventListener('scroll', () => {
-                    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                    const scrollPercentage = (scrollTop / scrollHeight) * 100;
-                    progressBar.style.width = scrollPercentage + '%';
-                });
-            }
-
-            // --- 2. Lógica do Banner Global de Anúncios ---
-            const banner = document.getElementById('global-banner');
-            const closeButton = document.getElementById('global-banner-close');
-            if (banner && closeButton) {
-                closeButton.addEventListener('click', () => {
-                    banner.classList.add('banner-hidden');
-                });
-            }
-
-            // --- 3. Lógica das Abas de Código + Highlight.js (Atualizado) ---
-            const tabsContainer = document.getElementById('code-tabs-container');
-            if (tabsContainer) {
-                
-                hljs.highlightAll();
-
-                const tabButtons = tabsContainer.querySelectorAll('.tab-button');
-                const tabPanels = tabsContainer.querySelectorAll('.code-tab-panel');
-
-                function applyLineNumbers(panel) {
-                    const codeBlock = panel.querySelector('pre code');
-                    if (codeBlock && !panel.hasAttribute('data-line-numbers-applied')) {
-                        hljs.lineNumbersBlock(codeBlock.parentElement);
-                        panel.setAttribute('data-line-numbers-applied', 'true');
-                    }
-                }
-
-                const defaultActivePanel = tabsContainer.querySelector('.code-tab-panel.active');
-                if (defaultActivePanel) {
-                    applyLineNumbers(defaultActivePanel);
-                }
-
-                tabButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const targetTab = button.getAttribute('data-tab');
-                        
-                        tabButtons.forEach(btn => btn.classList.remove('active'));
-                        tabPanels.forEach(panel => panel.classList.remove('active'));
-
-                        button.classList.add('active');
-                        const activePanel = document.getElementById(`panel-${targetTab}`);
-                        
-                        if (activePanel) {
-                            activePanel.classList.add('active');
-                            applyLineNumbers(activePanel);
-                        }
-                    });
-                });
-            }
-
-        });
-    </script>
-    </body>
+    
+</body>
 </html>
