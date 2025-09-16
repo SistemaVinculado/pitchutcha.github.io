@@ -72,12 +72,12 @@
       .border-color { border-color:#E0E0E0 !important; }
       a, a:hover { color:#5865F2; text-decoration: none; }
 
-      /* CORES DE STATUS */
-      .status-red .icon-indicator, .components-container .component-inner-container.status-red .component-status { color:#ED4245; }
-      .status-orange .icon-indicator, .components-container .component-inner-container.status-orange .component-status { color:#F26522; }
-      .status-yellow .icon-indicator, .components-container .component-inner-container.status-yellow .component-status { color:#CB8615; }
-      .status-blue .icon-indicator, .components-container .component-inner-container.status-blue .component-status { color:#3498DB; }
-      .status-green .icon-indicator, .components-container .component-inner-container.status-green .component-status { color:#3BA55C; }
+      /* CORES DE STATUS (CORRIGIDO) */
+      .status-red .component-status, .icon-indicator.status-red { color:#ED4245; }
+      .status-orange .component-status, .icon-indicator.status-orange { color:#F26522; }
+      .status-yellow .component-status, .icon-indicator.status-yellow { color:#CB8615; }
+      .status-blue .component-status, .icon-indicator.status-blue { color:#3498DB; }
+      .status-green .component-status, .icon-indicator.status-green { color:#3BA55C; }
 
       /*=============== ESTILOS DOS PAINÉIS (RECRIAÇÃO FIEL) ===============*/
       .components-section {
@@ -118,6 +118,11 @@
         gap: 8px;
         color: rgba(46,51,56,.8);
       }
+       .component-inner-container > .name .group-parent-indicator {
+        cursor: pointer;
+        font-size: 14px;
+        color: #72767D;
+       }
       .component-inner-container > .component-status {
         grid-column: 2;
         font-weight: 500;
@@ -125,15 +130,11 @@
       }
       .component-inner-container > .icon-indicator {
         display: none; /* Oculto no layout mobile, status já informa */
+        font-size: 18px;
       }
-       .component-inner-container .name .group-parent-indicator {
-        cursor: pointer;
-        font-size: 14px;
-       }
       
       .shared-partial.uptime-90-days-wrapper {
         display: none; /* Escondido em telas menores por padrão */
-        grid-column: 2;
         min-width: 0;
       }
       .availability-time-line-graphic {
@@ -141,8 +142,8 @@
           height: 34px;
       }
 
-      /* Layout para telas maiores (desktop) */
-      @media (min-width: 1024px) {
+      /* Layout para telas maiores (desktop) - BREAKPOINT CORRIGIDO */
+      @media (min-width: 768px) {
         .component-inner-container.showcased {
           grid-template-columns: 250px 1fr auto auto;
         }
@@ -166,17 +167,17 @@
           font-size: 12px;
           margin-top: 5px;
           color: #72767d;
+          padding-right: 15px; /* Alinhamento com a barra */
       }
-      @media (min-width: 1024px) {
+      @media (min-width: 768px) {
         .uptime-90-days-wrapper .legend {
             display: flex;
         }
       }
       .legend .spacer {
-        flex-grow: 1;
+        flex: 1 1 0%;
         height: 1px;
-        background: #72767d;
-        opacity: 0.5;
+        background: #e0e0e0;
         margin: auto 8px;
       }
       
@@ -191,7 +192,7 @@
       }
       .child-components-container .component-inner-container {
         padding: 12px 20px 12px 48px;
-        border-top: 1px solid #E0E0E0;
+        border-top: 1px solid #f0f0f0;
       }
        
       /* Tooltip */
@@ -262,7 +263,7 @@
 <body>
 
     <div class="components-section">
-        <div class="components-uptime-link">Uptime over the past 90 days. <a href="#">View historical uptime.</a></div>
+        <div class="components-uptime-link font-small">Uptime over the past 90 days. <a href="#">View historical uptime.</a></div>
 
         <div class="components-container">
             
@@ -282,7 +283,7 @@
                         </div>
                     </div>
                     <span class="component-status"> Operational </span>
-                    <span class="tool icon-indicator fa fa-check"></span>
+                    <span class="tool icon-indicator fa fa-check status-green"></span>
                 </div>
             </div>
 
@@ -293,7 +294,7 @@
                          <svg class="availability-time-line-graphic" preserveAspectRatio="none" viewBox="0 0 448 34">
                             <rect height="34" width="3" x="0" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="5" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="10" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="15" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="20" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="25" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="30" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="35" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="40" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="45" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="50" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="55" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="60" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="65" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="70" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="75" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="80" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="85" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="90" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="95" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="100" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="105" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="110" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="115" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="120" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="125" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="130" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="135" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="140" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="145" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="150" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="155" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="160" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="165" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="170" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="175" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="180" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="185" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="190" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="195" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="200" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="205" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="210" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="215" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="220" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="225" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="230" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="235" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="240" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="245" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="250" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="255" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="260" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="265" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="270" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="275" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="280" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="285" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="290" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="295" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="300" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="305" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="310" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="315" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="320" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="325" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="330" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="335" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="340" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="345" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="350" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="355" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="360" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="365" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="370" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="375" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="380" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="385" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="390" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="395" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="400" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="405" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="410" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="415" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="420" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="425" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="430" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="435" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="440" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="445" y="0" fill="#3ba55c"></rect>
                         </svg>
-                        <div class="legend">
+                         <div class="legend">
                           <div class="legend-item light">90 days ago</div>
                           <div class="spacer"></div>
                           <div class="legend-item">100 % uptime</div>
@@ -302,39 +303,39 @@
                         </div>
                     </div>
                     <span class="component-status"> Operational </span>
-                    <span class="tool icon-indicator fa fa-check"></span>
+                    <span class="tool icon-indicator fa fa-check status-green"></span>
                 </div>
             </div>
 
             <div class="component-container border-color is-group">
                 <div class="component-inner-container status-green" data-js-hook="component-group-opener">
                     <span class="name">
-                        <span class="fa group-parent-indicator color-secondary fa-plus-square-o" role="button" aria-expanded="false" aria-label="Toggle Voice" tabindex="0"></span>
+                        <span class="fa group-parent-indicator fa-plus-square-o" role="button" aria-expanded="false" aria-label="Toggle Voice" tabindex="0"></span>
                         <span> Voice </span>
                     </span>
                     <span class="component-status"> Operational </span>
-                    <span class="tool icon-indicator fa fa-check"></span>
+                    <span class="tool icon-indicator fa fa-check status-green"></span>
                 </div>
                 <div class="child-components-container">
-                    <div class="component-inner-container status-green"><span class="name"> Atlanta </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
-                    <div class="component-inner-container status-green"><span class="name"> Brazil </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
-                    <div class="component-inner-container status-green"><span class="name"> Hong Kong </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
-                    <div class="component-inner-container status-green"><span class="name"> US Central </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
-                    <div class="component-inner-container status-green"><span class="name"> US West </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> Atlanta </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check status-green"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> Brazil </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check status-green"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> Hong Kong </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check status-green"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> US Central </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check status-green"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> US West </span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check status-green"></span></div>
                 </div>
             </div>
             
              <div class="component-container border-color is-group">
                 <div class="component-inner-container status-green showcased" data-js-hook="component-group-opener">
                     <span class="name">
-                        <span class="fa group-parent-indicator color-secondary fa-plus-square-o" role="button" aria-expanded="false" aria-label="Toggle Client" tabindex="0"></span>
+                        <span class="fa group-parent-indicator fa-plus-square-o" role="button" aria-expanded="false" aria-label="Toggle Client" tabindex="0"></span>
                         <span> Client </span>
                     </span>
                      <div class="shared-partial uptime-90-days-wrapper">
                          <svg class="availability-time-line-graphic" preserveAspectRatio="none" viewBox="0 0 448 34">
                             <rect height="34" width="3" x="0" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="5" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="10" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="15" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="20" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="25" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="30" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="35" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="40" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="45" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="50" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="55" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="60" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="65" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="70" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="75" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="80" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="85" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="90" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="95" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="100" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="105" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="110" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="115" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="120" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="125" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="130" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="135" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="140" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="145" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="150" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="155" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="160" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="165" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="170" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="175" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="180" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="185" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="190" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="195" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="200" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="205" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="210" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="215" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="220" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="225" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="230" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="235" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="240" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="245" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="250" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="255" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="260" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="265" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="270" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="275" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="280" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="285" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="290" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="295" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="300" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="305" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="310" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="315" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="320" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="325" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="330" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="335" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="340" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="345" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="350" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="355" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="360" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="365" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="370" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="375" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="380" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="385" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="390" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="395" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="400" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="405" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="410" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="415" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="420" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="425" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="430" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="435" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="440" y="0" fill="#3ba55c"></rect><rect height="34" width="3" x="445" y="0" fill="#3ba55c"></rect>
                         </svg>
-                        <div class="legend">
+                         <div class="legend">
                           <div class="legend-item light">90 days ago</div>
                           <div class="spacer"></div>
                           <div class="legend-item">100 % uptime</div>
@@ -343,19 +344,19 @@
                         </div>
                     </div>
                     <span class="component-status"> Operational </span>
-                    <span class="tool icon-indicator fa fa-check"></span>
+                    <span class="tool icon-indicator fa fa-check status-green"></span>
                 </div>
                 <div class="child-components-container">
-                    <div class="component-inner-container status-green"><span class="name"> Desktop <span class="tooltip-base">?<span class="tooltip-text">O cliente para desktop (Windows/Mac/Linux)</span></span></span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check"></span></div>
-                    <div class="component-inner-container status-yellow"><span class="name"> iOS <span class="tooltip-base">?<span class="tooltip-text">O cliente nativo para iOS</span></span></span><span class="component-status"> Degraded Performance </span><span class="tool icon-indicator fa fa-minus-square"></span></div>
-                    <div class="component-inner-container status-orange"><span class="name"> Android <span class="tooltip-base">?<span class="tooltip-text">O cliente nativo para Android</span></span></span><span class="component-status"> Partial Outage </span><span class="tool icon-indicator fa fa-exclamation-triangle"></span></div>
-                    <div class="component-inner-container status-red"><span class="name"> Web <span class="tooltip-base">?<span class="tooltip-text">O cliente web (no navegador)</span></span></span><span class="component-status"> Major Outage </span><span class="tool icon-indicator fa fa-times"></span></div>
+                    <div class="component-inner-container status-green"><span class="name"> Desktop <span class="tooltip-base">?<span class="tooltip-text">O cliente para desktop (Windows/Mac/Linux)</span></span></span><span class="component-status"> Operational </span><span class="tool icon-indicator fa fa-check status-green"></span></div>
+                    <div class="component-inner-container status-yellow"><span class="name"> iOS <span class="tooltip-base">?<span class="tooltip-text">O cliente nativo para iOS</span></span></span><span class="component-status"> Degraded Performance </span><span class="tool icon-indicator fa fa-minus-square status-yellow"></span></div>
+                    <div class="component-inner-container status-orange"><span class="name"> Android <span class="tooltip-base">?<span class="tooltip-text">O cliente nativo para Android</span></span></span><span class="component-status"> Partial Outage </span><span class="tool icon-indicator fa fa-exclamation-triangle status-orange"></span></div>
+                    <div class="component-inner-container status-red"><span class="name"> Web <span class="tooltip-base">?<span class="tooltip-text">O cliente web (no navegador)</span></span></span><span class="component-status"> Major Outage </span><span class="tool icon-indicator fa fa-times status-red"></span></div>
                 </div>
             </div>
 
         </div>
 
-        <div class="component-statuses-legend font-small">
+        <div class="component-statuses-legend">
             <div class="legend-item"><span class="icon-indicator status-green fa fa-check"></span> Operational</div>
             <div class="legend-item"><span class="icon-indicator status-yellow fa fa-minus-square"></span> Degraded Performance</div>
             <div class="legend-item"><span class="icon-indicator status-orange fa fa-exclamation-triangle"></span> Partial Outage</div>
@@ -365,7 +366,6 @@
     </div>
 
     <script>
-      // Script para alternar a visibilidade dos grupos de componentes
       document.addEventListener('DOMContentLoaded', function() {
         const groupOpeners = document.querySelectorAll('[data-js-hook="component-group-opener"]');
         
@@ -386,4 +386,4 @@
     </script>
 
 </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       </html>
+                    </html>
