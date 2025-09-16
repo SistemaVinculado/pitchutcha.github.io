@@ -3,13 +3,13 @@ name: Fetch UptimeRobot Stats & Metrics
 on:
   workflow_dispatch: # Permite iniciar manualmente
   schedule:
-    - cron: '0 */1 * * *' # Roda a cada hora
+    - cron: '0 */1 * * *' # ATUALIZADO: Roda a cada hora para dados mais frescos
 
 jobs:
   fetch-data:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Permissão para fazer commit no repositório
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -17,21 +17,45 @@ jobs:
       - name: Generate Simulated Metrics and Graph Data
         run: |
           set -e
-          LATENCY=$((RANDOM % 40 + 20)); INFERENCE=$((RANDOM % 150 + 100)); ERROR_RATE=$(printf "0.0%d" $((RANDOM % 5 + 1)))
+          # Gera métricas simples
+          LATENCY=$((RANDOM % 40 + 20))
+          INFERENCE=$((RANDOM % 150 + 100))
+          ERROR_RATE=$(printf "0.0%d" $((RANDOM % 5 + 1)))
+
+          # Gera um array de 12 pontos de dados para o gráfico de linha de latência
           LATENCY_HISTORY=$(echo $(for i in {1..12}; do echo $((RANDOM % 60 + 10)); done) | sed 's/ /,/g')
+
+          # Gera um array de objetos para o gráfico de barras de tempo de inferência
           BAR_CHART_DATA=$(jq -n '[
-            {"model": "GPT-4", "time": '$((RANDOM % 100 + 150))'}, {"model": "GPT-3.5", "time": '$((RANDOM % 80 + 80))'},
-            {"model": "DALL-E", "time": '$((RANDOM % 120 + 200))'}, {"model": "Whisper", "time": '$((RANDOM % 50 + 50))'},
+            {"model": "GPT-4", "time": '$((RANDOM % 100 + 150))'},
+            {"model": "GPT-3.5", "time": '$((RANDOM % 80 + 80))'},
+            {"model": "DALL-E", "time": '$((RANDOM % 120 + 200))'},
+            {"model": "Whisper", "time": '$((RANDOM % 50 + 50))'},
             {"model": "Embeds", "time": '$((RANDOM % 30 + 20))'}
           ]')
+
+          # Cria o arquivo JSON temporário com todos os dados
           jq -n \
-            --arg latency "${LATENCY}ms" --arg inference "${INFERENCE}ms" --arg error_rate "${ERROR_RATE}%" \
-            --argjson latency_history "[$LATENCY_HISTORY]" --argjson inference_by_model "$BAR_CHART_DATA" \
-            '{"metrics": {"api_latency": $latency, "inference_time": $inference, "error_rate": $error_rate},
-              "graphs": {"latency_history": $latency_history, "inference_by_model": $inference_by_model}}' > metrics.json
+            --arg latency "${LATENCY}ms" \
+            --arg inference "${INFERENCE}ms" \
+            --arg error_rate "${ERROR_RATE}%" \
+            --argjson latency_history "[$LATENCY_HISTORY]" \
+            --argjson inference_by_model "$BAR_CHART_DATA" \
+            '{
+              "metrics": {
+                "api_latency": $latency,
+                "inference_time": $inference,
+                "error_rate": $error_rate
+              },
+              "graphs": {
+                "latency_history": $latency_history,
+                "inference_by_model": $inference_by_model
+              }
+            }' > metrics.json
 
       - name: Fetch UptimeRobot data
         run: |
+          # Busca os dados do UptimeRobot, incluindo o histórico horário de tempo de resposta
           curl --request POST 'https://api.uptimerobot.com/v2/getMonitors' \
           --header 'Content-Type: application/x-www-form-urlencoded' \
           --data-urlencode "api_key=${{ secrets.UPTIMEROBOT_API_KEY }}" \
@@ -43,12 +67,12 @@ jobs:
           --data-urlencode "response_times_limit=24" \
           --data-urlencode "response_times_average=60" \
           --data-urlencode "format=json" \
-          -o uptime.json || echo '{"stat": "fail"}' > uptime.json
+          -o uptime.json
 
       - name: Combine Metrics and Uptime data
         run: |
-          echo '{"monitors": [], "metrics": {}, "graphs": {}}' > base.json
-          jq -s '.[0] * .[1] * .[2]' base.json metrics.json uptime.json > docs/uptime-data.json
+          # Usa a ferramenta 'jq' para juntar os dois arquivos JSON em um só
+          jq -s '.[0] * .[1]' metrics.json uptime.json > docs/uptime-data.json
 
       - name: Commit and push if it changed
         uses: stefanzweifel/git-auto-commit-action@v5
