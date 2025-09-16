@@ -69,17 +69,16 @@ document.addEventListener("DOMContentLoaded", () => {
     async function initializeGraph() {
         try {
             const response = await fetch(`${baseUrl}uptime-data.json?cache_bust=${Date.now()}`);
-            if (!response.ok) throw new Error("Falha na rede ao buscar uptime-data.json");
+            if (!response.ok) throw new Error("Falha na rede ao buscar uptime-data.json para o gráfico.");
             
             const data = await response.json();
             const monitor = data?.monitors?.[0];
             
-            // Verificação CRÍTICA: Se não houver dados do monitor ou uptime, falha de forma segura.
+            // VERIFICAÇÃO DE SEGURANÇA para evitar o erro 'split' of undefined
             if (!monitor || !monitor.custom_uptime_ratios) {
                 throw new Error("Dados do monitor incompletos no arquivo JSON. Execute o workflow novamente.");
             }
 
-            // --- Se os dados existem, continue ---
             if (overallUptimeStatusElem) {
                 const uptimeRatio = monitor.custom_uptime_ratios.split('-')[1] || "100.00";
                 overallUptimeStatusElem.innerHTML = `<span class="text-sm text-[var(--text-secondary)]">Uptime de 30 dias</span> <span class="font-semibold text-lg text-[var(--success)]">${uptimeRatio}%</span>`;
@@ -118,9 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Erro ao inicializar o gráfico de uptime:", error);
             if (panel) {
-                const titleElem = panel.querySelector("#uptime-panel-title");
-                if(titleElem) titleElem.textContent = "Erro ao carregar dados";
-                panel.querySelector("#uptime-chart-container").innerHTML = `<p class="text-center text-xs text-red-500 w-full">${error.message}</p>`;
+                panel.querySelector("#uptime-chart-container").innerHTML = `<p class="text-center text-xs text-red-500 w-full p-4">${error.message}</p>`;
             }
         }
     }
