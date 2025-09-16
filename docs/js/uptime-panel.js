@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Seletores de Elementos do DOM ---
     const panel = document.getElementById("uptime-panel");
-    if (!panel) return;
+    // Se o painel principal não existe, a página não é a de status. Interrompe o script.
+    if (!panel) return; 
 
     const chartContainer = panel.querySelector("#uptime-chart-container");
     const tooltip = panel.querySelector("#uptime-tooltip");
@@ -15,10 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const incidentsContainer = document.getElementById("incidents-history-container");
     const overallStatusIndicator = document.getElementById("overall-status-indicator");
     const overallStatusText = document.getElementById("overall-status-text");
-    const uptimePanelTitle = panel.querySelector("#uptime-panel-title");
 
     // --- Configurações ---
-    const totalBars = 90; // Exibe 90 barras (dias)
+    const totalBars = 90;
     const statusTypes = {
         OPERATIONAL: { label: "Operacional", colorClass: "status-operational", description: "Todos os sistemas funcionando normalmente." },
         DEGRADED: { label: "Performance Degradada", colorClass: "status-degraded", description: "O site pode apresentar lentidão ou pequenos erros." },
@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * Exibe um tooltip com conteúdo customizado.
      */
     function showTooltip(targetElement, content) {
+        if (!tooltip) return;
         const tooltipContent = tooltip.querySelector("#tooltip-content");
         tooltipContent.innerHTML = content;
         tooltip.classList.add("visible");
@@ -57,13 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
      * Esconde o tooltip.
      */
     function hideTooltip() {
-        tooltip.classList.remove("visible");
+        if (tooltip) tooltip.classList.remove("visible");
     }
 
     /**
      * Constrói e renderiza as barras do gráfico de uptime.
      */
     function buildChart(data) {
+        if (!chartContainer) return;
         chartContainer.innerHTML = '';
         data.forEach((dayData, index) => {
             const bar = document.createElement("div");
@@ -92,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * Popula a legenda de status e adiciona interatividade ao botão "?".
      */
     function populateLegend() {
+        if (!legendContainer || !legendHelpButton) return;
         legendContainer.innerHTML = `
             <span>Menos</span>
             <div class="legend-gradient"></div>
@@ -171,23 +174,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const monitor = data?.monitors?.[0];
             if (!monitor) throw new Error("Monitor não encontrado nos dados da API.");
 
-            // Atualiza o indicador de saúde geral
-            if(overallStatusIndicator && overallStatusText) {
+            // CORREÇÃO: Verifica se os elementos existem antes de manipulá-los
+            if (overallStatusIndicator && overallStatusText) {
                 const isUp = monitor.status === 2;
                 overallStatusIndicator.querySelector(".ping-pulse").className = `ping-pulse ${isUp ? 'ping-green' : 'ping-red'}`;
                 overallStatusIndicator.querySelector(".relative").className = `relative inline-flex rounded-full h-3 w-3 ${isUp ? 'bg-green-500' : 'bg-red-500'}`;
                 overallStatusText.textContent = isUp ? "Todos os sistemas operacionais" : "Indisponibilidade detectada";
             }
 
-            // Calcula e exibe o uptime geral
             const uptimeRatio = monitor.custom_uptime_ratios.split('-')[1] || "100.00";
-            overallUptimeStatusElem.innerHTML = `<span class="text-sm text-[var(--text-secondary)]">Uptime de 30 dias</span> <span class="font-semibold text-lg text-[var(--success)]">${uptimeRatio}%</span>`;
+            if (overallUptimeStatusElem) {
+                overallUptimeStatusElem.innerHTML = `<span class="text-sm text-[var(--text-secondary)]">Uptime de 30 dias</span> <span class="font-semibold text-lg text-[var(--success)]">${uptimeRatio}%</span>`;
+            }
             
-            // Processa dados para o gráfico
             const responseTimes = monitor.response_times;
             let chartData = [];
             if (responseTimes && responseTimes.length > 0) {
-                chartData = responseTimes.map(item => {
+                 chartData = responseTimes.map(item => {
                     const rt = parseInt(item.value, 10);
                     let status = "OPERATIONAL", details = `Tempo médio de resposta: ${rt}ms.`;
                     if (rt === 0) { status = "OUTAGE"; details = "O monitor esteve indisponível (0ms)."; }
@@ -207,18 +210,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 chartData = [...padding, ...chartData];
             }
             
-            // Renderiza tudo
-            buildChart(chartData.slice(-totalBars)); // Garante que temos exatamente o número de barras
+            buildChart(chartData.slice(-totalBars));
             populateLegend();
             buildIncidentTimeline(monitor.logs);
             
-            // Atualiza as datas
-            chartStartDateElem.textContent = formatDate(chartData[0].date);
-            chartEndDateElem.textContent = "Hoje";
+            if (chartStartDateElem && chartEndDateElem) {
+                chartStartDateElem.textContent = formatDate(chartData[0].date);
+                chartEndDateElem.textContent = "Hoje";
+            }
 
         } catch (error) {
             console.error("Erro ao inicializar o painel de uptime:", error);
-            panel.innerHTML = `<p class="text-center text-red-500">Não foi possível carregar os dados de uptime.</p>`;
+            if (panel) panel.innerHTML = `<p class="text-center text-red-500">Não foi possível carregar os dados de uptime.</p>`;
+            if (incidentsContainer) incidentsContainer.innerHTML = `<p class="text-center text-red-500">Não foi possível carregar o histórico de incidentes.</p>`;
         }
     }
 
