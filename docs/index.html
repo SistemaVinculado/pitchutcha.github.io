@@ -40,7 +40,7 @@ layout: null
         .logo-carousel-item img:hover { filter: brightness(0) invert(1) opacity(1); }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, #0d1117, transparent); z-index: 2; }
+        #globe-container::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(to top, var(--background-primary), transparent); z-index: 2; }
         body { background-color: var(--background-primary); }
     </style>
 </head>
@@ -54,7 +54,7 @@ layout: null
         <div class="flex items-center space-x-4"><form action="{{ '/search.html' | relative_url }}" method="get" class="hidden lg:block"><input type="search" name="q" placeholder="Pesquisar na Pitchutcha" class="bg-[var(--background-primary)] border border-[var(--borders)] rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"></form><button id="menu-btn" class="md:hidden" aria-controls="mobile-menu" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg></button></div>
     </header>
 
-    <div id="mobile-menu" class="hidden md:hidden bg-[#0d1117] absolute top-16 left-0 w-full z-40"><a href="{{ '/docs.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Documentação</a><a href="{{ '/status.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Status</a><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="block px-8 py-3 hover:bg-gray-800">Open Source</a></div>
+    <div id="mobile-menu" class="hidden md:hidden bg-[var(--background-primary)] absolute top-16 left-0 w-full z-40"><a href="{{ '/docs.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Documentação</a><a href="{{ '/status.html' | relative_url }}" class="block px-8 py-3 hover:bg-gray-800">Status</a><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" class="block px-8 py-3 hover:bg-gray-800">Open Source</a></div>
 
     <main>
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
@@ -194,26 +194,50 @@ layout: null
             // Lógica para o Hero Section com Abas
             const tabs = document.querySelectorAll('[role="tab"]');
             const tabList = document.querySelector('[role="tablist"]');
+
+            function activateTab(tab) {
+                // Desativa todas as abas e painéis primeiro
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                    t.setAttribute('tabindex', '-1');
+                    const panel = document.getElementById(t.getAttribute('aria-controls'));
+                    if (panel) {
+                        panel.classList.remove('active');
+                        panel.setAttribute('aria-hidden', 'true');
+                    }
+                });
+
+                // Ativa a aba e o painel clicado
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                tab.setAttribute('tabindex', '0');
+                const activePanel = document.getElementById(tab.getAttribute('aria-controls'));
+                if (activePanel) {
+                    activePanel.classList.add('active');
+                    activePanel.setAttribute('aria-hidden', 'false');
+                }
+            }
+
             tabs.forEach(tab => {
-                tab.addEventListener('click', (e) => { e.preventDefault(); activateTab(e.currentTarget); });
+                tab.addEventListener('click', (e) => { 
+                    e.preventDefault(); 
+                    activateTab(e.currentTarget); 
+                });
+
                 tab.addEventListener('keydown', (e) => {
                     let index = Array.prototype.indexOf.call(tabs, e.currentTarget);
                     let newIndex = -1;
                     if (e.key === 'ArrowRight') { newIndex = (index + 1) % tabs.length; } 
                     else if (e.key === 'ArrowLeft') { newIndex = (index - 1 + tabs.length) % tabs.length; }
-                    if (newIndex !== -1) { tabs[newIndex].focus(); activateTab(tabs[newIndex]); }
+                    
+                    if (newIndex !== -1) { 
+                        tabs[newIndex].focus(); 
+                        // Ativa a aba na navegação por teclado também
+                        activateTab(tabs[newIndex]); 
+                    }
                 });
             });
-            function activateTab(tab) {
-                tabs.forEach(t => {
-                    t.setAttribute('aria-selected', 'false'); t.setAttribute('tabindex', '-1');
-                    const panel = document.getElementById(t.getAttribute('aria-controls'));
-                    panel.setAttribute('aria-hidden', 'true');
-                });
-                tab.setAttribute('aria-selected', 'true'); tab.setAttribute('tabindex', '0');
-                const activePanel = document.getElementById(tab.getAttribute('aria-controls'));
-                activePanel.setAttribute('aria-hidden', 'false');
-            }
 
             // Lógica para o Acordeão Interativo
             const accordionItems = document.querySelectorAll('.accordion-item');
@@ -221,11 +245,16 @@ layout: null
             accordionItems.forEach(item => {
                 item.addEventListener('toggle', () => {
                     if (item.open) {
-                        accordionItems.forEach(otherItem => { if (otherItem !== item) { otherItem.removeAttribute('open'); } });
+                        accordionItems.forEach(otherItem => { 
+                            if (otherItem !== item) { otherItem.removeAttribute('open'); } 
+                        });
                         const newImageSrc = item.getAttribute('data-image');
                         if (newImageSrc && accordionImage) {
                             accordionImage.style.opacity = 0;
-                            setTimeout(() => { accordionImage.src = newImageSrc; accordionImage.style.opacity = 1; }, 300);
+                            setTimeout(() => { 
+                                accordionImage.src = newImageSrc; 
+                                accordionImage.style.opacity = 1; 
+                            }, 300);
                         }
                     }
                 });
