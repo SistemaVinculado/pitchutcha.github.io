@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="utf-8"/>
-    
     <title>Pitchutcha - {{ page.title | default: "Artigo" }}</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="base-url" content="{{ '/' | relative_url }}">
     <meta name="description" content="{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}">
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-    <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
-    <link rel="preload" href="{{ '/css/style.css' | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}"></noscript>
+    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
     
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 </head>
@@ -20,33 +18,31 @@
     <div id="aria-live-region" class="sr-only" aria-live="polite"></div>
     <div id="toast-notification" class="toast-notification"></div>
 
-    <div class="flex flex-col min-h-screen">
-        <header class="flex h-16 flex-shrink-0 items-center justify-between whitespace-nowrap border-b border-solid border-[var(--borders)] px-4">
-            <div class="flex items-center gap-8">
-                <div class="flex items-center gap-3 text-[var(--text-primary)]">
-                    <svg class="h-8 w-8 text-[var(--primary-color)]" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM14.29 15.71L12 13.41L9.71 15.71C9.32 16.1 8.68 16.1 8.29 15.71C7.9 15.32 7.9 14.68 8.29 14.29L10.59 12L8.29 9.71C7.9 9.32 7.9 8.68 8.29 8.29C8.68 7.9 9.32 7.9 9.71 8.29L12 10.59L14.29 8.29C14.68 7.9 15.32 7.9 15.71 8.29C16.1 8.68 16.1 9.32 15.71 9.71L13.41 12L15.71 14.29C16.09 14.68 16.09 15.32 15.71 15.71C15.32 16.1 14.68 16.1 14.29 15.71Z"></path></svg>
-                    <h1 class="text-xl font-bold">Pitchutcha</h1>
+    <div class="flex min-h-screen flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'>
+        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+                <div class="flex items-center gap-8">
+                    <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
+                        <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
+                        <h1 class="text-xl font-bold">Pitchutcha</h1>
+                    </a>
+                    <nav class="hidden items-center gap-6 md:flex">
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/algoritmos.html' | relative_url }}">Algoritmos</a>
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/estruturas-de-dados.html' | relative_url }}">Estruturas de Dados</a>
+                        <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/status.html' | relative_url }}">Status</a>
+                    </nav>
                 </div>
-                <nav class="hidden md:flex items-center gap-6">
-                    <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="{{ '/docs.html' | relative_url }}">Documentação</a>
-                    <a class="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-color)]" href="#">Referência da API</a>
-                </nav>
-            </div>
-            <div class="flex items-center gap-4">
-                <form class="header-search-form relative hidden sm:block" action="{{ '/search.html' | relative_url }}" method="get">
-                    <label>
-                        <span class="sr-only">Pesquisar</span>
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                            <i data-lucide="search" class="w-5 h-5 text-[var(--text-secondary)]"></i>
-                        </span>
-                        <input class="form-input block w-full rounded-md border-transparent bg-[var(--background-secondary)] py-2 pl-10 pr-3 text-sm placeholder:text-[var(--text-secondary)]" placeholder="Pesquisar documentação..." type="search" name="q"/>
-                    </label>
-                </form>
+                <div class="flex items-center gap-4">
+                    <form id="header-search-form" class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"> search </span>
+                        <input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/>
+                    </form>
+                </div>
             </div>
         </header>
-        
+
         <div class="flex flex-1 overflow-hidden">
-            <aside class="w-64 flex-shrink-0 border-r border-[var(--borders)] p-4 overflow-y-auto">
+            <aside class="hidden w-64 flex-shrink-0 border-r border-[var(--borders)] p-4 overflow-y-auto lg:block">
                 <h2 class="mb-4 text-sm font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Nesta página</h2>
                 <nav id="toc-container" class="space-y-2"></nav>
             </aside>
@@ -56,7 +52,7 @@
                     <ol class="flex items-center space-x-1 text-sm text-[var(--text-secondary)] flex-wrap">
                         <li><a href="{{ '/docs.html' | relative_url }}" class="hover:text-[var(--primary-color)]">Início</a></li>
                         <li><span class="material-symbols-outlined text-base mx-1">chevron_right</span></li>
-                        <li><a href="/{{ page.category | slugify }}.html" class="hover:text-[var(--primary-color)]">{{ page.category }}</a></li>
+                        <li><a href="{{ page.category | slugify | prepend: '/' | relative_url }}.html" class="hover:text-[var(--primary-color)]">{{ page.category }}</a></li>
                     </ol>
                 </nav>
 
@@ -76,25 +72,37 @@
                 {% assign collection = site.articles | sort: 'date' %}
                 {% for article in collection %}
                     {% if article.url == page.url %}
-                        {% assign prev_article = forloop.previous %}
-                        {% assign next_article = forloop.next %}
+                        {% assign current_index = forloop.index0 %}
                     {% endif %}
                 {% endfor %}
+                {% assign prev_article = collection[current_index | minus: 1] %}
+                {% assign next_article = collection[current_index | plus: 1] %}
 
                 {% if prev_article or next_article %}
                 <hr class="my-12 border-[var(--borders)]"/>
-                <div class="mt-12 flex justify-between">
+                <div class="mt-12 flex flex-col md:flex-row justify-between gap-4">
                     {% if prev_article %}
-                    <a class="inline-flex items-center gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ prev_article.url | relative_url }}">
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                        <span>Anterior: {{ prev_article.title }}</span>
+                    <a class="flex-1 text-left inline-flex items-center gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] p-4 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ prev_article.url | relative_url }}">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        <div>
+                            <span class="text-xs text-[var(--text-secondary)]">Anterior</span>
+                            <span class="block font-semibold">{{ prev_article.title }}</span>
+                        </div>
                     </a>
+                    {% else %}
+                    <div class="flex-1"></div>
                     {% endif %}
+                    
                     {% if next_article %}
-                    <a class="inline-flex items-center gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)] ml-auto" href="{{ next_article.url | relative_url }}">
-                        <span>Próximo: {{ next_article.title }}</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <a class="flex-1 text-right inline-flex items-center justify-end gap-2 rounded-md border border-[var(--borders)] bg-[var(--cards-elements)] p-4 text-sm font-medium text-[var(--text-primary)] hover:border-[var(--primary-color)]" href="{{ next_article.url | relative_url }}">
+                        <div>
+                            <span class="text-xs text-[var(--text-secondary)]">Próximo</span>
+                            <span class="block font-semibold">{{ next_article.title }}</span>
+                        </div>
+                        <span class="material-symbols-outlined">arrow_forward</span>
                     </a>
+                    {% else %}
+                    <div class="flex-1"></div>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -103,15 +111,11 @@
                     <p class="text-sm text-[var(--text-secondary)]">Última atualização: {{ page.date | date: "%-d de %B de %Y" }}</p>
                 </div>
                 
-                {% include footer.html %}
             </main>
         </div>
+        {% include footer.html %}
     </div>
 
     {% include scripts.html %}
-    <script src="{{ '/js/code-enhancer.js' | relative_url }}" defer></script>
-    <script src="{{ '/js/tabbed-code.js' | relative_url }}" defer></script>
-    <script src="{{ '/js/toc-generator.js' | relative_url }}" defer></script>
-
 </body>
 </html>
