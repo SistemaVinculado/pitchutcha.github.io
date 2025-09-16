@@ -15,11 +15,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         const getLogDetails = (logType) => {
             switch (logType) {
-                case 1: return { text: "Pausa", color: "text-yellow-400", icon: "pause_circle" };
-                case 2: return { text: "Iniciado", color: "text-green-400", icon: "check_circle" };
-                case 9: return { text: "Parece estar fora", color: "text-red-500", icon: "error" };
-                case 8: return { text: "Parece estar online", color: "text-green-400", icon: "check_circle" };
-                default: return { text: `Evento (${logType})`, color: "text-gray-400", icon: "info" };
+                case 1: return { text: "Indisponibilidade Detectada", color: "text-red-500", icon: "error" };
+                case 2: return { text: "Serviço Restaurado", color: "text-green-400", icon: "check_circle" };
+                case 98: return { text: "Monitoramento Iniciado", color: "text-sky-400", icon: "play_circle" };
+                case 99: return { text: "Monitoramento Pausado", color: "text-yellow-400", icon: "pause_circle" };
+                default: return { text: `Evento (código: ${logType})`, color: "text-gray-400", icon: "info" };
             }
         };
 
