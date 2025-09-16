@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const DEV_PANEL_VERSION = "1.5.0"; // Versão com testes aprimorados e acessibilidade corrigida
+    const DEV_PANEL_VERSION = "1.5.1"; // Versão com botão de recarga de testes
     let capturedErrors = []; // Armazena erros de JS
 
     const baseUrlMeta = document.querySelector('meta[name="base-url"]');
@@ -95,12 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
             case "network": renderNetworkTab(); break;
             case "recursos": renderRecursosTab(); break;
             case "acessibilidade": renderAcessibilidadeTab(); break;
-            case "testes": renderTestesTab(); break;
+            case "testes": renderTestesTab(); break; // Modificado
             case "info": renderInfoTab(); break;
             default: panelContent.innerHTML = `<div class="p-4">Aba não encontrada: ${tabId}</div>`;
         }
     }
 
+    // ... (todas as outras funções como renderElementsTab, renderConsoleTab, etc. continuam iguais) ...
     function renderElementsTab() {
         panelContent.innerHTML = `
             <div id="elements-tree-container" class="w-1/2 overflow-auto p-2 border-r border-gray-700"></div>
@@ -179,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
         panelContent.innerHTML = `<div class="p-4 w-full"><table class='w-full text-left'><thead><tr class='border-b border-gray-700'><th class='p-2'>Nome</th><th class='p-2'>Tipo</th><th class='p-2'>Tamanho (KB)</th><th class='p-2'>Tempo (ms)</th></tr></thead><tbody>${tableRows}</tbody></table></div>`;
     }
     
-    // Aba de Acessibilidade (aponta para a nova lógica)
     function renderAcessibilidadeTab() {
         panelContent.innerHTML = `
             <div class="p-4">
@@ -189,13 +189,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("run-accessibility-check").addEventListener("click", runAxeAudit);
     }
     
-    // Aba de Testes (aponta para a nova lógica)
+    // MODIFICADO: Função para renderizar a Aba Testes
     function renderTestesTab() {
         panelContent.innerHTML = `
-            <div id="diagnostics-results" class="p-4 space-y-6">
-                 <p class="text-center text-[var(--text-secondary)]">Clique na aba para carregar o relatório de diagnóstico...</p>
+            <div class="p-4 w-full">
+                <button id="run-diagnostics-report" class="dev-button w-full mb-4">Carregar Relatório de Diagnóstico</button>
+                <div id="diagnostics-results" class="space-y-6 mt-4"></div>
             </div>`;
-        // A lógica de carregamento foi movida para o evento de clique da aba para otimização
+        document.getElementById("run-diagnostics-report").addEventListener("click", loadAndRenderDiagnostics);
     }
 
     function renderInfoTab() {
@@ -212,6 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </tbody></table></div>`;
     }
 
+    // ... (funções logToPanel, buildElementsTree e inspetor continuam as mesmas) ...
     function logToPanel(log) {
         const consoleOutput = document.getElementById("console-output");
         if (!consoleOutput) return;
@@ -397,7 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleInspector();
     }
 
-    // --- NOVA LÓGICA DA ABA DE ACESSIBILIDADE ---
+    // --- LÓGICA DA ABA DE ACESSIBILIDADE (Mesma lógica da versão anterior) ---
     const createAxeResultBlock = (item, type) => {
         const colors = {
             violation: 'border-red-500 bg-red-900/20',
@@ -452,7 +454,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 html += '<h4 class="text-base font-bold text-yellow-400 mt-4 mb-2">Itens para Revisão Manual</h4>';
                 html += results.incomplete.map(i => createAxeResultBlock(i, 'incomplete')).join('');
             }
-            // CORREÇÃO: Bloco "Testes Aprovados" agora é renderizado
             if (results.passes.length > 0) {
                 html += '<h4 class="text-base font-bold text-green-400 mt-4 mb-2">Testes Aprovados</h4>';
                 html += results.passes.map(p => createAxeResultBlock(p, 'pass')).join('');
@@ -467,7 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- NOVA LÓGICA DA ABA DE TESTES ---
+    // --- LÓGICA DA ABA DE TESTES (Mesma lógica da versão anterior) ---
     const renderDiagnosticItem = (item, isGlobal = false) => {
         const severityMap = {
             critical: { color: 'red', icon: 'error' },
@@ -497,9 +498,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     async function loadAndRenderDiagnostics() {
         const diagnosticsContainer = document.getElementById('diagnostics-results');
-        if (!diagnosticsContainer || diagnosticsContainer.dataset.loaded) return;
+        if (!diagnosticsContainer) return;
 
-        diagnosticsContainer.dataset.loaded = 'true';
         diagnosticsContainer.innerHTML = '<p class="text-center text-gray-400">Carregando relatório de diagnóstico...</p>';
         
         try {
@@ -538,7 +538,4 @@ document.addEventListener("DOMContentLoaded", () => {
             diagnosticsContainer.innerHTML = `<p class="text-red-400 p-3 bg-red-900/20 rounded-md">Ocorreu um erro ao carregar o relatório de diagnóstico: ${err.message}</p>`;
         }
     }
-    
-    // Função original runComprehensiveDiagnostics removida, pois a nova lógica a substitui.
-
 });
