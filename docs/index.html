@@ -237,11 +237,10 @@ layout: null
             width: 100%;
         }
         
-        /* CORREÇÃO 3: Fundo do código volta a ser #1f1f1f (idêntico ao AI Studio) */
         .code-block-tab-content {
             height: 350px;
             overflow: auto; 
-            background: #1f1f1f; /* Alterado de volta para o fundo do AI Studio */
+            background: #1f1f1f;
             padding: 1.25rem;
             border-top: 1px solid #2a2a2a;
             border-radius: 0 0 0.5rem 0.5rem;
@@ -250,11 +249,10 @@ layout: null
         .code-block-tab-content pre {
              padding: 0 !important;
              margin: 0 !important;
-             background: transparent !important; /* Remove qualquer fundo do HLJS */
+             background: transparent !important;
              overflow: visible;
         }
         
-        /* CORREÇÃO 1: Garante que fontes e espaçamento sejam IDÊNTICOS */
         .code-block-tab-content code.hljs,
         .hljs-ln-numbers {
             font-family: 'Courier New', Courier, monospace !important;
@@ -262,7 +260,6 @@ layout: null
             line-height: 1.5rem !important;
         }
 
-        /* Estilização do Plugin de Números de Linha (HLJS) */
         .hljs-ln {
             border-collapse: collapse;
             width: 100%;
@@ -279,7 +276,7 @@ layout: null
             padding-right: 12px;
             color: #8c8c8c;
             text-align: right;
-            background: #1f1f1f; /* CORREÇÃO 3: Fundo do sticky deve bater com o fundo do card */
+            background: #1f1f1f;
             -webkit-user-select: none;
             user-select: none;
             z-index: 1;
@@ -288,7 +285,6 @@ layout: null
             padding-left: 12px;
         }
         
-        /* 5. Link "Pular para Conteúdo" (Acessibilidade) */
         .skip-to-content {
             position: absolute;
             left: -10000px;
@@ -312,8 +308,6 @@ layout: null
             text-decoration: none;
             overflow: visible;
         }
-
-        /* --- FIM: NOVOS ESTILOS --- */
     </style>
 </head>
 <body class="text-[var(--text-primary)]">
@@ -632,30 +626,24 @@ FIM_FUNÇÃO
             const tabsContainer = document.getElementById('code-tabs-container');
             if (tabsContainer) {
                 
-                // Aplica o highlight em TODOS os blocos de código na página
                 hljs.highlightAll();
 
                 const tabButtons = tabsContainer.querySelectorAll('.tab-button');
                 const tabPanels = tabsContainer.querySelectorAll('.code-tab-panel');
 
-                // Função para aplicar números de linha (plugin hljs-line-numbers)
                 function applyLineNumbers(panel) {
                     const codeBlock = panel.querySelector('pre code');
-                    // Verifica se o plugin já rodou (para não duplicar números)
                     if (codeBlock && !panel.hasAttribute('data-line-numbers-applied')) {
-                        // O plugin (hljs.lineNumbersBlock) funciona no elemento <pre> PAI do <code>
                         hljs.lineNumbersBlock(codeBlock.parentElement);
-                        panel.setAttribute('data-line-numbers-applied', 'true'); // Marca como processado
+                        panel.setAttribute('data-line-numbers-applied', 'true');
                     }
                 }
 
-                // Aplica números de linha SOMENTE no painel ativo inicial
                 const defaultActivePanel = tabsContainer.querySelector('.code-tab-panel.active');
                 if (defaultActivePanel) {
                     applyLineNumbers(defaultActivePanel);
                 }
 
-                // Adiciona listeners para os cliques nas abas
                 tabButtons.forEach(button => {
                     button.addEventListener('click', () => {
                         const targetTab = button.getAttribute('data-tab');
@@ -668,7 +656,6 @@ FIM_FUNÇÃO
                         
                         if (activePanel) {
                             activePanel.classList.add('active');
-                            // Aplica os números de linha QUANDO a aba se torna visível (se ainda não tiver sido aplicado)
                             applyLineNumbers(activePanel);
                         }
                     });
