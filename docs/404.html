@@ -1,52 +1,28 @@
 ---
-layout: null
+layout: default
+title: Página Não Encontrada
 permalink: /404.html
 ---
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8"/>
-    <title>Pitchutcha - Página Não Encontrada</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
-    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
-</head>
-<body class="bg-[var(--background-primary)] text-[var(--text-primary)] flex flex-col min-h-screen">
 
-    <header class="p-4 md:px-8 lg:px-12 flex justify-between items-center z-30 relative">
-        <div class="flex items-center space-x-4">
-            <a href="{{ '/' | relative_url }}" class="flex items-center gap-3">
-                <svg height="32" aria-hidden="true" viewBox="0 0 32 32" version="1.1" width="32" class="fill-current text-[var(--text-primary)]"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4C9.37 4 4 9.37 4 16s5.37 12 12 12 12-5.37 12-12S22.63 4 16 4zM0 16C0 7.16 7.16 0 16 0s16 7.16 16 16-7.16 16-16 16S0 24.84 0 16z"/></svg>
-                <h1 class="text-xl font-bold">Pitchutcha</h1>
+<main class="flex-grow flex items-center justify-center text-center px-4 py-16">
+    <div>
+        <p class="text-6xl md:text-8xl font-bold text-[var(--primary-color)]">404</p>
+        <h1 class="mt-4 text-3xl md:text-5xl font-bold tracking-tight text-white">Página Não Encontrada</h1>
+        <p class="mt-6 text-base leading-7 text-[var(--text-secondary)]">Desculpe, não conseguimos encontrar a página que você está procurando.</p>
+        
+        <div class="mt-10 max-w-md mx-auto">
+            <form action="{{ '/search.html' | relative_url }}" method="get" class="main-search-form flex">
+                <input type="search" name="q" placeholder="Pesquisar nos artigos..." class="w-full bg-[#0d1117] border border-[var(--borders)] rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] text-lg">
+                <button type="submit" class="bg-[var(--primary-color)] hover:opacity-90 text-white font-semibold rounded-r-md px-6 py-2.5">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="mt-10">
+            <a href="{{ '/' | relative_url }}" class="text-lg font-semibold text-[var(--primary-color)] hover:opacity-80">
+                &larr; Voltar para a Página Inicial
             </a>
         </div>
-    </header>
-
-    <main class="flex-grow flex items-center justify-center text-center px-4">
-        <div>
-            <p class="text-6xl md:text-8xl font-bold text-[var(--primary-color)]">404</p>
-            <h1 class="mt-4 text-3xl md:text-5xl font-bold tracking-tight text-white">Página Não Encontrada</h1>
-            <p class="mt-6 text-base leading-7 text-[var(--text-secondary)]">Desculpe, não conseguimos encontrar a página que você está procurando.</p>
-            
-            <div class="mt-10 max-w-md mx-auto">
-                <form action="{{ '/search.html' | relative_url }}" method="get" class="main-search-form flex">
-                    <input type="search" name="q" placeholder="Pesquisar nos artigos..." class="w-full bg-[#0d1117] border border-[var(--borders)] rounded-l-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] text-lg">
-                    <button type="submit" class="bg-[var(--primary-color)] hover:opacity-90 text-white font-semibold rounded-r-md px-6 py-2.5">
-                        <span class="material-symbols-outlined">search</span>
-                    </button>
-                </form>
-            </div>
-
-            <div class="mt-6">
-                <a href="{{ '/' | relative_url }}" class="text-lg font-semibold text-[var(--primary-color)] hover:opacity-80">
-                    &larr; Voltar para a Página Inicial
-                </a>
-            </div>
-        </div>
-    </main>
-
-    {% include footer.html %}
-    
-</body>
-</html>
+    </div>
+</main>
