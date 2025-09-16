@@ -63,6 +63,8 @@
     /* Cores de Feedback */
     --success: #28a745;
     --danger: #dc3545;
+    --warning: #eab308; /* Amarelo/Laranja */
+    --info: #3388FF; /* Azul */
 
     /* Variáveis de Tipografia e Espaçamento */
     --tab-size-preference: 4;
@@ -157,35 +159,87 @@ div.highlighter-rouge,figure.highlight{position:relative;margin-bottom:1rem;bord
     background-color: var(--primary-hover);
 }
 
-/* --- ESTILOS PARA O GRÁFICO DE UPTIME (STATUS PAGE) --- */
-#status-legend .legend-item {
+/* --- NOVOS ESTILOS PARA O GRÁFICO DE UPTIME (ESTILO DISCORD) --- */
+.uptime-graph-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 50px;
+    padding: 2px;
+    gap: 2px; /* Espaçamento entre as barras */
+}
+.uptime-bar {
+    width: 100%; /* Flexbox cuidará da largura real */
+    min-width: 2px;
+    border-radius: 1px;
+    background-color: var(--borders); /* Cor padrão para barras de carregamento */
+}
+.uptime-tooltip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: var(--cards-elements);
+    border: 1px solid var(--borders);
+    border-radius: 6px;
+    padding: 10px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-size: 13px;
+    line-height: 1.5;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+    white-space: nowrap;
+}
+.uptime-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+}
+.tooltip-arrow {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--cards-elements);
+    border-bottom: 1px solid var(--borders);
+    border-right: 1px solid var(--borders);
+    transform: rotate(45deg);
+    bottom: -6px;
+    left: 50%;
+    margin-left: -5px;
+    z-index: -1;
+}
+.legend-gradient {
+    width: 80px;
+    height: 10px;
+    border-radius: 5px;
+    background: linear-gradient(to right, 
+        var(--danger), 
+        var(--warning), 
+        var(--success)
+    );
+}
+.legend-help-button {
     display: flex;
     align-items: center;
-}
-#status-legend .legend-color {
-    width: 0.75rem; /* 12px */
-    height: 0.75rem; /* 12px */
-    border-radius: 2px;
-    margin-right: 0.5rem; /* 8px */
-}
-#uptime-chart-container .uptime-bar {
-    flex-grow: 1;
-    border-radius: 1px;
-    transition: filter 0.2s ease-in-out;
-}
-#uptime-chart-container .uptime-bar:hover {
-    filter: brightness(1.5);
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    background-color: transparent;
+    font-size: 11px;
+    font-weight: bold;
     cursor: pointer;
+    line-height: 1;
 }
-.status-operational {
-    background-color: var(--success); /* Verde */
+.legend-help-button:hover {
+    background-color: var(--borders);
+    color: var(--text-primary);
 }
-.status-degraded {
-    background-color: #eab308; /* Amarelo */
-}
-.status-outage {
-    background-color: var(--danger); /* Vermelho */
-}
-.status-no-data {
-    background-color: var(--borders); /* Cinza para dados ausentes */
-  }
+/* Cores do Status */
+.status-operational { background-color: var(--success); }
+.status-degraded { background-color: var(--warning); }
+.status-outage { background-color: var(--danger); }
+.status-no-data { background-color: var(--borders); }
