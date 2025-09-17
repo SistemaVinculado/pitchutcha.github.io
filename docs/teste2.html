@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observabilidade Integrada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        /* As variáveis de cor e o tema escuro são definidos para corresponder
+           exatamente ao site original, garantindo consistência visual. */
+        :root {
+            --background-default: #ffffff; --foreground-default: #111827; --foreground-light: #6b7280;
+            --surface-75: #f9fafb; --surface-100: #f3f4f6; --surface-200: #e5e7eb; --surface-300: #d1d5db;
+            --border-default: #e5e7eb; --border-strong: #d1d5db;
+        }
+        .dark {
+            --background-default: #111111; --foreground-default: #ffffff; --foreground-light: #a0a0a0;
+            --surface-75: #1c1c1c; --surface-100: #1c1c1c; --surface-200: #2a2a2a; --surface-300: #3a3a3a;
+            --border-default: #303030; --border-strong: #404040;
+        }
+        body {
+            background-color: var(--background-default); color: var(--foreground-default); font-family: 'Inter', sans-serif;
+        }
+        /* Estilização da scrollbar para o tema escuro */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1c1c1c; }
+        ::-webkit-scrollbar-thumb { background-color: #4f4f4f; border-radius: 10px; border: 2px solid #1c1c1c; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #6f6f6f; }
+
+        /* A animação da barra de progresso agora usa um elemento filho, replicando o método original. */
+        .progress-indicator {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            background-color: var(--foreground-default);
+            transform: translateX(-100%);
+            transition: transform 5s linear;
+        }
+        .tab-progress-bar.active .progress-indicator { transform: translateX(0%); }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .fade-in-log { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-[var(--background-default)] antialiased">
+
+<div id="observability" class="sm:py-18 container relative mx-auto px-6 py-16 md:py-24 lg:px-16 lg:py-24 xl:px-20 flex flex-col gap-4 lg:gap-8">
+    <h2 class="h2 text-3xl md:text-4xl font-bold tracking-tight text-[var(--foreground-default)]">Built-in observability</h2>
+    <div class="flex flex-col gap-8 xl:gap-32 justify-between">
+        <div class="hidden md:flex gap-4" role="tablist">
+            
+            <!-- Aba 1: Realtime logs -->
+            <button id="tab-1" class="tab-button relative text-left text-lg flex flex-col group transition-all duration-500 ease-out text-[var(--foreground-default)] md:flex-[2]" aria-selected="true" role="tab">
+                <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-gradient-to-b from-[var(--border-default)] to-[var(--border-default)]/50 dark:to-[var(--surface-100)] transition-all hover:shadow-md w-full h-full mb-4">
+                    <div class="relative z-10 w-full h-[500px] rounded-[7px] md:rounded-[11px] bg-[var(--surface-75)] overflow-hidden text-[var(--foreground-light)] p-4">
+                        <div class="relative z-10 flex flex-col h-full justify-between">
+                            <h3 class="font-mono text-sm uppercase transition-colors text-[var(--foreground-default)]">Realtime logs</h3>
+                            <p class="pt-2 text-[var(--foreground-light)] text-sm max-w-[220px] transition-opacity md:opacity-0 group-aria-selected:md:opacity-100 lg:opacity-100">Stream logs to the dashboard in realtime. Logs are populated with rich metadata to help debugging</p>
+                        </div>
+                        <div id="content-1" class="tab-content absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-100">
+                             <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-[var(--surface-100)] transition-opacity pointer-events-none opacity-0 group-aria-selected:opacity-0"></div>
+                             <div class="w-full h-full bg-black/30 rounded-lg p-3 font-mono text-xs flex flex-col-reverse border border-[var(--border-default)] shadow-inner">
+                                <div id="log-container" class="overflow-y-auto h-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-progress-bar active relative w-full h-[1px] bg-[var(--border-strong)] rounded-full overflow-hidden">
+                    <div class="progress-indicator"></div>
+                </div>
+            </button>
+
+            <!-- Aba 2: Query Logs -->
+            <button id="tab-2" class="tab-button relative text-left text-lg flex flex-col group transition-all duration-500 ease-out text-[var(--foreground-light)] md:flex-[1]" aria-selected="false" role="tab">
+                <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-gradient-to-b from-[var(--border-default)] to-[var(--border-default)]/50 dark:to-[var(--surface-100)] transition-all hover:shadow-md w-full h-full mb-4">
+                    <div class="relative z-10 w-full h-[500px] rounded-[7px] md:rounded-[11px] bg-[var(--surface-75)] overflow-hidden text-[var(--foreground-light)] p-4">
+                        <div class="relative z-10 flex flex-col h-full justify-between">
+                            <h3 class="font-mono text-sm uppercase transition-colors">Query Logs via Log explorer</h3>
+                            <p class="pt-2 text-[var(--foreground-light)] text-sm max-w-[220px] md:opacity-0 group-aria-selected:md:opacity-100 lg:opacity-100 transition-opacity">Get deeper insights into how your functions are behaving by writing SQL queries on function logs</p>
+                        </div>
+                        <div id="content-2" class="tab-content absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-0 pointer-events-none">
+                            <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-[var(--surface-100)] transition-opacity pointer-events-none"></div>
+                            <div class="w-full h-full bg-black/30 rounded-lg border border-[var(--border-default)] shadow-inner flex flex-col p-3 gap-3">
+                               <div class="flex-shrink-0 bg-[var(--surface-200)] rounded-md p-3 font-mono text-sm border border-[var(--surface-300)]">
+                                   <span class="text-green-400">SELECT</span> <span class="text-gray-300">*</span> <span class="text-green-400">FROM</span> <span class="text-yellow-400">edge_function_logs</span><br>
+                                   <span class="text-green-400">WHERE</span> <span class="text-purple-400">timestamp</span> > <span class="text-blue-400">now()</span> - <span class="text-orange-400">'1 hour'::interval</span><br>
+                                   <span class="text-green-400">AND</span> <span class="text-gray-300">json_extract_path_text(metadata, <span class="text-red-400">'response'</span>, <span class="text-red-400">'status_code'</span>)</span> = <span class="text-orange-400">'500'</span><br>
+                                   <span class="text-green-400">ORDER BY</span> <span class="text-purple-400">timestamp</span> <span class="text-blue-400">DESC</span>;
+                               </div>
+                                <div class="flex-grow overflow-auto bg-[var(--surface-200)]/50 rounded-md border border-[var(--surface-300)]">
+                                   <table class="w-full text-xs text-left"><thead class="sticky top-0 bg-[var(--surface-300)]"><tr class="text-[var(--foreground-light)]"><th class="p-2 font-semibold">timestamp</th><th class="p-2 font-semibold">event_message</th><th class="p-2 font-semibold">status_code</th></tr></thead>
+                                       <tbody class="text-[var(--foreground-light)]"><tr class="hover:bg-[var(--surface-200)]/50"><td class="p-2">2023-10-27T10:15:01Z</td><td class="p-2">Internal Server Error</td><td class="p-2 text-red-400">500</td></tr><tr class="hover:bg-[var(--surface-200)]/50"><td class="p-2 border-t border-[var(--surface-300)]">2023-10-27T10:12:45Z</td><td class="p-2 border-t border-[var(--surface-300)]">Error processing payment</td><td class="p-2 border-t border-[var(--surface-300)] text-red-400">500</td></tr><tr class="hover:bg-[var(--surface-200)]/50"><td class="p-2 border-t border-[var(--surface-300)]">2023-10-27T10:05:12Z</td><td class="p-2 border-t border-[var(--surface-300)]">Database connection failed</td><td class="p-2 border-t border-[var(--surface-300)] text-red-400">500</td></tr></tbody>
+                                   </table>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-progress-bar relative w-full h-[1px] bg-[var(--border-strong)] rounded-full overflow-hidden">
+                    <div class="progress-indicator"></div>
+                </div>
+            </button>
+            
+            <!-- Aba 3: Metrics -->
+            <button id="tab-3" class="tab-button relative text-left text-lg flex flex-col group transition-all duration-500 ease-out text-[var(--foreground-light)] md:flex-[1]" aria-selected="false" role="tab">
+                <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-gradient-to-b from-[var(--border-default)] to-[var(--border-default)]/50 dark:to-[var(--surface-100)] transition-all hover:shadow-md w-full h-full mb-4">
+                    <div class="relative z-10 w-full h-[500px] rounded-[7px] md:rounded-[11px] bg-[var(--surface-75)] overflow-hidden text-[var(--foreground-light)] p-4">
+                        <div class="relative z-10 flex flex-col h-full justify-between">
+                            <h3 class="font-mono text-sm uppercase transition-colors">Metrics</h3>
+                            <p class="pt-2 text-[var(--foreground-light)] text-sm max-w-[220px] md:opacity-0 group-aria-selected:md:opacity-100 lg:opacity-100 transition-opacity">Dashboards show the health of your functions at all times</p>
+                        </div>
+                        <div id="content-3" class="tab-content absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-0 pointer-events-none">
+                            <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-[var(--surface-100)] transition-opacity pointer-events-none"></div>
+                            <div class="w-full h-full bg-black/30 rounded-lg border border-[var(--border-default)] shadow-inner grid grid-cols-2 grid-rows-2 gap-3 p-3 text-sm">
+                                <div class="bg-[var(--surface-200)]/50 rounded p-3 flex flex-col justify-between border border-[var(--surface-300)]"><span class="text-[var(--foreground-light)]">Invocations (24h)</span><span class="text-3xl font-bold text-[var(--foreground-default)]">1.25M</span></div>
+                                <div class="bg-[var(--surface-200)]/50 rounded p-3 flex flex-col justify-between border border-[var(--surface-300)]"><span class="text-[var(--foreground-light)]">Taxa de Erro</span><span class="text-3xl font-bold text-red-400">0.02%</span></div>
+                                <div class="bg-[var(--surface-200)]/50 rounded p-3 flex flex-col justify-between border border-[var(--surface-300)]"><span class="text-[var(--foreground-light)]">Latência Média (p99)</span><span class="text-3xl font-bold text-[var(--foreground-default)]">48ms</span></div>
+                                <div class="bg-[var(--surface-200)]/50 rounded p-3 flex flex-col justify-between border border-[var(--surface-300)]"><span class="text-[var(--foreground-light)]">Uso de Memória</span><span class="text-3xl font-bold text-[var(--foreground-default)]">64MB</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="tab-progress-bar relative w-full h-[1px] bg-[var(--border-strong)] rounded-full overflow-hidden">
+                    <div class="progress-indicator"></div>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.tab-button');
+    const contents = document.querySelectorAll('.tab-content');
+    const logContainer = document.getElementById('log-container');
+
+    const restartProgressBar = (activeTab) => {
+        document.querySelectorAll('.tab-progress-bar').forEach(bar => {
+            bar.classList.remove('active');
+            const indicator = bar.querySelector('.progress-indicator');
+            if (indicator) {
+                indicator.style.transition = 'none';
+                indicator.style.transform = 'translateX(-100%)';
+                indicator.offsetHeight; // Force reflow
+                indicator.style.transition = 'transform 5s linear';
+            }
+        });
+        const activeProgressBar = activeTab.querySelector('.tab-progress-bar');
+        setTimeout(() => activeProgressBar.classList.add('active'), 50);
+    };
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            if (tab.getAttribute('aria-selected') === 'true') return;
+            const targetId = tab.id.split('-')[1];
+
+            tabs.forEach(t => {
+                const isSelected = t.id === tab.id;
+                t.setAttribute('aria-selected', isSelected);
+                if (isSelected) {
+                    t.classList.remove('text-[var(--foreground-light)]', 'md:flex-[1]');
+                    t.classList.add('text-[var(--foreground-default)]', 'md:flex-[2]');
+                } else {
+                    t.classList.remove('text-[var(--foreground-default)]', 'md:flex-[2]');
+                    t.classList.add('text-[var(--foreground-light)]', 'md:flex-[1]');
+                }
+            });
+
+            contents.forEach(content => {
+                content.style.opacity = content.id === `content-${targetId}` ? '1' : '0';
+                content.classList.toggle('pointer-events-none', content.id !== `content-${targetId}`);
+            });
+            restartProgressBar(tab);
+        });
+    });
+
+    const logLevels = { 'INFO': 'bg-blue-500/30 text-blue-300', 'WARN': 'bg-yellow-500/30 text-yellow-300', 'ERROR': 'bg-red-500/30 text-red-300' };
+    const messages = ['Request to /api/users', 'User authenticated', 'Fetching data', 'Query took 45ms', 'Response sent: 200', 'WARN: API key deprecated', 'ERROR: Payment failed'];
+    
+    function addLog() {
+        if (!logContainer) return;
+        const level = Object.keys(logLevels)[Math.floor(Math.random() * 3)];
+        const message = messages[Math.floor(Math.random() * messages.length)];
+        const timestamp = new Date().toISOString();
+        const logElement = document.createElement('div');
+        logElement.className = 'flex items-start gap-2 mb-1 fade-in-log';
+        logElement.innerHTML = `<span class="text-gray-500 flex-shrink-0">${timestamp}</span><span class="px-1.5 py-0.5 rounded text-xs font-bold ${logLevels[level]}">${level}</span><span class="text-gray-300">${message}</span>`;
+        logContainer.prepend(logElement);
+        if (logContainer.children.length > 100) logContainer.removeChild(logContainer.lastChild);
+    }
+    
+    setInterval(addLog, 1500);
+    for (let i = 0; i < 15; i++) addLog();
+    restartProgressBar(document.querySelector('.tab-button[aria-selected="true"]'));
+});
+</script>
+
+</body>
+</html>
