@@ -1,44 +1,44 @@
 {
   "metrics": {
-    "api_latency": "30ms",
-    "inference_time": "100ms",
+    "api_latency": "56ms",
+    "inference_time": "241ms",
     "error_rate": "0.02%"
   },
   "graphs": {
     "latency_history": [
-      23,
-      58,
-      15,
+      24,
+      33,
       28,
-      49,
-      49,
-      46,
-      69,
-      11,
-      58,
-      65,
-      50
+      34,
+      47,
+      25,
+      24,
+      20,
+      22,
+      10,
+      28,
+      20
     ],
     "inference_by_model": [
       {
         "model": "GPT-4",
-        "time": 246
+        "time": 172
       },
       {
         "model": "GPT-3.5",
-        "time": 125
+        "time": 80
       },
       {
         "model": "DALL-E",
-        "time": 240
+        "time": 264
       },
       {
         "model": "Whisper",
-        "time": 95
+        "time": 96
       },
       {
         "model": "Embeds",
-        "time": 42
+        "time": 34
       }
     ]
   },
@@ -76,7 +76,7 @@
         {
           "type": 2,
           "datetime": 1757621312,
-          "duration": 493839,
+          "duration": 513485,
           "reason": {
             "code": "200",
             "detail": "OK"
