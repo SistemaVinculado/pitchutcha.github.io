@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charSet="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Supabase - Built-in observability</title>
+    <link rel="icon" type="image/png" href="https://supabase.com/favicon/favicon-196x196.png" sizes="196x196" />
+    <meta name="theme-color" content="#1E1E1E" />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="stylesheet" href="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/css/43a25c5886f0b18e.css?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" />
+    <link rel="stylesheet" href="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/css/3cd83cfe34ca397f.css?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" />
+    <link rel="stylesheet" href="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/css/992d6cc2d8deee95.css?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" />
+</head>
+<body>
+    <div id="__next">
+        <script>
+            !function(){try{var d=document.documentElement,n='data-theme',s='setAttribute';var e=localStorage.getItem('theme');if('system'===e||(!e&&false)){var t='(prefers-color-scheme: dark)',m=window.matchMedia(t);if(m.media!==t||m.matches){d.style.colorScheme = 'dark';d[s](n,'dark')}else{d.style.colorScheme = 'light';d[s](n,'light')}}else if(e){d[s](n,e|| '')}else{d[s](n,'dark')}if(e==='light'||e==='dark'||!e)d.style.colorScheme=e||'dark'}catch(e){}}()
+        </script>
+        <main class="relative min-h-screen" style="background-color: hsl(var(--background-default));">
+            <div class="overflow-hidden">
+                <div id="observability" class="sm:py-18 container relative mx-auto px-6 py-16 md:py-24 lg:px-16 lg:py-24 xl:px-20 flex flex-col gap-4 lg:gap-8">
+                    <h2 class="h2">Built-in observability</h2>
+                    <div class="flex flex-col gap-8 xl:gap-32 justify-between">
+                        <div class="hidden md:flex gap-4" role="tablist">
+                            <button class="relative hover:text-foreground w-full h-[500px] text-left text-lg flex flex-col group transition-all text-foreground md:flex-[2]" aria-selected="true" role="tab">
+                                <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-surface-75 bg-gradient-to-b from-border to-border/50 dark:to-surface-100 transition-all hover:shadow-md flex items-center justify-center w-full h-full mb-4">
+                                    <div class="relative z-10 w-full h-full rounded-[7px] md:rounded-[11px] bg-surface-75 overflow-hidden text-foreground-light p-4">
+                                        <div class="relative z-10 flex flex-col h-full justify-between">
+                                            <h3 class="font-mono text-sm uppercase transition-colors text-foreground">Realtime logs</h3>
+                                            <p class="pt-2 text-foreground-lighter text-sm max-w-[220px] md:opacity-0 transition-opacity lg:opacity-100 !opacity-100">Stream logs to the dashboard in realtime. Logs are populated with rich metadata to help debugging</p>
+                                        </div>
+                                        <div class="absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-100">
+                                            <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-background-surface-100 transition-opacity pointer-events-none opacity-0"></div>
+                                        </div>
+                                        <div class="absolute z-10 inset-0 w-full h-full pointer-events-none opacity-20"></div>
+                                    </div>
+                                </div>
+                                <div class="opacity-0 animate-fade-in absolute bottom-0 w-full h-[1px] bg-border-strong group-hover:opacity-100 rounded-full overflow-hidden">
+                                    <div class="absolute inset-0 w-full right-full bg-foreground h-full transition-opacity opacity-100" style="transform:translateX(-100%)"></div>
+                                </div>
+                            </button>
+                            <button class="relative hover:text-foreground w-full h-[500px] text-left text-lg flex flex-col group transition-all text-foreground-light md:flex-[1]" aria-selected="false" role="tab">
+                                <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-surface-75 bg-gradient-to-b from-border to-border/50 dark:to-surface-100 transition-all hover:shadow-md flex items-center justify-center w-full h-full mb-4">
+                                    <div class="relative z-10 w-full h-full rounded-[7px] md:rounded-[11px] bg-surface-75 overflow-hidden text-foreground-light p-4">
+                                        <div class="relative z-10 flex flex-col h-full justify-between">
+                                            <h3 class="font-mono text-sm uppercase transition-colors">Query Logs via Log explorer</h3>
+                                            <p class="pt-2 text-foreground-lighter text-sm max-w-[220px] md:opacity-0 transition-opacity lg:opacity-100">Get deeper insights into how your functions are behaving by writing SQL queries on function logs</p>
+                                        </div>
+                                        <div class="absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-25">
+                                            <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-background-surface-100 transition-opacity pointer-events-none"></div>
+                                        </div>
+                                        <div class="absolute z-10 inset-0 w-full h-full pointer-events-none opacity-20"></div>
+                                    </div>
+                                </div>
+                            </button>
+                            <button class="relative hover:text-foreground w-full h-[500px] text-left text-lg flex flex-col group transition-all text-foreground-light md:flex-[1]" aria-selected="false" role="tab">
+                                <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-surface-75 bg-gradient-to-b from-border to-border/50 dark:to-surface-100 transition-all hover:shadow-md flex items-center justify-center w-full h-full mb-4">
+                                    <div class="relative z-10 w-full h-full rounded-[7px] md:rounded-[11px] bg-surface-75 overflow-hidden text-foreground-light p-4">
+                                        <div class="relative z-10 flex flex-col h-full justify-between">
+                                            <h3 class="font-mono text-sm uppercase transition-colors">Metrics</h3>
+                                            <p class="pt-2 text-foreground-lighter text-sm max-w-[220px] md:opacity-0 transition-opacity lg:opacity-100">Dashboards show the health of your functions at all times</p>
+                                        </div>
+                                        <div class="absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-25">
+                                            <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-background-surface-100 transition-opacity pointer-events-none"></div>
+                                        </div>
+                                        <div class="absolute z-10 inset-0 w-full h-full pointer-events-none opacity-20"></div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="md:hidden relative w-full lg:w-1/2 min-h-[300px] overflow-visible">
+                            <div class="swiper" style="z-index:0;overflow:visible">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <button class="relative hover:text-foreground w-full h-[500px] text-left text-lg flex flex-col group transition-all text-foreground md:flex-[2]" aria-selected="true" role="tab">
+                                            <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-surface-75 bg-gradient-to-b from-border to-border/50 dark:to-surface-100 transition-all hover:shadow-md flex items-center justify-center w-full h-full mb-4">
+                                                <div class="relative z-10 w-full h-full rounded-[7px] md:rounded-[11px] bg-surface-75 overflow-hidden text-foreground-light p-4">
+                                                    <div class="relative z-10 flex flex-col h-full justify-between">
+                                                        <h3 class="font-mono text-sm uppercase transition-colors text-foreground">Realtime logs</h3>
+                                                        <p class="pt-2 text-foreground-lighter text-sm max-w-[220px] md:opacity-0 transition-opacity lg:opacity-100 !opacity-100">Stream logs to the dashboard in realtime. Logs are populated with rich metadata to help debugging</p>
+                                                    </div>
+                                                    <div class="absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-100">
+                                                        <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-background-surface-100 transition-opacity pointer-events-none opacity-0"></div>
+                                                    </div>
+                                                    <div class="absolute z-10 inset-0 w-full h-full pointer-events-none opacity-20"></div>
+                                                </div>
+                                            </div>
+                                            <div class="opacity-0 animate-fade-in absolute bottom-0 w-full h-[1px] bg-border-strong group-hover:opacity-100 rounded-full overflow-hidden">
+                                                <div class="absolute inset-0 w-full right-full bg-foreground h-full transition-opacity opacity-100" style="transform:translateX(-100%)"></div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <button class="relative hover:text-foreground w-full h-[500px] text-left text-lg flex flex-col group transition-all text-foreground-light md:flex-[1]" aria-selected="false" role="tab">
+                                            <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-surface-75 bg-gradient-to-b from-border to-border/50 dark:to-surface-100 transition-all hover:shadow-md flex items-center justify-center w-full h-full mb-4">
+                                                <div class="relative z-10 w-full h-full rounded-[7px] md:rounded-[11px] bg-surface-75 overflow-hidden text-foreground-light p-4">
+                                                    <div class="relative z-10 flex flex-col h-full justify-between">
+                                                        <h3 class="font-mono text-sm uppercase transition-colors">Query Logs via Log explorer</h3>
+                                                        <p class="pt-2 text-foreground-lighter text-sm max-w-[220px] md:opacity-0 transition-opacity lg:opacity-100">Get deeper insights into how your functions are behaving by writing SQL queries on function logs</p>
+                                                    </div>
+                                                    <div class="absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-25">
+                                                        <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-background-surface-100 transition-opacity pointer-events-none"></div>
+                                                    </div>
+                                                    <div class="absolute z-10 inset-0 w-full h-full pointer-events-none opacity-20"></div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <button class="relative hover:text-foreground w-full h-[500px] text-left text-lg flex flex-col group transition-all text-foreground-light md:flex-[1]" aria-selected="false" role="tab">
+                                            <div class="group/panel relative rounded-lg md:rounded-xl p-px bg-surface-75 bg-gradient-to-b from-border to-border/50 dark:to-surface-100 transition-all hover:shadow-md flex items-center justify-center w-full h-full mb-4">
+                                                <div class="relative z-10 w-full h-full rounded-[7px] md:rounded-[11px] bg-surface-75 overflow-hidden text-foreground-light p-4">
+                                                    <div class="relative z-10 flex flex-col h-full justify-between">
+                                                        <h3 class="font-mono text-sm uppercase transition-colors">Metrics</h3>
+                                                        <p class="pt-2 text-foreground-lighter text-sm max-w-[220px] md:opacity-0 transition-opacity lg:opacity-100">Dashboards show the health of your functions at all times</p>
+                                                    </div>
+                                                    <div class="absolute h-[calc(100%-150px)] inset-0 m-auto flex items-center justify-center transition-opacity opacity-25">
+                                                        <div class="absolute z-20 w-full h-full inset-0 bg-gradient-to-r from-transparent to-background-surface-100 transition-opacity pointer-events-none"></div>
+                                                    </div>
+                                                    <div class="absolute z-10 inset-0 w-full h-full pointer-events-none opacity-20"></div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/chunks/webpack-811e52cdca7d4ffa.js?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" defer=""></script>
+    <script src="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/chunks/framework-9ae46c84f33751f1.js?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" defer=""></script>
+    <script src="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/chunks/main-249b87e414208597.js?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" defer=""></script>
+    <script src="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/chunks/pages/_app-be0439ecda29238e.js?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" defer=""></script>
+    <script src="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/chunks/1561-6dda214669c80b06.js?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" defer=""></script>
+    <script src="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/chunks/2927-6ff2651950f24066.js?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" defer=""></script>
+    <script src="https://frontend-assets.supabase.com/www/8cd5e100387d/_next/static/chunks/pages/edge-functions-0f63629e6ba223c1.js?dpl=dpl_HqjLin7Uw5dHXdS3wnfVg9KphHJK" defer=""></script>
+
+</body>
+</html>
