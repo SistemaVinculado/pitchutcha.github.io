@@ -1,6 +1,15 @@
 [
   {
     "page": "/",
+    "type": "Qualidade de Código",
+    "severity": "serious",
+    "title": "Erros de JavaScript no Console",
+    "description": "Foram encontrados 1 erro(s): Failed to load resource: the server responded with a status of 404 ()",
+    "suggestion": "Abra o console do navegador nesta página para depurar os erros listados.",
+    "selector": "N/A"
+  },
+  {
+    "page": "/",
     "type": "Performance",
     "severity": "moderate",
     "title": "Imagem com Dimensionamento Incorreto",
