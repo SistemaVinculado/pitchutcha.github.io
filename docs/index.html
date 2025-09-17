@@ -6,255 +6,83 @@ layout: null
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supabase Edge Functions - Dark Theme Clone</title>
+    <title>Pitchutcha: Domine os Fundamentos da Computação</title>
+    <meta name="description" content="Guias aprofundados, artigos e exemplos de código sobre Algoritmos e Estruturas de Dados para construir software de alta performance.">
+    <meta name="base-url" content="{{ '/' | relative_url }}">
+    <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
-    <script>
-        tailwind.config = {
-          theme: {
-            extend: {
-              colors: {
-                'brand-blue': '#1591EA',
-                'dark-bg': '#0D1116',
-                'dark-card': '#1C1F26',
-                'dark-text-primary': '#E6E8EB',
-                'dark-text-secondary': '#A0A3A8',
-                'dark-border': '#2E3033',
-              }
-            }
-          }
-        }
-    </script>
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0D1116;
-            color: #E6E8EB;
+            background-color: var(--dark-bg);
+            color: var(--dark-text-primary);
         }
-        .font-mono {
-            font-family: 'Roboto Mono', monospace;
-        }
-        .h1 {
-            font-size: 3rem;
-            line-height: 1.1;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-        }
-        @media (min-width: 768px) {
-            .h1 {
-                font-size: 3.75rem;
-            }
-        }
-        .h2 {
-            font-size: 2.25rem;
-            line-height: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-        }
-        .globe-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            aspect-ratio: 1/1;
-            margin: auto;
-        }
-        .globe-bg {
-            width: 100%;
-            height: 100%;
-            background-image: url('https://supabase.com/images/product/functions/globe.svg'); /* Dark version of globe */
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-        .dot {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #E6E8EB;
-            transform: translate(-50%, -50%);
-        }
-        .dot::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            background-color: #E6E8EB;
-            opacity: 0.2;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.2; }
-            50% { transform: scale(1.5); opacity: 0; }
-        }
-        
-        /* Animações de Scroll */
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .reveal.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Ocultar a barra de rolagem */
+        .font-mono { font-family: 'Roboto Mono', monospace; }
+        .h1 { font-size: 3rem; line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; }
+        @media (min-width: 768px) { .h1 { font-size: 3.75rem; } }
+        .h2 { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; letter-spacing: -0.025em; }
+        .globe-container { position: relative; width: 100%; max-width: 500px; aspect-ratio: 1/1; margin: auto; }
+        .globe-bg { width: 100%; height: 100%; background-image: url('https://supabase.com/images/product/functions/globe.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; background-color: #E6E8EB; transform: translate(-50%, -50%); }
+        .dot::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; background-color: #E6E8EB; opacity: 0.2; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.5); opacity: 0; } }
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .reveal.is-visible { opacity: 1; transform: translateY(0); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .syntax-highlighter {
-            background-color: #0D1116;
-            color: #E6E8EB;
-            padding: 1.5rem;
-            border-radius: 0 0 0.75rem 0.75rem;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.875rem;
-            overflow-x: auto;
-            min-height: 200px;
-        }
-        .token-keyword { color: #f472b6; }
-        .token-function { color: #a78bfa; }
-        .token-string { color: #60a5fa; }
-        .token-comment { color: #A0A3A8; }
-        .token-punctuation { color: #E6E8EB; }
-
-        /* Efeito de brilho nos cards */
-        .card-glow {
-            position: relative;
-            overflow: hidden;
-        }
-        .card-glow:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(21, 145, 234, 0.15), transparent 40%);
-            z-index: 0;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .card-glow:hover:before {
-            opacity: 1;
-        }
-        
-        /* Animação do feed de logs */
-        .log-entry {
-            animation: fadeInSlideUp 0.5s ease-out forwards;
-        }
-        @keyframes fadeInSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        /* Animação de digitação do terminal */
-        .typing-effect {
-            width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            animation: typing 2s steps(40, end) forwards;
-        }
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
+        .syntax-highlighter { background-color: #0D1116; color: #E6E8EB; padding: 1.5rem; border-radius: 0 0 0.75rem 0.75rem; font-family: 'Roboto Mono', monospace; font-size: 0.875rem; overflow-x: auto; min-height: 200px; }
+        .token-keyword { color: #f472b6; } .token-function { color: #a78bfa; } .token-string { color: #60a5fa; } .token-comment { color: #A0A3A8; } .token-punctuation { color: #E6E8EB; }
+        .card-glow { position: relative; overflow: hidden; }
+        .card-glow:before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(21, 145, 234, 0.15), transparent 40%); z-index: 0; opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .card-glow:hover:before { opacity: 1; }
+        .log-entry { animation: fadeInSlideUp 0.5s ease-out forwards; }
+        @keyframes fadeInSlideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .typing-effect { width: 0; overflow: hidden; white-space: nowrap; animation: typing 2s steps(40, end) forwards; }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
     </style>
 </head>
 <body class="bg-dark-bg text-dark-text-primary">
 
-    <!-- Header -->
-    <header class="sticky top-0 z-40 bg-dark-bg/80 backdrop-blur-sm border-b border-dark-border">
-        <div class="container mx-auto px-6 lg:px-16 xl:px-20">
-            <div class="relative flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="#" class="flex items-center space-x-2">
-                        <svg width="24" height="24" viewBox="0 0 116 117" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M63.8581 0.31543L115.617 29.5372V88.0181L63.8581 117.24L12.1025 88.0181V29.5372L63.8581 0.31543Z" fill="#1591EA"/>
-                            <path d="M63.8581 0.31543L12.1025 29.5372V88.0181L24.195 94.8872V36.4062L63.8581 13.0736V0.31543Z" fill="url(#paint0_linear_header)"/>
-                            <defs>
-                                <linearGradient id="paint0_linear_header" x1="63.8581" y1="0.31543" x2="18.9716" y2="91.4305" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#0c5386"/>
-                                    <stop offset="1" stop-color="#1591EA"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        <span class="font-bold text-xl text-dark-text-primary">Supabase</span>
-                    </a>
-                </div>
-                <div class="hidden lg:flex items-center space-x-6" id="desktop-menu">
-                    <a href="#" class="text-dark-text-secondary hover:text-dark-text-primary transition-colors">Product</a>
-                    <a href="#" class="text-dark-text-secondary hover:text-dark-text-primary transition-colors">Developers</a>
-                    <a href="#" class="text-dark-text-secondary hover:text-dark-text-primary transition-colors">Pricing</a>
-                    <a href="#" class="text-dark-text-secondary hover:text-dark-text-primary transition-colors">Docs</a>
-                    <a href="#" class="text-dark-text-secondary hover:text-dark-text-primary transition-colors">Blog</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="#" class="hidden lg:block px-4 py-2 text-sm font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border transition-colors">Sign in</a>
-                    <a href="#" class="px-4 py-2 text-sm font-medium text-white bg-brand-blue rounded-md hover:opacity-90 transition-opacity">Start your project</a>
-                    <button class="lg:hidden text-dark-text-secondary hover:text-dark-text-primary" id="mobile-menu-button">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    </button>
-                </div>
-            </div>
-             <!-- Menu Móvel -->
-            <div id="mobile-menu" class="hidden lg:hidden py-4">
-                <a href="#" class="block py-2 px-4 text-dark-text-secondary hover:bg-dark-card rounded">Product</a>
-                <a href="#" class="block py-2 px-4 text-dark-text-secondary hover:bg-dark-card rounded">Developers</a>
-                <a href="#" class="block py-2 px-4 text-dark-text-secondary hover:bg-dark-card rounded">Pricing</a>
-                <a href="#" class="block py-2 px-4 text-dark-text-secondary hover:bg-dark-card rounded">Docs</a>
-                <a href="#" class="block py-2 px-4 text-dark-text-secondary hover:bg-dark-card rounded">Blog</a>
-            </div>
-        </div>
-    </header>
+    {% include 'header_new.html' %}
     
-    <!-- Sub-Navegação -->
     <nav class="sticky top-16 z-30 bg-dark-bg/80 backdrop-blur-sm border-b border-dark-border hidden md:block">
         <div class="container mx-auto px-6 lg:px-16 xl:px-20">
             <div class="flex items-center gap-3">
-                 <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-transparent text-sm text-dark-text-secondary hover:text-dark-text-primary transition-all" href="#">
+                 <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-brand-blue text-sm text-dark-text-primary font-medium transition-all" href="{{ '/docs.html' | relative_url }}">
                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.008 6.332H15.178v5.333H3.008V6.332ZM2 13.084c0-.782.634-1.417 1.416-1.417h11.332c.783 0 1.417.635 1.417 1.417v2.5c0 .782-.634 1.416-1.417 1.416H3.416C2.634 17 2 16.366 2 15.584v-2.5ZM2 2.416C2 1.634 2.634 1 3.416 1h11.332C15.53 1 16.165 1.634 16.165 2.416v2.5c0 .783-.635 1.417-1.417 1.417H3.416C2.634 6.333 2 5.699 2 4.916v-2.5Z"></path></svg>
-                    <span>Database</span>
+                    <span>Início</span>
                 </a>
-                 <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-transparent text-sm text-dark-text-secondary hover:text-dark-text-primary transition-all" href="#">
+                 <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-transparent text-sm text-dark-text-secondary hover:text-dark-text-primary transition-all" href="{{ '/algoritmos.html' | relative_url }}">
                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.026 12.046h6.154M3.026 12.046v2.461h6.154v-2.461M3.026 12.046V9.584h6.154v2.462M11.034 5.923V3.461c0-1.36.902-2.461 2.038-2.461 1.137 0 2.039 1.1 2.039 2.461v2.462M3 8.385v6.153C3 15.898 4.102 17 5.462 17h6.153c1.36 0 2.462-1.102 2.462-2.462V8.385c0-1.36-1.102-2.462-2.462-2.462H5.462C4.102 5.923 3 7.025 3 8.385Z"></path></svg>
-                    <span>Auth</span>
+                    <span>Algoritmos</span>
                 </a>
-                <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-brand-blue text-sm text-dark-text-primary font-medium transition-all" href="#">
+                <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-transparent text-sm text-dark-text-secondary hover:text-dark-text-primary transition-all" href="{{ '/estruturas-de-dados.html' | relative_url }}">
                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.312 16.101A8.999 8.999 0 0 0 9.001 17c4.418 0 8-3.582 8-8a8.999 8.999 0 0 0-.903-3.697M12.735 1.923A8.999 8.999 0 0 0 9 1C4.582 1 1 4.582 1 9c0 1.362.34 2.644.94 3.766m0 0C1.618 13.16 1.424 13.664 1.424 14.213c0 1.262 1.023 2.285 2.286 2.285s2.285-1.023 2.285-2.285c0-1.263-1.023-2.286-2.285-2.286-.714 0-1.351.327-1.77.842Zm15.196-8.987c0 1.263-1.023 2.286-2.286 2.286s-2.285-1.023-2.285-2.286c0-1.262 1.023-2.285 2.285-2.285s2.286 1.023 2.286 2.285Zm-4.108 5.22c0 2.84-2.298 5.143-5.143 5.143-2.845 0-5.143-2.302-5.143-5.143 0-2.845 2.3-5.143 5.143-5.143 2.845 0 5.143 2.3 5.143 5.143Z"></path></svg>
-                    <span>Edge Functions</span>
-                </a>
-                <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-transparent text-sm text-dark-text-secondary hover:text-dark-text-primary transition-all" href="#">
-                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.944 1v2.86m-2.14 0L1.359 1.341M3.804 5.839H1m7.75 5.843 3.817-.95c.53-.132.593-.861.092-1.081L6.366 5.65c-.478-.21-.966.276-.757.755l3.928 8.983c.218.499.944.441 1.08-.088l.934-3.617Z"></path></svg>
-                    <span>Realtime</span>
+                    <span>Estruturas de Dados</span>
                 </a>
             </div>
         </div>
     </nav>
 
     <main>
-        <!-- Seção Principal -->
         <section class="bg-dark-bg border-b border-dark-border">
             <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24">
                 <div class="grid lg:grid-cols-2 gap-12 items-center">
                     <div class="z-10">
-                        <span class="font-mono text-brand-blue uppercase reveal">Edge Functions</span>
-                        <h1 class="h1 mt-4 text-dark-text-primary reveal" style="transition-delay: 100ms;">Deploy JavaScript<br> globally in seconds</h1>
+                        <span class="font-mono text-brand-blue uppercase reveal">Pitchutcha Docs</span>
+                        <h1 class="h1 mt-4 text-dark-text-primary reveal" style="transition-delay: 100ms;">Domine os Fundamentos<br> da Computação</h1>
                         <p class="mt-6 text-lg text-dark-text-secondary max-w-lg reveal" style="transition-delay: 200ms;">
-                            Easily author, deploy and monitor serverless functions distributed globally at the edge, close to your users.
+                            Guias aprofundados, artigos e exemplos de código sobre Algoritmos, Estruturas de Dados e Análise de Complexidade.
                         </p>
                         <div class="flex flex-col sm:flex-row items-center gap-4 mt-8 reveal" style="transition-delay: 300ms;">
-                            <a href="#" class="w-full sm:w-auto text-center px-5 py-3 font-medium text-white bg-brand-blue rounded-md hover:opacity-90 transition-transform hover:scale-105">Create a free account</a>
-                            <a href="#" class="w-full sm:w-auto text-center px-5 py-3 font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border transition-transform hover:scale-105">Read documentation</a>
+                            <a href="{{ '/docs.html' | relative_url }}" class="w-full sm:w-auto text-center px-5 py-3 font-medium text-white bg-brand-blue rounded-md hover:opacity-90 transition-transform hover:scale-105">Comece a Aprender</a>
+                            <a href="{{ site.data.site_meta.site.github_url }}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto text-center px-5 py-3 font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border transition-transform hover:scale-105">Ver no GitHub</a>
                         </div>
                     </div>
                     <div class="relative min-h-[300px] lg:min-h-[400px]">
@@ -271,109 +99,98 @@ layout: null
             </div>
         </section>
 
-        <!-- Seção de Funcionalidades -->
         <section class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 reveal">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
                 <div class="flex flex-col">
                     <div class="w-12 h-12 p-2 bg-dark-card rounded-lg border border-dark-border flex justify-center items-center mb-4 transition-transform hover:scale-110">
-                        <svg class="w-7 h-7 text-dark-text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.8217 2.21899C9.75065 2.21899 8.07174 3.89791 8.07174 5.96896V11.783C8.07174 11.8536 8.08148 11.9218 8.0997 11.9866C8.17354 12.3232 8.47349 12.5752 8.83229 12.5752H10.5494C10.8626 12.5752 11.1749 12.8513 11.1749 13.2656V15.0638C11.1749 15.3165 11.2998 15.54 11.4913 15.6759C11.6177 15.7729 11.7759 15.8306 11.9476 15.8306H17.9997C20.0707 15.8306 21.7496 14.1517 21.7496 12.0806V5.96896C21.7496 3.89791 20.0707 2.21899 17.9997 2.21899H11.8217ZM12.6749 14.3307H17.9997C19.2423 14.3307 20.2497 13.3233 20.2497 12.0806L20.2497 5.96896C20.2497 4.7263 19.2423 3.71893 17.9997 3.71893H11.8217C10.579 3.71893 9.57167 4.7263 9.57167 5.96896V11.0752H10.5494C10.9115 11.0752 11.2478 11.1666 11.5412 11.3263C11.5507 11.3157 11.5605 11.3052 11.5708 11.295L15.5026 7.36084L12.6816 7.36066C12.2674 7.36063 11.9316 7.02482 11.9317 6.61061C11.9317 6.1964 12.2675 5.86063 12.6817 5.86066L16.543 5.86091C17.3714 5.86096 18.0429 6.53248 18.0429 7.36085L18.0431 11.2597C18.0431 11.6739 17.7073 12.0097 17.2931 12.0097C16.8789 12.0097 16.5431 11.674 16.5431 11.2598L16.543 8.44186L12.6317 12.3553C12.597 12.3901 12.5597 12.4207 12.5205 12.4472C12.6204 12.7022 12.6749 12.9791 12.6749 13.2656V14.3307Z" fill="currentColor"></path><path d="M4.53957 11.0752H6.25666C6.67087 11.0752 7.00666 11.411 7.00666 11.8252C7.00666 12.2394 6.67087 12.5752 6.25666 12.5752H4.53957C4.22636 12.5752 3.91406 12.8513 3.91406 13.2656L3.91406 15.0638C3.91406 15.4781 3.57828 15.8138 3.16406 15.8138C2.74985 15.8138 2.41406 15.4781 2.41406 15.0638V13.2656C2.41406 12.0889 3.33344 11.0752 4.53957 11.0752Z" fill="currentColor"></path><path d="M3.16406 17.0111C3.57828 17.0111 3.91406 17.3469 3.91406 17.7611L3.91406 19.5593C3.91406 19.9737 4.22636 20.2498 4.53957 20.2498L6.25666 20.2498C6.67087 20.2498 7.00666 20.5856 7.00666 20.9998C7.00666 21.414 6.67087 21.7498 6.25666 21.7498L4.53957 21.7498C3.33344 21.7498 2.41406 20.7361 2.41406 19.5593V17.7611C2.41406 17.3469 2.74985 17.0111 3.16406 17.0111Z" fill="currentColor"></path><path d="M11.9249 17.0111C12.3391 17.0111 12.6749 17.3469 12.6749 17.7611V19.5593C12.6749 20.7361 11.7555 21.7498 10.5494 21.7498H8.83229C8.41807 21.7498 8.08229 21.414 8.08229 20.9998C8.08229 20.5856 8.41807 20.2498 8.83229 20.2498H10.5494C10.8626 20.2498 11.1749 19.9737 11.1749 19.5593V17.7611C11.1749 17.3469 11.5107 17.0111 11.9249 17.0111Z" fill="currentColor"></path></svg>
+                        <svg class="w-7 h-7 text-dark-text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.7377 6.5363C14.145 6.61196 14.4138 7.00343 14.3381 7.41068L12.5869 16.8366C12.5112 17.2438 12.1197 17.5126 11.7125 17.437C11.3052 17.3613 11.0364 16.9698 11.1121 16.5626L12.8633 7.13669C12.939 6.72944 13.3305 6.46064 13.7377 6.5363Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.7279 9.10834C16.0208 8.81543 16.4957 8.81539 16.7886 9.10826L19.1499 11.4692C19.2906 11.6099 19.3696 11.8007 19.3696 11.9996C19.3696 12.1985 19.2906 12.3893 19.15 12.5299L16.7886 14.8913C16.4957 15.1842 16.0209 15.1842 15.728 14.8913C15.4351 14.5984 15.4351 14.1235 15.728 13.8306L17.5589 11.9997L15.728 10.169C15.4351 9.87613 15.4351 9.40126 15.7279 9.10834Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.72153 14.8913C9.42866 15.1842 8.95379 15.1842 8.66087 14.8913L6.29954 12.5303C6.15887 12.3897 6.07983 12.1989 6.07983 12C6.07982 11.8011 6.15884 11.6103 6.2995 11.4696L8.66083 9.10831C8.95373 8.81542 9.4286 8.81542 9.72149 9.10831C10.0144 9.4012 10.0144 9.87608 9.72149 10.169L7.89053 11.9999L9.72145 13.8306C10.0144 14.1235 10.0144 14.5983 9.72153 14.8913Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2.95312 6C2.95312 3.92893 4.63206 2.25 6.70313 2.25H18.7031C20.7742 2.25 22.4531 3.92893 22.4531 6V18C22.4531 20.0711 20.7742 21.75 18.7031 21.75H6.70313C4.63206 21.75 2.95312 20.0711 2.95312 18V6ZM6.70313 3.75C5.46048 3.75 4.45313 4.75736 4.45313 6V18C4.45313 19.2426 5.46048 20.25 6.70313 20.25H18.7031C19.9458 20.25 20.9531 19.2426 20.9531 18V6C20.9531 4.75736 19.9458 3.75 18.7031 3.75H6.70313Z" fill="currentColor"></path></svg>
                     </div>
-                    <h3 class="text-lg font-semibold text-dark-text-primary">Fully managed</h3>
-                    <p class="text-dark-text-secondary">Edge Functions scale automatically, reducing your devops burden</p>
+                    <h3 class="text-lg font-semibold text-dark-text-primary">Código Aberto</h3>
+                    <p class="text-dark-text-secondary">Construído com ferramentas open source e totalmente mantido pela comunidade.</p>
                 </div>
                 <div class="flex flex-col">
                     <div class="w-12 h-12 p-2 bg-dark-card rounded-lg border border-dark-border flex justify-center items-center mb-4 transition-transform hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 stroke-[1.4px] text-dark-text-primary"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
                     </div>
-                    <h3 class="text-lg font-semibold text-dark-text-primary">Global deployments</h3>
-                    <p class="text-dark-text-secondary">Deploy worldwide for maximum resiliency and low latency</p>
+                    <h3 class="text-lg font-semibold text-dark-text-primary">Conteúdo Global</h3>
+                    <p class="text-dark-text-secondary">Documentação clara e acessível para desenvolvedores de todos os níveis.</p>
                 </div>
                 <div class="flex flex-col">
                     <div class="w-12 h-12 p-2 bg-dark-card rounded-lg border border-dark-border flex justify-center items-center mb-4 transition-transform hover:scale-110">
-                        <svg class="w-7 h-7 text-dark-text-primary" width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.7377 6.5363C14.145 6.61196 14.4138 7.00343 14.3381 7.41068L12.5869 16.8366C12.5112 17.2438 12.1197 17.5126 11.7125 17.437C11.3052 17.3613 11.0364 16.9698 11.1121 16.5626L12.8633 7.13669C12.939 6.72944 13.3305 6.46064 13.7377 6.5363Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.7279 9.10834C16.0208 8.81543 16.4957 8.81539 16.7886 9.10826L19.1499 11.4692C19.2906 11.6099 19.3696 11.8007 19.3696 11.9996C19.3696 12.1985 19.2906 12.3893 19.15 12.5299L16.7886 14.8913C16.4957 15.1842 16.0209 15.1842 15.728 14.8913C15.4351 14.5984 15.4351 14.1235 15.728 13.8306L17.5589 11.9997L15.728 10.169C15.4351 9.87613 15.4351 9.40126 15.7279 9.10834Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.72153 14.8913C9.42866 15.1842 8.95379 15.1842 8.66087 14.8913L6.29954 12.5303C6.15887 12.3897 6.07983 12.1989 6.07983 12C6.07982 11.8011 6.15884 11.6103 6.2995 11.4696L8.66083 9.10831C8.95373 8.81542 9.4286 8.81542 9.72149 9.10831C10.0144 9.4012 10.0144 9.87608 9.72149 10.169L7.89053 11.9999L9.72145 13.8306C10.0144 14.1235 10.0144 14.5983 9.72153 14.8913Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2.95312 6C2.95312 3.92893 4.63206 2.25 6.70313 2.25H18.7031C20.7742 2.25 22.4531 3.92893 22.4531 6V18C22.4531 20.0711 20.7742 21.75 18.7031 21.75H6.70313C4.63206 21.75 2.95312 20.0711 2.95312 18V6ZM6.70313 3.75C5.46048 3.75 4.45313 4.75736 4.45313 6V18C4.45313 19.2426 5.46048 20.25 6.70313 20.25H18.7031C19.9458 20.25 20.9531 19.2426 20.9531 18V6C20.9531 4.75736 19.9458 3.75 18.7031 3.75H6.70313Z" fill="currentColor"></path></svg>
+                        <svg class="w-7 h-7 text-dark-text-primary" width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.9233 0.444469C12.6102 0.0512999 13.5049 0.049524 14.1912 0.444469C17.6439 2.39542 21.0976 4.3433 24.5497 6.29543C25.199 6.66117 25.6333 7.38378 25.6267 8.13193V19.8696C25.6315 20.6487 25.1543 21.3886 24.4693 21.746C21.028 23.6862 17.5884 25.6288 14.1477 27.569C13.4466 27.9698 12.5339 27.939 11.8547 27.5052C10.823 26.9072 9.78955 26.312 8.75774 25.7145C8.5469 25.5888 8.30922 25.4888 8.16034 25.2844C8.29195 25.107 8.52726 25.0849 8.71847 25.0074C9.14913 24.8705 9.54467 24.6507 9.9403 24.4373C10.0403 24.3689 10.1625 24.3951 10.2584 24.4564C11.1406 24.9622 12.0151 25.4828 12.9003 25.9838C13.0891 26.0928 13.2803 25.9481 13.4417 25.8581C16.8187 23.9495 20.1999 22.048 23.5763 20.1388C23.7014 20.0786 23.7706 19.9458 23.7604 19.8088C23.7628 15.9368 23.761 12.0641 23.7616 8.19212C23.7759 8.03662 23.6859 7.89366 23.5453 7.83003C20.1159 5.89871 16.6883 3.96444 13.2595 2.03263C13.2001 1.99179 13.1297 1.96988 13.0576 1.96977C12.9855 1.96967 12.9151 1.99138 12.8556 2.03204C9.42677 3.96444 5.99974 5.90049 2.57093 7.8317C2.43083 7.89544 2.3368 8.03603 2.35348 8.19212C2.35407 12.0641 2.35348 15.9368 2.35348 19.8094C2.34753 19.8763 2.36222 19.9433 2.39556 20.0016C2.4289 20.0599 2.47929 20.1065 2.53995 20.1353C3.45494 20.6541 4.37112 21.1694 5.2867 21.6864C5.80251 21.9641 6.43582 22.129 7.00412 21.9163C7.50562 21.7365 7.85715 21.2247 7.84758 20.6922C7.85232 16.8428 7.84521 12.9928 7.85113 9.14401C7.8386 8.97313 8.0007 8.83194 8.16685 8.84802C8.60649 8.84506 9.04672 8.8421 9.48636 8.84921C9.66987 8.84506 9.79616 9.02907 9.77347 9.20123C9.77169 13.075 9.7782 16.9489 9.77051 20.8227C9.77169 21.8551 9.34754 22.9784 8.39259 23.4836C7.21614 24.093 5.76206 23.9638 4.59982 23.3794C3.59366 22.8772 2.63348 22.2845 1.64518 21.7465C0.958393 21.391 0.483532 20.6482 0.488366 19.8697V8.13193C0.481164 7.36829 0.932741 6.63256 1.60226 6.27215C5.04301 4.33038 8.48316 2.38713 11.9233 0.444469Z" fill="currentColor"></path><path d="M14.9242 8.57537C16.4248 8.47878 18.0313 8.51814 19.3817 9.25742C20.4272 9.82394 21.0069 11.0129 21.0253 12.1745C20.9961 12.3311 20.8323 12.4176 20.6828 12.4068C20.2474 12.4062 19.8119 12.4127 19.3765 12.4039C19.1918 12.411 19.0844 12.2407 19.0613 12.0774C18.9362 11.5216 18.6331 10.9712 18.11 10.7031C17.3069 10.3011 16.3759 10.3213 15.5002 10.3297C14.861 10.3636 14.1736 10.419 13.6321 10.7949C13.2163 11.0796 13.09 11.6544 13.2384 12.1173C13.3783 12.4497 13.762 12.557 14.076 12.6558C15.8844 13.1288 17.8008 13.0818 19.5748 13.7042C20.3092 13.958 21.0277 14.4513 21.2791 15.2203C21.6079 16.2509 21.4638 17.4828 20.7305 18.3102C20.1359 18.991 19.2698 19.3616 18.406 19.5629C17.2569 19.8191 16.0644 19.8256 14.8974 19.7119C13.8001 19.5868 12.6582 19.2985 11.8111 18.5508C11.0867 17.9218 10.7329 16.9418 10.768 15.996C10.7764 15.8362 10.9354 15.7248 11.0885 15.7379C11.5269 15.7344 11.9654 15.7332 12.4038 15.7385C12.579 15.726 12.7088 15.8774 12.7178 16.0424C12.7987 16.5719 12.9977 17.1277 13.4594 17.4416C14.3505 18.0166 15.4687 17.9772 16.489 17.9933C17.3344 17.9558 18.2833 17.9444 18.9732 17.3857C19.3371 17.067 19.445 16.5339 19.3466 16.0752C19.24 15.6879 18.8349 15.5075 18.487 15.3895C16.7017 14.8247 14.7639 15.0297 12.9959 14.391C12.2781 14.1374 11.584 13.6578 11.3083 12.9204C10.9235 11.8767 11.0998 10.5858 11.9099 9.78635C12.6998 8.99113 13.8401 8.68498 14.9242 8.57537Z" fill="currentColor"></path></svg>
                     </div>
-                    <h3 class="text-lg font-semibold text-dark-text-primary">Secure and Scalable</h3>
-                    <p class="text-dark-text-secondary">Simply write your code in TypeScript and deploy</p>
-                </div>
-                <div class="flex flex-col">
-                    <div class="w-12 h-12 p-2 bg-dark-card rounded-lg border border-dark-border flex justify-center items-center mb-4 transition-transform hover:scale-110">
-                        <svg class="w-7 h-7 text-dark-text-primary" width="100%" height="100%" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.9233 0.444469C12.6102 0.0512999 13.5049 0.049524 14.1912 0.444469C17.6439 2.39542 21.0976 4.3433 24.5497 6.29543C25.199 6.66117 25.6333 7.38378 25.6267 8.13193V19.8696C25.6315 20.6487 25.1543 21.3886 24.4693 21.746C21.028 23.6862 17.5884 25.6288 14.1477 27.569C13.4466 27.9698 12.5339 27.939 11.8547 27.5052C10.823 26.9072 9.78955 26.312 8.75774 25.7145C8.5469 25.5888 8.30922 25.4888 8.16034 25.2844C8.29195 25.107 8.52726 25.0849 8.71847 25.0074C9.14913 24.8705 9.54467 24.6507 9.9403 24.4373C10.0403 24.3689 10.1625 24.3951 10.2584 24.4564C11.1406 24.9622 12.0151 25.4828 12.9003 25.9838C13.0891 26.0928 13.2803 25.9481 13.4417 25.8581C16.8187 23.9495 20.1999 22.048 23.5763 20.1388C23.7014 20.0786 23.7706 19.9458 23.7604 19.8088C23.7628 15.9368 23.761 12.0641 23.7616 8.19212C23.7759 8.03662 23.6859 7.89366 23.5453 7.83003C20.1159 5.89871 16.6883 3.96444 13.2595 2.03263C13.2001 1.99179 13.1297 1.96988 13.0576 1.96977C12.9855 1.96967 12.9151 1.99138 12.8556 2.03204C9.42677 3.96444 5.99974 5.90049 2.57093 7.8317C2.43083 7.89544 2.3368 8.03603 2.35348 8.19212C2.35407 12.0641 2.35348 15.9368 2.35348 19.8094C2.34753 19.8763 2.36222 19.9433 2.39556 20.0016C2.4289 20.0599 2.47929 20.1065 2.53995 20.1353C3.45494 20.6541 4.37112 21.1694 5.2867 21.6864C5.80251 21.9641 6.43582 22.129 7.00412 21.9163C7.50562 21.7365 7.85715 21.2247 7.84758 20.6922C7.85232 16.8428 7.84521 12.9928 7.85113 9.14401C7.8386 8.97313 8.0007 8.83194 8.16685 8.84802C8.60649 8.84506 9.04672 8.8421 9.48636 8.84921C9.66987 8.84506 9.79616 9.02907 9.77347 9.20123C9.77169 13.075 9.7782 16.9489 9.77051 20.8227C9.77169 21.8551 9.34754 22.9784 8.39259 23.4836C7.21614 24.093 5.76206 23.9638 4.59982 23.3794C3.59366 22.8772 2.63348 22.2845 1.64518 21.7465C0.958393 21.391 0.483532 20.6482 0.488366 19.8697V8.13193C0.481164 7.36829 0.932741 6.63256 1.60226 6.27215C5.04301 4.33038 8.48316 2.38713 11.9233 0.444469Z" fill="currentColor"></path><path d="M14.9242 8.57537C16.4248 8.47878 18.0313 8.51814 19.3817 9.25742C20.4272 9.82394 21.0069 11.0129 21.0253 12.1745C20.9961 12.3311 20.8323 12.4176 20.6828 12.4068C20.2474 12.4062 19.8119 12.4127 19.3765 12.4039C19.1918 12.411 19.0844 12.2407 19.0613 12.0774C18.9362 11.5216 18.6331 10.9712 18.11 10.7031C17.3069 10.3011 16.3759 10.3213 15.5002 10.3297C14.861 10.3636 14.1736 10.419 13.6321 10.7949C13.2163 11.0796 13.09 11.6544 13.2384 12.1173C13.3783 12.4497 13.762 12.557 14.076 12.6558C15.8844 13.1288 17.8008 13.0818 19.5748 13.7042C20.3092 13.958 21.0277 14.4513 21.2791 15.2203C21.6079 16.2509 21.4638 17.4828 20.7305 18.3102C20.1359 18.991 19.2698 19.3616 18.406 19.5629C17.2569 19.8191 16.0644 19.8256 14.8974 19.7119C13.8001 19.5868 12.6582 19.2985 11.8111 18.5508C11.0867 17.9218 10.7329 16.9418 10.768 15.996C10.7764 15.8362 10.9354 15.7248 11.0885 15.7379C11.5269 15.7344 11.9654 15.7332 12.4038 15.7385C12.579 15.726 12.7088 15.8774 12.7178 16.0424C12.7987 16.5719 12.9977 17.1277 13.4594 17.4416C14.3505 18.0166 15.4687 17.9772 16.489 17.9933C17.3344 17.9558 18.2833 17.9444 18.9732 17.3857C19.3371 17.067 19.445 16.5339 19.3466 16.0752C19.24 15.6879 18.8349 15.5075 18.487 15.3895C16.7017 14.8247 14.7639 15.0297 12.9959 14.391C12.2781 14.1374 11.584 13.6578 11.3083 12.9204C10.9235 11.8767 11.0998 10.5858 11.9099 9.78635C12.6998 8.99113 13.8401 8.68498 14.9242 8.57537Z" fill="currentColor"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-dark-text-primary">Node.js Support</h3>
-                    <p class="text-dark-text-secondary">Easily migrate existing workloads, with support for Node modules</p>
+                    <h3 class="text-lg font-semibold text-dark-text-primary">Automatizado e Escalável</h3>
+                    <p class="text-dark-text-secondary">Simplesmente escreva seu código e deixe que nós cuidamos da infraestrutura.</p>
                 </div>
             </div>
         </section>
         
-        <!-- Seção de Citação -->
         <section class="bg-dark-card/30 reveal">
             <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 text-center">
                 <blockquote class="text-2xl md:text-3xl font-medium text-dark-text-primary max-w-4xl mx-auto">
-                    "Supabase gave us the flexibility and scalability needed at every growth stage. It's rare to find a tool that works just as well for startups as it does for large-scale operations."
+                    "O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online."
                 </blockquote>
                 <div class="mt-8">
                     <img src="https://supabase.com/_next/image?url=%2Fimages%2Fblog%2Favatars%2Fzeno-rocha.png&w=64&q=75" alt="Zeno Rocha" class="w-12 h-12 rounded-full mx-auto object-cover">
-                    <p class="mt-4 text-dark-text-primary font-semibold">Zeno Rocha</p>
-                    <p class="font-mono text-sm text-dark-text-secondary">CEO at Resend</p>
+                    <p class="mt-4 text-dark-text-primary font-semibold">Engenheiro de Software Sênior</p>
+                    <p class="font-mono text-sm text-dark-text-secondary">Google</p>
                 </div>
             </div>
         </section>
 
-        <!-- Seção "O que construir" -->
         <section class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 reveal">
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
-                <h3 class="h2 !mb-0">What you can build with Edge Functions</h3>
-                <a href="#" class="px-3 py-1.5 text-xs font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border whitespace-nowrap transition-transform hover:scale-105">View all examples</a>
+                <h3 class="h2 !mb-0">O que você pode construir?</h3>
+                <a href="#" class="px-3 py-1.5 text-xs font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border whitespace-nowrap transition-transform hover:scale-105">Ver todos os exemplos</a>
             </div>
             <div class="mt-10 overflow-hidden">
                 <div class="flex space-x-8 -mx-6 px-6 overflow-x-auto no-scrollbar">
                     <div class="card-glow flex-shrink-0 w-80 bg-dark-card rounded-xl border border-dark-border p-6 hover:border-brand-blue/50 transition-all transform hover:-translate-y-1">
                         <div class="relative z-10">
-                            <h4 class="font-semibold text-dark-text-primary">Webhooks & Integrations</h4>
-                            <p class="text-sm text-dark-text-secondary mt-2">Integrate with third-party services like Stripe or GitHub.</p>
+                            <h4 class="font-semibold text-dark-text-primary">Webhooks & Integrações</h4>
+                            <p class="text-sm text-dark-text-secondary mt-2">Integre com serviços de terceiros como Stripe ou GitHub.</p>
                         </div>
                     </div>
                     <div class="card-glow flex-shrink-0 w-80 bg-dark-card rounded-xl border border-dark-border p-6 hover:border-brand-blue/50 transition-all transform hover:-translate-y-1">
                         <div class="relative z-10">
-                            <h4 class="font-semibold text-dark-text-primary">Realtime Applications</h4>
-                            <p class="text-sm text-dark-text-secondary mt-2">Power real-time features like chat or live dashboards.</p>
+                            <h4 class="font-semibold text-dark-text-primary">Aplicações em Tempo Real</h4>
+                            <p class="text-sm text-dark-text-secondary mt-2">Potencialize funcionalidades como chats ou dashboards ao vivo.</p>
                         </div>
                     </div>
                     <div class="card-glow flex-shrink-0 w-80 bg-dark-card rounded-xl border border-dark-border p-6 hover:border-brand-blue/50 transition-all transform hover:-translate-y-1">
                         <div class="relative z-10">
-                            <h4 class="font-semibold text-dark-text-primary">AI-powered Apps</h4>
-                            <p class="text-sm text-dark-text-secondary mt-2">Build AI applications by streaming responses from models.</p>
+                            <h4 class="font-semibold text-dark-text-primary">Aplicações com IA</h4>
+                            <p class="text-sm text-dark-text-secondary mt-2">Construa aplicações de IA com streaming de respostas de modelos.</p>
                         </div>
                     </div>
                      <div class="card-glow flex-shrink-0 w-80 bg-dark-card rounded-xl border border-dark-border p-6 hover:border-brand-blue/50 transition-all transform hover:-translate-y-1">
                         <div class="relative z-10">
-                            <h4 class="font-semibold text-dark-text-primary">Custom API Endpoints</h4>
-                            <p class="text-sm text-dark-text-secondary mt-2">Create custom logic and business workflows for your app.</p>
+                            <h4 class="font-semibold text-dark-text-primary">Endpoints de API Customizados</h4>
+                            <p class="text-sm text-dark-text-secondary mt-2">Crie lógicas de negócio e fluxos de trabalho para sua aplicação.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Seção DX -->
         <section class="bg-dark-card/30 border-y border-dark-border reveal">
             <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24">
-                <h2 class="h2">Delightful DX from local to production</h2>
+                <h2 class="h2">Uma ótima experiência de desenvolvimento</h2>
                 <p class="text-dark-text-secondary lg:w-1/2 mt-4">
-                    Edge Functions are developed using <a href="#" class="underline text-brand-blue hover:opacity-80">Deno</a>, an open source JavaScript runtime that ensures maximum power and flexibility. Migrate in and out at any time with no vendor lock-in.
+                    Edge Functions são desenvolvidas usando <a href="#" class="underline text-brand-blue hover:opacity-80">Deno</a>, um runtime de JavaScript open source que garante máxima performance e flexibilidade.
                 </p>
                 <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="card-glow rounded-xl border border-dark-border bg-dark-card p-6 flex flex-col justify-between min-h-[300px] transition-all">
                         <div class="relative group z-10">
                             <button class="copy-button w-full bg-dark-bg p-4 rounded-lg border border-dark-border shadow-sm text-center flex items-center justify-center" data-clipboard-text="supabase functions serve">
                                 <code class="font-mono text-dark-text-secondary">$ </code>
-                                <code class="font-mono text-dark-text-primary flex-1 text-left pl-2">supabase functions serve</code>
-                                <span class="text-xs text-dark-text-secondary opacity-0 group-hover:opacity-100 transition-opacity">Copy</span>
+                                <code class="font-mono text-dark-text-primary flex-1 text-left pl-2">pitchutcha functions serve</code>
+                                <span class="text-xs text-dark-text-secondary opacity-0 group-hover:opacity-100 transition-opacity">Copiar</span>
                            </button>
                         </div>
                         <div class="relative z-10">
-                            <h3 class="font-semibold text-dark-text-primary mt-4">First-class local dev experience</h3>
-                            <p class="text-sm text-dark-text-secondary mt-2">Write code with hot code reloading, a fast Language server for autocompletion, type checking and linting.</p>
+                            <h3 class="font-semibold text-dark-text-primary mt-4">Desenvolvimento Local de Primeira Classe</h3>
+                            <p class="text-sm text-dark-text-secondary mt-2">Escreva código com hot-reloading, autocompletar e verificação de tipos.</p>
                         </div>
                     </div>
                     <div class="card-glow rounded-xl border border-dark-border bg-dark-card p-6 flex flex-col justify-between min-h-[300px] transition-all">
@@ -385,8 +202,8 @@ layout: null
                             </div>
                         </div>
                         <div class="relative z-10">
-                            <h3 class="font-semibold text-dark-text-primary mt-4">Dev and Prod parity</h3>
-                            <p class="text-sm text-dark-text-secondary mt-2">The open source Edge runtime runs your functions locally and powers them in production.</p>
+                            <h3 class="font-semibold text-dark-text-primary mt-4">Paridade Dev/Prod</h3>
+                            <p class="text-sm text-dark-text-secondary mt-2">O mesmo runtime open source executa suas funções localmente e em produção.</p>
                         </div>
                     </div>
                     <div class="card-glow rounded-xl border border-dark-border bg-dark-card p-6 flex flex-col justify-between min-h-[300px] transition-all">
@@ -394,61 +211,56 @@ layout: null
                             <svg width="111" height="42" viewBox="0 0 111 42" fill="currentColor" class="text-brand-blue"><path d="M36.1763 37.4452H49.2591V30.8616H62.342V4.52698H36.1763V37.4452ZM4.77734 30.8616H17.8602V11.1106H24.4017V30.8616H30.9431V4.52698H4.77734V30.8616Z"></path></svg>
                         </div>
                         <div class="relative z-10">
-                            <h3 class="font-semibold text-dark-text-primary mt-4">Use any NPM module</h3>
-                            <p class="text-sm text-dark-text-secondary mt-2">Tap into the 2+ million modules in the Deno and NPM ecosystem.</p>
+                            <h3 class="font-semibold text-dark-text-primary mt-4">Use qualquer módulo NPM</h3>
+                            <p class="text-sm text-dark-text-secondary mt-2">Acesse mais de 2 milhões de módulos do ecossistema Deno e NPM.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Seção de Observabilidade -->
-        <section class="bg-dark-bg border-y border-dark-border reveal" id="observability-section">
+        <section class="bg-dark-bg border-b border-dark-border reveal" id="observability-section">
             <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24">
-                <h2 class="h2">Built-in observability</h2>
+                <h2 class="h2">Observabilidade Integrada</h2>
                 <div class="mt-10 flex flex-col md:flex-row gap-4">
-                    <!-- Abas -->
                     <button data-tab="1" class="obs-tab flex-[2] rounded-xl border border-dark-border bg-dark-card p-6 min-h-[400px] flex flex-col justify-between transition-all">
                         <div>
-                            <h3 class="font-mono text-sm uppercase text-dark-text-primary">Realtime logs</h3>
-                            <p class="pt-2 text-dark-text-secondary text-sm max-w-[220px]">Stream logs to the dashboard in realtime. Logs are populated with rich metadata to help debugging.</p>
+                            <h3 class="font-mono text-sm uppercase text-dark-text-primary">Logs em Tempo Real</h3>
+                            <p class="pt-2 text-dark-text-secondary text-sm max-w-[220px]">Visualize logs no painel em tempo real, populados com metadados para ajudar na depuração.</p>
                         </div>
-                        <div id="log-feed" class="h-48 bg-dark-bg rounded-lg mt-4 font-mono text-xs p-3 overflow-y-auto no-scrollbar flex flex-col-reverse">
-                            <!-- Logs serão injetados aqui -->
-                        </div>
+                        <div id="log-feed" class="h-48 bg-dark-bg rounded-lg mt-4 font-mono text-xs p-3 overflow-y-auto no-scrollbar flex flex-col-reverse"></div>
                     </button>
                     <button data-tab="2" class="obs-tab flex-1 rounded-xl border border-dark-border bg-dark-card/50 p-6 min-h-[400px] flex flex-col justify-between opacity-70 transition-all">
-                        <div>
-                           <h3 class="font-mono text-sm uppercase text-dark-text-secondary">Query Logs via Log explorer</h3>
-                           <p class="pt-2 text-dark-text-secondary/80 text-sm max-w-[220px]">Get deeper insights into how your functions are behaving by writing SQL queries on function logs.</p>
-                        </div>
+                       <div>
+                           <h3 class="font-mono text-sm uppercase text-dark-text-secondary">Explorador de Logs</h3>
+                           <p class="pt-2 text-dark-text-secondary/80 text-sm max-w-[220px]">Obtenha insights mais profundos escrevendo queries SQL nos logs de suas funções.</p>
+                       </div>
                     </button>
                     <button data-tab="3" class="obs-tab flex-1 rounded-xl border border-dark-border bg-dark-card/50 p-6 min-h-[400px] flex flex-col justify-between opacity-70 transition-all">
                        <div>
-                            <h3 class="font-mono text-sm uppercase text-dark-text-secondary">Metrics</h3>
-                            <p class="pt-2 text-dark-text-secondary/80 text-sm max-w-[220px]">Dashboards show the health of your functions at all times.</p>
+                            <h3 class="font-mono text-sm uppercase text-dark-text-secondary">Métricas</h3>
+                            <p class="pt-2 text-dark-text-secondary/80 text-sm max-w-[220px]">Dashboards mostram a saúde de suas funções a todo momento.</p>
                        </div>
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- Seção de Integrações -->
         <section class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 reveal" id="integrations-section">
-            <h2 class="h2">Integrates seamlessly with the Supabase ecosystem</h2>
+            <h2 class="h2">Integra-se perfeitamente com o ecossistema</h2>
             <div class="mt-10 flex flex-col lg:flex-row gap-8 xl:gap-24">
                 <div class="lg:w-1/3 flex flex-col">
                     <button data-tab="1" class="integration-tab text-left py-4 border-b-2 border-brand-blue transition-all">
-                        <h3 class="font-mono text-sm uppercase text-dark-text-primary">Zero configuration</h3>
-                        <p class="pt-2 text-dark-text-secondary text-sm">Pre-populated environment variables required to access your supabase project.</p>
+                        <h3 class="font-mono text-sm uppercase text-dark-text-primary">Configuração Zero</h3>
+                        <p class="pt-2 text-dark-text-secondary text-sm">Variáveis de ambiente pré-populadas para acessar seu projeto.</p>
                     </button>
                     <button data-tab="2" class="integration-tab text-left py-4 border-b border-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all">
-                        <h3 class="font-mono text-sm uppercase">Connect to your database</h3>
-                        <p class="pt-2 text-sm hidden">Connect to your Postgres database from an Edge Function by using the supabase-js client.</p>
+                        <h3 class="font-mono text-sm uppercase">Conecte ao seu Banco de Dados</h3>
+                        <p class="pt-2 text-sm hidden">Conecte-se ao seu banco de dados Postgres a partir de uma Edge Function.</p>
                     </button>
                     <button data-tab="3" class="integration-tab text-left py-4 border-b border-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all">
-                        <h3 class="font-mono text-sm uppercase">Trigger via webhook</h3>
-                         <p class="pt-2 text-sm hidden">Database Webhooks allow you to send real-time data from your database to another system.</p>
+                        <h3 class="font-mono text-sm uppercase">Acione via Webhook</h3>
+                         <p class="pt-2 text-sm hidden">Webhooks de banco de dados permitem que você envie dados em tempo real.</p>
                     </button>
                 </div>
                 <div class="lg:flex-1 relative min-h-[300px]">
@@ -459,18 +271,15 @@ layout: null
                             <div class="w-3 h-3 bg-dark-border rounded-full"></div>
                              <button class="copy-button absolute right-4 text-xs text-dark-text-secondary hover:text-white transition-colors flex items-center gap-2" data-clipboard-target="#code-snippet-1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                <span>Copy</span>
+                                <span>Copiar</span>
                             </button>
                         </div>
-                        <div id="code-snippets" class="h-full w-full rounded-b-lg">
-                            <!-- Snippets serão injetados aqui -->
-                        </div>
+                        <div id="code-snippets" class="h-full w-full rounded-b-lg"></div>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Seção CTA Final -->
         <section class="border-t border-dark-border reveal">
              <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 grid xl:grid-cols-2 gap-16 items-center">
                  <div class="relative w-full h-64 md:h-80 flex items-center justify-center">
@@ -478,7 +287,6 @@ layout: null
                         <a href="#" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-dark-card rounded-xl border border-dark-border p-4 shadow-lg w-20 h-20 flex items-center justify-center z-10 hover:shadow-2xl hover:scale-110 transition-all">
                              <svg class="h-8 w-8 text-brand-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.312 16.101A8.999 8.999 0 0 0 9.001 17c4.418 0 8-3.582 8-8a8.999 8.999 0 0 0-.903-3.697M12.735 1.923A8.999 8.999 0 0 0 9 1C4.582 1 1 4.582 1 9c0 1.362.34 2.644.94 3.766m0 0C1.618 13.16 1.424 13.664 1.424 14.213c0 1.262 1.023 2.285 2.286 2.285s2.285-1.023 2.285-2.285c0-1.263-1.023-2.286-2.285-2.286-.714 0-1.351.327-1.77.842Zm15.196-8.987c0 1.263-1.023 2.286-2.286 2.286s-2.285-1.023-2.285-2.286c0-1.262 1.023-2.285 2.285-2.285s2.286 1.023 2.286 2.285Zm-4.108 5.22c0 2.84-2.298 5.143-5.143 5.143-2.845 0-5.143-2.302-5.143-5.143 0-2.845 2.3-5.143 5.143-5.143 2.845 0 5.143 2.3 5.143 5.143Z"></path></svg>
                         </a>
-                        <!-- Ícones ao redor -->
                         <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 w-16 h-16 bg-dark-card rounded-xl border border-dark-border p-3 flex items-center justify-center text-dark-text-secondary hover:text-dark-text-primary transition-all hover:scale-110 hover:shadow-md"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.008 6.332H15.178v5.333H3.008V6.332ZM2 13.084c0-.782.634-1.417 1.416-1.417h11.332c.783 0 1.417.635 1.417 1.417v2.5c0 .782-.634 1.416-1.417 1.416H3.416C2.634 17 2 16.366 2 15.584v-2.5ZM2 2.416C2 1.634 2.634 1 3.416 1h11.332C15.53 1 16.165 1.634 16.165 2.416v2.5c0 .783-.635 1.417-1.417 1.417H3.416C2.634 6.333 2 5.699 2 4.916v-2.5Z"></path></svg></div>
                         <div class="absolute top-1/2 right-0 translate-x-4 -translate-y-1/2 w-16 h-16 bg-dark-card rounded-xl border border-dark-border p-3 flex items-center justify-center text-dark-text-secondary hover:text-dark-text-primary transition-all hover:scale-110 hover:shadow-md"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.026 12.046h6.154M3.026 12.046v2.461h6.154v-2.461M3.026 12.046V9.584h6.154v2.462M11.034 5.923V3.461c0-1.36.902-2.461 2.038-2.461 1.137 0 2.039 1.1 2.039 2.461v2.462M3 8.385v6.153C3 15.898 4.102 17 5.462 17h6.153c1.36 0 2.462-1.102 2.462-2.462V8.385c0-1.36-1.102-2.462-2.462-2.462H5.462C4.102 5.923 3 7.025 3 8.385Z"></path></svg></div>
                         <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 w-16 h-16 bg-dark-card rounded-xl border border-dark-border p-3 flex items-center justify-center text-dark-text-secondary hover:text-dark-text-primary transition-all hover:scale-110 hover:shadow-md"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M15.701 8.345v-2.543L10.877 1H3.701c-.736 0-1.333.597-1.333 1.334v4.001m13.287-4.023L10.875 1v3.446c0 .736.597 1.333 1.334 1.333h3.445ZM4.29 6.333H2.333C1.597 6.333 1 6.93 1 7.666V14.333C1 15.806 2.194 17 3.667 17h10.666c1.473 0 2.667-1.194 2.667-2.667V9.678c0-.736-.597-1.333-1.334-1.333H7.427a1.333 1.333 0 0 1-.943-2.277L5.225 4.716a1.333 1.333 0 0 0-1.885 0L2.398 5.659a1.333 1.333 0 0 1-.942.394H.5"></path></svg></div>
@@ -486,104 +294,22 @@ layout: null
                     </div>
                 </div>
                 <div class="text-center xl:text-left">
-                    <h2 class="h2">Ready to start building?</h2>
+                    <h2 class="h2">Pronto para começar a construir?</h2>
                     <div class="flex flex-col sm:flex-row items-center justify-center xl:justify-start gap-4 mt-8">
-                        <a href="#" class="w-full sm:w-auto px-6 py-3 font-medium text-white bg-brand-blue rounded-md hover:opacity-90 transition-transform hover:scale-105">Start for free</a>
-                        <a href="#" class="w-full sm:w-auto px-6 py-3 font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border transition-transform hover:scale-105">Contact Enterprise</a>
+                        <a href="#" class="w-full sm:w-auto px-6 py-3 font-medium text-white bg-brand-blue rounded-md hover:opacity-90 transition-transform hover:scale-105">Comece Gratuitamente</a>
+                        <a href="#" class="w-full sm:w-auto px-6 py-3 font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border transition-transform hover:scale-105">Fale com Vendas</a>
                     </div>
                 </div>
              </div>
         </section>
     </main>
 
-    <!-- Rodapé -->
-    <footer class="bg-dark-bg">
-        <div class="container mx-auto px-6 lg:px-16 xl:px-20">
-             <div class="py-8 grid grid-cols-2 md:flex items-center justify-between text-dark-text-secondary md:justify-center gap-8 md:gap-16 xl:gap-28 text-sm">
-                <div class="flex flex-col md:flex-row gap-2 md:items-center">We protect your data. <a class="text-brand-blue hover:underline" href="#">More on Security</a></div>
-                <ul class="flex flex-col md:flex-row gap-2 md:gap-8 justify-center md:items-center">
-                    <li class="flex items-center gap-2 whitespace-nowrap"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> SOC2 Type 2 <span class="text-dark-text-secondary/50 hidden sm:inline">Certified</span></li>
-                    <li class="flex items-center gap-2 whitespace-nowrap"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> HIPAA <span class="text-dark-text-secondary/50 hidden sm:inline">Compliant</span></li>
-                </ul>
-            </div>
-            <div class="border-t border-dark-border"></div>
-        </div>
-        <div class="container mx-auto px-6 lg:px-16 xl:px-20 pt-16 pb-8">
-            <div class="xl:grid xl:grid-cols-7 xl:gap-8">
-                <div class="space-y-8 xl:col-span-2">
-                     <a href="#" class="inline-block">
-                        <span class="font-bold text-2xl text-dark-text-primary">Supabase</span>
-                    </a>
-                    <div class="flex space-x-6 text-dark-text-secondary">
-                        <a href="#" class="hover:text-dark-text-primary transition-colors"><span class="sr-only">Twitter</span><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg></a>
-                        <a href="#" class="hover:text-dark-text-primary transition-colors"><span class="sr-only">GitHub</span><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"></path></svg></a>
-                        <a href="#" class="hover:text-dark-text-primary transition-colors"><span class="sr-only">Discord</span><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.222 5.378a21.363 21.363 0 0 0-3.666-1.234c-.16-.048-.32.024-.384.18C15.91 5.11 15.61 5.914 15.482 6.562c-1.848-.42-3.792-.42-5.616 0C9.736 5.914 9.436 5.11 9.172 4.324a.222.222 0 0 0-.384-.18A21.39 21.39 0 0 0 5.146 5.378a.296.296 0 0 0-.252.336c.552 4.8 2.652 8.712 2.652 8.712a.33.33 0 0 0 .312.228h.036a.32.32 0 0 0 .288-.192c.504-.864.924-1.692 1.272-2.484a.295.295 0 0 0-.108-.396c-.636-.336-1.224-.708-1.764-1.116a.22.22 0 0 1-.024-.312c.084-.108.18-.204.264-.3.024-.012.048-.024.084-.024c4.08 1.86 8.256 1.86 12.336 0c.036 0 .06.012.084.024.084.108.18.204.264.3a.22.22 0 0 1-.024.312c-.54.408-1.128.78-1.764 1.116a.294.294 0 0 0-.108.396c.348.792.768 1.62 1.272 2.484a.32.32 0 0 0 .288.192h.036a.33.33 0 0 0 .312-.228s2.1-3.912 2.652-8.712a.296.296 0 0 0-.252-.336ZM9.85 14.11c-1.236 0-2.232-1.152-2.232-2.58 0-1.428 1-2.58 2.232-2.58s2.232 1.152 2.22 2.58c0 1.428-.996 2.58-2.22 2.58Zm5.664 0c-1.236 0-2.232-1.152-2.232-2.58 0-1.428 1-2.58 2.232-2.58 1.224 0 2.22 1.152 2.22 2.58 0 1.428-1 2.58-2.22 2.58Z"/></svg></a>
-                         <a href="#" class="hover:text-dark-text-primary transition-colors"><span class="sr-only">Youtube</span><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.6657 4.13526C15.4817 3.44239 14.9395 2.8967 14.2511 2.71152C13.0033 2.37502 8 2.37502 8 2.37502C8 2.37502 2.99669 2.37502 1.74891 2.71152C1.06052 2.89673 0.518351 3.44239 0.334337 4.13526C1.90735e-06 5.39112 1.90735e-06 8.01137 1.90735e-06 8.01137C1.90735e-06 8.01137 1.90735e-06 10.6316 0.334337 11.8875C0.518351 12.5804 1.06052 13.1033 1.74891 13.2885C2.99669 13.625 8 13.625 8 13.625C8 13.625 13.0033 13.625 14.2511 13.2885C14.9395 13.1033 15.4817 12.5804 15.6657 11.8875C16 10.6316 16 8.01137 16 8.01137C16 8.01137 16 5.39112 15.6657 4.13526ZM6.36363 10.3904V5.63238L10.5454 8.01143L6.36363 10.3904Z" fill="currentColor"></path></svg></a>
-                    </div>
-                </div>
-                <div class="mt-12 grid grid-cols-2 gap-8 xl:col-span-5 xl:mt-0 md:grid-cols-5">
-                    <div>
-                        <h6 class="font-semibold text-dark-text-primary">Product</h6>
-                        <ul class="mt-4 space-y-2 text-sm">
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Database</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Auth</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Functions</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Realtime</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Storage</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Vector</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Pricing</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h6 class="font-semibold text-dark-text-primary">Solutions</h6>
-                        <ul class="mt-4 space-y-2 text-sm">
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">AI Builders</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Startups</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Enterprise</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h6 class="font-semibold text-dark-text-primary">Resources</h6>
-                        <ul class="mt-4 space-y-2 text-sm">
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Blog</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Support</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">System Status</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Integrations</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Brand Assets</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h6 class="font-semibold text-dark-text-primary">Developers</h6>
-                        <ul class="mt-4 space-y-2 text-sm">
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Documentation</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Changelog</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Contributing</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Open Source</a></li>
-                             <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">SupaSquad</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">RSS</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h6 class="font-semibold text-dark-text-primary">Company</h6>
-                        <ul class="mt-4 space-y-2 text-sm">
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Company</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Careers</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Terms of Service</a></li>
-                            <li><a href="#" class="text-dark-text-secondary hover:text-dark-text-primary">Privacy Policy</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-12 border-t border-dark-border pt-8">
-                <p class="text-sm text-dark-text-secondary text-center">&copy; 2024 Supabase Inc. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    {% include 'footer_new.html' %}
+    {% include 'scripts.html' %}
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // Animação de Fade-in ao rolar
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -593,14 +319,6 @@ layout: null
             }, { threshold: 0.1 });
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-            // Menu Móvel
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
-            // Abas da seção de Observabilidade
             const obsTabs = document.querySelectorAll('.obs-tab');
             obsTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -613,67 +331,39 @@ layout: null
                 });
             });
 
-            // Feed de logs em tempo real
             const logFeed = document.getElementById('log-feed');
             const logTypes = [{ type: '[INFO]', color: 'text-blue-400'}, { type: '[DEPLOY]', color: 'text-green-400'}, { type: '[INVOKE]', color: 'text-purple-400'}, { type: '[ERROR]', color: 'text-red-400'}];
-            function generateRandomCode() {
-                return Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
-            }
+            function generateRandomCode() { return Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10); }
             function addLogEntry() {
                 if(!logFeed) return;
                 const randomType = logTypes[Math.floor(Math.random() * logTypes.length)];
                 const timestamp = new Date().toLocaleTimeString();
                 const logCode = generateRandomCode();
-
                 const entry = document.createElement('div');
                 entry.className = 'log-entry mb-1';
                 entry.innerHTML = `<span class="text-dark-text-secondary/70">${timestamp}</span> <span class="${randomType.color}">${randomType.type}</span> <span class="text-dark-text-primary">${logCode}</span>`;
-                
                 logFeed.prepend(entry);
-                
-                if (logFeed.children.length > 50) {
-                    logFeed.removeChild(logFeed.lastChild);
-                }
+                if (logFeed.children.length > 50) { logFeed.removeChild(logFeed.lastChild); }
             }
             setInterval(addLogEntry, 2000);
 
-
-            // Abas da seção de Integrações
             const integrationTabs = document.querySelectorAll('.integration-tab');
             const codeSnippetsContainer = document.getElementById('code-snippets');
             const codeSnippets = {
-                '1': `<pre id="code-snippet-1" class="syntax-highlighter"><code><span class="token-comment">// Variáveis de ambiente são populadas automaticamente</span>
-<span class="token-keyword">console</span><span class="token-punctuation">.</span><span class="token-function">log</span><span class="token-punctuation">(</span><span class="token-string">"SUPABASE_URL:"</span><span class="token-punctuation">,</span> Deno<span class="token-punctuation">.</span>env<span class="token-punctuation">.</span><span class="token-function">get</span><span class="token-punctuation">(</span><span class="token-string">'SUPABASE_URL'</span><span class="token-punctuation">)</span><span class="token-punctuation">)</span><span class="token-punctuation">;</span>
-<span class="token-keyword">console</span><span class="token-punctuation">.</span><span class="token-function">log</span><span class="token-punctuation">(</span><span class="token-string">"SUPABASE_ANON_KEY:"</span><span class="token-punctuation">,</span> Deno<span class="token-punctuation">.</span>env<span class="token-punctuation">.</span><span class="token-function">get</span><span class="token-punctuation">(</span><span class="token-string">'SUPABASE_ANON_KEY'</span><span class="token-punctuation">)</span><span class="token-punctuation">)</span><span class="token-punctuation">;</span>
-</code></pre>`,
-                '2': `<pre id="code-snippet-2" class="syntax-highlighter"><code><span class="token-comment">// Conecte-se ao seu banco de dados Postgres</span>
-<span class="token-keyword">import</span> { createClient } <span class="token-keyword">from</span> <span class="token-string">'@supabase/supabase-js'</span><span class="token-punctuation">;</span>
-
-<span class="token-keyword">const</span> supabase = <span class="token-function">createClient</span><span class="token-punctuation">(</span>
-  Deno<span class="token-punctuation">.</span>env<span class="token-punctuation">.</span><span class="token-function">get</span><span class="token-punctuation">(</span><span class="token-string">'SUPABASE_URL'</span><span class="token-punctuation">)</span><span class="token-punctuation">,</span>
-  Deno<span class="token-punctuation">.</span>env<span class="token-punctuation">.</span><span class="token-function">get</span><span class="token-punctuation">(</span><span class="token-string">'SUPABASE_ANON_KEY'</span><span class="token-punctuation">)</span>
-<span class="token-punctuation">)</span><span class="token-punctuation">;</span>
-</code></pre>`,
-                '3': `<pre id="code-snippet-3" class="syntax-highlighter"><code><span class="token-comment">// Acione funções a partir de eventos do banco de dados</span>
-<span class="token-keyword">CREATE TRIGGER</span> on_new_user
-<span class="token-keyword">AFTER INSERT ON</span> auth.users
-<span class="token-keyword">FOR EACH ROW EXECUTE PROCEDURE</span>
-  supabase_functions.http_request(
-    <span class="token-string">'https://.../my-webhook'</span><span class="token-punctuation">,</span>
-    <span class="token-string">'POST'</span><span class="token-punctuation">,</span>
-    <span class="token-string">'{"Content-type":"application/json"}'</span><span class="token-punctuation">,</span>
-    <span class="token-string">'{}'</span>
-  <span class="token-punctuation">)</span><span class="token-punctuation">;</span>
-</code></pre>`
+                '1': `<pre id="code-snippet-1" class="syntax-highlighter"><code><span class="token-comment">// Variáveis de ambiente são populadas automaticamente</span>\n<span class="token-keyword">console</span><span class="token-punctuation">.</span><span class="token-function">log</span><span class="token-punctuation">(</span><span class="token-string">"SUPABASE_URL:"</span><span class="token-punctuation">,</span> Deno<span class="token-punctuation">.</span>env<span class="token-punctuation">.</span><span class="token-function">get</span><span class="token-punctuation">(</span><span class="token-string">'SUPABASE_URL'</span><span class="token-punctuation">)</span><span class="token-punctuation">)</span><span class="token-punctuation">;</span></code></pre>`,
+                '2': `<pre id="code-snippet-2" class="syntax-highlighter"><code><span class="token-comment">// Conecte-se ao seu banco de dados Postgres</span>\n<span class="token-keyword">import</span> { createClient } <span class="token-keyword">from</span> <span class="token-string">'@supabase/supabase-js'</span><span class="token-punctuation">;</span>\n\n<span class="token-keyword">const</span> supabase = <span class="token-function">createClient</span><span class="token-punctuation">(...);</span></code></pre>`,
+                '3': `<pre id="code-snippet-3" class="syntax-highlighter"><code><span class="token-comment">// Acione funções a partir de eventos do banco de dados</span>\n<span class="token-keyword">CREATE TRIGGER</span> on_new_user...\n<span class="token-keyword">EXECUTE PROCEDURE</span> supabase_functions.http_request(...)</span></code></pre>`
             };
             
             function updateIntegrationContent(tabId) {
-                codeSnippetsContainer.innerHTML = codeSnippets[tabId];
-                const copyBtn = document.querySelector('#integration-content .copy-button');
-                copyBtn.dataset.clipboardTarget = `#code-snippet-${tabId}`;
+                if (codeSnippetsContainer) {
+                    codeSnippetsContainer.innerHTML = codeSnippets[tabId];
+                    const copyBtn = document.querySelector('#integration-content .copy-button');
+                    if(copyBtn) copyBtn.dataset.clipboardTarget = `#code-snippet-${tabId}`;
+                }
             }
 
-            updateIntegrationContent('1'); // Conteúdo inicial
+            updateIntegrationContent('1');
 
             integrationTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -690,26 +380,19 @@ layout: null
                 });
             });
 
-            // Funcionalidade de Copiar
             document.body.addEventListener('click', function(e) {
                 const button = e.target.closest('.copy-button');
                 if (button) {
                     const selector = button.dataset.clipboardTarget;
                     const textToCopy = document.querySelector(selector).innerText;
-                    
                     navigator.clipboard.writeText(textToCopy).then(() => {
                         const originalText = button.querySelector('span').textContent;
-                        button.querySelector('span').textContent = 'Copied!';
-                        setTimeout(() => {
-                           button.querySelector('span').textContent = "Copy";
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Failed to copy text: ', err);
+                        button.querySelector('span').textContent = 'Copiado!';
+                        setTimeout(() => { button.querySelector('span').textContent = "Copiar"; }, 2000);
                     });
                 }
             });
             
-             // Efeito de brilho nos cards
             const cards = document.querySelectorAll('.card-glow');
             cards.forEach(card => {
                 card.addEventListener('mousemove', e => {
@@ -724,4 +407,3 @@ layout: null
     </script>
 </body>
 </html>
-
