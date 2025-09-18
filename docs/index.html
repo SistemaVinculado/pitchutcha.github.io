@@ -160,7 +160,7 @@ def find_duplicates_fast(arr):
                 </div>
                 <div class="visualizer-card">
                     <div id="visualizer-container" class="flex items-end justify-center h-64 border-b border-[var(--borders)] p-4">
-                        <!-- Barras do visualizador serão geradas aqui pelo JS -->
+                        <p class="text-[var(--text-secondary)]">Carregando visualização...</p>
                     </div>
                     <div class="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
                         <div id="visualizer-explanation" class="text-[var(--text-secondary)] text-sm md:w-1/2">
@@ -182,16 +182,18 @@ def find_duplicates_fast(arr):
         <!-- TIP OF THE DAY SECTION -->
         <div class="bg-[var(--background-primary)]">
             <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-3xl mx-auto reveal-on-scroll">
-                {% assign random_tip = site.data.tips | sample %}
-                <div class="tip-card">
-                    <div class="tip-card-icon">
-                        <span class="material-symbols-outlined text-3xl">{{ random_tip.icon | default: 'lightbulb' }}</span>
+                {% if site.data.tips %}
+                    {% assign random_tip = site.data.tips | sample %}
+                    <div class="tip-card">
+                        <div class="tip-card-icon">
+                            <span class="material-symbols-outlined text-3xl">{{ random_tip.icon | default: 'lightbulb' }}</span>
+                        </div>
+                        <div class="tip-card-content">
+                            <h4>Dica do Dia: {{ random_tip.title }}</h4>
+                            <p>{{ random_tip.description }}</p>
+                        </div>
                     </div>
-                    <div class="tip-card-content">
-                        <h4>Dica do Dia: {{ random_tip.title }}</h4>
-                        <p>{{ random_tip.description }}</p>
-                    </div>
-                </div>
+                {% endif %}
             </div>
         </div>
 
