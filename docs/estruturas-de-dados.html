@@ -7,7 +7,7 @@
 </head>
 <body class="bg-[var(--background-primary)] text-[var(--text-primary)]">
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]/80 backdrop-blur-md">
+        <header id="main-header" class="sticky top-0 z-30 transition-all duration-300 border-b border-transparent">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
                 <div class="flex items-center gap-8">
                     <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
@@ -51,6 +51,7 @@
                 
                 <!-- Artigo em Destaque -->
                 {% assign featured_article = category_articles | first %}
+                {% if featured_article %}
                 <a href="{{ featured_article.url | relative_url }}" class="featured-article-card group mb-12 block">
                     <div class="overflow-hidden rounded-lg">
                         <img src="{{ featured_article.image | relative_url }}" alt="Imagem para {{ featured_article.title }}" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105">
@@ -60,27 +61,12 @@
                         <p class="mt-2 text-[var(--text-secondary)]">{{ featured_article.excerpt }}</p>
                     </div>
                 </a>
+                {% endif %}
 
                 <!-- Outros Artigos -->
                 <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {% for article in category_articles offset: 1 %}
-                        <div class="article-card group">
-                            <a href="{{ article.url | relative_url }}" class="block p-6">
-                                <div class="mb-4 flex items-center gap-3">
-                                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[var(--background-secondary)] text-[var(--primary-color)]">
-                                        <span class="material-symbols-outlined">{{ article.icon | default: 'article' }}</span>
-                                    </div>
-                                    <h4 class="flex-1 text-lg font-semibold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">{{ article.title }}</h4>
-                                </div>
-                                <p class="mb-4 text-sm text-[var(--text-secondary)]">{{ article.excerpt }}</p>
-                            </a>
-                            <div class="mt-auto border-t border-[var(--borders)] bg-[var(--background-primary)] px-6 py-3">
-                                <a class="flex items-center justify-between text-sm font-medium text-[var(--primary-color)] transition-opacity hover:text-[var(--primary-hover)]" href="{{ article.url | relative_url }}">
-                                    <span>Ler artigo</span>
-                                    <span class="material-symbols-outlined"> arrow_forward </span>
-                                </a>
-                            </div>
-                        </div>
+                        {% include article-card.html article=article %}
                     {% endfor %}
                 </div>
             </div>
