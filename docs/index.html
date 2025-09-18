@@ -44,7 +44,7 @@ layout: null
     <div class="spotlight"></div>
     <div id="progress-bar-container"><div id="progress-bar"></div></div>
     <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
-    <header class="sticky top-0 z-30 border-b border-[var(--borders)] bg-[var(--background-primary)]/80 backdrop-blur-md">
+    <header id="main-header" class="fixed top-0 w-full z-30 transition-all duration-300">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
             <div class="flex items-center gap-8">
                 <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
@@ -59,19 +59,19 @@ layout: null
             <div class="flex items-center gap-4">
                 <form id="header-search-form" class="header-search-form relative hidden lg:block" action="{{ '/search.html' | relative_url }}" method="get">
                     <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-                    <input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar" type="search" name="q"/>
+                    <input id="header-search-input" class="h-10 w-full rounded-md border border-[var(--borders)] bg-[var(--background-secondary)] pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:border-[var(--primary-color)] focus:outline-none focus:ring-1 focus:ring-[var(--primary-color)]" placeholder="Pesquisar (Ctrl+K)" type="search" name="q"/>
                 </form>
             </div>
         </div>
     </header>
-    <div id="global-banner" class="global-banner">
-        <div class="global-banner-content"><strong>🚀 Novidade:</strong> Explore os novos exemplos de código interativos e o monitoramento em tempo real!</div>
+    <div id="global-banner" class="global-banner pt-16">
+        <div class="global-banner-content"><strong>🚀 Novidade:</strong> Agora com visualizador de algoritmos interativo e seletor de temas!</div>
         <button id="global-banner-close" class="global-banner-close" aria-label="Fechar banner"><span class="material-symbols-outlined" style="font-size:1.25rem">close</span></button>
     </div>
 
     <main id="main-content">
         <!-- HERO SECTION -->
-        <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
+        <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-screen px-4 overflow-hidden">
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
             <div class="relative z-10 w-full max-w-4xl mx-auto">
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight hero-title-gradient">Domine os Fundamentos da Computação</h1>
@@ -103,39 +103,30 @@ layout: null
             </div>
         </div>
 
-        <!-- FEATURE SHOWCASE SECTION -->
+        <!-- ALGORITHM VISUALIZER SECTION -->
         <div class="bg-[var(--background-secondary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 text-center max-w-7xl mx-auto reveal-on-scroll">
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">O que você vai aprender</h2>
-                <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Explore guias práticos e exemplos interativos para dominar os conceitos que impulsionam a tecnologia moderna.</p>
-                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                    <a href="{{ '/algoritmos.html' | relative_url }}" class="feature-card" style="--delay: 0s;">
-                        <div class="card-content p-8">
-                            <div class="bg-[var(--background-primary)] p-3 rounded-full mb-4 w-fit">
-                                <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">search</span>
-                            </div>
-                            <h3 class="text-xl font-semibold">Busca e Ordenação</h3>
-                            <p class="mt-2 text-[var(--text-secondary)]">Desde a simplicidade da Busca Linear até a eficiência da Busca Binária e do Merge Sort.</p>
+            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
+                <div class="text-center">
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Visualize para Entender</h2>
+                    <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Não apenas leia, veja os algoritmos em ação. Interaja com as visualizações para solidificar seu conhecimento.</p>
+                </div>
+                <div class="visualizer-card">
+                    <div id="visualizer-container" class="flex items-end justify-center h-64 border-b border-[var(--borders)] p-4">
+                        <!-- Barras do visualizador serão geradas aqui pelo JS -->
+                    </div>
+                    <div class="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div id="visualizer-explanation" class="text-[var(--text-secondary)] text-sm md:w-1/2">
+                            Clique em "Ordenar" para ver o Bubble Sort em ação.
                         </div>
-                    </a>
-                    <a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="feature-card" style="--delay: 0.2s;">
-                        <div class="card-content p-8">
-                            <div class="bg-[var(--background-primary)] p-3 rounded-full mb-4 w-fit">
-                                <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">account_tree</span>
-                            </div>
-                            <h3 class="text-xl font-semibold">Estruturas de Dados</h3>
-                            <p class="mt-2 text-[var(--text-secondary)]">Organize dados com Arrays, Listas Ligadas, Pilhas e Filas para otimizar suas aplicações.</p>
+                        <div class="flex items-center gap-4">
+                            <button id="shuffle-btn" class="control-button">
+                                <span class="material-symbols-outlined">shuffle</span> Embaralhar
+                            </button>
+                            <button id="sort-btn" class="control-button cta">
+                                <span class="material-symbols-outlined">play_arrow</span> Ordenar
+                            </button>
                         </div>
-                    </a>
-                    <a href="{{ '/articles/introduction-to-algorithm-design.md' | relative_url }}" class="feature-card" style="--delay: 0.4s;">
-                        <div class="card-content p-8">
-                            <div class="bg-[var(--background-primary)] p-3 rounded-full mb-4 w-fit">
-                                <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">speed</span>
-                            </div>
-                            <h3 class="text-xl font-semibold">Análise de Complexidade</h3>
-                            <p class="mt-2 text-[var(--text-secondary)]">Domine a Notação Big O para escrever códigos mais rápidos e escaláveis.</p>
-                        </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -153,145 +144,39 @@ layout: null
             </figure>
         </div>
 
-        <!-- LIVE STATUS SECTION -->
+        <!-- TIP OF THE DAY SECTION -->
         <div class="bg-[var(--background-secondary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
-                <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Monitoramento em Tempo Real</h2>
-                    <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Dados de performance do projeto, atualizados continuamente para garantir a melhor experiência.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Latência da API</p>
-                            <span class="material-symbols-outlined text-gray-500">speed</span>
-                        </div>
-                        <p id="metric-api-latency-home" class="text-[var(--text-primary)] text-4xl font-bold" data-target-value="0">--ms</p>
+            <div class="px-4 md:px-8 lg:px-12 pb-20 md:pb-32 max-w-3xl mx-auto reveal-on-scroll">
+                {% assign random_tip = site.data.tips | sample %}
+                <div class="tip-card">
+                    <div class="tip-card-icon">
+                        <span class="material-symbols-outlined text-3xl">{{ random_tip.icon | default: 'lightbulb' }}</span>
                     </div>
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência</p>
-                            <span class="material-symbols-outlined text-gray-500">model_training</span>
-                        </div>
-                        <p id="metric-inference-time-home" class="text-[var(--text-primary)] text-4xl font-bold" data-target-value="0">--ms</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Taxa de Erros</p>
-                            <span class="material-symbols-outlined text-gray-500">error_outline</span>
-                        </div>
-                        <p id="metric-error-rate-home" class="text-[var(--text-primary)] text-4xl font-bold" data-target-value="0">--%</p>
-                    </div>
-                </div>
-                <div class="text-center mt-8">
-                    <a href="{{ '/status.html' | relative_url }}" class="text-sm font-medium text-[var(--primary-color)] hover:text-[var(--primary-hover)]">
-                        Ver página de status completa &rarr;
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- PRACTICAL EXAMPLES SECTION -->
-        <div class="bg-[var(--background-primary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
-                <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Exemplos Práticos</h2>
-                    <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Veja como os conceitos ganham vida com exemplos de código claros e comentados.</p>
-                </div>
-                <div class="code-block-card">
-                    <div class="code-block-left-side">
-                        <h3 class="code-block-title">Busca Binária</h3>
-                        <p class="code-block-description">Um algoritmo de busca eficiente que encontra a posição de um item em uma lista ordenada. Reduz pela metade o tamanho da busca a cada iteração.</p>
-                        <div class="code-block-time-estimate"><span class="material-symbols-outlined notranslate">schedule</span><span>Complexidade: O(log n)</span></div>
-                        <div class="code-block-button-container"><a href="{{ '/articles/algoritmos-de-busca-linear-vs-binaria' | relative_url }}" class="custom-button-small"><span class="material-symbols-outlined notranslate">auto_stories</span> Ver o Guia</a></div>
-                    </div>
-                    <div class="code-block-right-side">
-                        <div class="code-block-header">
-                            <div class="traffic-lights">
-                                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-                            </div>
-                            <div class="code-tabs-buttons">
-                                <button class="tab-button active" data-tab="python">Python</button>
-                                <button class="tab-button" data-tab="javascript">JavaScript</button>
-                                <button class="tab-button" data-tab="pseudo">Pseudocódigo</button>
-                            </div>
-                            <button class="copy-button" aria-label="Copiar código">
-                                <span class="material-symbols-outlined icon-copy">content_copy</span>
-                                <span class="material-symbols-outlined icon-check">check</span>
-                            </button>
-                        </div>
-                        <div class="code-block-body">
-                            <div class="code-tab-panel active" data-tab-content="python">
-                                <pre><code class="language-python">def binary_search(arr, target):
-    low = 0
-    high = len(arr) - 1
-    while low <= high:
-        mid = (low + high) // 2
-        guess = arr[mid]
-        if guess == target:
-            return mid
-        elif guess > target:
-            high = mid - 1
-        else:
-            low = mid + 1
-    return None
-
-my_list = [1, 3, 5, 7, 9, 11]
-print(binary_search(my_list, 7))</code></pre>
-                            </div>
-                            <div class="code-tab-panel" data-tab-content="javascript">
-                                <pre><code class="language-javascript">function binarySearch(arr, target) {
-    let low = 0;
-    let high = arr.length - 1;
-    while (low <= high) {
-        const mid = Math.floor((low + high) / 2);
-        const guess = arr[mid];
-        if (guess === target) {
-            return mid;
-        } else if (guess > target) {
-            high = mid - 1;
-        } else {
-            low = mid + 1;
-        }
-    }
-    return null;
-}
-
-const myList = [1, 3, 5, 7, 9, 11];
-console.log(binarySearch(myList, 7));</code></pre>
-                            </div>
-                            <div class="code-tab-panel" data-tab-content="pseudo">
-                                <pre><code class="language-plaintext">FUNÇÃO BuscaBinaria(lista, item)
-    baixo = 0
-    alto = tamanho(lista) - 1
-
-    ENQUANTO baixo <= alto
-        meio = (baixo + alto) / 2
-        chute = lista[meio]
-
-        SE chute == item
-            RETORNE meio
-        SENÃO SE chute > item
-            alto = meio - 1
-        SENÃO
-            baixo = meio + 1
-            
-    RETORNE nulo
-FIM_FUNÇÃO</code></pre>
-                            </div>
-                        </div>
+                    <div class="tip-card-content">
+                        <h4>Dica do Dia: {{ random_tip.title }}</h4>
+                        <p>{{ random_tip.description }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- FINAL CTA SECTION -->
-        <div class="final-cta-section bg-[var(--background-secondary)]">
+        <div class="final-cta-section bg-[var(--background-primary)]">
             <div class="relative z-10 text-center px-4 flex flex-col items-center py-20 md:py-32 reveal-on-scroll">
-                <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Construído para a Comunidade</h2>
-                <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.</p>
+                <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Pronto para Começar?</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Todo o conhecimento que você precisa para se destacar, em um só lugar. Gratuito e open source, para sempre.</p>
                 <div class="mt-10">
                     <a href="{{ '/docs.html' | relative_url }}" class="cta-button bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-all hover:scale-105 inline-block">Comece a Aprender Agora</a>
+                </div>
+                <!-- ASK PITCHUTCHA UI -->
+                <div class="mt-16 w-full max-w-2xl">
+                    <form class="ai-prompt-form" onsubmit="return false;">
+                        <span class="material-symbols-outlined">spark</span>
+                        <input type="text" placeholder="Pergunte ao Pitchutcha (em breve)..." disabled>
+                        <button type="submit" aria-label="Enviar pergunta" disabled>
+                            <span class="material-symbols-outlined">arrow_upward</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
