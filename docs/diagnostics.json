@@ -4,15 +4,6 @@
     "type": "Performance",
     "severity": "moderate",
     "title": "Imagem com Dimensionamento Incorreto",
-    "description": "A imagem 'introduction-to-algorithm-design.jpg' (1024px de largura) está sendo exibida em um contêiner de 368px.",
-    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
-    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/images/introduction-to-algorithm-design.jpg\"]"
-  },
-  {
-    "page": "/",
-    "type": "Performance",
-    "severity": "moderate",
-    "title": "Imagem com Dimensionamento Incorreto",
     "description": "A imagem 'google.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
     "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
     "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/google.svg\"]"
