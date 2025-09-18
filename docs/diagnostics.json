@@ -4,35 +4,314 @@
     "type": "Performance",
     "severity": "moderate",
     "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'google.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/google.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'asus.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/asus.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'apple.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/apple.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'meta.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/meta.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'bmw.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/bmw.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'porsche.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/porsche.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'intel.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/intel.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'nvidia.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/nvidia.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'openai.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/openai.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem '3m.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/3m.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'fifa.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/fifa.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'themoviedatabase.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/themoviedatabase.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'csswizardry.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/csswizardry.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'walmart.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/walmart.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'blender.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/blender.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'spotify.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/spotify.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'amd.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/amd.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'google.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/google.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'asus.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/asus.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'apple.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/apple.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'meta.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/meta.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'bmw.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/bmw.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'porsche.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/porsche.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'intel.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/intel.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'nvidia.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/nvidia.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'openai.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/openai.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem '3m.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/3m.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'fifa.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/fifa.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'themoviedatabase.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/themoviedatabase.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'csswizardry.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/csswizardry.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'walmart.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/walmart.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'blender.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/blender.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'spotify.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/spotify.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'amd.svg' (150px de largura) está sendo exibida em um contêiner de 48px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/logos/amd.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
     "description": "A imagem 'introduction-to-algorithm-design.jpg' (1024px de largura) está sendo exibida em um contêiner de 344px.",
     "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
     "selector": "img[src=\"https://sistemavinculado.github.io/pitchutcha.github.io/assets/images/introduction-to-algorithm-design.jpg\"]"
-  },
-  {
-    "page": "/docs.html",
-    "type": "Performance",
-    "severity": "moderate",
-    "title": "Imagem com Dimensionamento Incorreto",
-    "description": "A imagem '2563EB?text=Design+de+Algoritmos' (400px de largura) está sendo exibida em um contêiner de 211px.",
-    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
-    "selector": "img[src=\"https://placehold.co/400x300/D1E7FC/2563EB?text=Design+de+Algoritmos\"]"
-  },
-  {
-    "page": "/docs.html",
-    "type": "Performance",
-    "severity": "moderate",
-    "title": "Imagem com Dimensionamento Incorreto",
-    "description": "A imagem '047857?text=Estruturas+de+Dados' (400px de largura) está sendo exibida em um contêiner de 211px.",
-    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
-    "selector": "img[src=\"https://placehold.co/400x300/D1FAE5/047857?text=Estruturas+de+Dados\"]"
-  },
-  {
-    "page": "/docs.html",
-    "type": "Performance",
-    "severity": "moderate",
-    "title": "Imagem com Dimensionamento Incorreto",
-    "description": "A imagem '8b5cf6?text=Busca+Linear+vs+Bin%C3%A1ria' (400px de largura) está sendo exibida em um contêiner de 211px.",
-    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
-    "selector": "img[src=\"https://placehold.co/400x300/f3e8ff/8b5cf6?text=Busca+Linear+vs+Bin%C3%A1ria\"]"
   }
 ]
