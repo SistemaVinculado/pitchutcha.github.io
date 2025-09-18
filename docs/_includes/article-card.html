@@ -1,0 +1,22 @@
+{% comment %}
+  Componente reutilizável para exibir um card de artigo.
+  Uso: {% include article-card.html article=article %}
+  - `article`: O objeto do artigo do Jekyll a ser renderizado.
+{% endcomment %}
+<div class="article-card group">
+    <a href="{{ include.article.url | relative_url }}" class="block p-6">
+        <div class="mb-4 flex items-center gap-3">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[var(--background-secondary)] text-[var(--primary-color)]">
+                <span class="material-symbols-outlined">{{ include.article.icon | default: 'article' }}</span>
+            </div>
+            <h4 class="flex-1 text-lg font-semibold text-[var(--text-primary)] group-hover:text-[var(--primary-color)] transition-colors">{{ include.article.title }}</h4>
+        </div>
+        <p class="mb-4 text-sm text-[var(--text-secondary)]">{{ include.article.excerpt }}</p>
+    </a>
+    <div class="mt-auto border-t border-[var(--borders)] bg-[var(--background-primary)] px-6 py-3">
+        <a class="flex items-center justify-between text-sm font-medium text-[var(--primary-color)] transition-opacity hover:text-[var(--primary-hover)]" href="{{ include.article.url | relative_url }}">
+            <span>Ler artigo</span>
+            <span class="material-symbols-outlined"> arrow_forward </span>
+        </a>
+    </div>
+</div>
