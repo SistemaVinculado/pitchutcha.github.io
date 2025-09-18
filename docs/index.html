@@ -64,7 +64,7 @@ layout: null
             </div>
         </div>
     </header>
-    <div id="global-banner" class="global-banner pt-16">
+    <div id="global-banner" class="global-banner">
         <div class="global-banner-content"><strong>🚀 Novidade:</strong> Agora com visualizador de algoritmos interativo e seletor de temas!</div>
         <button id="global-banner-close" class="global-banner-close" aria-label="Fechar banner"><span class="material-symbols-outlined" style="font-size:1.25rem">close</span></button>
     </div>
@@ -103,6 +103,54 @@ layout: null
             </div>
         </div>
 
+        <!-- BEFORE & AFTER SECTION -->
+        <div class="bg-[var(--background-secondary)]">
+            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
+                <div class="text-center">
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">De Ineficiente a Otimizado</h2>
+                    <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Veja o impacto real de escolher o algoritmo certo. Um pequeno ajuste pode transformar um código lento em uma solução de alta performance.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div class="code-comparison-card">
+                        <h3 class="font-mono text-lg mb-2 text-red-400">ANTES: O(n²)</h3>
+                        <p class="text-sm text-[var(--text-secondary)] mb-4">Lento e ineficiente para grandes volumes de dados.</p>
+                        <pre><code class="language-python"># Encontrar duplicatas com loops aninhados
+def find_duplicates_slow(arr):
+    for i in range(len(arr)):
+        for j in range(i + 1, len(arr)):
+            if arr[i] == arr[j]:
+                return True
+    return False</code></pre>
+                    </div>
+                    <div class="code-comparison-card">
+                        <h3 class="font-mono text-lg mb-2 text-green-400">DEPOIS: O(n)</h3>
+                        <p class="text-sm text-[var(--text-secondary)] mb-4">Rápido e escalável, usando a estrutura de dados correta.</p>
+                        <pre><code class="language-python"># Encontrar duplicatas com um Set
+def find_duplicates_fast(arr):
+    seen = set()
+    for item in arr:
+        if item in seen:
+            return True
+        seen.add(item)
+    return False</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TESTIMONIAL SECTION -->
+        <div class="bg-[var(--background-primary)] py-20 md:py-32 testimonial-section reveal-on-scroll">
+            <figure class="max-w-4xl mx-auto text-center">
+                <blockquote class="text-2xl md:text-3xl lg:text-4xl font-medium text-white">
+                    <p>“O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online.”</p>
+                </blockquote>
+                <figcaption class="mt-8">
+                    <div class="text-lg font-semibold text-white">Engenheiro de Software Sênior</div>
+                    <div class="text-base text-[var(--text-secondary)]">Google</div>
+                </figcaption>
+            </figure>
+        </div>
+
         <!-- ALGORITHM VISUALIZER SECTION -->
         <div class="bg-[var(--background-secondary)]">
             <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
@@ -130,23 +178,10 @@ layout: null
                 </div>
             </div>
         </div>
-        
-        <!-- TESTIMONIAL SECTION -->
-        <div class="bg-[var(--background-primary)] py-20 md:py-32 testimonial-section reveal-on-scroll">
-            <figure class="max-w-4xl mx-auto text-center">
-                <blockquote class="text-2xl md:text-3xl lg:text-4xl font-medium text-white">
-                    <p>“O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online.”</p>
-                </blockquote>
-                <figcaption class="mt-8">
-                    <div class="text-lg font-semibold text-white">Engenheiro de Software Sênior</div>
-                    <div class="text-base text-[var(--text-secondary)]">Google</div>
-                </figcaption>
-            </figure>
-        </div>
 
         <!-- TIP OF THE DAY SECTION -->
-        <div class="bg-[var(--background-secondary)]">
-            <div class="px-4 md:px-8 lg:px-12 pb-20 md:pb-32 max-w-3xl mx-auto reveal-on-scroll">
+        <div class="bg-[var(--background-primary)]">
+            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-3xl mx-auto reveal-on-scroll">
                 {% assign random_tip = site.data.tips | sample %}
                 <div class="tip-card">
                     <div class="tip-card-icon">
@@ -161,7 +196,7 @@ layout: null
         </div>
 
         <!-- FINAL CTA SECTION -->
-        <div class="final-cta-section bg-[var(--background-primary)]">
+        <div class="final-cta-section bg-[var(--background-secondary)]">
             <div class="relative z-10 text-center px-4 flex flex-col items-center py-20 md:py-32 reveal-on-scroll">
                 <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Pronto para Começar?</h2>
                 <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Todo o conhecimento que você precisa para se destacar, em um só lugar. Gratuito e open source, para sempre.</p>
@@ -172,7 +207,7 @@ layout: null
                 <div class="mt-16 w-full max-w-2xl">
                     <form class="ai-prompt-form" onsubmit="return false;">
                         <span class="material-symbols-outlined">spark</span>
-                        <input type="text" placeholder="Pergunte ao Pitchutcha (em breve)..." disabled>
+                        <input type="text" placeholder="Pergunte ao Pitchutcha (em breve)..." disabled title="Funcionalidade de IA em desenvolvimento">
                         <button type="submit" aria-label="Enviar pergunta" disabled>
                             <span class="material-symbols-outlined">arrow_upward</span>
                         </button>
