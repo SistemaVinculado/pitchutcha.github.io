@@ -1,409 +1,1081 @@
----
-layout: null
----
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pitchutcha: Domine os Fundamentos da Computação</title>
-    <meta name="description" content="Guias aprofundados, artigos e exemplos de código sobre Algoritmos e Estruturas de Dados para construir software de alta performance.">
-    <meta name="base-url" content="{{ '/' | relative_url }}">
-    <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
+    <title>Pitchutcha - Edge Functions</title>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Space Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Mono&display=swap" rel="stylesheet">
     
     <style>
+        /* Base Styling & Custom Properties */
         body {
+            background-color: #0D1116;
+            color: #E6E8EB;
             font-family: 'Inter', sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--dark-text-primary);
         }
-        .font-mono { font-family: 'Roboto Mono', monospace; }
-        .h1 { font-size: 3rem; line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; }
-        @media (min-width: 768px) { .h1 { font-size: 3.75rem; } }
-        .h2 { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; letter-spacing: -0.025em; }
-        .globe-container { position: relative; width: 100%; max-width: 500px; aspect-ratio: 1/1; margin: auto; }
-        .globe-bg { width: 100%; height: 100%; background-image: url('https://supabase.com/images/product/functions/globe.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; }
-        .dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; background-color: #E6E8EB; transform: translate(-50%, -50%); }
-        .dot::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; background-color: #E6E8EB; opacity: 0.2; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.2; } 50% { transform: scale(1.5); opacity: 0; } }
-        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        .reveal.is-visible { opacity: 1; transform: translateY(0); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .syntax-highlighter { background-color: #0D1116; color: #E6E8EB; padding: 1.5rem; border-radius: 0 0 0.75rem 0.75rem; font-family: 'Roboto Mono', monospace; font-size: 0.875rem; overflow-x: auto; min-height: 200px; }
-        .token-keyword { color: #f472b6; } .token-function { color: #a78bfa; } .token-string { color: #60a5fa; } .token-comment { color: #A0A3A8; } .token-punctuation { color: #E6E8EB; }
-        .card-glow { position: relative; overflow: hidden; }
-        .card-glow:before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(21, 145, 234, 0.15), transparent 40%); z-index: 0; opacity: 0; transition: opacity 0.3s ease-in-out; }
-        .card-glow:hover:before { opacity: 1; }
-        .log-entry { animation: fadeInSlideUp 0.5s ease-out forwards; }
-        @keyframes fadeInSlideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .typing-effect { width: 0; overflow: hidden; white-space: nowrap; animation: typing 2s steps(40, end) forwards; }
-        @keyframes typing { from { width: 0 } to { width: 100% } }
+
+        /* Custom properties for theme colors for easier management */
+        :root {
+            --color-background: #0D1116;
+            --color-container: #1C1F26;
+            --color-text-main: #E6E8EB;
+            --color-text-secondary: #A0A3A8;
+            --color-accent: #1591EA;
+            --color-border: #2E3033;
+            --color-brand: #22c55e;
+        }
+        
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Header Styling */
+        #main-header.scrolled {
+            background-color: rgba(13, 17, 22, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom-width: 1px;
+            border-color: var(--color-border);
+        }
+
+        /* Globe Animation Styling */
+        .globe-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw-line 2s ease-in-out forwards;
+        }
+
+        .globe-dot {
+            opacity: 0;
+            animation: pulse-dot 2.5s infinite ease-in-out;
+        }
+        
+        /* Keyframe Animations */
+        @keyframes draw-line {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse-border {
+            0%, 100% {
+                border-color: var(--color-brand);
+                box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+            }
+            50% {
+                border-color: rgba(34, 197, 94, 0.7);
+                box-shadow: 0 0 25px rgba(34, 197, 94, 0.5);
+            }
+        }
+        
+        @keyframes scroll-tags {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Animation Delays */
+        #svg2 .globe-path { animation-delay: 0.3s; }
+        #svg3 .globe-path { animation-delay: 0.6s; }
+        #dot1 { animation-delay: 0.8s; }
+        #dot2 { animation-delay: 1.1s; }
+        #dot3 { animation-delay: 1.4s; }
+
+        /* Card and Interactive Element Styling */
+        .dx-card {
+            background-color: var(--color-container);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+        .dx-card:hover {
+            border-color: #4A4F55;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .pricing-card:hover {
+             box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+             transform: translateY(-5px);
+        }
+        .pro-plan {
+            animation: pulse-border 3s infinite ease-in-out;
+        }
+        .tag-cloud-container {
+            animation: scroll-tags 40s linear infinite;
+        }
+        
+        /* Observability Tabs */
+        .observability-tab {
+            transition: flex-grow 0.5s ease-in-out, color 0.3s ease;
+        }
+        .observability-tab .tab-content {
+             transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Integration Tabs */
+        .integration-tab-content {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s;
+        }
+        .integration-tab-underline {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(-101%);
+        }
+        .integration-tab.active .integration-tab-underline {
+            transform: translateX(0);
+        }
+        .integration-tab.active p {
+             max-height: 100px;
+        }
+        .integration-tab p {
+            transition: max-height 0.5s ease-in-out;
+        }
+        
+        /* FAQ Accordion */
+        .faq-item details summary::-webkit-details-marker {
+            display: none;
+        }
+        .faq-item details .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .faq-item details[open] .faq-answer {
+            max-height: 500px; /* Adjust as needed */
+        }
+        .faq-item details .faq-icon {
+            transition: transform 0.3s ease-out;
+        }
+        .faq-item details[open] .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        
+        /* Scroll Animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Fallback for when JS is disabled */
+        .no-js .globe-path {
+            stroke-dashoffset: 0;
+        }
+        .no-js .globe-dot {
+            opacity: 1;
+        }
+        .no-js .scroll-reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
-<body>
-
-    {% include header.html %}
+<body class="bg-[#0D1116]">
+    <noscript><style>.no-js{opacity:1!important;}.scroll-reveal{opacity:1!important;transform:translateY(0)!important;}</style></noscript>
     
-    <nav class="sticky top-16 z-30 bg-dark-bg/80 backdrop-blur-sm border-b border-dark-border hidden md:block">
-        <div class="container mx-auto px-6 lg:px-16 xl:px-20">
-            <div class="flex items-center gap-3">
-                 <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-brand-blue text-sm text-dark-text-primary font-medium transition-all" href="{{ '/docs.html' | relative_url }}">
-                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.008 6.332H15.178v5.333H3.008V6.332ZM2 13.084c0-.782.634-1.417 1.416-1.417h11.332c.783 0 1.417.635 1.417 1.417v2.5c0 .782-.634 1.416-1.417 1.416H3.416C2.634 17 2 16.366 2 15.584v-2.5ZM2 2.416C2 1.634 2.634 1 3.416 1h11.332C15.53 1 16.165 1.634 16.165 2.416v2.5c0 .783-.635 1.417-1.417 1.417H3.416C2.634 6.333 2 5.699 2 4.916v-2.5Z"></path></svg>
-                    <span>Início</span>
+    <!-- SVG Definitions for reuse -->
+    <svg style="display: none;">
+        <defs>
+            <symbol id="pitchutcha-logo" viewBox="0 0 22 22">
+                <path d="M19.9844 14.0469L17.9375 12.0001L19.9844 9.95322L22.0312 12.0001L19.9844 14.0469Z" fill="#A0A3A8"></path>
+                <path d="M19.9844 14.0469L17.9375 12.0001L19.9844 9.95322L22.0312 12.0001L19.9844 14.0469Z" fill="url(#logo-grad1)"></path>
+                <path d="M19.9845 21.0312L12.9688 14.0156L19.9845 7.00002L27.0001 14.0156L19.9845 21.0312Z" fill="#A0A3A8"></path>
+                <path d="M19.9845 21.0312L12.9688 14.0156L19.9845 7.00002L27.0001 14.0156L19.9845 21.0312Z" fill="url(#logo-grad2)"></path>
+                <path d="M11.9687 11.9844L19.9844 19.9688V4.03125L11.9687 11.9844Z" fill="#A0A3A8"></path>
+                <path d="M11.9687 11.9844L19.9844 19.9688V4.03125L11.9687 11.9844Z" fill="url(#logo-grad3)"></path>
+                <path d="M1.9845 11.9844L9.96885 19.9688V4.03125L1.9845 11.9844Z" fill="#A0A3A8"></path>
+                <path d="M1.9845 11.9844L9.96885 19.9688V4.03125L1.9845 11.9844Z" fill="url(#logo-grad4)"></path>
+                <defs>
+                    <linearGradient id="logo-grad1" x1="19.9844" y1="9.95322" x2="19.9844" y2="14.0469" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="1" stop-color="#22c55e" stop-opacity="0.5"/></linearGradient>
+                    <linearGradient id="logo-grad2" x1="19.9845" y1="7.00002" x2="19.9845" y2="21.0312" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="1" stop-color="#22c55e" stop-opacity="0.5"/></linearGradient>
+                    <linearGradient id="logo-grad3" x1="15.9765" y1="4.03125" x2="15.9765" y2="19.9688" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="1" stop-color="#22c55e" stop-opacity="0.5"/></linearGradient>
+                    <linearGradient id="logo-grad4" x1="5.97668" y1="4.03125" x2="5.97668" y2="19.9688" gradientUnits="userSpaceOnUse"><stop stop-color="#22c55e"/><stop offset="1" stop-color="#22c55e" stop-opacity="0.5"/></linearGradient>
+                </defs>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- Top Announcement Banner -->
+    <div id="announcement-banner" class="relative z-50 w-full bg-black border-b border-[#2E3033]">
+        <div class="container mx-auto px-12 py-3 flex items-center justify-center text-sm">
+            <div class="flex items-center gap-4">
+                 <img src="https://supabase.com/images/select/supabase-select.svg" alt="Pitchutcha Select Conference Logo" class="w-28">
+                 <p class="text-white hidden sm:block">Our first user conference・October 3, San Francisco</p>
+                 <a href="#" class="px-4 py-1 text-xs font-semibold text-white bg-[#1C1F26] hover:bg-[#2E3033] border border-[#2E3033] rounded-md transition-colors shrink-0">
+                    Save your seat
                 </a>
-                 <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-transparent text-sm text-dark-text-secondary hover:text-dark-text-primary transition-all" href="{{ '/algoritmos.html' | relative_url }}">
-                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.026 12.046h6.154M3.026 12.046v2.461h6.154v-2.461M3.026 12.046V9.584h6.154v2.462M11.034 5.923V3.461c0-1.36.902-2.461 2.038-2.461 1.137 0 2.039 1.1 2.039 2.461v2.462M3 8.385v6.153C3 15.898 4.102 17 5.462 17h6.153c1.36 0 2.462-1.102 2.462-2.462V8.385c0-1.36-1.102-2.462-2.462-2.462H5.462C4.102 5.923 3 7.025 3 8.385Z"></path></svg>
-                    <span>Algoritmos</span>
+            </div>
+            <button id="close-banner-button" aria-label="Close Announcement Banner" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#A0A3A8] hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    </div>
+
+
+    <header id="main-header" class="sticky top-0 z-40 w-full transition-all duration-300">
+        <nav class="container mx-auto px-6 flex items-center justify-between h-16">
+            <!-- Logo -->
+            <div class="flex-shrink-0">
+                 <a href="#" class="flex items-center gap-2" aria-label="Pitchutcha Home">
+                    <svg class="w-7 h-7" aria-hidden="true"><use xlink:href="#pitchutcha-logo"></use></svg>
+                    <span class="text-white font-semibold text-lg">Pitchutcha</span>
                 </a>
-                <a class="flex items-center gap-1.5 px-2 py-4 border-b-2 border-transparent text-sm text-dark-text-secondary hover:text-dark-text-primary transition-all" href="{{ '/estruturas-de-dados.html' | relative_url }}">
-                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.312 16.101A8.999 8.999 0 0 0 9.001 17c4.418 0 8-3.582 8-8a8.999 8.999 0 0 0-.903-3.697M12.735 1.923A8.999 8.999 0 0 0 9 1C4.582 1 1 4.582 1 9c0 1.362.34 2.644.94 3.766m0 0C1.618 13.16 1.424 13.664 1.424 14.213c0 1.262 1.023 2.285 2.286 2.285s2.285-1.023 2.285-2.285c0-1.263-1.023-2.286-2.285-2.286-.714 0-1.351.327-1.77.842Zm15.196-8.987c0 1.263-1.023 2.286-2.286 2.286s-2.285-1.023-2.285-2.286c0-1.262 1.023-2.285 2.285-2.285s2.286 1.023 2.286 2.285Zm-4.108 5.22c0 2.84-2.298 5.143-5.143 5.143-2.845 0-5.143-2.302-5.143-5.143 0-2.845 2.3-5.143 5.143-5.143 2.845 0 5.143 2.3 5.143 5.143Z"></path></svg>
-                    <span>Estruturas de Dados</span>
-                </a>
+            </div>
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-sm text-[#A0A3A8] hover:text-white transition">Product</a>
+                <a href="#" class="text-sm text-[#A0A3A8] hover:text-white transition">Developers</a>
+                <a href="#" class="text-sm text-[#A0A3A8] hover:text-white transition">Pricing</a>
+                <a href="#" class="text-sm text-[#A0A3A8] hover:text-white transition">Docs</a>
+            </div>
+            <!-- Desktop CTAs -->
+            <div class="hidden md:flex items-center space-x-3">
+                <a href="#" class="px-4 py-2 text-sm font-semibold text-white hover:bg-[#1C1F26] rounded-md transition-colors">Sign In</a>
+                <a href="#" class="px-4 py-2 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors">Start your project</a>
+            </div>
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" aria-label="Open main menu" aria-expanded="false" class="text-white">
+                    <svg id="menu-open-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        </nav>
+         <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-[#10141A] border-t border-[#2E3033] p-6">
+            <div class="flex flex-col space-y-4">
+                <a href="#" class="text-lg text-white">Product</a>
+                <a href="#" class="text-lg text-white">Developers</a>
+                <a href="#" class="text-lg text-white">Pricing</a>
+                <a href="#" class="text-lg text-white">Docs</a>
+                <div class="border-t border-[#2E3033] pt-4 flex flex-col space-y-3">
+                    <a href="#" class="px-5 py-2.5 text-center text-sm font-semibold text-white bg-[#1C1F26] hover:bg-[#2E3033] border border-[#2E3033] rounded-md transition-colors">Sign In</a>
+                    <a href="#" class="px-5 py-2.5 text-center text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors">Start your project</a>
+                </div>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main>
-        <section class="bg-dark-bg border-b border-dark-border">
-            <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="z-10">
-                        <span class="font-mono text-brand-blue uppercase reveal">Pitchutcha Docs</span>
-                        <h1 class="h1 mt-4 text-dark-text-primary reveal" style="transition-delay: 100ms;">Domine os Fundamentos<br> da Computação</h1>
-                        <p class="mt-6 text-lg text-dark-text-secondary max-w-lg reveal" style="transition-delay: 200ms;">
-                            Guias aprofundados, artigos e exemplos de código sobre Algoritmos, Estruturas de Dados e Análise de Complexidade.
-                        </p>
-                        <div class="flex flex-col sm:flex-row items-center gap-4 mt-8 reveal" style="transition-delay: 300ms;">
-                            <a href="{{ '/docs.html' | relative_url }}" class="w-full sm:w-auto text-center px-5 py-3 font-medium text-white bg-brand-blue rounded-md hover:opacity-90 transition-transform hover:scale-105">Comece a Aprender</a>
-                            <a href="{{ site.data.site_meta.site.github_url }}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto text-center px-5 py-3 font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border transition-transform hover:scale-105">Ver no GitHub</a>
-                        </div>
-                    </div>
-                    <div class="relative min-h-[300px] lg:min-h-[400px]">
-                        <div class="globe-container">
-                            <div class="globe-bg"></div>
-                            <div class="dot" style="top: 30%; left: 51%;"></div>
-                            <div class="dot" style="top: 50%; left: 24%;"></div>
-                            <div class="dot" style="top: 64%; left: 78%;"></div>
-                            <div class="dot" style="top: 75%; left: 35%;"></div>
-                            <div class="dot" style="top: 25%; left: 70%;"></div>
-                        </div>
-                    </div>
-                </div>
+    <main class="relative">
+         <!-- Secondary Product Navigation -->
+         <nav aria-label="Product Sections" class="hidden md:flex items-center bg-[#0D1116] w-full border-b border-[#2E3033]">
+            <div class="container relative mx-auto px-6 flex gap-6 items-center overflow-x-auto">
+                <a class="flex items-center gap-2 py-4 border-b-2 border-transparent text-sm text-[#A0A3A8] hover:text-white transition-colors" href="#">
+                    <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.008 6.332h12.17M2 13.084c0-.782.634-1.416 1.416-1.416h11.33c.782 0 1.416.634 1.416 1.416v2.499a1.416 1.416 0 0 1-1.416 1.417H3.416A1.416 1.416 0 0 1 2 15.583v-2.5ZM2 2.416C2 1.634 2.634 1 3.416 1h11.33c.782 0 1.416.634 1.416 1.416v2.5c0 .782-.634 1.416-1.416 1.416H3.416A1.416 1.416 0 0 1 2 4.917v-2.5Z"></path></svg>
+                    <span>Database</span>
+                </a>
+                 <a class="flex items-center gap-2 py-4 border-b-2 border-transparent text-sm text-[#A0A3A8] hover:text-white transition-colors" href="#">
+                    <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.026 12.046h6.154M3.026 12.046v2.461h6.154v-2.461M3.026 12.046V9.584h6.154v2.462M11.034 5.923V3.461C11.034 2.102 9.932 1 8.572 1 7.213 1 6.11 2.102 6.11 3.461v2.462M3 8.385V14.539c0 1.36.96 2.461 2.154 2.461h6.153c1.195 0 2.154-1.102 2.154-2.461V8.385c0-1.36-.96-2.462-2.154-2.462H5.154C4.092 5.923 3 7.025 3 8.385Z"></path></svg>
+                    <span>Auth</span>
+                </a>
+                 <a class="flex items-center gap-2 py-4 border-b-2 border-transparent text-sm text-[#A0A3A8] hover:text-white transition-colors" href="#">
+                    <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.701 8.345v-2.543L10.877 1H3.701C2.965 1 2.368 1.597 2.368 2.334v4M15.655 5.779 10.875 1v3.446c0 .736.597 1.333 1.334 1.333h3.446ZM4.29 6.333H2.333C1.597 6.333 1 6.93 1 7.666v6.667C1 15.806 2.194 17 3.667 17h10.666C15.806 17 17 15.806 17 14.333V9.678c0-.736-.597-1.333-1.333-1.333H7.427a.833.833 0 0 1-.59-.246l-1.267-1.25c-.164-.165-.386-.257-.62-.257Z"></path></svg>
+                    <span>Storage</span>
+                </a>
+                <a class="flex items-center gap-2 py-4 border-b-2 border-green-500 text-sm text-white" href="#">
+                    <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.312 16.101a8.96 8.96 0 0 0 3.688.899c4.419 0 8-3.582 8-8a8.96 8.96 0 0 0-.903-3.697M12.735 1.923A8.96 8.96 0 0 0 9 1C4.582 1 1 4.582 1 9c0 1.362.34 2.644.94 3.766m.001 0c-.322.394-.516.898-.516 1.447 0 1.262 1.023 2.285 2.286 2.285s2.286-1.023 2.286-2.285c0-1.262-1.023-2.286-2.286-2.286-.713 0-1.35.327-1.77.838Zm13.346-8.987c0 1.263-1.024 2.286-2.286 2.286s-2.286-1.023-2.286-2.286c0-1.262 1.024-2.285 2.286-2.285s2.286 1.023 2.286 2.285ZM14.144 9c0 2.84-2.303 5.143-5.143 5.143S3.857 11.84 3.857 9c0-2.84 2.303-5.143 5.143-5.143s5.143 2.303 5.143 5.143Z"></path></svg>
+                    <span>Edge Functions</span>
+                </a>
+                 <a class="flex items-center gap-2 py-4 border-b-2 border-transparent text-sm text-[#A0A3A8] hover:text-white transition-colors" href="#">
+                    <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.944 1v2.86M3.803 3.86 1.359 1.341M3.803 5.839H1m7.75 5.843 3.817-.95c.53-.132.593-.861-.098-1.08L6.366 5.65c-.478-.21-.966.276-.756.756l3.928 8.982c.218.499.944.441 1.08-.087l.935-3.62Z"></path></svg>
+                    <span>Realtime</span>
+                </a>
             </div>
-        </section>
+        </nav>
+        <!-- Hero Section -->
+        <section class="w-full relative mx-auto py-16 lg:py-24 border-b border-[#2E3033] bg-[#10141A] overflow-hidden">
+            <div class="container relative mx-auto px-6 grid grid-cols-12 gap-8">
+                
+                <!-- Left Content Column -->
+                <div class="relative z-10 col-span-12 lg:col-span-5 flex flex-col justify-center">
+                    <div class="mb-4">
+                        <span class="text-green-500 font-mono uppercase text-sm tracking-wider">Edge Functions</span>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[#E6E8EB] leading-tight">
+                        Deploy JavaScript<br> globally in seconds
+                    </h1>
+                    <div class="mt-6">
+                        <p class="text-lg text-[#A0A3A8] max-w-lg">
+                            Easily author, deploy and monitor serverless functions distributed globally at the edge, close to your users.
+                        </p>
+                    </div>
+                    <div class="flex flex-row items-center gap-3 mt-8">
+                        <a href="#" class="px-5 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors duration-200">
+                           Start your project
+                        </a>
+                        <a href="#" class="px-5 py-2.5 text-sm font-semibold text-[#E6E8EB] bg-[#1C1F26] hover:bg-[#2E3033] border border-[#2E3033] rounded-md transition-colors duration-200">
+                            Read documentation
+                        </a>
+                    </div>
+                </div>
 
-        <section class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 reveal">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-                <div class="flex flex-col">
-                    <div class="w-12 h-12 p-2 bg-dark-card rounded-lg border border-dark-border flex justify-center items-center mb-4 transition-transform hover:scale-110">
-                        <svg class="w-7 h-7 text-dark-text-primary" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.7377 6.5363C14.145 6.61196 14.4138 7.00343 14.3381 7.41068L12.5869 16.8366C12.5112 17.2438 12.1197 17.5126 11.7125 17.437C11.3052 17.3613 11.0364 16.9698 11.1121 16.5626L12.8633 7.13669C12.939 6.72944 13.3305 6.46064 13.7377 6.5363Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.7279 9.10834C16.0208 8.81543 16.4957 8.81539 16.7886 9.10826L19.1499 11.4692C19.2906 11.6099 19.3696 11.8007 19.3696 11.9996C19.3696 12.1985 19.2906 12.3893 19.15 12.5299L16.7886 14.8913C16.4957 15.1842 16.0209 15.1842 15.728 14.8913C15.4351 14.5984 15.4351 14.1235 15.728 13.8306L17.5589 11.9997L15.728 10.169C15.4351 9.87613 15.4351 9.40126 15.7279 9.10834Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.72153 14.8913C9.42866 15.1842 8.95379 15.1842 8.66087 14.8913L6.29954 12.5303C6.15887 12.3897 6.07983 12.1989 6.07983 12C6.07982 11.8011 6.15884 11.6103 6.2995 11.4696L8.66083 9.10831C8.95373 8.81542 9.4286 8.81542 9.72149 9.10831C10.0144 9.4012 10.0144 9.87608 9.72149 10.169L7.89053 11.9999L9.72145 13.8306C10.0144 14.1235 10.0144 14.5983 9.72153 14.8913Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2.95312 6C2.95312 3.92893 4.63206 2.25 6.70313 2.25H18.7031C20.7742 2.25 22.4531 3.92893 22.4531 6V18C22.4531 20.0711 20.7742 21.75 18.7031 21.75H6.70313C4.63206 21.75 2.95312 20.0711 2.95312 18V6ZM6.70313 3.75C5.46048 3.75 4.45313 4.75736 4.45313 6V18C4.45313 19.2426 5.46048 20.25 6.70313 20.25H18.7031C19.9458 20.25 20.9531 19.2426 20.9531 18V6C20.9531 4.75736 19.9458 3.75 18.7031 3.75H6.70313Z" fill="currentColor"></path></svg>
+                <!-- Right Globe Column -->
+                <div class="relative col-span-12 lg:col-span-7 min-h-[300px] lg:min-h-[auto] mt-8 lg:mt-0">
+                    <div id="globe-parent" class="absolute inset-0 -left-12 sm:-left-24 md:-left-32 lg:-left-10 w-[140%] sm:w-[150%] lg:w-[130%] h-full">
+                        <div id="globe-container" class="w-full h-full transition-transform duration-300 ease-out">
+                        
+                            <!-- Command Line Element -->
+                            <div class="absolute z-20 w-[60%] left-[25%] top-[2%] sm:w-[40%] sm:left-[32%] lg:w-[50%] lg:left-[28%] xl:w-[45%] xl:left-[30%]">
+                                <button id="copy-button-hero" class="w-full px-3 py-2.5 group hover:border-[#4A4F55] flex gap-2 items-center bg-[#10141A] rounded-lg border border-[#2E3033] transition-colors duration-200">
+                                    <div class="text-[#A0A3A8] text-sm font-mono">$</div>
+                                    <div class="copy-text-hero flex-1 text-left text-white text-xs md:text-sm font-mono">supabase functions deploy hello</div>
+                                    <div class="text-[#A0A3A8] rounded p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                                    </div>
+                                    <span class="copy-feedback-hero absolute right-3 text-green-500 text-xs font-mono opacity-0 transition-opacity duration-300">Copied!</span>
+                                </button>
+                            </div>
+
+                            <!-- SVG Assets for Globe and Lines -->
+                            <svg id="svg1" class="absolute w-[15.2%] h-[41.2%] left-[38.8%] top-[31.2%]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 155 284">
+                                <path class="globe-path" stroke="url(#lg-svg1)" stroke-width="1.5" d="M.797 283.216c14.605-22.693 64.498-78.738 87.739-104.396-22.406-17.823-47.852-46.354-57.983-58.555 36.536-29.153 96.735-65.699 122.267-80.327-6.727-8.041-21.226-27.282-26.518-39.053"></path>
+                                <defs><linearGradient id="lg-svg1" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#E6E8EB" stop-opacity="0"></stop><stop offset="50%" stop-color="#E6E8EB" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#E6E8EB" stop-opacity="0"></stop></linearGradient></defs>
+                            </svg>
+                            <svg id="svg2" class="absolute w-[27.4%] h-[34%] left-[50.8%] top-[31.4%]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 272 235">
+                                <path class="globe-path" stroke="url(#lg-svg2)" stroke-width="1.5" d="M271.749 233.614C215.075 230.474 159.599 210.964 138.945 201.602C144.38 186.681 156.517 152.612 161.587 135.71C126.058 122.39 44.25 76.75 1.25 0.75"></path>
+                                <defs><linearGradient id="lg-svg2" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#E6E8EB" stop-opacity="0"></stop><stop offset="50%" stop-color="#E6E8EB" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#E6E8EB" stop-opacity="0"></stop></linearGradient></defs>
+                            </svg>
+                            <svg id="svg3" class="absolute w-[26.7%] h-[20.5%] left-[25.1%] top-[31.4%]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 261 144">
+                                <path class="globe-path" stroke="url(#lg-svg3)" stroke-width="1.5" d="M260.5 1.5C157.75 30.75 67.75 89 1.13281 143.202"></path>
+                                <defs><linearGradient id="lg-svg3" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="#E6E8EB" stop-opacity="0"></stop><stop offset="50%" stop-color="#E6E8EB" stop-opacity="0.8"></stop><stop offset="100%" stop-color="#E6E8EB" stop-opacity="0"></stop></linearGradient></defs>
+                            </svg>
+                            
+                            <!-- Dots -->
+                            <div id="dot1" class="globe-dot absolute w-[2.5%] h-[3.6%] left-[50%] top-[29.9%] flex items-center justify-center"><span class="absolute inset-0 w-full h-full rounded-full bg-white bg-opacity-20"></span><span class="absolute w-3/5 h-3/5 rounded-full bg-white"></span></div>
+                            <div id="dot2" class="globe-dot absolute w-[2.5%] h-[3.6%] left-[24.3%] top-[50.2%] flex items-center justify-center"><span class="absolute inset-0 w-full h-full rounded-full bg-white bg-opacity-20"></span><span class="absolute w-3/5 h-3/5 rounded-full bg-white"></span></div>
+                            <div id="dot3" class="globe-dot absolute w-[2.5%] h-[3.6%] left-[77.8%] top-[63.4%] flex items-center justify-center"><span class="absolute inset-0 w-full h-full rounded-full bg-white bg-opacity-20"></span><span class="absolute w-3/5 h-3/5 rounded-full bg-white"></span></div>
+                            
+                            <!-- Globe Image -->
+                            <img id="globe-image" alt="globe wireframe" src="https://supabase.com/images/product/functions/globe.svg" class="w-full h-auto">
+                        </div>
                     </div>
-                    <h3 class="text-lg font-semibold text-dark-text-primary">Código Aberto</h3>
-                    <p class="text-dark-text-secondary">Construído com ferramentas open source e totalmente mantido pela comunidade.</p>
-                </div>
-                <div class="flex flex-col">
-                    <div class="w-12 h-12 p-2 bg-dark-card rounded-lg border border-dark-border flex justify-center items-center mb-4 transition-transform hover:scale-110">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-7 h-7 stroke-[1.4px] text-dark-text-primary"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-dark-text-primary">Conteúdo Global</h3>
-                    <p class="text-dark-text-secondary">Documentação clara e acessível para desenvolvedores de todos os níveis.</p>
-                </div>
-                <div class="flex flex-col">
-                    <div class="w-12 h-12 p-2 bg-dark-card rounded-lg border border-dark-border flex justify-center items-center mb-4 transition-transform hover:scale-110">
-                        <svg class="w-7 h-7 text-dark-text-primary" width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.9233 0.444469C12.6102 0.0512999 13.5049 0.049524 14.1912 0.444469C17.6439 2.39542 21.0976 4.3433 24.5497 6.29543C25.199 6.66117 25.6333 7.38378 25.6267 8.13193V19.8696C25.6315 20.6487 25.1543 21.3886 24.4693 21.746C21.028 23.6862 17.5884 25.6288 14.1477 27.569C13.4466 27.9698 12.5339 27.939 11.8547 27.5052C10.823 26.9072 9.78955 26.312 8.75774 25.7145C8.5469 25.5888 8.30922 25.4888 8.16034 25.2844C8.29195 25.107 8.52726 25.0849 8.71847 25.0074C9.14913 24.8705 9.54467 24.6507 9.9403 24.4373C10.0403 24.3689 10.1625 24.3951 10.2584 24.4564C11.1406 24.9622 12.0151 25.4828 12.9003 25.9838C13.0891 26.0928 13.2803 25.9481 13.4417 25.8581C16.8187 23.9495 20.1999 22.048 23.5763 20.1388C23.7014 20.0786 23.7706 19.9458 23.7604 19.8088C23.7628 15.9368 23.761 12.0641 23.7616 8.19212C23.7759 8.03662 23.6859 7.89366 23.5453 7.83003C20.1159 5.89871 16.6883 3.96444 13.2595 2.03263C13.2001 1.99179 13.1297 1.96988 13.0576 1.96977C12.9855 1.96967 12.9151 1.99138 12.8556 2.03204C9.42677 3.96444 5.99974 5.90049 2.57093 7.8317C2.43083 7.89544 2.3368 8.03603 2.35348 8.19212C2.35407 12.0641 2.35348 15.9368 2.35348 19.8094C2.34753 19.8763 2.36222 19.9433 2.39556 20.0016C2.4289 20.0599 2.47929 20.1065 2.53995 20.1353C3.45494 20.6541 4.37112 21.1694 5.2867 21.6864C5.80251 21.9641 6.43582 22.129 7.00412 21.9163C7.50562 21.7365 7.85715 21.2247 7.84758 20.6922C7.85232 16.8428 7.84521 12.9928 7.85113 9.14401C7.8386 8.97313 8.0007 8.83194 8.16685 8.84802C8.60649 8.84506 9.04672 8.8421 9.48636 8.84921C9.66987 8.84506 9.79616 9.02907 9.77347 9.20123C9.77169 13.075 9.7782 16.9489 9.77051 20.8227C9.77169 21.8551 9.34754 22.9784 8.39259 23.4836C7.21614 24.093 5.76206 23.9638 4.59982 23.3794C3.59366 22.8772 2.63348 22.2845 1.64518 21.7465C0.958393 21.391 0.483532 20.6482 0.488366 19.8697V8.13193C0.481164 7.36829 0.932741 6.63256 1.60226 6.27215C5.04301 4.33038 8.48316 2.38713 11.9233 0.444469Z" fill="currentColor"></path><path d="M14.9242 8.57537C16.4248 8.47878 18.0313 8.51814 19.3817 9.25742C20.4272 9.82394 21.0069 11.0129 21.0253 12.1745C20.9961 12.3311 20.8323 12.4176 20.6828 12.4068C20.2474 12.4062 19.8119 12.4127 19.3765 12.4039C19.1918 12.411 19.0844 12.2407 19.0613 12.0774C18.9362 11.5216 18.6331 10.9712 18.11 10.7031C17.3069 10.3011 16.3759 10.3213 15.5002 10.3297C14.861 10.3636 14.1736 10.419 13.6321 10.7949C13.2163 11.0796 13.09 11.6544 13.2384 12.1173C13.3783 12.4497 13.762 12.557 14.076 12.6558C15.8844 13.1288 17.8008 13.0818 19.5748 13.7042C20.3092 13.958 21.0277 14.4513 21.2791 15.2203C21.6079 16.2509 21.4638 17.4828 20.7305 18.3102C20.1359 18.991 19.2698 19.3616 18.406 19.5629C17.2569 19.8191 16.0644 19.8256 14.8974 19.7119C13.8001 19.5868 12.6582 19.2985 11.8111 18.5508C11.0867 17.9218 10.7329 16.9418 10.768 15.996C10.7764 15.8362 10.9354 15.7248 11.0885 15.7379C11.5269 15.7344 11.9654 15.7332 12.4038 15.7385C12.579 15.726 12.7088 15.8774 12.7178 16.0424C12.7987 16.5719 12.9977 17.1277 13.4594 17.4416C14.3505 18.0166 15.4687 17.9772 16.489 17.9933C17.3344 17.9558 18.2833 17.9444 18.9732 17.3857C19.3371 17.067 19.445 16.5339 19.3466 16.0752C19.24 15.6879 18.8349 15.5075 18.487 15.3895C16.7017 14.8247 14.7639 15.0297 12.9959 14.391C12.2781 14.1374 11.584 13.6578 11.3083 12.9204C10.9235 11.8767 11.0998 10.5858 11.9099 9.78635C12.6998 8.99113 13.8401 8.68498 14.9242 8.57537Z" fill="currentColor"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-dark-text-primary">Automatizado e Escalável</h3>
-                    <p class="text-dark-text-secondary">Simplesmente escreva seu código e deixe que nós cuidamos da infraestrutura.</p>
                 </div>
             </div>
         </section>
         
-        <section class="bg-dark-card/30 reveal">
-            <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 text-center">
-                <blockquote class="text-2xl md:text-3xl font-medium text-dark-text-primary max-w-4xl mx-auto">
-                    "O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online."
-                </blockquote>
-                <div class="mt-8">
-                    <img src="https://supabase.com/_next/image?url=%2Fimages%2Fblog%2Favatars%2Fzeno-rocha.png&w=64&q=75" alt="Zeno Rocha" class="w-12 h-12 rounded-full mx-auto object-cover">
-                    <p class="mt-4 text-dark-text-primary font-semibold">Engenheiro de Software Sênior</p>
-                    <p class="font-mono text-sm text-dark-text-secondary">Google</p>
-                </div>
+        <!-- Testimonial Section -->
+        <section class="container relative mx-auto px-6 py-16 md:py-24 text-center scroll-reveal">
+            <blockquote class="text-2xl md:text-3xl lg:text-4xl max-w-4xl mx-auto leading-snug text-white">
+                “Supabase gave us the flexibility and scalability needed at every growth stage. It's rare to find a tool that works just as well for startups as it does for large-scale operations.”
+            </blockquote>
+            <div class="mt-8">
+                <img src="https://supabase.com/images/blog/avatars/zeno-rocha.png" alt="Avatar of Zeno Rocha" class="w-10 h-10 rounded-full mx-auto mb-4 border-2 border-[#2E3033]">
+                <p class="text-white font-semibold">Zeno Rocha</p>
+                <p class="text-[#A0A3A8] font-mono text-sm">CEO at Resend</p>
             </div>
         </section>
 
-        <section class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 reveal">
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
-                <h3 class="h2 !mb-0">O que você pode construir?</h3>
-                <a href="#" class="px-3 py-1.5 text-xs font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border whitespace-nowrap transition-transform hover:scale-105">Ver todos os exemplos</a>
-            </div>
-            <div class="mt-10 overflow-hidden">
-                <div class="flex space-x-8 -mx-6 px-6 overflow-x-auto no-scrollbar">
-                    <div class="card-glow flex-shrink-0 w-80 bg-dark-card rounded-xl border border-dark-border p-6 hover:border-brand-blue/50 transition-all transform hover:-translate-y-1">
-                        <div class="relative z-10">
-                            <h4 class="font-semibold text-dark-text-primary">Webhooks & Integrações</h4>
-                            <p class="text-sm text-dark-text-secondary mt-2">Integre com serviços de terceiros como Stripe ou GitHub.</p>
-                        </div>
-                    </div>
-                    <div class="card-glow flex-shrink-0 w-80 bg-dark-card rounded-xl border border-dark-border p-6 hover:border-brand-blue/50 transition-all transform hover:-translate-y-1">
-                        <div class="relative z-10">
-                            <h4 class="font-semibold text-dark-text-primary">Aplicações em Tempo Real</h4>
-                            <p class="text-sm text-dark-text-secondary mt-2">Potencialize funcionalidades como chats ou dashboards ao vivo.</p>
-                        </div>
-                    </div>
-                    <div class="card-glow flex-shrink-0 w-80 bg-dark-card rounded-xl border border-dark-border p-6 hover:border-brand-blue/50 transition-all transform hover:-translate-y-1">
-                        <div class="relative z-10">
-                            <h4 class="font-semibold text-dark-text-primary">Aplicações com IA</h4>
-                            <p class="text-sm text-dark-text-secondary mt-2">Construa aplicações de IA com streaming de respostas de modelos.</p>
-                        </div>
-                    </div>
-                     <div class="card-glow flex-shrink-0 w-80 bg-dark-card rounded-xl border border-dark-border p-6 hover:border-brand-blue/50 transition-all transform hover:-translate-y-1">
-                        <div class="relative z-10">
-                            <h4 class="font-semibold text-dark-text-primary">Endpoints de API Customizados</h4>
-                            <p class="text-sm text-dark-text-secondary mt-2">Crie lógicas de negócio e fluxos de trabalho para sua aplicação.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="bg-dark-card/30 border-y border-dark-border reveal">
-            <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24">
-                <h2 class="h2">Uma ótima experiência de desenvolvimento</h2>
-                <p class="text-dark-text-secondary lg:w-1/2 mt-4">
-                    Edge Functions são desenvolvidas usando <a href="#" class="underline text-brand-blue hover:opacity-80">Deno</a>, um runtime de JavaScript open source que garante máxima performance e flexibilidade.
+        <!-- Developer Experience Section -->
+        <section class="container relative mx-auto px-6 py-16 md:py-24 border-t border-[#2E3033] scroll-reveal">
+            <div class="flex flex-col gap-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#E6E8EB]">Delightful DX from local to production</h2>
+                <p class="text-[#A0A3A8] lg:w-1/2">
+                    Edge Functions are developed using Deno, an open source JavaScript runtime that ensures maximum power and flexibility. Migrate in and out at any time with no vendor lock-in.
                 </p>
-                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="card-glow rounded-xl border border-dark-border bg-dark-card p-6 flex flex-col justify-between min-h-[300px] transition-all">
-                        <div class="relative group z-10">
-                            <button class="copy-button w-full bg-dark-bg p-4 rounded-lg border border-dark-border shadow-sm text-center flex items-center justify-center" data-clipboard-text="supabase functions serve">
-                                <code class="font-mono text-dark-text-secondary">$ </code>
-                                <code class="font-mono text-dark-text-primary flex-1 text-left pl-2">pitchutcha functions serve</code>
-                                <span class="text-xs text-dark-text-secondary opacity-0 group-hover:opacity-100 transition-opacity">Copiar</span>
-                           </button>
-                        </div>
-                        <div class="relative z-10">
-                            <h3 class="font-semibold text-dark-text-primary mt-4">Desenvolvimento Local de Primeira Classe</h3>
-                            <p class="text-sm text-dark-text-secondary mt-2">Escreva código com hot-reloading, autocompletar e verificação de tipos.</p>
+            </div>
+            <div class="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Card 1: Local Dev Experience -->
+                <div class="dx-card rounded-xl p-6 flex flex-col justify-between col-span-1 md:col-span-2 lg:col-span-1 min-h-[350px]">
+                    <div>
+                        <h3 class="text-lg font-semibold text-[#E6E8EB]">First-class local dev experience</h3>
+                        <p class="text-sm text-[#A0A3A8] mt-2">Write code with hot code reloading, a fast Language server for autocompletion, type checking and linting.</p>
+                    </div>
+                    <div class="flex items-center justify-center h-full">
+                        <div class="p-3 group flex gap-2 items-center bg-[#0D1116] rounded-lg border border-[#2E3033]">
+                            <div class="text-[#A0A3A8] text-sm font-mono">$</div>
+                            <div class="text-white text-sm font-mono">supabase functions serve</div>
                         </div>
                     </div>
-                    <div class="card-glow rounded-xl border border-dark-border bg-dark-card p-6 flex flex-col justify-between min-h-[300px] transition-all">
-                         <div class="relative z-10 flex items-center justify-center h-full">
-                            <div class="flex items-center gap-4 font-mono text-sm text-center">
-                                <span class="py-2 px-4 bg-dark-bg rounded-lg shadow border border-dark-border">Dev</span>
-                                <svg width="32" height="7" viewBox="0 0 32 7" fill="currentColor" class="text-dark-text-secondary"><path d="M27 5.74425C27 6.0204 27.3382 6.21566 27.5774 6.07759L31.4226 3.8575C31.6618 3.71943 31.6618 3.32891 31.4226 3.19084L27.5774 0.970752C27.3382 0.832681 27 1.02794 27 1.30409V5.74425ZM5 1.30409C5 1.02794 4.6618 0.832681 4.42265 0.970752L0.57735 3.19084C0.338204 3.32891 0.338204 3.71943 0.57735 3.8575L4.42265 6.07759C4.6618 6.21566 5 6.0204 5 5.74425V1.30409ZM27.5 3.02417H4.5V4.02417H27.5V3.02417Z"></path></svg>
-                                <span class="py-2 px-4 bg-dark-bg rounded-lg shadow border border-dark-border">Prod</span>
+                </div>
+                <!-- Card 2: Dev/Prod Parity -->
+                <div class="dx-card rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
+                    <div>
+                        <h3 class="text-lg font-semibold text-[#E6E8EB]">Dev and Prod parity</h3>
+                        <p class="text-sm text-[#A0A3A8] mt-2">The open source Edge runtime runs your functions locally and in production.</p>
+                    </div>
+                    <div class="flex items-center justify-center h-full">
+                         <div class="relative p-4 font-mono bg-transparent border-2 border-dashed border-[#2E3033] rounded-2xl flex justify-center items-center gap-2">
+                            <div class="py-2 px-4 bg-[#10141A] rounded-lg shadow border border-[#2E3033]"><div class="text-[#E6E8EB] uppercase tracking-wide text-sm">Dev</div></div>
+                            <svg width="32" height="7" viewBox="0 0 32 7" fill="#A0A3A8" xmlns="http://www.w3.org/2000/svg"><path d="M27 5.74425C27 6.0204 27.3382 6.21566 27.5774 6.07759L31.4226 3.8575C31.6618 3.71943 31.6618 3.32891 31.4226 3.19084L27.5774 0.970752C27.3382 0.832681 27 1.02794 27 1.30409V5.74425ZM5 1.30409C5 1.02794 4.6618 0.832681 4.42265 0.970752L0.57735 3.19084C0.338204 3.32891 0.338204 3.71943 0.57735 3.8575L4.42265 6.07759C4.6618 6.21566 5 6.0204 5 5.74425V1.30409ZM27.5 3.02417H4.5V4.02417H27.5V3.02417Z"></path></svg>
+                            <div class="py-2 px-4 bg-[#10141A] rounded-lg shadow border border-[#2E3033]"><div class="text-[#E6E8EB] uppercase tracking-wide text-sm">Prod</div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 3: NPM Modules -->
+                 <div class="dx-card rounded-xl p-6 flex flex-col justify-between overflow-hidden min-h-[350px]">
+                    <div>
+                        <h3 class="text-lg font-semibold text-[#E6E8EB]">Use any NPM module</h3>
+                        <p class="text-sm text-[#A0A3A8] mt-2">Tap into the 2+ million modules in the Deno and NPM ecosystem.</p>
+                    </div>
+                    <div class="relative w-full h-full flex items-center justify-center mt-4 -mx-6">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#1C1F26] via-transparent to-[#1C1F26] z-10"></div>
+                        <div class="flex whitespace-nowrap tag-cloud-container">
+                            <div class="flex items-center space-x-2 px-2">
+                                <span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">express</span><span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">moment</span><span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">lodash</span><span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">axios</span><span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">jsonwebtoken</span>
+                            </div>
+                             <div class="flex items-center space-x-2 px-2">
+                                <span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">express</span><span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">moment</span><span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">lodash</span><span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">axios</span><span class="py-1 px-3 text-sm rounded-md bg-[#2E3033] border border-[#4A4F55] text-[#A0A3A8]">jsonwebtoken</span>
                             </div>
                         </div>
-                        <div class="relative z-10">
-                            <h3 class="font-semibold text-dark-text-primary mt-4">Paridade Dev/Prod</h3>
-                            <p class="text-sm text-dark-text-secondary mt-2">O mesmo runtime open source executa suas funções localmente e em produção.</p>
-                        </div>
-                    </div>
-                    <div class="card-glow rounded-xl border border-dark-border bg-dark-card p-6 flex flex-col justify-between min-h-[300px] transition-all">
-                         <div class="relative z-10 flex items-center justify-center h-full">
-                            <svg width="111" height="42" viewBox="0 0 111 42" fill="currentColor" class="text-brand-blue"><path d="M36.1763 37.4452H49.2591V30.8616H62.342V4.52698H36.1763V37.4452ZM4.77734 30.8616H17.8602V11.1106H24.4017V30.8616H30.9431V4.52698H4.77734V30.8616Z"></path></svg>
-                        </div>
-                        <div class="relative z-10">
-                            <h3 class="font-semibold text-dark-text-primary mt-4">Use qualquer módulo NPM</h3>
-                            <p class="text-sm text-dark-text-secondary mt-2">Acesse mais de 2 milhões de módulos do ecossistema Deno e NPM.</p>
-                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        
-        <section class="bg-dark-bg border-b border-dark-border reveal" id="observability-section">
-            <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24">
-                <h2 class="h2">Observabilidade Integrada</h2>
-                <div class="mt-10 flex flex-col md:flex-row gap-4">
-                    <button data-tab="1" class="obs-tab flex-[2] rounded-xl border border-dark-border bg-dark-card p-6 min-h-[400px] flex flex-col justify-between transition-all">
-                        <div>
-                            <h3 class="font-mono text-sm uppercase text-dark-text-primary">Logs em Tempo Real</h3>
-                            <p class="pt-2 text-dark-text-secondary text-sm max-w-[220px]">Visualize logs no painel em tempo real, populados com metadados para ajudar na depuração.</p>
-                        </div>
-                        <div id="log-feed" class="h-48 bg-dark-bg rounded-lg mt-4 font-mono text-xs p-3 overflow-y-auto no-scrollbar flex flex-col-reverse"></div>
-                    </button>
-                    <button data-tab="2" class="obs-tab flex-1 rounded-xl border border-dark-border bg-dark-card/50 p-6 min-h-[400px] flex flex-col justify-between opacity-70 transition-all">
-                       <div>
-                           <h3 class="font-mono text-sm uppercase text-dark-text-secondary">Explorador de Logs</h3>
-                           <p class="pt-2 text-dark-text-secondary/80 text-sm max-w-[220px]">Obtenha insights mais profundos escrevendo queries SQL nos logs de suas funções.</p>
-                       </div>
-                    </button>
-                    <button data-tab="3" class="obs-tab flex-1 rounded-xl border border-dark-border bg-dark-card/50 p-6 min-h-[400px] flex flex-col justify-between opacity-70 transition-all">
-                       <div>
-                            <h3 class="font-mono text-sm uppercase text-dark-text-secondary">Métricas</h3>
-                            <p class="pt-2 text-dark-text-secondary/80 text-sm max-w-[220px]">Dashboards mostram a saúde de suas funções a todo momento.</p>
-                       </div>
-                    </button>
+                <!-- Card 4: CI/CD -->
+                <div class="dx-card rounded-xl p-0 flex flex-col justify-between md:col-span-2 min-h-[350px] overflow-hidden">
+                    <div class="p-6 pb-0">
+                         <h3 class="text-lg font-semibold text-[#E6E8EB]">Continuous Integration</h3>
+                         <p class="text-sm text-[#A0A3A8] mt-2">Use the Supabase CLI with GitHub actions to preview and deploy your functions.</p>
+                    </div>
+                    <div class="relative bg-[#10141A] border-t border-[#2E3033] rounded-b-xl mt-4 px-4 py-3 font-mono text-xs">
+                        <button id="copy-button-ci" class="absolute right-3 top-3 p-1.5 rounded-md hover:bg-[#2E3033] text-[#A0A3A8] transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                            <span class="copy-feedback-ci absolute -top-8 right-0 bg-green-600 text-white px-2 py-1 rounded-md text-xs opacity-0 transition-opacity duration-300">Copied!</span>
+                        </button>
+                        <pre class="code-snippet-ci text-[#A0A3A8] overflow-x-auto"><code class="language-yaml"><span class="text-[#E6E8EB]">jobs:</span>
+  <span class="text-[#E6E8EB]">deploy:</span>
+    <span class="text-[#E6E8EB]">runs-on:</span> <span class="text-green-400">ubuntu-latest</span>
+    <span class="text-[#E6E8EB]">steps:</span>
+      - <span class="text-[#E6E8EB]">uses:</span> <span class="text-green-400">actions/checkout@v4</span>
+      - <span class="text-[#E6E8EB]">uses:</span> <span class="text-green-400">supabase/setup-cli@v1</span>
+        <span class="text-[#E6E8EB]">with:</span>
+          <span class="text-[#E6E8EB]">version:</span> <span class="text-green-400">latest</span>
+      - <span class="text-[#E6E8EB]">run:</span> <span class="text-green-400">supabase functions deploy</span>
+</code></pre>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 reveal" id="integrations-section">
-            <h2 class="h2">Integra-se perfeitamente com o ecossistema</h2>
-            <div class="mt-10 flex flex-col lg:flex-row gap-8 xl:gap-24">
-                <div class="lg:w-1/3 flex flex-col">
-                    <button data-tab="1" class="integration-tab text-left py-4 border-b-2 border-brand-blue transition-all">
-                        <h3 class="font-mono text-sm uppercase text-dark-text-primary">Configuração Zero</h3>
-                        <p class="pt-2 text-dark-text-secondary text-sm">Variáveis de ambiente pré-populadas para acessar seu projeto.</p>
-                    </button>
-                    <button data-tab="2" class="integration-tab text-left py-4 border-b border-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all">
-                        <h3 class="font-mono text-sm uppercase">Conecte ao seu Banco de Dados</h3>
-                        <p class="pt-2 text-sm hidden">Conecte-se ao seu banco de dados Postgres a partir de uma Edge Function.</p>
-                    </button>
-                    <button data-tab="3" class="integration-tab text-left py-4 border-b border-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all">
-                        <h3 class="font-mono text-sm uppercase">Acione via Webhook</h3>
-                         <p class="pt-2 text-sm hidden">Webhooks de banco de dados permitem que você envie dados em tempo real.</p>
-                    </button>
-                </div>
-                <div class="lg:flex-1 relative min-h-[300px]">
-                    <div id="integration-content" class="relative rounded-xl shadow-lg w-full h-full bg-dark-bg border border-dark-border flex flex-col">
-                        <div class="w-full px-4 py-3 relative flex items-center gap-2 border-b border-dark-border">
-                            <div class="w-3 h-3 bg-dark-border rounded-full"></div>
-                            <div class="w-3 h-3 bg-dark-border rounded-full"></div>
-                            <div class="w-3 h-3 bg-dark-border rounded-full"></div>
-                             <button class="copy-button absolute right-4 text-xs text-dark-text-secondary hover:text-white transition-colors flex items-center gap-2" data-clipboard-target="#code-snippet-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                <span>Copiar</span>
-                            </button>
-                        </div>
-                        <div id="code-snippets" class="h-full w-full rounded-b-lg"></div>
+        <!-- Global Presence Section -->
+        <section class="container relative mx-auto px-6 py-16 md:py-24 border-t border-[#2E3033] scroll-reveal">
+            <div class="w-full flex flex-col xl:grid grid-cols-3 gap-8 md:gap-16">
+                <p class="text-xl sm:text-2xl max-w-lg text-[#A0A3A8]">Edge Functions run <span class="text-white">server-side logic geographically close to users</span>, offering low latency and great performance.</p>
+                <div class="flex flex-col col-span-2 gap-8 md:grid grid-cols-3 items-start">
+                    <div class="w-full flex flex-col gap-2 pt-3 md:pt-0 border-t md:border-t-0 md:pl-6 md:border-l border-[#2E3033] text-sm">
+                        <p class="font-mono uppercase tracking-wide text-white">Global presence</p>
+                        <p class="text-[#A0A3A8]">Run functions globally or pin to your database's region.</p>
+                    </div>
+                    <div class="w-full flex flex-col gap-2 pt-3 md:pt-0 border-t md:border-t-0 md:pl-6 md:border-l border-[#2E3033] text-sm">
+                        <p class="font-mono uppercase tracking-wide text-white">Automatic scaling</p>
+                        <p class="text-[#A0A3A8]">Seamlessly scale with usage without any manual tuning.</p>
+                    </div>
+                    <div class="w-full flex flex-col gap-2 pt-3 md:pt-0 border-t md:border-t-0 md:pl-6 md:border-l border-[#2E3033] text-sm">
+                        <p class="font-mono uppercase tracking-wide text-white">Secure</p>
+                        <p class="text-[#A0A3A8]">Scale with confidence with SSL, Firewall and DDOS protection.</p>
                     </div>
                 </div>
             </div>
         </section>
         
-        <section class="border-t border-dark-border reveal">
-             <div class="container mx-auto px-6 lg:px-16 xl:px-20 py-16 md:py-24 grid xl:grid-cols-2 gap-16 items-center">
-                 <div class="relative w-full h-64 md:h-80 flex items-center justify-center">
-                    <div class="relative w-64 h-64 md:w-80 md:h-80">
-                        <a href="#" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-dark-card rounded-xl border border-dark-border p-4 shadow-lg w-20 h-20 flex items-center justify-center z-10 hover:shadow-2xl hover:scale-110 transition-all">
-                             <svg class="h-8 w-8 text-brand-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.312 16.101A8.999 8.999 0 0 0 9.001 17c4.418 0 8-3.582 8-8a8.999 8.999 0 0 0-.903-3.697M12.735 1.923A8.999 8.999 0 0 0 9 1C4.582 1 1 4.582 1 9c0 1.362.34 2.644.94 3.766m0 0C1.618 13.16 1.424 13.664 1.424 14.213c0 1.262 1.023 2.285 2.286 2.285s2.285-1.023 2.285-2.285c0-1.263-1.023-2.286-2.285-2.286-.714 0-1.351.327-1.77.842Zm15.196-8.987c0 1.263-1.023 2.286-2.286 2.286s-2.285-1.023-2.285-2.286c0-1.262 1.023-2.285 2.285-2.285s2.286 1.023 2.286 2.285Zm-4.108 5.22c0 2.84-2.298 5.143-5.143 5.143-2.845 0-5.143-2.302-5.143-5.143 0-2.845 2.3-5.143 5.143-5.143 2.845 0 5.143 2.3 5.143 5.143Z"></path></svg>
-                        </a>
-                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 w-16 h-16 bg-dark-card rounded-xl border border-dark-border p-3 flex items-center justify-center text-dark-text-secondary hover:text-dark-text-primary transition-all hover:scale-110 hover:shadow-md"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.008 6.332H15.178v5.333H3.008V6.332ZM2 13.084c0-.782.634-1.417 1.416-1.417h11.332c.783 0 1.417.635 1.417 1.417v2.5c0 .782-.634 1.416-1.417 1.416H3.416C2.634 17 2 16.366 2 15.584v-2.5ZM2 2.416C2 1.634 2.634 1 3.416 1h11.332C15.53 1 16.165 1.634 16.165 2.416v2.5c0 .783-.635 1.417-1.417 1.417H3.416C2.634 6.333 2 5.699 2 4.916v-2.5Z"></path></svg></div>
-                        <div class="absolute top-1/2 right-0 translate-x-4 -translate-y-1/2 w-16 h-16 bg-dark-card rounded-xl border border-dark-border p-3 flex items-center justify-center text-dark-text-secondary hover:text-dark-text-primary transition-all hover:scale-110 hover:shadow-md"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M3.026 12.046h6.154M3.026 12.046v2.461h6.154v-2.461M3.026 12.046V9.584h6.154v2.462M11.034 5.923V3.461c0-1.36.902-2.461 2.038-2.461 1.137 0 2.039 1.1 2.039 2.461v2.462M3 8.385v6.153C3 15.898 4.102 17 5.462 17h6.153c1.36 0 2.462-1.102 2.462-2.462V8.385c0-1.36-1.102-2.462-2.462-2.462H5.462C4.102 5.923 3 7.025 3 8.385Z"></path></svg></div>
-                        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 w-16 h-16 bg-dark-card rounded-xl border border-dark-border p-3 flex items-center justify-center text-dark-text-secondary hover:text-dark-text-primary transition-all hover:scale-110 hover:shadow-md"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M15.701 8.345v-2.543L10.877 1H3.701c-.736 0-1.333.597-1.333 1.334v4.001m13.287-4.023L10.875 1v3.446c0 .736.597 1.333 1.334 1.333h3.445ZM4.29 6.333H2.333C1.597 6.333 1 6.93 1 7.666V14.333C1 15.806 2.194 17 3.667 17h10.666c1.473 0 2.667-1.194 2.667-2.667V9.678c0-.736-.597-1.333-1.334-1.333H7.427a1.333 1.333 0 0 1-.943-2.277L5.225 4.716a1.333 1.333 0 0 0-1.885 0L2.398 5.659a1.333 1.333 0 0 1-.942.394H.5"></path></svg></div>
-                        <div class="absolute top-1/2 left-0 -translate-x-4 -translate-y-1/2 w-16 h-16 bg-dark-card rounded-xl border border-dark-border p-3 flex items-center justify-center text-dark-text-secondary hover:text-dark-text-primary transition-all hover:scale-110 hover:shadow-md"><svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.944 1v2.86m-2.14 0L1.359 1.341M3.804 5.839H1m7.75 5.843 3.817-.95c.53-.132.593-.861.092-1.081L6.366 5.65c-.478-.21-.966.276-.757.755l3.928 8.983c.218.499.944.441 1.08-.088l.934-3.617Z"></path></svg></div>
+        <!-- What you can build Section -->
+        <section id="examples" class="container relative mx-auto px-6 py-16 md:py-24 border-t border-[#2E3033] scroll-reveal">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#E6E8EB]">What you can build with Edge Functions</h2>
+                <a href="#" class="px-4 py-2 text-sm font-semibold text-[#E6E8EB] bg-[#1C1F26] hover:bg-[#2E3033] border border-[#2E3033] rounded-md transition-colors duration-200 shrink-0">
+                    View all examples
+                </a>
+            </div>
+            <div class="mt-8 lg:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                
+                <!-- Example Card 1: Resend -->
+                <a href="#" target="_blank" class="block group">
+                    <div class="dx-card rounded-xl h-full flex flex-col overflow-hidden">
+                        <div class="bg-[#10141A] rounded-t-xl h-full flex flex-col">
+                            <div class="relative w-full aspect-[3/1] flex items-center justify-center overflow-hidden bg-[#1C1F26]">
+                                <svg role="img" width="40" height="40" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><title>Resend Logo</title><path fill-rule="evenodd" clip-rule="evenodd" d="M49.7506 19.7083C47.6879 18.6006 45.377 18.0467 42.8178 18.0467H24.7693V58.1544H34.0513V44.0594H39.0608L47.0004 58.1544H58.116L49.136 42.6889C49.363 42.5793 49.587 42.4631 49.8078 42.3404C51.8706 41.1946 53.494 39.6284 54.6781 37.6421C55.8623 35.6177 56.4544 33.3449 56.4544 30.8238C56.4544 28.3792 55.8623 26.2019 54.6781 24.2921C53.494 22.3439 51.8516 20.816 49.7506 19.7083ZM44.5366 35.9805C43.8109 36.4008 42.9514 36.6108 41.9583 36.6108H34.0513V26.1829H41.0988C42.3211 26.1829 43.3525 26.3929 44.1929 26.813C45.0714 27.2333 45.7398 27.8445 46.1982 28.6466C46.6566 29.4105 46.8858 30.3082 46.8858 31.3396C46.8858 32.3709 46.6757 33.2876 46.2555 34.0897C45.8735 34.892 45.3006 35.5221 44.5366 35.9805Z" fill="#A0A3A8"></path></svg>
+                            </div>
+                            <div class="p-5 flex flex-col gap-2 border-t border-[#2E3033]">
+                                <h4 class="text-[#E6E8EB] text-lg font-semibold">Sending Emails</h4>
+                                <p class="text-sm text-[#A0A3A8]">Send emails in Edge Functions with Resend.</p>
+                            </div>
+                            <div class="p-5 pt-0 mt-auto">
+                                <div class="text-sm text-[#A0A3A8] group-hover:text-white transition-colors duration-200 flex items-center gap-2">
+                                    <span>View Template</span>
+                                    <div class="relative w-4 h-4 overflow-hidden">
+                                        <svg class="absolute transition-transform duration-300 transform group-hover:translate-x-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                                        <svg class="absolute transition-transform duration-300 transform -translate-x-4 group-hover:translate-x-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </a>
+
+                <!-- Example Card 2: OpenAI -->
+                 <a href="#" target="_blank" class="block group">
+                    <div class="dx-card rounded-xl h-full flex flex-col overflow-hidden">
+                        <div class="bg-[#10141A] rounded-t-xl h-full flex flex-col">
+                            <div class="relative w-full aspect-[3/1] flex items-center justify-center overflow-hidden bg-[#1C1F26]">
+                                <svg role="img" width="40" height="40" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><title>OpenAI Logo</title><path fill-rule="evenodd" clip-rule="evenodd" d="M66.1943 35.3654C67.5556 31.2814 67.0883 26.8114 64.9143 23.0932C61.643 17.4041 55.0599 14.4782 48.6394 15.8396C45.7745 12.6293 41.6702 10.8007 37.3628 10.821C30.8 10.821 24.9687 15.0472 22.9369 21.2848C18.7107 22.1585 15.0737 24.7999 12.9403 28.5384C9.64875 34.2275 10.4005 41.3796 14.8096 46.2559C13.4483 50.3399 13.9156 54.8099 16.0896 58.5078C19.3608 64.2172 25.9439 67.143 32.3848 65.7817C35.2294 68.992 39.3336 70.841 43.6411 70.8206C50.2039 70.8206 56.0352 66.5944 58.067 60.3568C62.2932 59.4831 65.9302 56.8417 68.0433 53.1032C71.3551 47.4141 70.6034 40.2621 66.1943 35.3857V35.3654ZM61.5211 25.064C62.8215 27.3397 63.3091 30.0014 62.8621 32.5818C62.7809 32.5208 62.6183 32.4395 62.5167 32.3786L50.5696 25.4704C49.9601 25.125 49.2083 25.125 48.5987 25.4704L34.5995 33.557V27.6241L46.1606 20.9394C51.5449 17.8307 58.4124 19.6797 61.5211 25.064ZM34.5995 37.3972L40.4918 33.9837L46.3841 37.3972V44.2038L40.4918 47.6172L34.5995 44.2038V37.3972ZM37.3425 14.7424C39.9838 14.7424 42.5236 15.6567 44.5554 17.3431C44.4741 17.3837 44.3116 17.4853 44.1897 17.5463L32.2426 24.4342C31.633 24.7796 31.2673 25.4298 31.2673 26.1409V42.3142L26.1268 39.3477V25.9784C26.1268 19.761 31.1454 14.7424 37.3628 14.7221L37.3425 14.7424ZM16.3538 30.5093C17.6744 28.2337 19.7266 26.4863 22.2054 25.572V39.7744C22.2054 40.4855 22.5711 41.1154 23.1807 41.4811L37.1596 49.5475L31.9988 52.5342L20.458 45.8699C15.094 42.7612 13.2451 35.8936 16.3538 30.5093ZM19.5031 56.5776C18.1824 54.3223 17.7151 51.6402 18.1621 49.0598C18.2433 49.1208 18.4059 49.2021 18.5075 49.263L30.4546 56.1712C31.0641 56.5166 31.8159 56.5166 32.4255 56.1712L46.4044 48.0846V54.0175L34.8433 60.6819C29.459 63.7702 22.5914 61.9416 19.4828 56.5776H19.5031ZM43.6614 66.8992C41.0404 66.8992 38.4803 65.9849 36.4688 64.2985C36.5501 64.2579 36.7329 64.1563 36.8345 64.0953L48.7816 57.2074C49.3912 56.862 49.7772 56.2118 49.7569 55.5007V39.3477L54.8974 42.3142V55.6632C54.8974 61.8806 49.8585 66.9195 43.6614 66.9195V66.8992ZM64.6704 51.1323C63.3498 53.4079 61.2773 55.1553 58.8188 56.0493V41.8469C58.8188 41.1357 58.4531 40.4856 57.8435 40.1401L43.8443 32.0535L48.9848 29.087L60.5459 35.7514C65.9302 38.8601 67.7588 45.7276 64.6501 51.112L64.6704 51.1323Z" fill="#A0A3A8"></path></svg>
+                            </div>
+                            <div class="p-5 flex flex-col gap-2 border-t border-[#2E3033]">
+                                <h4 class="text-[#E6E8EB] text-lg font-semibold">Generating OpenAI GPT3 completions</h4>
+                                <p class="text-sm text-[#A0A3A8]">Using OpenAI in Edge Functions.</p>
+                            </div>
+                            <div class="p-5 pt-0 mt-auto">
+                                <div class="text-sm text-[#A0A3A8] group-hover:text-white transition-colors duration-200 flex items-center gap-2">
+                                    <span>View Template</span>
+                                    <div class="relative w-4 h-4 overflow-hidden">
+                                        <svg class="absolute transition-transform duration-300 transform group-hover:translate-x-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                                        <svg class="absolute transition-transform duration-300 transform -translate-x-4 group-hover:translate-x-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Example Card 3: Stripe -->
+                 <a href="#" target="_blank" class="block group">
+                    <div class="dx-card rounded-xl h-full flex flex-col overflow-hidden">
+                        <div class="bg-[#10141A] rounded-t-xl h-full flex flex-col">
+                            <div class="relative w-full aspect-[3/1] flex items-center justify-center overflow-hidden bg-[#1C1F26]">
+                                <svg role="img" width="40" height="40" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><title>Stripe Logo</title><path fill-rule="evenodd" clip-rule="evenodd" d="M13.1153 17.4759C10.0596 21.6818 10.0596 27.6813 10.0596 39.6805V41.9614C10.0596 53.9605 10.0596 59.9601 13.1153 64.1659C14.1022 65.5242 15.2967 66.7188 16.655 67.7056C20.8609 70.7614 26.8604 70.7614 38.8596 70.7614H41.1404C53.1396 70.7614 59.1391 70.7614 63.345 67.7056C64.7033 66.7188 65.8978 65.5242 66.8847 64.1659C69.9404 59.9601 69.9404 53.9605 69.9404 41.9614V39.6805C69.9404 27.6813 69.9404 21.6818 66.8847 17.4759C65.8978 16.1176 64.7033 14.9231 63.345 13.9362C59.1391 10.8805 53.1396 10.8805 41.1404 10.8805H38.8596C26.8604 10.8805 20.8609 10.8805 16.655 13.9362C15.2967 14.9231 14.1022 16.1176 13.1153 17.4759ZM38.0531 33.4895C38.0531 34.8563 39.7101 35.7264 42.7339 36.8445C48.4088 38.8739 51.9293 41.2766 51.9293 47.0343C51.9293 50.5137 50.728 53.206 48.4085 55.0286C46.3375 56.6854 43.2723 57.5551 39.5859 57.5551C34.9463 57.5551 30.4728 56.1469 28.0706 54.78L29.3131 47.0343C32.1301 48.6911 36.4375 49.975 39.0472 49.975C41.1594 49.975 42.3196 49.1881 42.3196 47.8212C42.3196 46.413 41.1183 45.5017 37.5147 44.2175C31.9228 42.1879 28.4848 39.7854 28.4848 34.1522C28.4848 31.0456 29.6029 28.4773 31.7572 26.6963C33.8282 24.9979 36.7278 24.0868 40.207 24.0868C45.1361 24.0868 48.6983 25.4536 50.4382 26.2821L49.1956 33.9449C47.0002 32.8683 43.8108 31.6669 40.7042 31.6669C39.0058 31.6669 38.0531 32.3293 38.0531 33.4895Z" fill="#A0A3A8"></path></svg>
+                            </div>
+                            <div class="p-5 flex flex-col gap-2 border-t border-[#2E3033]">
+                                <h4 class="text-[#E6E8EB] text-lg font-semibold">Stripe Webhooks</h4>
+                                <p class="text-sm text-[#A0A3A8]">Handling signed Stripe Webhooks with Edge Functions.</p>
+                            </div>
+                            <div class="p-5 pt-0 mt-auto">
+                                <div class="text-sm text-[#A0A3A8] group-hover:text-white transition-colors duration-200 flex items-center gap-2">
+                                    <span>View Template</span>
+                                    <div class="relative w-4 h-4 overflow-hidden">
+                                        <svg class="absolute transition-transform duration-300 transform group-hover:translate-x-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                                        <svg class="absolute transition-transform duration-300 transform -translate-x-4 group-hover:translate-x-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Built-in Observability Section -->
+        <section id="observability" class="container relative mx-auto px-6 py-16 md:py-24 border-t border-[#2E3033] scroll-reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#E6E8EB] mb-8 lg:mb-12">Built-in observability</h2>
+            <div id="tabs-container" class="flex flex-col md:flex-row gap-4 h-auto md:h-[500px]">
+                
+                <!-- Tab 1: Realtime Logs -->
+                <button data-tab="1" role="tab" aria-selected="true" class="observability-tab cursor-pointer flex-[2] text-white">
+                    <div class="dx-card rounded-xl h-full p-6 flex flex-col justify-between">
+                         <div>
+                            <h3 class="font-mono text-sm uppercase">Realtime logs</h3>
+                            <p class="tab-content text-sm text-[#A0A3A8] mt-2 opacity-100">Stream logs to the dashboard in realtime. Logs are populated with rich metadata to help debugging.</p>
+                        </div>
+                        <div class="tab-content mt-4 h-[300px] overflow-hidden relative opacity-100">
+                             <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1F26] to-transparent z-10"></div>
+                             <ul class="font-mono text-xs">
+                                <li class="flex gap-4 items-center py-2 border-b border-[#2E3033]"><span class="text-[#A0A3A8]">17 Sep 14:21:06</span><span class="inline-flex items-center bg-gray-700 text-gray-300 border border-gray-600 px-2 py-0.5 text-xs rounded">200</span><span class="w-10">POST</span><span>4c27...c700</span></li>
+                                <li class="flex gap-4 items-center py-2 border-b border-[#2E3033]"><span class="text-[#A0A3A8]">17 Sep 13:47:46</span><span class="inline-flex items-center bg-gray-700 text-gray-300 border border-gray-600 px-2 py-0.5 text-xs rounded">200</span><span class="w-10">GET</span><span>d3a2...c6d3</span></li>
+                                <li class="flex gap-4 items-center py-2 border-b border-[#2E3033]"><span class="text-[#A0A3A8]">17 Sep 13:31:06</span><span class="inline-flex items-center bg-red-800 text-red-300 border border-red-700 px-2 py-0.5 text-xs rounded">500</span><span class="w-10">POST</span><span>2e88...a856</span></li>
+                                <li class="flex gap-4 items-center py-2 border-b border-[#2E3033]"><span class="text-[#A0A3A8]">17 Sep 13:14:26</span><span class="inline-flex items-center bg-gray-700 text-gray-300 border border-gray-600 px-2 py-0.5 text-xs rounded">200</span><span class="w-10">GET</span><span>85a4...0e28</span></li>
+                             </ul>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Tab 2: Query Logs -->
+                <button data-tab="2" role="tab" aria-selected="false" class="observability-tab cursor-pointer flex-1 text-[#A0A3A8]">
+                     <div class="dx-card rounded-xl h-full p-6 flex flex-col justify-between">
+                         <div>
+                            <h3 class="font-mono text-sm uppercase">Query Logs</h3>
+                            <p class="tab-content text-sm text-[#A0A3A8] mt-2 opacity-0">Get deeper insights by writing SQL queries on function logs.</p>
+                        </div>
+                        <div class="tab-content mt-4 h-[300px] overflow-hidden relative opacity-0">
+                           <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1F26] to-transparent z-10"></div>
+                             <ul class="font-mono text-xs">
+                                <li class="flex gap-4 items-center py-2 border-b border-[#2E3033]"><span class="text-[#A0A3A8]">14:21:06</span><span class="text-blue-400">INFO</span><span class="text-white">booted (time: 91ms)</span></li>
+                                <li class="flex gap-4 items-center py-2 border-b border-[#2E3033]"><span class="text-[#A0A3A8]">13:47:46</span><span class="text-green-400">LOG</span><span class="text-white">Function up and running</span></li>
+                             </ul>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Tab 3: Metrics -->
+                <button data-tab="3" role="tab" aria-selected="false" class="observability-tab cursor-pointer flex-1 text-[#A0A3A8]">
+                    <div class="dx-card rounded-xl h-full p-6 flex flex-col justify-between">
+                         <div>
+                            <h3 class="font-mono text-sm uppercase">Metrics</h3>
+                            <p class="tab-content text-sm text-[#A0A3A8] mt-2 opacity-0">Dashboards show the health of your functions at all times.</p>
+                        </div>
+                        <div class="tab-content mt-4 h-full w-full overflow-hidden relative opacity-0">
+                           <svg width="100%" height="100%" viewBox="0 0 200 100" class="absolute bottom-0 left-0">
+                                <defs>
+                                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stop-color="#22c55e" stop-opacity="0.4"/>
+                                        <stop offset="95%" stop-color="#22c55e" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 0 80 C 20 60, 40 90, 60 70 S 100 20, 120 50 S 160 90, 180 60 L 200 70 V 100 H 0 Z" fill="url(#chartGradient)" />
+                                <path d="M 0 80 C 20 60, 40 90, 60 70 S 100 20, 120 50 S 160 90, 180 60 L 200 70" stroke="#22c55e" stroke-width="2" fill="none" />
+                            </svg>
+                        </div>
+                    </div>
+                </button>
+
+            </div>
+        </section>
+
+        <!-- Integrates Seamlessly Section -->
+        <section id="integrations" class="container relative mx-auto px-6 py-16 md:py-24 border-t border-[#2E3033] scroll-reveal">
+             <h2 class="text-3xl md:text-4xl font-bold text-[#E6E8EB]">Integrates seamlessly with the Supabase ecosystem</h2>
+             <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 mt-8 lg:mt-12">
+                <!-- Left: Tab navigation -->
+                <div id="integration-tabs-nav" role="tablist" aria-label="Ecosystem Integrations" class="lg:w-1/3 flex flex-col items-start gap-1">
+                    <button id="integration-tab-1" data-target="1" role="tab" aria-selected="true" aria-controls="integration-panel-1" class="integration-tab group w-full text-left text-lg py-4">
+                        <h3 class="font-mono text-sm uppercase">Zero configuration</h3>
+                        <p class="text-[#A0A3A8] text-sm mt-2 overflow-hidden max-h-0">Pre-populated environment variables required to access your supabase project.</p>
+                        <div class="relative w-full h-[1px] bg-[#2E3033] mt-4 rounded-full overflow-hidden">
+                            <div class="integration-tab-underline absolute inset-0 w-full bg-white h-full"></div>
+                        </div>
+                    </button>
+                    <button id="integration-tab-2" data-target="2" role="tab" aria-selected="false" aria-controls="integration-panel-2" class="integration-tab group w-full text-left text-lg py-4">
+                        <h3 class="font-mono text-sm uppercase">Connect to your database</h3>
+                        <p class="text-[#A0A3A8] text-sm mt-2 overflow-hidden max-h-0">Connect to your Postgres database from an Edge Function by using the supabase-js client.</p>
+                        <div class="relative w-full h-[1px] bg-[#2E3033] mt-4 rounded-full overflow-hidden">
+                            <div class="integration-tab-underline absolute inset-0 w-full bg-white h-full"></div>
+                        </div>
+                    </button>
+                    <button id="integration-tab-3" data-target="3" role="tab" aria-selected="false" aria-controls="integration-panel-3" class="integration-tab group w-full text-left text-lg py-4">
+                        <h3 class="font-mono text-sm uppercase">Trigger via webhook</h3>
+                        <p class="text-[#A0A3A8] text-sm mt-2 overflow-hidden max-h-0">Database Webhooks allow you to send real-time data from your database to another system.</p>
+                         <div class="relative w-full h-[1px] bg-[#2E3033] mt-4 rounded-full overflow-hidden">
+                            <div class="integration-tab-underline absolute inset-0 w-full bg-white h-full"></div>
+                        </div>
+                    </button>
+                     <button id="integration-tab-4" data-target="4" role="tab" aria-selected="false" aria-controls="integration-panel-4" class="integration-tab group w-full text-left text-lg py-4">
+                        <h3 class="font-mono text-sm uppercase">Works with Supabase Auth</h3>
+                        <p class="text-[#A0A3A8] text-sm mt-2 overflow-hidden max-h-0">Edge Functions are designed to work seamlessly with Supabase Auth.</p>
+                         <div class="relative w-full h-[1px] bg-[#2E3033] mt-4 rounded-full overflow-hidden">
+                            <div class="integration-tab-underline absolute inset-0 w-full bg-white h-full"></div>
+                        </div>
+                    </button>
                 </div>
-                <div class="text-center xl:text-left">
-                    <h2 class="h2">Pronto para começar a construir?</h2>
-                    <div class="flex flex-col sm:flex-row items-center justify-center xl:justify-start gap-4 mt-8">
-                        <a href="#" class="w-full sm:w-auto px-6 py-3 font-medium text-white bg-brand-blue rounded-md hover:opacity-90 transition-transform hover:scale-105">Comece Gratuitamente</a>
-                        <a href="#" class="w-full sm:w-auto px-6 py-3 font-medium text-dark-text-primary bg-dark-card rounded-md hover:bg-dark-border transition-transform hover:scale-105">Fale com Vendas</a>
+                <!-- Right: Tab content -->
+                <div class="relative lg:w-2/3 min-h-[400px]">
+                    <div id="integration-tabs-content" class="relative w-full h-full">
+                        <div id="integration-panel-1" data-content="1" role="tabpanel" aria-labelledby="integration-tab-1" class="integration-tab-content absolute w-full h-full">
+                             <div class="relative rounded-xl shadow-lg p-2 pt-0 w-full h-full bg-[#1C1F26] border border-[#2E3033] flex flex-col">
+                                <div class="w-full px-4 py-3 relative flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-[#2E3033] rounded-full"></div><div class="w-3 h-3 bg-[#2E3033] rounded-full"></div><div class="w-3 h-3 bg-[#2E3033] rounded-full"></div>
+                                </div>
+                                <div class="h-full w-full rounded-lg bg-[#0D1116] p-4 text-sm font-mono overflow-auto"><pre><code class="language-js">const supabase = createClient(
+  Deno.env.get('SUPABASE_URL'),
+  Deno.env.get('SUPABASE_ANON_KEY')
+)</code></pre></div>
+                            </div>
+                        </div>
+                        <div id="integration-panel-2" data-content="2" role="tabpanel" aria-labelledby="integration-tab-2" class="integration-tab-content absolute w-full h-full">
+                            <div class="relative rounded-xl shadow-lg p-2 pt-0 w-full h-full bg-[#1C1F26] border border-[#2E3033] flex flex-col">
+                                <div class="w-full px-4 py-3 relative flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-[#2E3033] rounded-full"></div><div class="w-3 h-3 bg-[#2E3033] rounded-full"></div><div class="w-3 h-3 bg-[#2E3033] rounded-full"></div>
+                                </div>
+                                <div class="h-full w-full rounded-lg bg-[#0D1116] p-4 text-sm font-mono overflow-auto"><pre><code class="language-js">const { data, error } = await supabase
+  .from('countries')
+  .select('*')</code></pre></div>
+                            </div>
+                        </div>
+                        <div id="integration-panel-3" data-content="3" role="tabpanel" aria-labelledby="integration-tab-3" class="integration-tab-content absolute w-full h-full">
+                             <div class="relative rounded-xl shadow-lg p-2 pt-0 w-full h-full bg-[#1C1F26] border border-[#2E3033] flex flex-col">
+                                <div class="w-full px-4 py-3 relative flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-[#2E3033] rounded-full"></div><div class="w-3 h-3 bg-[#2E3033] rounded-full"></div><div class="w-3 h-3 bg-[#2E3033] rounded-full"></div>
+                                </div>
+                                <div class="h-full w-full rounded-lg bg-[#0D1116] p-4 text-sm font-mono overflow-auto"><pre><code class="language-sql">create trigger "my_webhook" after insert
+on "public"."my_table" for each row
+execute function "supabase_functions"."http_request"(
+  'http://localhost:3000', 'POST',
+  '{"Content-Type":"application/json"}',
+  '{}', '1000'
+);</code></pre></div>
+                            </div>
+                        </div>
+                         <div id="integration-panel-4" data-content="4" role="tabpanel" aria-labelledby="integration-tab-4" class="integration-tab-content absolute w-full h-full">
+                             <div class="relative rounded-xl shadow-lg p-2 pt-0 w-full h-full bg-[#1C1F26] border border-[#2E3033] flex flex-col">
+                                <div class="w-full px-4 py-3 relative flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-[#2E3033] rounded-full"></div><div class="w-3 h-3 bg-[#2E3033] rounded-full"></div><div class="w-3 h-3 bg-[#2E3033] rounded-full"></div>
+                                </div>
+                                <div class="h-full w-full rounded-lg bg-[#0D1116] p-4 text-sm font-mono overflow-auto"><pre><code class="language-js">// Get the session or user object
+const { data } = await supabase.auth.getUser()
+const user = data.user</code></pre></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
              </div>
         </section>
-    </main>
 
-    {% include footer.html %}
-    {% include scripts.html %}
+        <!-- Design System Section -->
+        <section class="container relative mx-auto px-6 py-16 md:py-24 border-t border-[#2E3033] scroll-reveal">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#E6E8EB]">Design System</h2>
+            <p class="text-[#A0A3A8] lg:w-1/2 mt-4">The core color palette of the Pitchutcha platform, ensuring consistency and a high-quality user experience.</p>
+            <div class="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div class="space-y-3">
+                    <div class="w-full aspect-square rounded-lg" style="background-color: var(--color-background);"></div>
+                    <div>
+                        <p class="font-semibold text-white">Background</p>
+                        <p class="font-mono text-sm text-[#A0A3A8]">#0D1116</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="w-full aspect-square rounded-lg" style="background-color: var(--color-container);"></div>
+                    <div>
+                        <p class="font-semibold text-white">Container</p>
+                        <p class="font-mono text-sm text-[#A0A3A8]">#1C1F26</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="w-full aspect-square rounded-lg flex items-center justify-center" style="background-color: var(--color-text-main);">
+                         <span class="text-black font-bold">Aa</span>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-white">Main Text</p>
+                        <p class="font-mono text-sm text-[#A0A3A8]">#E6E8EB</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                     <div class="w-full aspect-square rounded-lg" style="background-color: var(--color-brand);"></div>
+                    <div>
+                        <p class="font-semibold text-white">Brand</p>
+                        <p class="font-mono text-sm text-[#A0A3A8]">#22c55e</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="w-full aspect-square rounded-lg" style="background-color: var(--color-border);"></div>
+                    <div>
+                        <p class="font-semibold text-white">Border</p>
+                        <p class="font-mono text-sm text-[#A0A3A8]">#2E3033</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Pricing Section -->
+        <section id="pricing" class="container relative mx-auto px-6 py-16 md:py-24 border-t border-[#2E3033] scroll-reveal">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#E6E8EB]">Transparent, usage-based pricing</h2>
+                <p class="text-[#A0A3A8] mt-4">Only pay for what you use. Scale to millions of users without breaking the bank.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12 max-w-5xl mx-auto">
+                <!-- Free Plan -->
+                <div class="dx-card pricing-card rounded-xl p-8 flex flex-col">
+                    <h3 class="text-lg font-semibold text-green-500">Free</h3>
+                    <p class="mt-2 text-4xl font-bold text-white">$0<span class="text-sm font-normal text-[#A0A3A8]">/month</span></p>
+                    <p class="mt-1 text-sm text-[#A0A3A8]">Perfect for hobby projects.</p>
+                    <ul class="mt-8 space-y-4 text-sm text-[#A0A3A8] flex-grow">
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 500,000 Invocations/month</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 2ms average execution time</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 1GB bandwidth</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Community Support</li>
+                    </ul>
+                    <a href="#" class="mt-8 w-full block text-center px-5 py-2.5 text-sm font-semibold text-[#E6E8EB] bg-[#1C1F26] hover:bg-[#2E3033] border border-[#2E3033] rounded-md transition-colors">Start for free</a>
+                </div>
+                <!-- Pro Plan -->
+                <div class="dx-card pricing-card pro-plan rounded-xl p-8 flex flex-col border-2 border-green-500 relative">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">MOST POPULAR</div>
+                    <h3 class="text-lg font-semibold text-green-500">Pro</h3>
+                    <p class="mt-2 text-4xl font-bold text-white">$25<span class="text-sm font-normal text-[#A0A3A8]">/month</span></p>
+                    <p class="mt-1 text-sm text-[#A0A3A8]">For production applications.</p>
+                     <ul class="mt-8 space-y-4 text-sm text-[#A0A3A8] flex-grow">
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 2,000,000 Invocations/month</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 1ms average execution time</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 10GB bandwidth</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Email Support</li>
+                    </ul>
+                    <a href="#" class="mt-8 w-full block text-center px-5 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors">Upgrade to Pro</a>
+                </div>
+                <!-- Enterprise Plan -->
+                <div class="dx-card pricing-card rounded-xl p-8 flex flex-col">
+                    <h3 class="text-lg font-semibold text-green-500">Enterprise</h3>
+                    <p class="mt-2 text-4xl font-bold text-white">Custom</p>
+                    <p class="mt-1 text-sm text-[#A0A3A8]">For large-scale applications.</p>
+                    <ul class="mt-8 space-y-4 text-sm text-[#A0A3A8] flex-grow">
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Unlimited Invocations</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Sub-millisecond execution</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Custom bandwidth</li>
+                        <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Dedicated Support & SLA</li>
+                    </ul>
+                    <a href="#" class="mt-8 w-full block text-center px-5 py-2.5 text-sm font-semibold text-[#E6E8EB] bg-[#1C1F26] hover:bg-[#2E3033] border border-[#2E3033] rounded-md transition-colors">Contact Sales</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Final CTA Section -->
+        <section class="container relative mx-auto px-6 py-16 md:py-24 border-t border-[#2E3033] scroll-reveal">
+             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+                <div class="flex flex-col items-center lg:items-start text-center lg:text-left">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#E6E8EB]">Ready to start building?</h2>
+                    <div class="flex items-center gap-3 mt-8">
+                        <a href="#" class="px-5 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors duration-200">
+                           Start for free
+                        </a>
+                        <a href="#" class="px-5 py-2.5 text-sm font-semibold text-[#E6E8EB] bg-[#1C1F26] hover:bg-[#2E3033] border border-[#2E3033] rounded-md transition-colors duration-200">
+                            Contact Enterprise
+                        </a>
+                    </div>
+                </div>
+                 <div class="w-full">
+                    <div class="grid grid-cols-3 gap-5">
+                        <a href="#" class="group">
+                            <div class="w-full aspect-square bg-[#1C1F26] rounded-xl border border-[#2E3033] p-4 flex items-center justify-center transition-all duration-300 group-hover:border-[#4A4F55] group-hover:scale-105">
+                                 <svg class="w-1/2 h-1/2 text-[#A0A3A8] group-hover:text-white transition-colors duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.18625 8.66531H19.5035V15.331H5.18625V8.66531Z M4 17.0007C4 16.0804 4.7461 15.3343 5.66645 15.3343H18.9984C19.9187 15.3343 20.6648 16.0804 20.6648 17.0007V20.3335C20.6648 21.2539 19.9187 22 18.9984 22H5.66646C4.7461 22 4 21.2539 4 20.3335V17.0007Z M4 3.66646C4 2.7461 4.7461 2 5.66645 2H18.9984C19.9187 2 20.6648 2.7461 20.6648 3.66645V6.99926C20.6648 7.91962 19.9187 8.66572 18.9984 8.66572H5.66646C4.7461 8.66572 4 7.91962 4 6.99926V3.66646Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </a>
+                         <a href="#" class="group">
+                            <div class="w-full aspect-square bg-[#1C1F26] rounded-xl border border-[#2E3033] p-4 flex items-center justify-center transition-all duration-300 group-hover:border-[#4A4F55] group-hover:scale-105">
+                                <svg class="w-1/2 h-1/2 text-[#A0A3A8] group-hover:text-white transition-colors duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.03305 15.8071H12.7252M5.03305 15.8071V18.884H12.7252V15.8071M5.03305 15.8071V12.7302H12.7252V15.8071M15.0419 8.15385V5.07692C15.0419 3.37759 13.6643 2 11.965 2C10.2657 2 8.88814 3.37759 8.88814 5.07692V8.15385M5 11.2307L5 18.9231C5 20.6224 6.37757 22 8.07689 22H15.769C17.4683 22 18.8459 20.6224 18.8459 18.9231V11.2307C18.8459 9.53142 17.4683 8.15385 15.769 8.15385L8.07689 8.15385C6.37757 8.15385 5 9.53142 5 11.2307Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </a>
+                         <a href="#" class="group">
+                            <div class="w-full aspect-square bg-[#1C1F26] rounded-xl border border-[#2E3033] p-4 flex items-center justify-center transition-all duration-300 group-hover:border-[#4A4F55] group-hover:scale-105">
+                                 <svg class="w-1/2 h-1/2 text-[#A0A3A8] group-hover:text-white transition-colors duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.4997 12.1386V9.15811L14.8463 3.53163H6.43717C5.57423 3.53163 4.87467 4.23119 4.87467 5.09413V9.78087M20.4447 9.13199L14.844 3.53125L14.844 7.56949C14.844 8.43243 15.5436 9.13199 16.4065 9.13199L20.4447 9.13199ZM7.12729 9.78087H4.83398C3.97104 9.78087 3.27148 10.4804 3.27148 11.3434V19.1559C3.27148 20.8818 4.67059 22.2809 6.39648 22.2809H18.8965C20.6224 22.2809 22.0215 20.8818 22.0215 19.1559V13.7011C22.0215 12.8381 21.3219 12.1386 20.459 12.1386H10.8032C10.3933 12.1386 9.99969 11.9774 9.70743 11.6899L8.22312 10.2296C7.93086 9.94202 7.53729 9.78087 7.12729 9.78087Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </a>
+                    </div>
+                 </div>
+             </div>
+        </section>
+    </main>
+    
+    <footer class="bg-[#10141A] border-t border-[#2E3033]">
+        <div class="w-full">
+            <div class="container mx-auto px-6 py-10 grid grid-cols-2 md:flex items-center justify-between text-white md:justify-center gap-8 md:gap-16 xl:gap-28 text-sm">
+                <div class="flex flex-col md:flex-row gap-2 md:items-center">We protect your data. <a class="text-green-500 hover:underline" href="#">More on Security</a></div>
+                <ul class="flex flex-col md:flex-row gap-4 md:gap-8 justify-center md:items-center">
+                    <li class="flex items-center gap-2 whitespace-nowrap"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-green-500"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> SOC2 Type 2 <span class="text-[#A0A3A8] hidden sm:inline">Certified</span></li>
+                    <li class="flex items-center gap-2 whitespace-nowrap"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-green-500"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> HIPAA <span class="text-[#A0A3A8] hidden sm:inline">Compliant</span></li>
+                </ul>
+            </div>
+            <div class="w-full h-px bg-gradient-to-r from-transparent via-[#2E3033] to-transparent"></div>
+        </div>
+        <div class="container mx-auto px-6 py-12">
+            <div class="xl:grid xl:grid-cols-6 xl:gap-8">
+                <div class="space-y-8 xl:col-span-2">
+                    <a href="#" class="flex items-center gap-2 text-white font-bold text-2xl" aria-label="Pitchutcha Home">
+                        <svg class="w-8 h-8" aria-hidden="true"><use xlink:href="#pitchutcha-logo"></use></svg>
+                        <span>Pitchutcha</span>
+                    </a>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-[#A0A3A8] hover:text-white transition" aria-label="Twitter"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg></a>
+                        <a href="#" class="text-[#A0A3A8] hover:text-white transition" aria-label="GitHub"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"></path></svg></a>
+                        <a href="#" class="text-[#A0A3A8] hover:text-white transition" aria-label="Discord"><svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.54 5.23a13.3 13.3 0 00-3.31-1.32.08.08 0 00-.09.07l-.42 1.57a11.14 11.14 0 01-5.46 0l-.42-1.57a.08.08 0 00-.09-.07 13.3 13.3 0 00-3.31 1.32.08.08 0 00-.04.08 13.9 13.9 0 00-1.97 6.3c0 .09.04.14.1.18a10.23 10.23 0 003.41 1.63.08.08 0 00.09-.05 8.52 8.52 0 01-.42-1.27.08.08 0 010-.09c.4-.23.78-.49 1.15-.78a.08.08 0 01.1-.01c2.44.91 5.05.91 7.44 0a.08.08 0 01.1.01c.37.29.75.55 1.15.78a.08.08 0 010 .09 8.62 8.62 0 01-.42 1.27.08.08 0 00.09.05 10.23 10.23 0 003.41-1.63.08.08 0 00.1-.18 13.9 13.9 0 00-1.97-6.3.08.08 0 00-.04-.08zM8.04 12.33a1.42 1.42 0 01-1.42-1.42 1.42 1.42 0 011.42-1.42 1.42 1.42 0 011.42 1.42 1.42 1.42 0 01-1.42 1.42zm7.92 0a1.42 1.42 0 01-1.42-1.42 1.42 1.42 0 011.42-1.42 1.42 1.42 0 011.42 1.42c0 .79-.64 1.42-1.42 1.42z"/></svg></a>
+                    </div>
+                </div>
+                <div>
+                    <h6 class="font-semibold text-white">Product</h6>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Database</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Auth</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Functions</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Realtime</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h6 class="font-semibold text-white">Resources</h6>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Support</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">System Status</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Pricing</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h6 class="font-semibold text-white">Developers</h6>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Documentation</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Changelog</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Contributing</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Open Source</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="font-semibold text-white">Company</h6>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">About</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Careers</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Terms</a></li>
+                        <li><a href="#" class="text-[#A0A3A8] hover:text-white transition">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-[#2E3033] pt-8 flex justify-between items-center text-sm">
+                <p class="text-[#A0A3A8]">&copy; 2024 Pitchutcha Inc.</p>
+            </div>
+        </div>
+    </footer>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
+            
+            // Centralized App Initialization
+            function initApp() {
+                // Header Scroll Effect
+                const mainHeader = document.getElementById('main-header');
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 10) {
+                        mainHeader.classList.add('scrolled');
+                    } else {
+                        mainHeader.classList.remove('scrolled');
                     }
                 });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-            const obsTabs = document.querySelectorAll('.obs-tab');
-            obsTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    obsTabs.forEach(t => {
-                        t.classList.remove('flex-[2]', 'bg-dark-card', 'opacity-100');
-                        t.classList.add('flex-1', 'bg-dark-card/50', 'opacity-70');
-                    });
-                    tab.classList.remove('flex-1', 'bg-dark-card/50', 'opacity-70');
-                    tab.classList.add('flex-[2]', 'bg-dark-card', 'opacity-100');
-                });
-            });
-
-            const logFeed = document.getElementById('log-feed');
-            const logTypes = [{ type: '[INFO]', color: 'text-blue-400'}, { type: '[DEPLOY]', color: 'text-green-400'}, { type: '[INVOKE]', color: 'text-purple-400'}, { type: '[ERROR]', color: 'text-red-400'}];
-            function generateRandomCode() { return Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10); }
-            function addLogEntry() {
-                if(!logFeed) return;
-                const randomType = logTypes[Math.floor(Math.random() * logTypes.length)];
-                const timestamp = new Date().toLocaleTimeString();
-                const logCode = generateRandomCode();
-                const entry = document.createElement('div');
-                entry.className = 'log-entry mb-1';
-                entry.innerHTML = `<span class="text-dark-text-secondary/70">${timestamp}</span> <span class="${randomType.color}">${randomType.type}</span> <span class="text-dark-text-primary">${logCode}</span>`;
-                logFeed.prepend(entry);
-                if (logFeed.children.length > 50) { logFeed.removeChild(logFeed.lastChild); }
-            }
-            setInterval(addLogEntry, 2000);
-
-            const integrationTabs = document.querySelectorAll('.integration-tab');
-            const codeSnippetsContainer = document.getElementById('code-snippets');
-            const codeSnippets = {
-                '1': `<pre id="code-snippet-1" class="syntax-highlighter"><code><span class="token-comment">// Variáveis de ambiente são populadas automaticamente</span>\n<span class="token-keyword">console</span><span class="token-punctuation">.</span><span class="token-function">log</span><span class="token-punctuation">(</span><span class="token-string">"SUPABASE_URL:"</span><span class="token-punctuation">,</span> Deno<span class="token-punctuation">.</span>env<span class="token-punctuation">.</span><span class="token-function">get</span><span class="token-punctuation">(</span><span class="token-string">'SUPABASE_URL'</span><span class="token-punctuation">)</span><span class="token-punctuation">)</span><span class="token-punctuation">;</span></code></pre>`,
-                '2': `<pre id="code-snippet-2" class="syntax-highlighter"><code><span class="token-comment">// Conecte-se ao seu banco de dados Postgres</span>\n<span class="token-keyword">import</span> { createClient } <span class="token-keyword">from</span> <span class="token-string">'@supabase/supabase-js'</span><span class="token-punctuation">;</span>\n\n<span class="token-keyword">const</span> supabase = <span class="token-function">createClient</span><span class="token-punctuation">(...);</span></code></pre>`,
-                '3': `<pre id="code-snippet-3" class="syntax-highlighter"><code><span class="token-comment">// Acione funções a partir de eventos do banco de dados</span>\n<span class="token-keyword">CREATE TRIGGER</span> on_new_user...\n<span class="token-keyword">EXECUTE PROCEDURE</span> supabase_functions.http_request(...)</span></code></pre>`
-            };
-            
-            function updateIntegrationContent(tabId) {
-                if (codeSnippetsContainer) {
-                    codeSnippetsContainer.innerHTML = codeSnippets[tabId];
-                    const copyBtn = document.querySelector('#integration-content .copy-button');
-                    if(copyBtn) copyBtn.dataset.clipboardTarget = `#code-snippet-${tabId}`;
-                }
-            }
-
-            updateIntegrationContent('1');
-
-            integrationTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.dataset.tab;
-                    integrationTabs.forEach(t => {
-                        t.classList.remove('border-brand-blue', 'text-dark-text-primary');
-                        t.classList.add('border-dark-border', 'text-dark-text-secondary');
-                        t.querySelector('p').classList.add('hidden');
-                    });
-                    tab.classList.add('border-brand-blue', 'text-dark-text-primary');
-                    tab.classList.remove('text-dark-text-secondary');
-                    tab.querySelector('p').classList.remove('hidden');
-                    updateIntegrationContent(tabId);
-                });
-            });
-
-            document.body.addEventListener('click', function(e) {
-                const button = e.target.closest('.copy-button');
-                if (button) {
-                    const selector = button.dataset.clipboardTarget;
-                    const textToCopy = document.querySelector(selector).innerText;
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        const originalText = button.querySelector('span').textContent;
-                        button.querySelector('span').textContent = 'Copiado!';
-                        setTimeout(() => { button.querySelector('span').textContent = "Copiar"; }, 2000);
+                // Mobile Menu
+                const mobileMenuButton = document.getElementById('mobile-menu-button');
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenuButton) {
+                    mobileMenuButton.addEventListener('click', () => {
+                        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+                        mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+                        mobileMenu.classList.toggle('hidden');
+                        document.getElementById('menu-open-icon').classList.toggle('hidden');
+                        document.getElementById('menu-close-icon').classList.toggle('hidden');
                     });
                 }
-            });
+
+                // Announcement Banner
+                const announcementBanner = document.getElementById('announcement-banner');
+                const closeBannerButton = document.getElementById('close-banner-button');
+                if (closeBannerButton) {
+                    closeBannerButton.addEventListener('click', () => {
+                        announcementBanner.style.display = 'none';
+                    });
+                }
+                
+                // Copy to Clipboard Utility
+                const setupCopyButton = (buttonId, textSelector, feedbackSelector) => {
+                    const copyButton = document.getElementById(buttonId);
+                    const textElement = document.querySelector(textSelector);
+                    const feedbackElement = document.querySelector(feedbackSelector);
+                    if (!copyButton || !textElement || !feedbackElement) return;
+                    
+                    copyButton.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const textToCopy = textElement.textContent.trim();
+                        navigator.clipboard.writeText(textToCopy).then(() => {
+                            feedbackElement.style.opacity = '1';
+                            setTimeout(() => { feedbackElement.style.opacity = '0'; }, 2000);
+                        }).catch(err => console.error('Failed to copy: ', err));
+                    });
+                };
+                setupCopyButton('copy-button-hero', '.copy-text-hero', '.copy-feedback-hero');
+                setupCopyButton('copy-button-ci', '.code-snippet-ci', '.copy-feedback-ci');
+                
+                // Interactive Globe
+                const globeParent = document.getElementById('globe-parent');
+                const globeContainer = document.getElementById('globe-container');
+                if (globeParent && globeContainer) {
+                    globeParent.addEventListener('mousemove', (e) => {
+                        const rect = globeParent.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+                        const rotateX = (y - centerY) / 20;
+                        const rotateY = -(x - centerX) / 20;
+                        globeContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+                    });
+                    globeParent.addEventListener('mouseleave', () => {
+                        globeContainer.style.transform = 'none';
+                    });
+                }
+                
+                // Scroll-triggered animations for sections
+                const scrollObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
+
+                // Observability Tabs Logic
+                const tabsContainer = document.getElementById('tabs-container');
+                if (tabsContainer) {
+                    const tabs = tabsContainer.querySelectorAll('.observability-tab');
+                    tabs.forEach(tab => {
+                        tab.addEventListener('click', () => {
+                            tabs.forEach(t => {
+                                t.style.flexGrow = '1';
+                                t.classList.add('text-[#A0A3A8]');
+                                t.querySelector('.tab-content').style.opacity = '0';
+                                t.setAttribute('aria-selected', 'false');
+                            });
+                            tab.style.flexGrow = '2';
+                            tab.classList.remove('text-[#A0A3A8]');
+                            tab.querySelector('.tab-content').style.opacity = '1';
+                            tab.setAttribute('aria-selected', 'true');
+                        });
+                    });
+                }
+                
+                // Integration Tabs Logic
+                const integrationTabsNav = document.getElementById('integration-tabs-nav');
+                if(integrationTabsNav) {
+                    const integrationTabs = integrationTabsNav.querySelectorAll('.integration-tab');
+                    const integrationContents = document.querySelectorAll('.integration-tab-content');
+
+                    const activateTab = (tab) => {
+                        const targetId = tab.dataset.target;
+                        integrationTabs.forEach(t => {
+                            t.classList.remove('active', 'text-white');
+                            t.classList.add('text-[#A0A3A8]');
+                            t.setAttribute('aria-selected', 'false');
+                            const desc = t.querySelector('p');
+                            if (desc) desc.style.maxHeight = '0';
+                        });
+                        
+                        tab.classList.add('active', 'text-white');
+                        tab.classList.remove('text-[#A0A3A8]');
+                        tab.setAttribute('aria-selected', 'true');
+                        const desc = tab.querySelector('p');
+                        if (desc) desc.style.maxHeight = desc.scrollHeight + "px";
+
+                        integrationContents.forEach(content => {
+                             setTimeout(() => {
+                                const isTarget = content.dataset.content === targetId;
+                                content.classList.toggle('opacity-100', isTarget);
+                                content.classList.toggle('visible', isTarget);
+                                content.classList.toggle('opacity-0', !isTarget);
+                                content.classList.toggle('invisible', !isTarget);
+                            }, 50);
+                        });
+                    };
+                    
+                    integrationTabs.forEach(tab => {
+                        tab.addEventListener('click', () => activateTab(tab));
+                    });
+
+                    if (integrationTabs.length > 0) {
+                        activateTab(integrationTabs[0]); // Activate the first tab on load
+                    }
+                }
+            }
             
-            const cards = document.querySelectorAll('.card-glow');
-            cards.forEach(card => {
-                card.addEventListener('mousemove', e => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
-                });
-            });
+            initApp();
         });
     </script>
 </body>
 </html>
+
