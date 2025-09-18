@@ -1,24 +1,13 @@
 ---
 ---
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
-    <meta charset="utf-8"/>
-    <title>Pitchutcha - Resultados da Busca</title>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="base-url" content="{{ '/' | relative_url }}">
-    <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
-    <meta name="description" content="Encontre artigos e tópicos sobre Ciência da Computação no Pitchutcha.">
-    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
-    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
+    {% include head.html %}
 </head>
 <body class="bg-[var(--background-primary)] text-[var(--text-primary)]">
-    <div class="flex min-h-screen flex-col" style='font-family: Inter, "Noto Sans", sans-serif;'>
-        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+    <div class="flex min-h-screen flex-col">
+        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]/80 backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
                 <div class="flex items-center gap-8">
                     <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
@@ -40,7 +29,7 @@
         </header>
         <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <aside class="md:col-span-1">
+                <aside class="md:col-span-1 md:sticky top-24 self-start">
                     <h2 class="text-lg font-semibold mb-4 text-[var(--text-primary)]">Filtrar Resultados</h2>
                     <div class="space-y-6">
                         <div>
@@ -69,6 +58,11 @@
                         <p id="results-count" class="text-sm text-[var(--text-secondary)]">Carregando artigos...</p>
                     </div>
                     <div id="results-container" class="space-y-6"></div>
+                    <div id="no-results-message" class="hidden text-center py-16">
+                        <span class="material-symbols-outlined text-6xl text-[var(--text-secondary)]">search_off</span>
+                        <h3 class="mt-4 text-xl font-semibold text-[var(--text-primary)]">Nenhum resultado encontrado</h3>
+                        <p class="mt-2 text-[var(--text-secondary)]">Tente uma busca diferente ou explore nossas categorias.</p>
+                    </div>
                 </div>
             </div>
         </main>
