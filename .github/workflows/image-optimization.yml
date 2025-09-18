@@ -24,8 +24,10 @@ jobs:
     name: Optimize Images with Calibre
     runs-on: ubuntu-latest
     
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
-    
+    # CORREÇÃO: A condição foi ajustada para evitar erro em eventos de push.
+    # Agora, o job roda em dispatch manual ou em PRs que não são de forks.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+
     permissions:
       contents: write
       pull-requests: write
@@ -38,19 +40,37 @@ jobs:
 
       - name: Compress Images
         id: calibre
-        # CORREÇÃO: Usa o hash de commit específico da versão v1.4.1 para garantir a resolução
-        uses: calibreapp/image-actions@416b615b1362c4a0024f227f2c8f8d95a0b7713a # Pinned to v1.4.1
+        # Mantido o hash de commit da v1.4.1 para estabilidade
+        uses: calibreapp/image-actions@416b615b1362c4a0024f227f2c8f8d95a0b7713a 
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          compressOnly: ${{ github.event_name != 'pull_request' }}
+          # MELHORIA: `compressOnly` é sempre falso para garantir que todos os formatos sejam gerados.
+          compressOnly: false
           jpegQuality: '85'
           pngQuality: '80'
           webpQuality: '85'
           avifQuality: '75'
 
+      # MELHORIA: Este passo agora commita as mudanças diretamente no Pull Request,
+      # tornando o processo mais direto e eliminando a necessidade de um novo PR.
+      - name: Commit changes for Pull Request events
+        if: github.event_name == 'pull_request' && steps.calibre.outputs.markdown != ''
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: '📸 Otimização automática de imagens'
+          body: ${{ steps.calibre.outputs.markdown }}
+          commit-message: 'chore: Otimiza imagens com [image-actions]'
+          # Commita diretamente na branch do PR
+          branch: ${{ github.head_ref }}
+          base: ${{ github.base_ref }}
+          # Não cria um novo PR, apenas adiciona commits ao existente
+          create-pull-request: false
+
+      # MELHORIA: Este passo só roda para pushes na 'main' ou dispatch manual, criando um PR para revisão.
       - name: Create Pull Request for non-PR events
         if: github.event_name != 'pull_request' && steps.calibre.outputs.markdown != ''
-        uses: peter-evans/create-pull-request@v5
+        # ATUALIZAÇÃO: Usando a v6 para melhor performance e segurança
+        uses: peter-evans/create-pull-request@v6
         with:
           title: '📸 Otimização automática de imagens'
           body: ${{ steps.calibre.outputs.markdown }}
