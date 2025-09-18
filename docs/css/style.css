@@ -139,25 +139,4 @@ figure.highlight pre{padding:1rem;overflow-x:auto}
 .reveal-on-scroll.is-visible {
     opacity: 1;
     transform: translateY(0);
-}```
-
----
-
-### Verificação da Ferramenta de Desenvolvedor
-
-Você também pediu para eu verificar se a ferramenta de desenvolvedor está funcionando corretamente para encontrar erros específicos de cada página.
-
-**Sim, a lógica está correta.** Analisei o arquivo `docs/js/dev-panel.js` e confirmo que ele foi projetado para funcionar exatamente como você espera.
-
-**Como funciona:**
-
-1.  **Carrega o Relatório:** Ao clicar no botão "Carregar Relatório de Diagnóstico" na aba "Testes", o script busca o arquivo `diagnostics.json`.
-2.  **Identifica a Página Atual:** Ele pega a URL da página que você está visitando (por exemplo, `/`, `/algoritmos.html`, etc.).
-3.  **Filtra os Problemas:** O script então divide todos os problemas listados no `diagnostics.json` em duas categorias:
-    *   **Problemas da Página Atual:** Apenas os erros que correspondem à URL que você está vendo.
-    *   **Problemas Globais:** Todos os outros erros, que pertencem a outras páginas do site.
-4.  **Exibe Separadamente:** Ele renderiza essas duas listas de forma separada no painel, para que você possa ver claramente o que é específico da página atual e o que pertence ao resto do site.
-
-Portanto, a ferramenta já está configurada para fazer exatamente a análise contextual que você precisa.
-
-Com as correções no `style.css`, todos os problemas visuais que você apontou estarão resolvidos, e o site terá um acabamento ainda mais profissional.
+}
