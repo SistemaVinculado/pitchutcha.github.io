@@ -25,9 +25,6 @@ layout: null
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-    <style>
-        .logo-carousel-container{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(to right, transparent, black 20%, black 80%, transparent);mask-image:linear-gradient(to right, transparent, black 20%, black 80%, transparent)}.logo-carousel-track{display:flex;width:max-content;animation:scroll-left 60s linear infinite}.logo-carousel-track:hover{animation-play-state:paused}.logo-carousel-item{flex-shrink:0;width:auto;display:flex;justify-content:center;align-items:center;padding:0 1.5rem}.logo-carousel-item img{height:48px;width:auto;filter:brightness(0) invert(1) opacity(0.6);transition:all 0.2s ease-in-out}.logo-carousel-item img:hover{filter:brightness(0) invert(1) opacity(1)}@keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}body{background-color:var(--background-primary);position:relative;overflow-x:hidden}#progress-bar-container{position:fixed;top:4rem;left:0;width:100%;height:4px;background-color:transparent;z-index:19}#progress-bar{height:4px;background-color:var(--primary-color);width:0%;transition:width 0.1s linear}.global-banner{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.5rem;background-color:var(--cards-elements);border-bottom:1px solid var(--borders);color:var(--text-secondary);font-size:0.9rem;width:100%;z-index:10}.global-banner-content strong{color:var(--primary-color);font-weight:600}.global-banner-close{background:none;border:none;color:var(--text-secondary);cursor:pointer;padding:0.25rem;line-height:1}.global-banner-close:hover{color:var(--text-primary)}.banner-hidden{display:none}.code-block-card{background:#1f1f1f;border:1px solid #2a2a2a;display:flex;margin-bottom:70px;padding:16px;width:100%;border-radius:12px}@media screen and (max-width: 768px){.code-block-card{flex-direction:column;gap:20px}}.code-block-left-side{color:#d4d4d4;display:flex;flex-direction:column;gap:8px;margin-right:30px;max-width:240px;flex-shrink:0}@media screen and (max-width: 768px){.code-block-left-side{margin-right:0;max-width:unset}}.code-block-title{color:#d4d4d4;font-size:1.5rem;font-weight:300;margin-bottom:8px}.code-block-description{color:#8c8c8c;font-size:0.9rem;line-height:1.4}.code-block-time-estimate{align-items:center;display:flex;gap:4px;color:#8c8c8c;font-size:0.9rem;margin-top:8px}.code-block-time-estimate .material-symbols-outlined{font-size:1.2rem;vertical-align:middle}.code-block-button-container{margin-top:auto;padding-top:16px}.custom-button-small{align-items:center;background:#323232;border:1px solid #3e3e3e;border-radius:12px;color:#d4d4d4;cursor:pointer;display:inline-flex;gap:8px;height:36px;opacity:.9;padding:8px 12px;text-decoration:none;transition:background-color .2s ease-in-out,opacity .2s ease-in-out;font-size:0.875rem;font-weight:500}.custom-button-small:hover{background:#3c3c3c;border-color:#3e3e3e;opacity:1}.custom-button-small .material-symbols-outlined{font-size:1.1rem;vertical-align:middle}.code-block-right-side{display:flex;min-width:0;width:100%;flex-direction:column}.code-tabs-buttons{display:flex;border-bottom:1px solid #2a2a2a}.tab-button{padding:0.75rem 1rem;cursor:pointer;background-color:transparent;border:none;border-bottom:3px solid transparent;color:#8c8c8c;font-weight:500;margin-bottom:-1px;transition:color 0.2s, border-color 0.2s}.tab-button:hover{color:#d4d4d4}.tab-button.active{color:#d4d4d4;border-bottom-color:#d4d4d4}.code-tab-panel{display:none}.code-tab-panel.active{display:block}.code-block-tab-content{height:350px;overflow:auto;background:#1f1f1f;padding:1.25rem;border-top:1px solid #2a2a2a;border-radius:0 0 0.5rem 0.5rem}.code-block-tab-content pre{padding:0!important;margin:0!important;background:transparent!important;overflow:visible}.code-block-tab-content code.hljs,.hljs-ln-numbers{font-family:'JetBrains Mono',monospace!important;font-size:0.875rem!important;line-height:1.5rem!important}.skip-to-content{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}.skip-to-content:focus{left:50%;transform:translateX(-50%);top:1rem;width:auto;height:auto;padding:0.75rem 1.25rem;background-color:var(--primary-color);color:white;font-weight:700;border-radius:0.5rem;z-index:100;text-decoration:none;overflow:visible}.paradigm-tab-button{padding:1rem 0;border-bottom:2px solid transparent;transition:all 0.2s ease-in-out;color:var(--text-secondary)}.paradigm-tab-button.active{color:var(--text-primary);border-bottom-color:var(--primary-color)}.paradigm-tab-panel{display:none}.paradigm-tab-panel.active{display:block;animation:fadeIn 0.5s ease-in-out}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.paradigm-image{transition:opacity 0.4s ease-in-out;position:absolute;width:100%;height:100%;object-fit:cover;border-radius:0.5rem}
-    </style>
 </head>
 <body class="text-[var(--text-primary)]">
     <div id="progress-bar-container"><div id="progress-bar"></div></div>
@@ -66,7 +63,7 @@ layout: null
                 <p class="mt-6 text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
                     Guias aprofundados, artigos e exemplos de código sobre Algoritmos e Estruturas de Dados para construir software de alta performance.
                 </p>
-                <a href="{{ '/docs.html' | relative_url }}" class="mt-10 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">
+                <a href="{{ '/docs.html' | relative_url }}" class="cta-button mt-10 bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-all hover:scale-105 inline-block">
                     Explorar a Documentação &rarr;
                 </a>
             </div>
@@ -74,28 +71,30 @@ layout: null
 
         <!-- SEÇÃO DE LOGOS -->
         <div class="bg-[var(--background-primary)] py-12 md:py-20">
-            <h3 class="text-center text-lg text-[var(--text-secondary)] mb-8">Com a confiança de profissionais e estudantes de:</h3>
-            <div class="logo-carousel-container">
-                <div class="logo-carousel-track">
-                    {% assign logos = "google,asus,apple,meta,bmw,porsche,intel,nvidia,openai,3m,fifa,themoviedatabase,csswizardry,walmart,blender,spotify,amd" | split: "," %}
-                    {% for i in (1..2) %}
-                        {% for logo_name in logos %}
-                            <div class="logo-carousel-item">
-                                <img src="{{ '/assets/logos/' | append: logo_name | append: '.svg' | relative_url }}" alt="{{ logo_name | capitalize }} logo" loading="lazy">
-                            </div>
+            <div class="reveal-on-scroll">
+                <h3 class="text-center text-lg text-[var(--text-secondary)] mb-8">Com a confiança de profissionais e estudantes de:</h3>
+                <div class="logo-carousel-container">
+                    <div class="logo-carousel-track">
+                        {% assign logos = "google,asus,apple,meta,bmw,porsche,intel,nvidia,openai,3m,fifa,themoviedatabase,csswizardry,walmart,blender,spotify,amd" | split: "," %}
+                        {% for i in (1..2) %}
+                            {% for logo_name in logos %}
+                                <div class="logo-carousel-item">
+                                    <img src="{{ '/assets/logos/' | append: logo_name | append: '.svg' | relative_url }}" alt="{{ logo_name | capitalize }} logo" loading="lazy">
+                                </div>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- SEÇÃO PILARES DO CONHECIMENTO (COM FOCO EM BENEFÍCIOS) -->
         <div class="bg-[var(--background-secondary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 text-center max-w-7xl mx-auto">
+            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 text-center max-w-7xl mx-auto reveal-on-scroll">
                 <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Pilares do Conhecimento</h2>
                 <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Estruturas e conceitos fundamentais para o desenvolvimento de software robusto e eficiente.</p>
                 <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                    <div class="card-container">
+                    <div class="card-container" style="--delay: 0s;">
                         <div class="card-content p-8 flex flex-col items-center text-center">
                             <div class="bg-[var(--background-primary)] p-4 rounded-full mb-4">
                                 <span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">speed</span>
@@ -106,7 +105,7 @@ layout: null
                             <p class="text-sm text-gray-500">mais rápido ao otimizar um algoritmo.</p>
                         </div>
                     </div>
-                    <div class="card-container">
+                    <div class="card-container" style="--delay: 0.2s;">
                         <div class="card-content p-8 flex flex-col items-center text-center">
                             <div class="bg-[var(--background-primary)] p-4 rounded-full mb-4">
                                 <span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">account_tree</span>
@@ -117,7 +116,7 @@ layout: null
                             <p class="text-sm text-gray-500">menos código em soluções recursivas.</p>
                         </div>
                     </div>
-                    <div class="card-container">
+                    <div class="card-container" style="--delay: 0.4s;">
                         <div class="card-content p-8 flex flex-col items-center text-center">
                             <div class="bg-[var(--background-primary)] p-4 rounded-full mb-4">
                                 <span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">query_stats</span>
@@ -133,7 +132,7 @@ layout: null
         </div>
         
         <!-- SEÇÃO DEPOIMENTO REPOSICIONADA E COM MAIS DESTAQUE -->
-        <div class="bg-[var(--background-primary)] py-20 md:py-32 testimonial-section">
+        <div class="bg-[var(--background-primary)] py-20 md:py-32 testimonial-section reveal-on-scroll">
             <figure class="max-w-4xl mx-auto text-center">
                 <blockquote class="text-2xl md:text-3xl lg:text-4xl font-medium text-white">
                     <p>“O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online.”</p>
@@ -147,7 +146,7 @@ layout: null
 
         <!-- SEÇÃO PARADIGMAS ESSENCIAIS -->
         <div class="bg-[var(--background-secondary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto">
+            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
                 <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Paradigmas Essenciais</h2>
                 <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto">Explore diferentes abordagens para resolver problemas e veja como elas funcionam na prática com exemplos visuais.</p>
                 <div id="paradigms-section" class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -157,7 +156,7 @@ layout: null
                             <button role="tab" class="paradigm-tab-button" data-paradigm="dynamic">Programação Dinâmica</button>
                             <button role="tab" class="paradigm-tab-button" data-paradigm="greedy">Algoritmos Gulosos</button>
                         </nav>
-                        <div class="pt-4 min-h-[150px]">
+                        <div class="pt-4 min-h-[150px] relative">
                             <div role="tabpanel" class="paradigm-tab-panel active" data-paradigm-content="conquer">
                                 <h3 class="text-xl font-semibold text-white mb-2">Dividir para Conquistar</h3>
                                 <p class="text-[var(--text-secondary)]">Quebre um problema grande em subproblemas menores, resolva-os independentemente e combine as soluções. O Merge Sort é um exemplo clássico desta técnica poderosa.</p>
@@ -172,10 +171,10 @@ layout: null
                             </div>
                         </div>
                     </div>
-                    <div class="relative h-80 md:h-96">
-                        <img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="conquer" style="opacity:1" alt="Visualização do paradigma Dividir para Conquistar.">
-                        <img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="dynamic" style="opacity:0" alt="Visualização do paradigma Programação Dinâmica." loading="lazy">
-                        <img src="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="greedy" style="opacity:0" alt="Visualização do paradigma de Algoritmos Gulosos." loading="lazy">
+                    <div class="relative h-80 md:h-96 overflow-hidden">
+                        <img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="paradigm-image active" data-paradigm-image="conquer" alt="Visualização do paradigma Dividir para Conquistar.">
+                        <img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="dynamic" alt="Visualização do paradigma Programação Dinâmica." loading="lazy">
+                        <img src="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="greedy" alt="Visualização do paradigma de Algoritmos Gulosos." loading="lazy">
                     </div>
                 </div>
             </div>
@@ -183,7 +182,7 @@ layout: null
 
         <!-- SEÇÃO EXEMPLOS PRÁTICOS -->
         <div class="bg-[var(--background-primary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto">
+            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
                 <div class="text-center">
                     <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Exemplos Práticos</h2>
                     <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Veja como os conceitos ganham vida com exemplos de código claros e comentados.</p>
@@ -265,12 +264,12 @@ FIM_FUNÇÃO</code></pre></div>
         </div>
 
         <!-- SEÇÃO FINAL CTA -->
-        <div class="bg-[var(--background-secondary)]">
-            <div class="relative z-10 text-center px-4 flex flex-col items-center py-20 md:py-32">
+        <div class="final-cta-section bg-[var(--background-secondary)]">
+            <div class="relative z-10 text-center px-4 flex flex-col items-center py-20 md:py-32 reveal-on-scroll">
                 <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Construído para a Comunidade</h2>
                 <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.</p>
                 <div class="mt-10">
-                    <a href="{{ '/docs.html' | relative_url }}" class="bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-transform hover:scale-105 inline-block">Explorar a Documentação</a>
+                    <a href="{{ '/docs.html' | relative_url }}" class="cta-button bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-all hover:scale-105 inline-block">Explorar a Documentação</a>
                 </div>
             </div>
         </div>
