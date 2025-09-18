@@ -26,7 +26,6 @@ layout: null
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     <script>
-        // Aplica o tema salvo antes do carregamento da página para evitar FOUC (Flash of Unstyled Content)
         (function() {
             try {
                 const theme = localStorage.getItem('theme') || 'dark';
@@ -42,6 +41,7 @@ layout: null
     </script>
 </head>
 <body class="text-[var(--text-primary)] bg-[var(--background-primary)]">
+    <div class="spotlight"></div>
     <div id="progress-bar-container"><div id="progress-bar"></div></div>
     <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
     <header class="sticky top-0 z-30 border-b border-[var(--borders)] bg-[var(--background-primary)]/80 backdrop-blur-md">
@@ -74,7 +74,7 @@ layout: null
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
             <div class="relative z-10 w-full max-w-4xl mx-auto">
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">Domine os Fundamentos da Computação</h1>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight hero-title-gradient">Domine os Fundamentos da Computação</h1>
                 <p class="mt-6 text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
                     Guias aprofundados, artigos e exemplos de código sobre Algoritmos e Estruturas de Dados para construir software de alta performance.
                 </p>
