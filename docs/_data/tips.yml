@@ -1,0 +1,15 @@
+- title: "Complexidade de Algoritmos"
+  icon: "speed"
+  description: "Entender a Notação Big O é crucial para escrever um código eficiente. Um algoritmo O(log n) é significativamente mais rápido para grandes volumes de dados do que um O(n)."
+
+- title: "Estruturas de Dados"
+  icon: "account_tree"
+  description: "A escolha da estrutura de dados correta pode ter um impacto gigantesco na performance. Uma Tabela Hash (ou Dicionário) oferece acesso O(1) em média, superando a busca O(n) de um array."
+
+- title: "Recursão vs. Iteração"
+  icon: "autorenew"
+  description: "Toda função recursiva pode ser reescrita de forma iterativa. Embora a recursão possa ser mais elegante, a iteração geralmente consome menos memória ao evitar o estouro da pilha de chamadas (stack overflow)."
+
+- title: "Busca Binária"
+  icon: "search"
+  description: "A Busca Binária requer que o array esteja ordenado. Se você precisa buscar em uma coleção muitas vezes, o custo de ordená-la uma vez (ex: O(n log n)) é compensado pela velocidade das buscas subsequentes (O(log n))."
