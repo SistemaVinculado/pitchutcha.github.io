@@ -1,1 +1,69 @@
-document.addEventListener("DOMContentLoaded",()=>{const e=document.querySelectorAll(".hero-tab-button"),t=document.querySelectorAll(".hero-tab-panel");e.forEach(o=>{o.addEventListener("click",()=>{e.forEach(e=>{e.classList.remove("active"),e.setAttribute("aria-selected","false"),e.setAttribute("tabindex","-1")}),o.classList.add("active"),o.setAttribute("aria-selected","true"),o.removeAttribute("tabindex");const c=o.getAttribute("aria-controls");t.forEach(e=>{e.id===c?(e.classList.add("active"),e.setAttribute("aria-hidden","false")):(e.classList.remove("active"),e.setAttribute("aria-hidden","true"))})})});const o=document.getElementById("paradigms-section");if(o){const e=o.querySelectorAll(".paradigm-tab-button"),t=o.querySelectorAll(".paradigm-tab-panel"),c=o.querySelectorAll(".paradigm-image");e.forEach(o=>{o.addEventListener("click",()=>{const a=o.dataset.paradigm;e.forEach(e=>e.classList.remove("active")),o.classList.add("active"),t.forEach(e=>{e.classList.toggle("active",e.dataset.paradigmContent===a)}),c.forEach(e=>{e.style.opacity=e.dataset.paradigmImage===a?"1":"0"})})})}const c=document.querySelector(".code-block-card");if(c){const e=c.querySelectorAll('.tab-button[data-tab]'),t=c.querySelectorAll(".code-tab-panel[data-tab-content]");e.forEach(o=>{o.addEventListener("click",()=>{const a=o.dataset.tab;e.forEach(e=>e.classList.remove("active")),o.classList.add("active"),t.forEach(e=>{e.classList.toggle("active",e.dataset.tabContent===a)})})})}});
+document.addEventListener("DOMContentLoaded", () => {
+    // --- LÓGICA DOS PARADIGMAS (COM TRANSIÇÃO DE IMAGEM MELHORADA) ---
+    const paradigmsSection = document.getElementById("paradigms-section");
+    if (paradigmsSection) {
+        const tabButtons = paradigmsSection.querySelectorAll(".paradigm-tab-button");
+        const tabPanels = paradigmsSection.querySelectorAll(".paradigm-tab-panel");
+        const paradigmImages = paradigmsSection.querySelectorAll(".paradigm-image");
+
+        tabButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const paradigm = button.dataset.paradigm;
+
+                // Botões
+                tabButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+
+                // Painéis de texto
+                tabPanels.forEach(panel => {
+                    panel.classList.toggle("active", panel.dataset.paradigmContent === paradigm);
+                });
+
+                // Imagens com transição de slide
+                paradigmImages.forEach(image => {
+                    image.classList.toggle("active", image.dataset.paradigmImage === paradigm);
+                });
+            });
+        });
+    }
+
+    // --- LÓGICA DOS BLOCOS DE CÓDIGO COM ABAS ---
+    const codeBlockCard = document.querySelector(".code-block-card");
+    if (codeBlockCard) {
+        const tabButtons = codeBlockCard.querySelectorAll('.tab-button[data-tab]');
+        const tabPanels = codeBlockCard.querySelectorAll(".code-tab-panel[data-tab-content]");
+
+        tabButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const tab = button.dataset.tab;
+                tabButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+                tabPanels.forEach(panel => {
+                    panel.classList.toggle("active", panel.dataset.tabContent === tab);
+                });
+            });
+        });
+    }
+
+    // --- NOVA LÓGICA PARA ANIMAÇÃO DE SCROLL ---
+    const revealOnScrollElements = document.querySelectorAll(".reveal-on-scroll");
+
+    const observerOptions = {
+        root: null, // viewport
+        rootMargin: "0px",
+        threshold: 0.15 // Revela quando 15% do elemento está visível
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target); // Para a observação após a primeira vez
+            }
+        });
+    }, observerOptions);
+
+    revealOnScrollElements.forEach(element => {
+        observer.observe(element);
+    });
+});
