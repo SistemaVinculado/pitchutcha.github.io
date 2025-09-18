@@ -84,136 +84,128 @@ layout: null
             </div>
         </div>
 
-        <!-- LOGO CAROUSEL SECTION -->
-        <div class="bg-[var(--background-primary)] py-12 md:py-20">
-            <div class="reveal-on-scroll">
-                <h3 class="text-center text-lg text-[var(--text-secondary)] mb-8">Com a confiança de profissionais e estudantes de:</h3>
-                <div class="logo-carousel-container">
-                    <div class="logo-carousel-track">
-                        {% assign logos = "google,asus,apple,meta,bmw,porsche,intel,nvidia,openai,3m,fifa,themoviedatabase,csswizardry,walmart,blender,spotify,amd" | split: "," %}
-                        {% for i in (1..2) %}
-                            {% for logo_name in logos %}
-                                <div class="logo-carousel-item">
-                                    <img src="{{ '/assets/logos/' | append: logo_name | append: '.svg' | relative_url }}" alt="{{ logo_name | capitalize }} logo" loading="lazy">
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
+        <!-- FEATURE GRID SECTION -->
+        <div class="bg-[var(--background-secondary)] py-20 md:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+                    <div class="flex flex-col">
+                        <div class="feature-icon"><span class="material-symbols-outlined">bolt</span></div>
+                        <h3 class="text-lg font-semibold text-[var(--text-primary)] mt-4">Performance</h3>
+                        <p class="text-[var(--text-secondary)] mt-1">Aprenda a escrever código que escala e performa sob pressão.</p>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="feature-icon"><span class="material-symbols-outlined">model_training</span></div>
+                        <h3 class="text-lg font-semibold text-[var(--text-primary)] mt-4">Lógica Estruturada</h3>
+                        <p class="text-[var(--text-secondary)] mt-1">Domine os padrões para resolver problemas complexos de forma eficiente.</p>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="feature-icon"><span class="material-symbols-outlined">integration_instructions</span></div>
+                        <h3 class="text-lg font-semibold text-[var(--text-primary)] mt-4">Pronto para Entrevistas</h3>
+                        <p class="text-[var(--text-secondary)] mt-1">Prepare-se para os desafios técnicos das maiores empresas de tecnologia.</p>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="feature-icon"><span class="material-symbols-outlined">code_blocks</span></div>
+                        <h3 class="text-lg font-semibold text-[var(--text-primary)] mt-4">Código Aberto</h3>
+                        <p class="text-[var(--text-secondary)] mt-1">Explore, contribua e aprenda com uma base de código transparente.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- BEFORE & AFTER SECTION -->
-        <div class="bg-[var(--background-secondary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
+        <!-- "WHAT YOU CAN BUILD" SECTION -->
+        <div class="bg-[var(--background-primary)] py-20 md:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
                 <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">De Ineficiente a Otimizado</h2>
-                    <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Veja o impacto real de escolher o algoritmo certo. Um pequeno ajuste pode transformar um código lento em uma solução de alta performance.</p>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">O Que Você Pode Construir</h2>
+                    <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Aplique seu conhecimento para resolver problemas do mundo real.</p>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                    <div class="code-comparison-card">
-                        <h3 class="font-mono text-lg mb-2 text-red-400">ANTES: O(n²)</h3>
-                        <p class="text-sm text-[var(--text-secondary)] mb-4">Lento e ineficiente para grandes volumes de dados.</p>
-                        <pre><code class="language-python"># Encontrar duplicatas com loops aninhados
-def find_duplicates_slow(arr):
-    for i in range(len(arr)):
-        for j in range(i + 1, len(arr)):
-            if arr[i] == arr[j]:
-                return True
-    return False</code></pre>
-                    </div>
-                    <div class="code-comparison-card">
-                        <h3 class="font-mono text-lg mb-2 text-green-400">DEPOIS: O(n)</h3>
-                        <p class="text-sm text-[var(--text-secondary)] mb-4">Rápido e escalável, usando a estrutura de dados correta.</p>
-                        <pre><code class="language-python"># Encontrar duplicatas com um Set
-def find_duplicates_fast(arr):
-    seen = set()
-    for item in arr:
-        if item in seen:
-            return True
-        seen.add(item)
-    return False</code></pre>
-                    </div>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <a href="{{ '/articles/algoritmos-de-busca-linear-vs-binaria' | relative_url }}" class="build-card">
+                        <div class="build-card-content">
+                            <div class="build-card-icon"><span class="material-symbols-outlined">search</span></div>
+                            <h3 class="font-semibold text-[var(--text-primary)]">Sistemas de Busca Otimizados</h3>
+                            <p class="text-sm text-[var(--text-secondary)] mt-1">Implemente buscas que encontram dados em milissegundos, mesmo em grandes datasets.</p>
+                        </div>
+                    </a>
+                    <a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="build-card">
+                        <div class="build-card-content">
+                            <div class="build-card-icon"><span class="material-symbols-outlined">database</span></div>
+                            <h3 class="font-semibold text-[var(--text-primary)]">Gerenciamento de Dados Eficiente</h3>
+                            <p class="text-sm text-[var(--text-secondary)] mt-1">Escolha a estrutura de dados certa para otimizar o uso de memória e a velocidade de acesso.</p>
+                        </div>
+                    </a>
+                    <a href="{{ '/algoritmos.html' | relative_url }}" class="build-card">
+                        <div class="build-card-content">
+                            <div class="build-card-icon"><span class="material-symbols-outlined">checklist</span></div>
+                            <h3 class="font-semibold text-[var(--text-primary)]">Soluções para Desafios de Entrevistas</h3>
+                            <p class="text-sm text-[var(--text-secondary)] mt-1">Resolva problemas clássicos de entrevistas técnicas com confiança e código de alta qualidade.</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- TESTIMONIAL SECTION -->
-        <div class="bg-[var(--background-primary)] py-20 md:py-32 testimonial-section reveal-on-scroll">
-            <figure class="max-w-4xl mx-auto text-center">
-                <blockquote class="text-2xl md:text-3xl lg:text-4xl font-medium text-white">
-                    <p>“O Pitchutcha foi essencial para a minha preparação para entrevistas técnicas. Os guias sobre busca binária e complexidade de algoritmos são os melhores que já encontrei online.”</p>
-                </blockquote>
-                <figcaption class="mt-8">
-                    <div class="text-lg font-semibold text-white">Engenheiro de Software Sênior</div>
-                    <div class="text-base text-[var(--text-secondary)]">Google</div>
-                </figcaption>
-            </figure>
-        </div>
-
-        <!-- ALGORITHM VISUALIZER SECTION -->
-        <div class="bg-[var(--background-secondary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
+        <!-- DELIGHTFUL DX SECTION -->
+        <div class="bg-[var(--background-secondary)] py-20 md:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 reveal-on-scroll">
                 <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Visualize para Entender</h2>
-                    <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Não apenas leia, veja os algoritmos em ação. Interaja com as visualizações para solidificar seu conhecimento.</p>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Experiência de Aprendizagem de Ponta</h2>
+                    <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Ferramentas interativas e transparentes que aceleram seu desenvolvimento.</p>
                 </div>
-                <div class="visualizer-card">
-                    <div id="visualizer-container" class="flex items-end justify-center h-64 border-b border-[var(--borders)] p-4">
-                        <p class="text-[var(--text-secondary)]">Carregando visualização...</p>
-                    </div>
-                    <div class="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div id="visualizer-explanation" class="text-[var(--text-secondary)] text-sm md:w-1/2">
-                            Clique em "Ordenar" para ver o Bubble Sort em ação.
+                <div class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- ALGORITHM VISUALIZER -->
+                    <div class="visualizer-card">
+                        <div id="visualizer-container" class="flex items-end justify-center h-64 border-b border-[var(--borders)] p-4">
+                            <p class="text-[var(--text-secondary)]">Carregando visualização...</p>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <button id="shuffle-btn" class="control-button">
-                                <span class="material-symbols-outlined">shuffle</span> Embaralhar
-                            </button>
-                            <button id="sort-btn" class="control-button cta">
-                                <span class="material-symbols-outlined">play_arrow</span> Ordenar
-                            </button>
+                        <div class="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div id="visualizer-explanation" class="text-[var(--text-secondary)] text-sm md:w-1/2">
+                                Clique em "Ordenar" para ver o Bubble Sort em ação.
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <button id="shuffle-btn" class="control-button">
+                                    <span class="material-symbols-outlined">shuffle</span> Embaralhar
+                                </button>
+                                <button id="sort-btn" class="control-button cta">
+                                    <span class="material-symbols-outlined">play_arrow</span> Ordenar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DEV PANEL & STATUS -->
+                    <div class="flex flex-col gap-8">
+                        <div class="dx-card">
+                            <h3 class="font-semibold text-lg text-[var(--text-primary)]">Painel de Desenvolvedor Integrado</h3>
+                            <p class="text-[var(--text-secondary)] mt-2">Use nosso painel de dev para inspecionar elementos, testar acessibilidade e diagnosticar problemas em tempo real, sem sair do site.</p>
+                        </div>
+                        <div class="dx-card">
+                            <h3 class="font-semibold text-lg text-[var(--text-primary)]">Observabilidade Transparente</h3>
+                            <p class="text-[var(--text-secondary)] mt-2">Acompanhe a saúde do projeto em nossa página de status detalhada, com dados de performance e uptime atualizados automaticamente.</p>
+                            <a href="{{ '/status.html' | relative_url }}" class="text-sm font-medium text-[var(--primary-color)] hover:text-[var(--primary-hover)] mt-4 inline-block">Ver Status &rarr;</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TIP OF THE DAY SECTION -->
-        <div class="bg-[var(--background-primary)]">
-            <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-3xl mx-auto reveal-on-scroll">
-                {% if site.data.tips %}
-                    {% assign random_tip = site.data.tips | sample %}
-                    <div class="tip-card">
-                        <div class="tip-card-icon">
-                            <span class="material-symbols-outlined text-3xl">{{ random_tip.icon | default: 'lightbulb' }}</span>
-                        </div>
-                        <div class="tip-card-content">
-                            <h4>Dica do Dia: {{ random_tip.title }}</h4>
-                            <p>{{ random_tip.description }}</p>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- FINAL CTA SECTION -->
-        <div class="final-cta-section bg-[var(--background-secondary)]">
-            <div class="relative z-10 text-center px-4 flex flex-col items-center py-20 md:py-32 reveal-on-scroll">
-                <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Pronto para Começar?</h2>
-                <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Todo o conhecimento que você precisa para se destacar, em um só lugar. Gratuito e open source, para sempre.</p>
-                <div class="mt-10">
-                    <a href="{{ '/docs.html' | relative_url }}" class="cta-button bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-all hover:scale-105 inline-block">Comece a Aprender Agora</a>
-                </div>
-                <!-- ASK PITCHUTCHA UI -->
-                <div class="mt-16 w-full max-w-2xl">
-                    <form class="ai-prompt-form" onsubmit="return false;">
-                        <span class="material-symbols-outlined">spark</span>
-                        <input type="text" placeholder="Pergunte ao Pitchutcha (em breve)..." disabled title="Funcionalidade de IA em desenvolvimento">
-                        <button type="submit" aria-label="Enviar pergunta" disabled>
-                            <span class="material-symbols-outlined">arrow_upward</span>
-                        </button>
-                    </form>
+        <!-- ECOSYSTEM SECTION -->
+        <div class="bg-[var(--background-primary)] py-20 md:py-32">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal-on-scroll">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Explore o Ecossistema Pitchutcha</h2>
+                <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Tudo o que você precisa para aprofundar seus conhecimentos, em um só lugar.</p>
+                <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <a href="{{ '/algoritmos.html' | relative_url }}" class="ecosystem-card">
+                        <span class="material-symbols-outlined">memory</span> Algoritmos
+                    </a>
+                    <a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="ecosystem-card">
+                        <span class="material-symbols-outlined">account_tree</span> Estruturas de Dados
+                    </a>
+                    <a href="{{ '/search.html' | relative_url }}" class="ecosystem-card">
+                        <span class="material-symbols-outlined">search</span> Busca
+                    </a>
+                    <a href="{{ '/status.html' | relative_url }}" class="ecosystem-card">
+                        <span class="material-symbols-outlined">monitoring</span> Status
+                    </a>
                 </div>
             </div>
         </div>
