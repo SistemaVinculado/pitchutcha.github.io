@@ -1,24 +1,13 @@
 ---
 ---
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
-    <meta charset="utf-8"/>
-    <title>Pitchutcha - Status do Sistema</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="base-url" content="{{ '/' | relative_url }}">
-    <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
-    <meta name="description" content="Acompanhe em tempo real o status e a performance dos serviços do Pitchutcha.">
-    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
-    <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
+    {% include head.html %}
 </head>
-<body class="bg-[var(--background-primary)] text-[var(--text-primary)]" style='font-family: Inter, "Noto Sans", sans-serif;'>
+<body class="bg-[var(--background-primary)] text-[var(--text-primary)]">
     <div class="flex min-h-screen flex-col">
-        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+        <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]/80 backdrop-blur-md">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
                 <div class="flex items-center gap-8">
                     <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
@@ -75,37 +64,31 @@
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold tracking-tight text-[var(--text-primary)] mb-4">Histórico de Uptime e Incidentes</h2>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div id="uptime-history-container"><p class="text-[var(--text-secondary)]">Carregando dados de uptime...</p></div>
-                        <div id="incidents-history-container"><p class="text-[var(--text-secondary)]">Carregando histórico de incidentes...</p></div>
+                        <div id="uptime-history-container" class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg"><p class="text-[var(--text-secondary)]">Carregando dados de uptime...</p></div>
+                        <div id="incidents-history-container" class="p-6 bg-[var(--background-secondary)] border border-[var(--borders)] rounded-lg"><p class="text-[var(--text-secondary)]">Carregando histórico de incidentes...</p></div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                    <div class="stat-card">
                         <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Latência da API</p>
+                            <p class="text-[var(--text-secondary)] font-medium flex items-center gap-1">Latência da API <span class="material-symbols-outlined text-sm cursor-help" title="Tempo médio para a nossa API responder a uma requisição.">info</span></p>
                             <span class="material-symbols-outlined text-gray-500">speed</span>
                         </div>
-                        <div class="flex items-baseline gap-2">
-                            <p id="metric-api-latency" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
-                        </div>
+                        <p id="metric-api-latency" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
                     </div>
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                    <div class="stat-card">
                         <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência do Modelo</p>
+                            <p class="text-[var(--text-secondary)] font-medium flex items-center gap-1">Tempo de Inferência <span class="material-symbols-outlined text-sm cursor-help" title="Tempo médio que nossos modelos levam para processar uma requisição.">info</span></p>
                             <span class="material-symbols-outlined text-gray-500">model_training</span>
                         </div>
-                        <div class="flex items-baseline gap-2">
-                            <p id="metric-inference-time" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
-                        </div>
+                        <p id="metric-inference-time" class="text-[var(--text-primary)] text-3xl font-bold">--ms</p>
                     </div>
-                    <div class="flex flex-col gap-4 rounded-lg p-6 bg-[var(--background-secondary)] border border-[var(--borders)]">
+                    <div class="stat-card">
                         <div class="flex items-center justify-between">
-                            <p class="text-[var(--text-secondary)] font-medium">Taxa de Erros</p>
+                            <p class="text-[var(--text-secondary)] font-medium flex items-center gap-1">Taxa de Erros <span class="material-symbols-outlined text-sm cursor-help" title="Porcentagem de requisições que resultaram em erro nas últimas 24 horas.">info</span></p>
                             <span class="material-symbols-outlined text-gray-500">error_outline</span>
                         </div>
-                        <div class="flex items-baseline gap-2">
-                            <p id="metric-error-rate" class="text-[var(--text-primary)] text-3xl font-bold">--%</p>
-                        </div>
+                        <p id="metric-error-rate" class="text-[var(--text-primary)] text-3xl font-bold">--%</p>
                     </div>
                 </div>
                 <div class="mb-8">
