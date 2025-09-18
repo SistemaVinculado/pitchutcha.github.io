@@ -4,9 +4,36 @@
     "type": "Qualidade de Código",
     "severity": "serious",
     "title": "Erros de JavaScript no Console",
-    "description": "Foram encontrados 2 erro(s): THREE is not defined, Failed to load resource: the server responded with a status of 404 ()",
+    "description": "Foram encontrados 1 erro(s): Failed to load resource: the server responded with a status of 404 ()",
     "suggestion": "Abra o console do navegador nesta página para depurar os erros listados.",
     "selector": "N/A"
+  },
+  {
+    "page": "/",
+    "type": "SEO",
+    "severity": "moderate",
+    "title": "Meta Description Ausente ou Vazia",
+    "description": "A página não possui uma meta tag de descrição, o que afeta como ela aparece nos resultados de busca.",
+    "suggestion": "Adicione `<meta name=\"description\" content=\"...\">` com um resumo da página.",
+    "selector": "meta[name=\"description\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'supabase-select.svg' (480px de largura) está sendo exibida em um contêiner de 112px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://supabase.com/images/select/supabase-select.svg\"]"
+  },
+  {
+    "page": "/",
+    "type": "Performance",
+    "severity": "moderate",
+    "title": "Imagem com Dimensionamento Incorreto",
+    "description": "A imagem 'zeno-rocha.png' (460px de largura) está sendo exibida em um contêiner de 36px.",
+    "suggestion": "Redimensione a imagem para um tamanho mais próximo ao de exibição para economizar dados e acelerar o carregamento.",
+    "selector": "img[src=\"https://supabase.com/images/blog/avatars/zeno-rocha.png\"]"
   },
   {
     "page": "/docs.html",
