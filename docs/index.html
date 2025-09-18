@@ -50,12 +50,12 @@ layout: null
         </div>
     </header>
     <div id="global-banner" class="global-banner">
-        <div class="global-banner-content"><strong>🚀 Novidade:</strong> Veja nossos novos exemplos de código interativos abaixo!</div>
+        <div class="global-banner-content"><strong>🚀 Novidade:</strong> Explore os novos exemplos de código interativos e o monitoramento em tempo real!</div>
         <button id="global-banner-close" class="global-banner-close" aria-label="Fechar banner"><span class="material-symbols-outlined" style="font-size:1.25rem">close</span></button>
     </div>
 
     <main id="main-content">
-        <!-- HERO SIMPLIFICADO -->
+        <!-- HERO SECTION -->
         <div class="relative hero-glow text-center flex flex-col items-center justify-center min-h-[85vh] md:min-h-[90vh] px-4 overflow-hidden">
             <div id="globe-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-0"></div>
             <div class="relative z-10 w-full max-w-4xl mx-auto">
@@ -69,7 +69,7 @@ layout: null
             </div>
         </div>
 
-        <!-- SEÇÃO DE LOGOS -->
+        <!-- LOGO CAROUSEL SECTION -->
         <div class="bg-[var(--background-primary)] py-12 md:py-20">
             <div class="reveal-on-scroll">
                 <h3 class="text-center text-lg text-[var(--text-secondary)] mb-8">Com a confiança de profissionais e estudantes de:</h3>
@@ -88,50 +88,44 @@ layout: null
             </div>
         </div>
 
-        <!-- SEÇÃO PILARES DO CONHECIMENTO (COM FOCO EM BENEFÍCIOS) -->
+        <!-- FEATURE SHOWCASE SECTION -->
         <div class="bg-[var(--background-secondary)]">
             <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 text-center max-w-7xl mx-auto reveal-on-scroll">
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Pilares do Conhecimento</h2>
-                <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Estruturas e conceitos fundamentais para o desenvolvimento de software robusto e eficiente.</p>
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">O que você vai aprender</h2>
+                <p class="mt-4 text-[var(--text-secondary)] max-w-3xl mx-auto">Explore guias práticos e exemplos interativos para dominar os conceitos que impulsionam a tecnologia moderna.</p>
                 <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                    <div class="card-container" style="--delay: 0s;">
-                        <div class="card-content p-8 flex flex-col items-center text-center">
-                            <div class="bg-[var(--background-primary)] p-4 rounded-full mb-4">
-                                <span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">speed</span>
+                    <a href="{{ '/algoritmos.html' | relative_url }}" class="feature-card" style="--delay: 0s;">
+                        <div class="card-content p-8">
+                            <div class="bg-[var(--background-primary)] p-3 rounded-full mb-4 w-fit">
+                                <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">search</span>
                             </div>
-                            <h3 class="text-2xl font-semibold">Escreva Código Eficiente</h3>
-                            <p class="mt-2 text-[var(--text-secondary)] flex-grow">Entenda a Notação Big O para prever a escalabilidade e a eficiência do seu código.</p>
-                            <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">Até 1000x</p>
-                            <p class="text-sm text-gray-500">mais rápido ao otimizar um algoritmo.</p>
+                            <h3 class="text-xl font-semibold">Busca e Ordenação</h3>
+                            <p class="mt-2 text-[var(--text-secondary)]">Desde a simplicidade da Busca Linear até a eficiência da Busca Binária e do Merge Sort.</p>
                         </div>
-                    </div>
-                    <div class="card-container" style="--delay: 0.2s;">
-                        <div class="card-content p-8 flex flex-col items-center text-center">
-                            <div class="bg-[var(--background-primary)] p-4 rounded-full mb-4">
-                                <span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">account_tree</span>
+                    </a>
+                    <a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="feature-card" style="--delay: 0.2s;">
+                        <div class="card-content p-8">
+                            <div class="bg-[var(--background-primary)] p-3 rounded-full mb-4 w-fit">
+                                <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">account_tree</span>
                             </div>
-                            <h3 class="text-2xl font-semibold">Resolva Problemas Complexos</h3>
-                            <p class="mt-2 text-[var(--text-secondary)] flex-grow">Aprenda paradigmas como Dividir para Conquistar para resolver problemas complexos de forma elegante.</p>
-                            <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">50%</p>
-                            <p class="text-sm text-gray-500">menos código em soluções recursivas.</p>
+                            <h3 class="text-xl font-semibold">Estruturas de Dados</h3>
+                            <p class="mt-2 text-[var(--text-secondary)]">Organize dados com Arrays, Listas Ligadas, Pilhas e Filas para otimizar suas aplicações.</p>
                         </div>
-                    </div>
-                    <div class="card-container" style="--delay: 0.4s;">
-                        <div class="card-content p-8 flex flex-col items-center text-center">
-                            <div class="bg-[var(--background-primary)] p-4 rounded-full mb-4">
-                                <span class="material-symbols-outlined text-4xl text-[var(--primary-color)]">query_stats</span>
+                    </a>
+                    <a href="{{ '/articles/introduction-to-algorithm-design' | relative_url }}" class="feature-card" style="--delay: 0.4s;">
+                        <div class="card-content p-8">
+                            <div class="bg-[var(--background-primary)] p-3 rounded-full mb-4 w-fit">
+                                <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">speed</span>
                             </div>
-                            <h3 class="text-2xl font-semibold">Otimize Seus Dados</h3>
-                            <p class="mt-2 text-[var(--text-secondary)] flex-grow">Escolha a estrutura certa (Arrays, Listas, Hashes) para otimizar o acesso e a manipulação de dados.</p>
-                            <p class="text-3xl font-bold mt-4 text-[var(--primary-color)]">O(1)</span>
-                            <p class="text-sm text-gray-500">tempo de acesso com a estrutura ideal.</p>
+                            <h3 class="text-xl font-semibold">Análise de Complexidade</h3>
+                            <p class="mt-2 text-[var(--text-secondary)]">Domine a Notação Big O para escrever códigos mais rápidos e escaláveis.</p>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
         
-        <!-- SEÇÃO DEPOIMENTO REPOSICIONADA E COM MAIS DESTAQUE -->
+        <!-- TESTIMONIAL SECTION -->
         <div class="bg-[var(--background-primary)] py-20 md:py-32 testimonial-section reveal-on-scroll">
             <figure class="max-w-4xl mx-auto text-center">
                 <blockquote class="text-2xl md:text-3xl lg:text-4xl font-medium text-white">
@@ -144,43 +138,45 @@ layout: null
             </figure>
         </div>
 
-        <!-- SEÇÃO PARADIGMAS ESSENCIAIS -->
+        <!-- LIVE STATUS SECTION -->
         <div class="bg-[var(--background-secondary)]">
             <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-center">Paradigmas Essenciais</h2>
-                <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto">Explore diferentes abordagens para resolver problemas e veja como elas funcionam na prática com exemplos visuais.</p>
-                <div id="paradigms-section" class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-                    <div class="flex flex-col gap-4">
-                        <nav class="flex justify-between border-b border-[var(--borders)]" role="tablist">
-                            <button role="tab" class="paradigm-tab-button active" data-paradigm="conquer">Dividir para Conquistar</button>
-                            <button role="tab" class="paradigm-tab-button" data-paradigm="dynamic">Programação Dinâmica</button>
-                            <button role="tab" class="paradigm-tab-button" data-paradigm="greedy">Algoritmos Gulosos</button>
-                        </nav>
-                        <div class="pt-4 min-h-[150px] relative">
-                            <div role="tabpanel" class="paradigm-tab-panel active" data-paradigm-content="conquer">
-                                <h3 class="text-xl font-semibold text-white mb-2">Dividir para Conquistar</h3>
-                                <p class="text-[var(--text-secondary)]">Quebre um problema grande em subproblemas menores, resolva-os independentemente e combine as soluções. O Merge Sort é um exemplo clássico desta técnica poderosa.</p>
-                            </div>
-                            <div role="tabpanel" class="paradigm-tab-panel" data-paradigm-content="dynamic">
-                                <h3 class="text-xl font-semibold text-white mb-2">Programação Dinâmica</h3>
-                                <p class="text-[var(--text-secondary)]">Evite recálculos armazenando os resultados de subproblemas (memoização). Ideal para problemas de otimização, como o cálculo da sequência de Fibonacci.</p>
-                            </div>
-                            <div role="tabpanel" class="paradigm-tab-panel" data-paradigm-content="greedy">
-                                <h3 class="text-xl font-semibold text-white mb-2">Algoritmos Gulosos (Greedy)</h3>
-                                <p class="text-[var(--text-secondary)]">Faça a escolha localmente ótima em cada etapa, na esperança de encontrar uma solução globalmente ótima. Eficiente para problemas como o da seleção de atividades.</p>
-                            </div>
+                <div class="text-center">
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold">Monitoramento em Tempo Real</h2>
+                    <p class="mt-4 text-center text-[var(--text-secondary)] max-w-3xl mx-auto mb-12">Dados de performance do projeto, atualizados continuamente para garantir a melhor experiência.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Latência da API</p>
+                            <span class="material-symbols-outlined text-gray-500">speed</span>
                         </div>
+                        <p id="metric-api-latency-home" class="text-[var(--text-primary)] text-4xl font-bold">--ms</p>
                     </div>
-                    <div class="relative h-80 md:h-96 overflow-hidden">
-                        <img src="{{ '/assets/images/introduction-to-algorithm-design.jpg' | relative_url }}" class="paradigm-image active" data-paradigm-image="conquer" alt="Visualização do paradigma Dividir para Conquistar.">
-                        <img src="{{ '/assets/images/data-structures-overview.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="dynamic" alt="Visualização do paradigma Programação Dinâmica." loading="lazy">
-                        <img src="{{ '/assets/images/search-algorithms-linear-vs-binary.jpg' | relative_url }}" class="paradigm-image" data-paradigm-image="greedy" alt="Visualização do paradigma de Algoritmos Gulosos." loading="lazy">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência</p>
+                            <span class="material-symbols-outlined text-gray-500">model_training</span>
+                        </div>
+                        <p id="metric-inference-time-home" class="text-[var(--text-primary)] text-4xl font-bold">--ms</p>
                     </div>
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <p class="text-[var(--text-secondary)] font-medium">Taxa de Erros</p>
+                            <span class="material-symbols-outlined text-gray-500">error_outline</span>
+                        </div>
+                        <p id="metric-error-rate-home" class="text-[var(--text-primary)] text-4xl font-bold">--%</p>
+                    </div>
+                </div>
+                <div class="text-center mt-8">
+                    <a href="{{ '/status.html' | relative_url }}" class="text-sm font-medium text-[var(--primary-color)] hover:text-[var(--primary-hover)]">
+                        Ver página de status completa &rarr;
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- SEÇÃO EXEMPLOS PRÁTICOS -->
+        <!-- PRACTICAL EXAMPLES SECTION -->
         <div class="bg-[var(--background-primary)]">
             <div class="px-4 md:px-8 lg:px-12 py-20 md:py-32 max-w-7xl mx-auto reveal-on-scroll">
                 <div class="text-center">
@@ -263,13 +259,13 @@ FIM_FUNÇÃO</code></pre></div>
             </div>
         </div>
 
-        <!-- SEÇÃO FINAL CTA -->
+        <!-- FINAL CTA SECTION -->
         <div class="final-cta-section bg-[var(--background-secondary)]">
             <div class="relative z-10 text-center px-4 flex flex-col items-center py-20 md:py-32 reveal-on-scroll">
                 <h2 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Construído para a Comunidade</h2>
                 <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-[var(--text-secondary)]">Acreditamos que o conhecimento fundamental de Ciência da Computação deve ser acessível a todos. Junte-se a milhares de estudantes e profissionais que usam o Pitchutcha para aprimorar suas habilidades.</p>
                 <div class="mt-10">
-                    <a href="{{ '/docs.html' | relative_url }}" class="cta-button bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-all hover:scale-105 inline-block">Explorar a Documentação</a>
+                    <a href="{{ '/docs.html' | relative_url }}" class="cta-button bg-[var(--primary-color)] hover:bg-[var(--primary-hover)] text-white font-semibold rounded-lg px-8 py-4 text-lg transition-all hover:scale-105 inline-block">Comece a Aprender Agora</a>
                 </div>
             </div>
         </div>
