@@ -25,11 +25,26 @@ layout: null
     <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script>
+        // Aplica o tema salvo antes do carregamento da página para evitar FOUC (Flash of Unstyled Content)
+        (function() {
+            try {
+                const theme = localStorage.getItem('theme') || 'dark';
+                if (['dark', 'light', 'high-contrast'].includes(theme)) {
+                    document.documentElement.className = theme;
+                } else {
+                    document.documentElement.className = 'dark';
+                }
+            } catch (e) {
+                document.documentElement.className = 'dark';
+            }
+        })();
+    </script>
 </head>
-<body class="text-[var(--text-primary)]">
+<body class="text-[var(--text-primary)] bg-[var(--background-primary)]">
     <div id="progress-bar-container"><div id="progress-bar"></div></div>
     <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
-    <header class="sticky top-0 z-20 border-b border-[var(--borders)] bg-[var(--background-primary)]">
+    <header class="sticky top-0 z-30 border-b border-[var(--borders)] bg-[var(--background-primary)]/80 backdrop-blur-md">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
             <div class="flex items-center gap-8">
                 <a class="flex items-center gap-3 text-[var(--text-primary)]" href="{{ '/docs.html' | relative_url }}">
@@ -112,7 +127,7 @@ layout: null
                             <p class="mt-2 text-[var(--text-secondary)]">Organize dados com Arrays, Listas Ligadas, Pilhas e Filas para otimizar suas aplicações.</p>
                         </div>
                     </a>
-                    <a href="{{ '/articles/introduction-to-algorithm-design' | relative_url }}" class="feature-card" style="--delay: 0.4s;">
+                    <a href="{{ '/articles/introduction-to-algorithm-design.md' | relative_url }}" class="feature-card" style="--delay: 0.4s;">
                         <div class="card-content p-8">
                             <div class="bg-[var(--background-primary)] p-3 rounded-full mb-4 w-fit">
                                 <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]">speed</span>
@@ -151,21 +166,21 @@ layout: null
                             <p class="text-[var(--text-secondary)] font-medium">Latência da API</p>
                             <span class="material-symbols-outlined text-gray-500">speed</span>
                         </div>
-                        <p id="metric-api-latency-home" class="text-[var(--text-primary)] text-4xl font-bold">--ms</p>
+                        <p id="metric-api-latency-home" class="text-[var(--text-primary)] text-4xl font-bold" data-target-value="0">--ms</p>
                     </div>
                     <div class="stat-card">
                         <div class="flex items-center justify-between">
                             <p class="text-[var(--text-secondary)] font-medium">Tempo de Inferência</p>
                             <span class="material-symbols-outlined text-gray-500">model_training</span>
                         </div>
-                        <p id="metric-inference-time-home" class="text-[var(--text-primary)] text-4xl font-bold">--ms</p>
+                        <p id="metric-inference-time-home" class="text-[var(--text-primary)] text-4xl font-bold" data-target-value="0">--ms</p>
                     </div>
                     <div class="stat-card">
                         <div class="flex items-center justify-between">
                             <p class="text-[var(--text-secondary)] font-medium">Taxa de Erros</p>
                             <span class="material-symbols-outlined text-gray-500">error_outline</span>
                         </div>
-                        <p id="metric-error-rate-home" class="text-[var(--text-primary)] text-4xl font-bold">--%</p>
+                        <p id="metric-error-rate-home" class="text-[var(--text-primary)] text-4xl font-bold" data-target-value="0">--%</p>
                     </div>
                 </div>
                 <div class="text-center mt-8">
@@ -191,13 +206,23 @@ layout: null
                         <div class="code-block-button-container"><a href="{{ '/articles/algoritmos-de-busca-linear-vs-binaria' | relative_url }}" class="custom-button-small"><span class="material-symbols-outlined notranslate">auto_stories</span> Ver o Guia</a></div>
                     </div>
                     <div class="code-block-right-side">
-                        <div class="code-tabs-buttons">
-                            <button class="tab-button active" data-tab="python">Python</button>
-                            <button class="tab-button" data-tab="javascript">JavaScript</button>
-                            <button class="tab-button" data-tab="pseudo">Pseudocódigo</button>
+                        <div class="code-block-header">
+                            <div class="traffic-lights">
+                                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                            </div>
+                            <div class="code-tabs-buttons">
+                                <button class="tab-button active" data-tab="python">Python</button>
+                                <button class="tab-button" data-tab="javascript">JavaScript</button>
+                                <button class="tab-button" data-tab="pseudo">Pseudocódigo</button>
+                            </div>
+                            <button class="copy-button" aria-label="Copiar código">
+                                <span class="material-symbols-outlined icon-copy">content_copy</span>
+                                <span class="material-symbols-outlined icon-check">check</span>
+                            </button>
                         </div>
-                        <div class="code-tab-panel active" data-tab-content="python">
-                            <div class="code-block-tab-content"><pre><code class="language-python">def binary_search(arr, target):
+                        <div class="code-block-body">
+                            <div class="code-tab-panel active" data-tab-content="python">
+                                <pre><code class="language-python">def binary_search(arr, target):
     low = 0
     high = len(arr) - 1
     while low <= high:
@@ -212,10 +237,10 @@ layout: null
     return None
 
 my_list = [1, 3, 5, 7, 9, 11]
-print(binary_search(my_list, 7))</code></pre></div>
-                        </div>
-                        <div class="code-tab-panel" data-tab-content="javascript">
-                            <div class="code-block-tab-content"><pre><code class="language-javascript">function binarySearch(arr, target) {
+print(binary_search(my_list, 7))</code></pre>
+                            </div>
+                            <div class="code-tab-panel" data-tab-content="javascript">
+                                <pre><code class="language-javascript">function binarySearch(arr, target) {
     let low = 0;
     let high = arr.length - 1;
     while (low <= high) {
@@ -233,10 +258,10 @@ print(binary_search(my_list, 7))</code></pre></div>
 }
 
 const myList = [1, 3, 5, 7, 9, 11];
-console.log(binarySearch(myList, 7));</code></pre></div>
-                        </div>
-                        <div class="code-tab-panel" data-tab-content="pseudo">
-                            <div class="code-block-tab-content"><pre><code class="language-plaintext">FUNÇÃO BuscaBinaria(lista, item)
+console.log(binarySearch(myList, 7));</code></pre>
+                            </div>
+                            <div class="code-tab-panel" data-tab-content="pseudo">
+                                <pre><code class="language-plaintext">FUNÇÃO BuscaBinaria(lista, item)
     baixo = 0
     alto = tamanho(lista) - 1
 
@@ -252,7 +277,8 @@ console.log(binarySearch(myList, 7));</code></pre></div>
             baixo = meio + 1
             
     RETORNE nulo
-FIM_FUNÇÃO</code></pre></div>
+FIM_FUNÇÃO</code></pre>
+                            </div>
                         </div>
                     </div>
                 </div>
