@@ -1,93 +1,213 @@
-<footer class="bg-[var(--background-primary)] border-t border-[var(--borders)] pt-16 pb-8 text-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
-            <div class="col-span-2 md:col-span-1 pr-8">
-                <a href="{{ '/' | relative_url }}" class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-3xl text-[var(--primary-color)]"> science </span>
-                    <h1 class="text-xl font-bold">Pitchutcha</h1>
-                </a>
-                <p class="mt-4 text-[var(--text-secondary)]">
-                    Uma enciclopédia de documentação sobre Ciência da Computação, construída pela comunidade.
-                </p>
-            </div>
+/* --- FONTES LOCAIS --- */
+@font-face{font-display:swap;font-family:'Inter';font-style:normal;font-weight:400;src:url('../fonts/inter-v13-latin-regular.woff2') format('woff2')}
+@font-face{font-display:swap;font-family:'Inter';font-style:normal;font-weight:500;src:url('../fonts/inter-v13-latin-500.woff2') format('woff2')}
+@font-face{font-display:swap;font-family:'Inter';font-style:normal;font-weight:600;src:url('../fonts/inter-v13-latin-600.woff2') format('woff2')}
+@font-face{font-display:swap;font-family:'Inter';font-style:normal;font-weight:700;src:url('../fonts/inter-v13-latin-700.woff2') format('woff2')}
+@font-face{font-display:swap;font-family:'JetBrains Mono';font-style:normal;font-weight:400;src:url('../fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2')}
+@font-face{font-display:swap;font-family:'JetBrains Mono';font-style:normal;font-weight:500;src:url('../fonts/jetbrains-mono-v23-latin-500.woff2') format('woff2')}
 
-            <div class="space-y-4">
-                <h3 class="font-semibold text-gray-400 tracking-wider uppercase">Plataforma</h3>
-                <ul class="space-y-3">
-                    <li><a href="{{ '/docs.html' | relative_url }}" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">Documentação</a></li>
-                    <li><a href="{{ '/search.html' | relative_url }}" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">Pesquisa</a></li>
-                     <li><a href="{{ '/status.html' | relative_url }}" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">Status</a></li>
-                </ul>
-            </div>
-            <div class="space-y-4">
-                <h3 class="font-semibold text-gray-400 tracking-wider uppercase">Conteúdo</h3>
-                <ul class="space-y-3">
-                    <li><a href="{{ '/algoritmos.html' | relative_url }}" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">Algoritmos</a></li>
-                    <li><a href="{{ '/estruturas-de-dados.html' | relative_url }}" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">Estruturas de Dados</a></li>
-                </ul>
-            </div>
-            <div class="space-y-4">
-                <h3 class="font-semibold text-gray-400 tracking-wider uppercase">Comunidade</h3>
-                <ul class="space-y-3">
-                    <li><a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" rel="noopener noreferrer" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">Open Source</a></li>
-                    <li><a href="#" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">Como Contribuir</a></li>
-                </ul>
-            </div>
-            <div class="space-y-4">
-                <h3 class="font-semibold text-gray-400 tracking-wider uppercase">Sobre</h3>
-                <ul class="space-y-3">
-                    <li><a href="#" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">O Projeto</a></li>
-                    <li><a href="#" class="text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">Histórias de Clientes</a></li>
-                </ul>
-            </div>
-        </div>
+/* --- VARIÁVEIS DE TEMA E ESTILOS BASE --- */
+:root, html.dark {
+    --primary-color: #3388FF; --primary-hover: #55A2FF;
+    --text-primary: #FFFFFF; --text-secondary: #a0a0a0;
+    --background-primary: #0a0a0a; --background-secondary: #121212;
+    --cards-elements: #1f1f1f; --borders: #333333;
+    --success: #28a745; --danger: #dc3545;
+}
+html.light {
+    --primary-color: #1f6feb; --primary-hover: #1c64d6;
+    --text-primary: #111827; --text-secondary: #6b7280;
+    --background-primary: #ffffff; --background-secondary: #f9fafb;
+    --cards-elements: #ffffff; --borders: #e5e7eb;
+}
+html.high-contrast {
+    --primary-color: #38bdf8; --primary-hover: #7dd3fc;
+    --text-primary: #ffffff; --text-secondary: #e5e5e5;
+    --background-primary: #000000; --background-secondary: #111111;
+    --cards-elements: #1a1a1a; --borders: #6b7280;
+}
+:root {
+    --tab-size-preference:4; --font-sans:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace; --line-height-body:1.65;
+}
+body{font-family:var(--font-sans);background-color:var(--background-primary);color:var(--text-primary);overflow-x:hidden; transition: background-color 0.3s ease, color 0.3s ease;}
+pre,code{font-family:var(--font-mono);tab-size:var(--tab-size-preference);-moz-tab-size:var(--tab-size-preference)}
+*:focus-visible{outline:2px solid var(--primary-color);outline-offset:2px;border-radius:4px}
+a,button{transition:color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out}
 
-        <div class="mt-12 pt-8 border-t border-[var(--borders)] flex flex-col sm:flex-row justify-between items-center">
-            <div class="flex space-x-6 order-2 sm:order-1 mt-4 sm:mt-0">
-                <p class="text-sm text-[var(--text-secondary)]">
-                    &copy; {{ site.time | date: "%Y" }} 
-                    <a href="https://github.com/SistemaVinculado" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--primary-color)]">
-                        SistemaVinculado
-                    </a>.
-                </p>
-            </div>
-            <div class="flex items-center space-x-6 order-1 sm:order-2">
-                <!-- SELETOR DE TEMA APRIMORADO -->
-                <div class="relative">
-                    <button id="theme-toggle" class="flex items-center justify-center h-8 w-8 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--cards-elements)] transition-colors" aria-label="Alterar tema">
-                        <span class="material-symbols-outlined text-lg theme-icon-light">light_mode</span>
-                        <span class="material-symbols-outlined text-lg theme-icon-dark">dark_mode</span>
-                        <span class="material-symbols-outlined text-lg theme-icon-contrast">contrast</span>
-                    </button>
-                    <div id="theme-options" class="hidden absolute bottom-full right-0 mb-2 w-40 bg-[var(--cards-elements)] border border-[var(--borders)] rounded-md shadow-lg z-50">
-                        <a href="#" data-theme="light" class="flex items-center gap-3 px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]">
-                            <span class="material-symbols-outlined text-base">light_mode</span> Claro
-                        </a>
-                        <a href="#" data-theme="dark" class="flex items-center gap-3 px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]">
-                            <span class="material-symbols-outlined text-base">dark_mode</span> Escuro
-                        </a>
-                        <a href="#" data-theme="high-contrast" class="flex items-center gap-3 px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]">
-                            <span class="material-symbols-outlined text-base">contrast</span> Alto Contraste
-                        </a>
-                    </div>
-                </div>
-                <a href="https://github.com/SistemaVinculado/pitchutcha.github.io" target="_blank" rel="noopener noreferrer" class="text-[var(--text-secondary)] hover:text-white">
-                    <span class="sr-only">GitHub</span>
-                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-        
-        <div class="mt-8 pt-8 border-t border-[var(--borders)] flex justify-center">
-            <a href="{{ '/status.html' | relative_url }}" class="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--primary-color)]">
-                <div id="global-status-indicator" class="relative flex h-3 w-3">
-                    <span class="ping-pulse ping-gray"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-gray-400"></span>
-                </div>
-                <span id="global-status-text">Verificando status do sistema...</span>
-            </a>
-        </div>
-    </div>
-</footer>
+/* --- ESTILOS DE ARTIGO --- */
+article h1,article h2,article h3,article h4{color:var(--text-primary);letter-spacing:-0.025em}
+article h1{font-size:2.25rem;font-weight:800}
+article h2{font-size:1.875rem;font-weight:700}
+article h3{font-size:1.5rem;font-weight:600}
+article h4{font-size:1.25rem;font-weight:600}
+article p,article li{line-height:var(--line-height-body);color:var(--text-secondary);font-size:1.125rem}
+article a{color:var(--primary-color);text-decoration:underline}
+article a:hover{color:var(--primary-hover)}
+article strong{color:var(--text-primary)}
+article blockquote{margin:1.5rem 0;padding-left:1.5rem;border-left:4px solid var(--borders);color:var(--text-secondary);font-style:italic}
+
+/* --- COMPONENTES GLOBAIS (BANNER, NPROGRESS, ETC) --- */
+.global-banner{background-color:var(--cards-elements);border-bottom:1px solid var(--borders);color:var(--text-secondary);font-size:0.9rem;width:100%;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.5rem;}
+.global-banner-content strong{color:var(--primary-color);font-weight:600}
+.global-banner-close{background:none;border:none;color:var(--text-secondary);cursor:pointer;padding:0.25rem;line-height:1}
+.global-banner-close:hover{color:var(--text-primary)}
+.banner-hidden{display:none}
+#nprogress{pointer-events:none}
+#nprogress .bar{background:var(--primary-color);position:fixed;z-index:1031;top:0;left:0;width:100%;height:3px}
+#nprogress .peg{display:block;position:absolute;right:0;width:100px;height:100%;box-shadow:0 0 10px var(--primary-color),0 0 5px var(--primary-color);opacity:1;-webkit-transform:rotate(3deg) translate(0,-4px);-ms-transform:rotate(3deg) translate(0,-4px);transform:rotate(3deg) translate(0,-4px)}
+.ping-pulse::before{content:'';position:absolute;display:inline-flex;width:100%;height:100%;border-radius:9999px;background-color:currentColor;opacity:.75;animation:ping 1s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{75%,100%{transform:scale(2);opacity:0}}
+.ping-green{background-color:var(--success);}.ping-yellow{background-color:#eab308;}.ping-red{background-color:var(--danger);}.ping-gray{background-color:#9ca3af}
+.skip-to-content{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-to-content:focus{left:50%;transform:translateX(-50%);top:1rem;width:auto;height:auto;padding:0.75rem 1.25rem;background-color:var(--primary-color);color:white;font-weight:700;border-radius:0.5rem;z-index:100;text-decoration:none;overflow:visible}
+
+/* --- HERO & GLOBO --- */
+.hero-glow{background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(51,136,255,0.15),hsla(0,0%,100%,0))}
+.hero-title-gradient { background-image: linear-gradient(to right, var(--text-primary), var(--text-secondary)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cta-button:hover { box-shadow: 0 0 20px 0 rgba(51, 136, 255, 0.5); }
+.spotlight { position: fixed; top: 0; left: 0; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(51, 136, 255, 0.15) 0%, rgba(51, 136, 255, 0) 70%); pointer-events: none; z-index: 2; transition: transform 0.1s ease-out, opacity 0.2s ease-out; opacity: 0; }
+body:hover .spotlight { opacity: 1; }
+
+/* --- CARROSSEL DE LOGOS --- */
+.logo-carousel-container{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(to right, transparent, black 20%, black 80%, transparent);mask-image:linear-gradient(to right, transparent, black 20%, black 80%, transparent)}
+.logo-carousel-track{display:flex;width:max-content;animation:scroll-left 60s linear infinite}
+.logo-carousel-track:hover{animation-play-state:paused}
+.logo-carousel-item{flex-shrink:0;width:auto;display:flex;justify-content:center;align-items:center;padding:0 1.5rem}
+.logo-carousel-item img{height:48px;width:auto;filter:brightness(0) invert(1) opacity(0.6);transition:all 0.2s ease-in-out}
+html.light .logo-carousel-item img { filter: grayscale(1) opacity(0.6); }
+html.light .logo-carousel-item img:hover { filter: grayscale(0) opacity(1); }
+.logo-carousel-item img:hover{filter:brightness(0) invert(1) opacity(1)}
+@keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* --- CARDS (FEATURES & STATS) --- */
+.feature-card { animation: card-fade-in 0.6s ease-out forwards; animation-delay: var(--delay, 0s); opacity: 0; text-decoration: none; }
+.feature-card { display: block; background-color: var(--cards-elements); border: 1px solid var(--borders); border-radius: 0.75rem; transition: all 0.3s ease-in-out; }
+.feature-card:hover { border-color: var(--primary-color); transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2), 0 8px 10px -6px rgba(0,0,0,0.2); }
+@keyframes card-fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- SEÇÃO DEPOIMENTO --- */
+.testimonial-section { position: relative; overflow: hidden; }
+.testimonial-section::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 80%; height: 400px; background-image: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(51, 136, 255, 0.1), hsla(0, 0%, 100%, 0)); z-index: 0; pointer-events: none; }
+.testimonial-section > figure { position: relative; z-index: 1; }
+
+/* --- SEÇÃO STATUS EM TEMPO REAL --- */
+.stat-card { background-color: var(--cards-elements); border: 1px solid var(--borders); border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+
+/* --- SEÇÃO DICA DO DIA --- */
+.tip-card{background-color:var(--cards-elements);border:1px solid var(--borders);border-left-width:4px;border-left-color:var(--primary-color);border-radius:.5rem;padding:1.5rem;display:flex;align-items:flex-start;gap:1rem}
+.tip-card-icon{flex-shrink:0;color:var(--primary-color)}
+.tip-card-content h4{font-size:1.125rem;font-weight:600;color:var(--text-primary);margin-top:0;margin-bottom:.5rem}
+.tip-card-content p{font-size:.875rem;color:var(--text-secondary);margin:0}
+
+/* --- SEÇÃO ANTES E DEPOIS --- */
+.code-comparison-card { background-color: var(--cards-elements); border: 1px solid var(--borders); border-radius: 0.75rem; padding: 1.5rem; }
+.code-comparison-card pre { background-color: var(--background-primary) !important; border-radius: 0.5rem; padding: 1rem !important; }
+
+/* --- VISUALIZADOR DE ALGORITMO --- */
+.visualizer-card { background-color: var(--cards-elements); border: 1px solid var(--borders); border-radius: 0.75rem; overflow: hidden; }
+#visualizer-container .bar { width: 1%; background-color: var(--text-secondary); margin: 0 0.5%; transition: height 0.2s ease-in-out, background-color 0.2s ease-in-out; }
+#visualizer-container .bar.comparing { background-color: #f59e0b; } /* Amarelo */
+#visualizer-container .bar.swapping { background-color: #ef4444; } /* Vermelho */
+#visualizer-container .bar.sorted { background-color: #22c55e; } /* Verde */
+.control-button { display: inline-flex; align-items: center; gap: 0.5rem; background-color: var(--background-secondary); border: 1px solid var(--borders); padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; transition: all 0.2s ease; }
+.control-button:hover { background-color: var(--cards-elements); border-color: var(--primary-color); color: var(--primary-color); }
+.control-button.cta { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+.control-button.cta:hover { background-color: var(--primary-hover); }
+.control-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* --- BLOCOS DE CÓDIGO --- */
+.code-block-card{background-color: var(--cards-elements); border:1px solid var(--borders); display:flex;padding:16px;width:100%;border-radius:12px}
+@media screen and (max-width: 768px){.code-block-card{flex-direction:column;gap:20px}}
+.code-block-left-side{color:var(--text-secondary);display:flex;flex-direction:column;gap:8px;margin-right:30px;max-width:240px;flex-shrink:0}
+@media screen and (max-width: 768px){.code-block-left-side{margin-right:0;max-width:unset}}
+.code-block-title{color:var(--text-primary);font-size:1.5rem;font-weight:300;margin-bottom:8px}
+.code-block-description{font-size:0.9rem;line-height:1.4}
+.code-block-time-estimate{align-items:center;display:flex;gap:4px;font-size:0.9rem;margin-top:8px}
+.code-block-time-estimate .material-symbols-outlined{font-size:1.2rem;vertical-align:middle}
+.code-block-button-container{margin-top:auto;padding-top:16px}
+.custom-button-small{align-items:center;background:var(--background-secondary);border:1px solid var(--borders);border-radius:12px;color:var(--text-primary);cursor:pointer;display:inline-flex;gap:8px;height:36px;opacity:.9;padding:8px 12px;text-decoration:none;transition:background-color .2s ease-in-out,opacity .2s ease-in-out;font-size:0.875rem;font-weight:500}
+.custom-button-small:hover{background:var(--cards-elements);border-color:var(--borders);opacity:1}
+.custom-button-small .material-symbols-outlined{font-size:1.1rem;vertical-align:middle}
+.code-block-right-side{display:flex;min-width:0;width:100%;flex-direction:column; border-radius: 0.5rem; border: 1px solid var(--borders); overflow: hidden;}
+.code-block-header{display:flex;align-items:center;padding:0 0.75rem;background-color:var(--background-secondary);border-bottom:1px solid var(--borders); height: 48px;}
+.traffic-lights{display:flex;gap:0.5rem; margin-right: 1rem;}
+.traffic-lights .dot{width:12px;height:12px;border-radius:50%;}
+.traffic-lights .red{background-color:#ff5f56;}
+.traffic-lights .yellow{background-color:#ffbd2e;}
+.traffic-lights .green{background-color:#27c93f;}
+.code-tabs-buttons{display:flex;flex-grow:1;}
+.tab-button{padding:0.75rem 1rem;cursor:pointer;background-color:transparent;border:none;border-bottom:3px solid transparent;color:var(--text-secondary);font-weight:500;margin-bottom:-2px;transition:color 0.2s, border-color 0.2s}
+.tab-button:hover{color:var(--text-primary)}
+.tab-button.active{color:var(--text-primary);border-bottom-color:var(--primary-color)}
+.copy-button{background:none;border:none;color:var(--text-secondary);cursor:pointer;padding:0.5rem;border-radius:0.375rem;transition:background-color 0.2s, color 0.2s; position: relative; width: 28px; height: 28px;}
+.copy-button:hover{background-color:var(--cards-elements);color:var(--text-primary)}
+.copy-button .icon-check{display:none; color: var(--success);}
+.copy-button.copied .icon-copy{display:none;}
+.copy-button.copied .icon-check{display:inline-block;}
+.code-block-body{background-color:#1f1f1f;}
+.code-tab-panel{display:none}
+.code-tab-panel.active{display:block}
+.code-tab-panel pre{padding:1.25rem!important;margin:0!important;background:transparent!important;overflow-x:auto;}
+.code-tab-panel code.hljs{font-family:'JetBrains Mono',monospace!important;font-size:0.875rem!important;line-height:1.5rem!important}
+div.highlighter-rouge,figure.highlight{position:relative;margin-bottom:1rem;border-radius:.5rem;background:#282a36;color:#f8f8f2;font-size:.875rem}
+figure.highlight pre{padding:1rem;overflow-x:auto}
+.highlight .c{color:#6272a4}.highlight .err{color:#f8f8f2;background-color:#ff5555}.highlight .k{color:#ff79c6}.highlight .l{color:#bd93f9}.highlight .n{color:#f8f8f2}.highlight .o{color:#ff79c6}.highlight .p{color:#f8f8f2}.highlight .cm{color:#6272a4}.highlight .cp{color:#ff79c6}.highlight .c1{color:#6272a4}.highlight .cs{color:#6272a4}.highlight .gd{color:#ff5555}.highlight .ge{font-style:italic}.highlight .gh{color:#50fa7b}.highlight .gs{font-weight:700}.highlight .gu{color:#ff79c6}.highlight .kc{color:#ff79c6}.highlight .kd{color:#8be9fd;font-style:italic}.highlight .kn{color:#ff79c6}.highlight .kp{color:#ff79c6}.highlight .kr{color:#ff79c6}.highlight .kt{color:#8be9fd}.highlight .ld{color:#f1fa8c}.highlight .m{color:#bd93f9}.highlight .s{color:#f1fa8c}.highlight .na{color:#50fa7b}.highlight .nb{color:#8be9fd;font-style:italic}.highlight .nc{color:#50fa7b}.highlight .no{color:#bd93f9}.highlight .nd{color:#ff79c6}.highlight .ni{color:#f8f8f2}.highlight .ne{color:#50fa7b}.highlight .nf{color:#50fa7b}.highlight .nl{color:#f8f8f2}.highlight .nn{color:#f8f8f2}.highlight .nx{color:#50fa7b}.highlight .py{color:#f8f8f2}.highlight .nt{color:#ff79c6}.highlight .nv{color:#8be9fd;font-style:italic}.highlight .ow{color:#ff79c6}.highlight .w{color:#f8f8f2}.highlight .mb{color:#bd93f9}.highlight .mf{color:#bd93f9}.highlight .mh{color:#bd93f9}.highlight .mi{color:#bd93f9}.highlight .mo{color:#bd93f9}.highlight .sb{color:#f1fa8c}.highlight .sc{color:#f1fa8c}.highlight .sd{color:#f1fa8c}.highlight .s2{color:#f1fa8c}.highlight .se{color:#bd93f9}.highlight .sh{color:#f1fa8c}.highlight .si{color:#f1fa8c}.highlight .sx{color:#f1fa8c}.highlight .sr{color:#f1fa8c}.highlight .s1{color:#f1fa8c}.highlight .ss{color:#f1fa8c}.highlight .bp{color:#f8f8f2}.highlight .vc{color:#8be9fd;font-style:italic}.highlight .vg{color:#8be9fd;font-style:italic}.highlight .vi{color:#8be9fd;font-style:italic}.highlight .il{color:#bd93f9}
+
+/* --- MODAL DE BUSCA GLOBAL --- */
+.search-modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding-top:15vh;opacity:0;visibility:hidden;transition:opacity .2s ease, visibility .2s ease}
+.search-modal-overlay.visible{opacity:1;visibility:visible}
+.search-modal{width:100%;max-width:640px;display:flex;flex-direction:column;max-height:70vh;transform:scale(.95);transition:transform .2s ease;background-color:var(--background-secondary);border:1px solid var(--borders);box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05); border-radius: 0.5rem;}
+.visible .search-modal{transform:scale(1)}
+.search-modal-input-wrapper{border-bottom:1px solid var(--borders);padding:1rem;display:flex;align-items:center;gap:.75rem}
+.search-modal-input{flex-grow:1;background:0 0;border:none;outline:0;color:var(--text-primary);font-size:1.125rem}
+.search-modal-results{overflow-y:auto}
+.search-modal-results a{display:block;padding:1rem;border-bottom:1px solid var(--borders)}
+.search-modal-results a:hover{background-color:var(--background-primary)}
+.search-modal-results a:last-child{border-bottom:none}
+.search-modal-results .title{font-weight:600;color:var(--text-primary)}
+.search-modal-results .excerpt{font-size:.875rem;color:var(--text-secondary);margin-top:.25rem}
+.search-modal-results mark{background-color:rgba(51,136,255,0.3);color:var(--text-primary);border-radius:2px}
+.search-modal-footer{border-top:1px solid var(--borders);padding:.75rem 1rem;font-size:.75rem;color:var(--text-secondary);display:flex;gap:.75rem}
+.search-modal-footer kbd{background-color:var(--cards-elements);border:1px solid var(--borders);border-radius:4px;padding:.125rem .375rem;font-family:monospace}
+
+/* --- PAINEL DE DESENVOLVEDOR --- */
+.dev-tab{padding:0.5rem 1rem;border-radius:0.375rem;transition:background-color 0.2s ease-in-out;border:none;background-color:transparent;color:var(--text-secondary);cursor:pointer; margin-right: 0.25rem;}
+.dev-tab:hover{background-color:#374151}
+.dev-tab.active-tab{background-color:var(--primary-color);color:white;font-weight:600}
+.dev-button{display:inline-block;background-color:var(--primary-color);color:white;padding:0.5rem 1rem;border-radius:0.375rem;font-weight:600;transition:background-color 0.2s ease-in-out;border:none;cursor:pointer}
+.dev-button:hover{background-color:var(--primary-hover)}
+
+/* --- SEÇÃO FINAL CTA --- */
+.final-cta-section {
+    background-image: radial-gradient(ellipse 100% 60% at 50% 100%, rgba(51, 136, 255, 0.1), hsla(0, 0%, 100%, 0));
+}
+.ai-prompt-form { position: relative; display: flex; align-items: center; }
+.ai-prompt-form .material-symbols-outlined { position: absolute; left: 1rem; color: var(--text-secondary); }
+.ai-prompt-form input { width: 100%; height: 56px; border-radius: 9999px; border: 1px solid var(--borders); background-color: var(--background-secondary); padding-left: 3rem; padding-right: 4rem; color: var(--text-primary); }
+.ai-prompt-form input:disabled { cursor: not-allowed; opacity: 0.6; }
+.ai-prompt-form button { position: absolute; right: 0.5rem; height: 40px; width: 40px; border-radius: 50%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; }
+.ai-prompt-form button:disabled { background-color: var(--borders); cursor: not-allowed; }
+
+/* --- ANIMAÇÃO DE SCROLL E ACESSIBILIDADE --- */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll, .logo-carousel-track, .cta-button, .feature-card {
+        transition: none;
+        animation: none;
+    }
+}
+
+/* --- ÍCONES DINÂMICOS DO SELETOR DE TEMA --- */
+.theme-icon-light, .theme-icon-dark, .theme-icon-contrast { display: none; }
+html.light .theme-icon-light { display: inline-block; }
+html.dark .theme-icon-dark { display: inline-block; }
+html.high-contrast .theme-icon-contrast { display: inline-block; }
