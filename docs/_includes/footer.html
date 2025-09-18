@@ -45,7 +45,6 @@
         <div class="mt-12 pt-8 border-t border-[var(--borders)] flex flex-col sm:flex-row justify-between items-center">
             <div class="flex space-x-6 order-2 sm:order-1 mt-4 sm:mt-0">
                 <p class="text-sm text-[var(--text-secondary)]">
-                    <!-- CORREÇÃO APLICADA AQUI -->
                     &copy; {{ site.time | date: "%Y" }} 
                     <a href="https://github.com/SistemaVinculado" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--primary-color)]">
                         SistemaVinculado
@@ -53,9 +52,12 @@
                 </p>
             </div>
             <div class="flex items-center space-x-6 order-1 sm:order-2">
+                <!-- SELETOR DE TEMA APRIMORADO -->
                 <div class="relative">
                     <button id="theme-toggle" class="flex items-center justify-center h-8 w-8 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--cards-elements)] transition-colors" aria-label="Alterar tema">
-                        <span class="material-symbols-outlined text-lg">contrast</span>
+                        <span class="material-symbols-outlined text-lg theme-icon-light">light_mode</span>
+                        <span class="material-symbols-outlined text-lg theme-icon-dark">dark_mode</span>
+                        <span class="material-symbols-outlined text-lg theme-icon-contrast">contrast</span>
                     </button>
                     <div id="theme-options" class="hidden absolute bottom-full right-0 mb-2 w-40 bg-[var(--cards-elements)] border border-[var(--borders)] rounded-md shadow-lg z-50">
                         <a href="#" data-theme="light" class="flex items-center gap-3 px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--background-secondary)] hover:text-[var(--text-primary)]">
