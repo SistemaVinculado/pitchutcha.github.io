@@ -7,22 +7,28 @@
 <meta name="jekyll-build-time" content="{{ site.time | date_to_xmlschema }}">
 <link rel="canonical" href="{{ page.url | absolute_url }}">
 
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
 <meta property="og:title" content="{{ page.title | default: site.title }}">
 <meta property="og:description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
-<meta property="og:image" content="{{ page.image | default: '/assets/default-social-image.png' | absolute_url }}">
-<meta property="og:url" content="{{ page.url | absolute_url }}">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="{{ site.title }}">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ page.title | default: site.title }}">
-<meta name="twitter:description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
-<meta name="twitter:image" content="{{ page.image | default: '/assets/default-social-image.png' | absolute_url }}">
+<meta property="og:image" content="{{ page.image | default: '/assets/images/social-preview.jpg' | absolute_url }}">
 
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ page.url | absolute_url }}">
+<meta property="twitter:title" content="{{ page.title | default: site.title }}">
+<meta property="twitter:description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
+<meta property="twitter:image" content="{{ page.image | default: '/assets/images/social-preview.jpg' | absolute_url }}">
+
+<!-- Performance -->
 <link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
 
 <link rel="icon" href="data:image/x-icon;base64," type="image/x-icon">
 
+<!-- Estilos e Scripts Essenciais -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
@@ -31,17 +37,18 @@
 <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
 
 <script>
+    // Aplica o tema salvo antes do carregamento da página para evitar FOUC (Flash of Unstyled Content)
     (function() {
         try {
-            const theme = localStorage.getItem('theme');
-            if (theme) {
-                const themes = ['dark', 'high-contrast'];
-                if (themes.includes(theme)) {
-                    document.documentElement.classList.add(theme);
-                }
+            const theme = localStorage.getItem('theme') || 'dark';
+            if (['dark', 'light', 'high-contrast'].includes(theme)) {
+                document.documentElement.className = theme;
+            } else {
+                document.documentElement.className = 'dark';
             }
         } catch (e) {
-            console.error("Could not apply saved theme.", e);
+            console.error("Não foi possível aplicar o tema salvo.", e);
+            document.documentElement.className = 'dark';
         }
     })();
 </script>
