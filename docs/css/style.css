@@ -49,8 +49,9 @@ article blockquote{margin:1.5rem 0;padding-left:1.5rem;border-left:4px solid var
 
 /* --- COMPONENTES GLOBAIS (HEADER, BANNER, NPROGRESS, ETC) --- */
 #main-header { transition: background-color 0.3s ease, border-color 0.3s ease; }
-#main-header.scrolled { background-color: var(--background-primary)/80; backdrop-filter: blur(8px); border-bottom-color: var(--borders); }
-.global-banner{background-color:var(--cards-elements);border-bottom:1px solid var(--borders);color:var(--text-secondary);font-size:0.9rem;width:100%;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.5rem;}
+#main-header.scrolled { background-color: rgba(10, 10, 10, 0.8); backdrop-filter: blur(8px); border-bottom-color: var(--borders); }
+html.light #main-header.scrolled { background-color: rgba(255, 255, 255, 0.8); }
+.global-banner{background-color:var(--cards-elements);border-bottom:1px solid var(--borders);color:var(--text-secondary);font-size:0.9rem;width:100%;z-index:25;display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.5rem; position: relative;}
 .global-banner-content strong{color:var(--primary-color);font-weight:600}
 .global-banner-close{background:none;border:none;color:var(--text-secondary);cursor:pointer;padding:0.25rem;line-height:1}
 .global-banner-close:hover{color:var(--text-primary)}
