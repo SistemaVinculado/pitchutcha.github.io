@@ -1,33 +1,33 @@
 {
   "mobile": {
     "scores": {
-      "performance": 30,
+      "performance": 39,
       "accessibility": 92,
       "bestPractices": 100,
       "seo": 100
     },
     "metrics": {
-      "fcp": "6.1 s",
-      "lcp": "7.2 s",
-      "tbt": "1,890 ms",
-      "cls": "0.08",
-      "si": "7.2 s"
+      "fcp": "5.0 s",
+      "lcp": "5.0 s",
+      "tbt": "3,200 ms",
+      "cls": "0.031",
+      "si": "5.1 s"
     },
     "opportunities": []
   },
   "desktop": {
     "scores": {
-      "performance": 95,
+      "performance": 96,
       "accessibility": 93,
       "bestPractices": 100,
       "seo": 100
     },
     "metrics": {
-      "fcp": "1.1 s",
-      "lcp": "1.2 s",
+      "fcp": "1.0 s",
+      "lcp": "1.1 s",
       "tbt": "0 ms",
-      "cls": "0.006",
-      "si": "1.1 s"
+      "cls": "0.004",
+      "si": "1.0 s"
     },
     "opportunities": []
   }
